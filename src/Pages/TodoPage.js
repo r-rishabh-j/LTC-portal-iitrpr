@@ -17,25 +17,40 @@ export const TodoPage = () => {
 
     const handleFormChange = (inputValue) => {
         setAddTodo(inputValue)
-        //console.log(addTodo)
+        console.log(addTodo)
     }
 
-    // const handleFormSubmit = () => {
-    //     fetch('/api/create', {
-    //         method: 'POST',
-    //         body: JSON.stringify({
-    //             content:addTodo
-    //         }),
-    //         headers: {
-    //             "content-type": "application/json; charset=UTF-8"
-    //         }
-    //     }).then(response => response.json())
-    //     .then(message => console.log(message))
-    //}
+    const handleFormSubmit = () => {
+         fetch('/api/create', {
+             method: 'POST',
+             body: JSON.stringify({
+                 content:addTodo
+             }),
+    
+             headers: {
+                 "Content-type": "application/json; charset=UTF-8"
+             }
+            
+         }).then(response => response.json())
+         .then(message => {console.log(message)
+            setAddTodo('')
+            getLatestTodos()
+        })
+    }
+
+    const getLatestTodos = () => {
+        fetch("/api")
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          })
+          .then((data) => setTodo(data));
+    }
 
     return(
         <>
-        <Form userInput={addTodo} onFormChange={ handleFormChange} />
+        <Form userInput={addTodo} onFormChange={ handleFormChange} onFormSubmit={handleFormSubmit}/>
         <Card listOfTodos={todo}/>
        </>
     )

@@ -1,22 +1,26 @@
 import React from 'react';
 
-export const Form = ({userInput, onFormChange}) =>{
+export const Form = ({ userInput, onFormChange, onFormSubmit }) => {
+  const handleChange = (event) => {
+    onFormChange(event.target.value);
+  };
 
-    const handleChange = (event) => {
-        onFormChange(event.target.value)
-    }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onFormSubmit();
+  };
 
-    // const handleSubmit = (event) => {
-    //     event.preventDefault()
-    //     handleFormSubmit()
-    // }
-
-    return (
-      <>
-        <form>
-          <input type="text" required value={userInput} onChange={handleChange}></input>
-          <input type="submit"></input>
-        </form>
-      </>
-    );
-}
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          required
+          value={userInput}
+          onChange={handleChange}
+        ></input>
+        <input type="submit"></input>
+      </form>
+    </>
+  );
+};

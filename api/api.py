@@ -26,15 +26,18 @@ def todo_serializer(todo):
 def index():
     return jsonify([*map(todo_serializer, Todo.query.all())])
 
-# @app.route('/api/create', methods=['POST'])
-# def create():
-#     request_data = json.loads(request.data) #converts into Py dict
-#     todo = Todo(content = request_data['content'])
+@app.route('/api/create', methods=['POST'])
+def create():
+    request_data = json.loads(request.data) #converts into Py dict
+    todo = Todo(content = request_data['content'])
+    db.session.add(todo)
+    db.session.commit()
 
-#     db.session.add(todo)
-#     db.session.commit()
+    return{'201': 'created successfully'}
 
-#     return{'201': 'created successfully'}
+@app.route('/api/<int:id>')
+def show(id):
+    return jsonify([*map(todo_serializer, Todo.query.filter_by(id = id))])
 
 if __name__ == '__main__':
     app.run(debug=True)
