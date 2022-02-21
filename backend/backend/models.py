@@ -49,7 +49,9 @@ class Users(db.Model, UserMixin):
         self.department = dept
 
 
-"""Design 1"""
+"""Design 1
+This creates all comment fields in the comment column at the time of request generation
+"""
 # class LTCRequests(db.Model):
 #     __tablename__ = 'ltc_requests'
 #     request_id = db.Column(db.Integer, primary_key=True)
@@ -78,6 +80,9 @@ class Users(db.Model, UserMixin):
 #         return comments
 
 
+"""Design 2
+This creates next stage comment fields in the comment column onlt at the time of forward
+"""
 class LTCRequests(db.Model):
     __tablename__ = 'ltc_requests'
     request_id = db.Column(db.Integer, primary_key=True)
