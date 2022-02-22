@@ -1,10 +1,11 @@
 from flask import Flask, jsonify, request, flash
-from flask_login import login_required, current_user, login_user, logout_user
-from flask_restful import Resource, Api, reqparse, marshal_with, abort, fields
+from flask_login import login_required, login_user, logout_user
+from flask_restful import Resource, reqparse, marshal_with, abort, fields
 import json
 from .models import Users, LTCRequests, test_table
 from . import db
 from .reqParser import register_user_args, login_user_args
+from flask_jwt_extended import create_access_token, unset_access_cookies, jwt_required, set_access_cookies, unset_jwt_cookies, get_jwt_identity
 
 
 class RegisterUser(Resource):
@@ -15,7 +16,7 @@ class RegisterUser(Resource):
 
         if Users.query.filter_by(email=args['email']).first():
             abort(409, message="user already exists")
-        # ensure password is hashed
+        # TODO: ensure password is hashed
         # validate credential lengths
         if not args['password'] or len(args['password']) < 3:
             abort(409, message='invalid password')
@@ -24,19 +25,23 @@ class RegisterUser(Resource):
         new_user_cred = Users(email=args['email'], password=args['password'])
         db.session.add(new_user)
         db.session.commit()
-        login_user(new_user, remember=True)
-        return {"success": 'User account created successfully'}, 201
+
+        access_token = create_access_token(identity=args['email'])
+        response = {"success": 'User account created successfully'}
+        set_access_cookies(response)
+        # login_user(new_user, remember=True)
+        return response, 201
 
 
 class ApplyForLTC(Resource):
-    @login_required
+    @jwt_required()
     def post(self):
         data = json.loads(request.data)
-        user_id = current_user.id
+        email = get_jwt_identity()
         # user_id = data['userID']
-        user = Users.query.get(user_id)
+        user = Users.query.filter(email=email).first()
         if user:
-            new_request = LTCRequests(userID=user_id)
+            new_request = LTCRequests(userID=user.id)
             db.session.add(new_request)
             db.session.commit()
             flash('Request send', category='success')
@@ -45,13 +50,20 @@ class ApplyForLTC(Resource):
 
 
 class Logout(Resource):
-    @login_required
+    @jwt_required()
     def get(self):
-        logout_user()
-        return {'logout': 'user logged out successfully'}
+        response = jsonify({"msg": "logout successful"})
+        unset_jwt_cookies(response)
+        return response, 200
 
 
 class Login(Resource):
+    def get(self):
+
+        return {
+            "login-page": "Login"
+        }, 200
+
     def post(self):
         args = login_user_args.parse_args()
         if not args['email'] or len(args['email']) < 4:
@@ -64,8 +76,11 @@ class Login(Resource):
         if str(args['password']) != user.password:
             abort(409, message='invalid password')
 
-        login_user(user)
-        return {'login': 'user logged in successfully'}
+        # login_user(user)
+        access_token = create_access_token(identity=args['email'])
+        response = {'login': 'user logged in successfully'}
+        set_access_cookies(response, access_token)
+        return response, 201
 
 
 p = reqparse.RequestParser()
