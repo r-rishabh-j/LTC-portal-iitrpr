@@ -28,7 +28,7 @@ class RegisterUser(Resource):
 
         access_token = create_access_token(identity=args['email'])
         response = {"success": 'User account created successfully'}
-        set_access_cookies(response)
+        set_access_cookies(response, access_token)
         # login_user(new_user, remember=True)
         return response, 201
 
