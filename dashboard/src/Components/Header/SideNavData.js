@@ -12,7 +12,7 @@ import { useStyles } from './HeaderStyles';
 export default function SideNavData({handleDrawerClose}) {
     const classes = useStyles();
     const listItemData = [
-      { label: "Home", link: "/", icon: <HomeIcon /> },
+      { label: "Home", link: "/home", icon: <HomeIcon /> },
       { label: "New Application", link: "/create", icon: <AddIcon /> },
       { label: "Past Applications", link: "/past", icon: <HistoryIcon /> },
       { label: "Notifications", link: "/notifications", icon: <NotificationsIcon /> },

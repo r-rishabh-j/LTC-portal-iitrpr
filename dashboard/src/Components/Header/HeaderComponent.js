@@ -12,7 +12,7 @@ import { Box } from "@material-ui/core";
 import {useStyles} from './HeaderStyles';
 
 
-export default function HeaderComponent() {
+export default function HeaderComponent(props) {
   const classes = useStyles();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -21,6 +21,32 @@ export default function HeaderComponent() {
   };
   const handleDrawerClose = () => {
     setMobileOpen(false);
+  }
+
+  const [profileData, setProfileData] = useState(null);
+  function getData() {
+    axios({
+      method: "GET",
+      url: "/profile",
+      headers: {
+        Authorization: "Bearer " + props.token,
+      },
+    })
+      .then((response) => {
+        const res = response.data;
+        res.access_token && props.setToken(res.access_token);
+        setProfileData({
+          profile_name: res.email,
+          about_me: res.password,
+        });
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
   }
 
   return (
@@ -33,7 +59,7 @@ export default function HeaderComponent() {
       />
       <Box className={classes.wrapper}>
         <Routes>
-          <Route path="/" element={<Home />}></Route>
+          <Route path="/home" element={<Home />}></Route>
           <Route path="/create" element={<CreateApplication />}></Route>
           <Route path="/past" element={<PastApplications />}></Route>
           <Route path="/notifications" element={<Notifications />}></Route>
@@ -41,6 +67,7 @@ export default function HeaderComponent() {
           <Route index element={<Home />}></Route>
         </Routes>
       </Box>
+      <p>{profileData.email}</p>
     </div>
   );
 }

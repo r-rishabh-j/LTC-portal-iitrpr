@@ -13,21 +13,22 @@ function Login(props) {
   const onSubmit = (data) => {
     axios({
       method: "POST",
-      url:"/api/login",
-      data:{
+      url: "/token",
+      data: {
         email: data.email,
-        password: data.password
-       }
+        password: data.password,
+      },
     })
-    .then((response) => {
-      props.setToken(response.data.access_token)
-    }).catch((error) => {
-      if (error.response) {
-        console.log(error.response)
-        console.log(error.response.status)
-        console.log(error.response.headers)
+      .then((response) => {
+        props.setToken(response.data.access_token);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
         }
-    })
+      });
     console.log(data);
   }
 

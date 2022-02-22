@@ -11,6 +11,7 @@
 # production
 **/build
 **/__pycache__
+**/venv
 
 # misc
 .DS_Store
