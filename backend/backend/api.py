@@ -21,7 +21,8 @@ class RegisterUser(Resource):
         if not args['password'] or len(args['password']) < 3:
             abort(409, message='invalid password')
 
-        new_user = Users(email=args['email'], name=args['name'], department=args['department'])
+        new_user = Users(
+            email=args['email'], name=args['name'], department=args['department'])
         new_user_cred = Users(email=args['email'], password=args['password'])
         db.session.add(new_user)
         db.session.commit()
@@ -91,12 +92,10 @@ p.add_argument('c', type=dict)
 
 class TestInsert(Resource):
     def put(self):
-        
+
         # data = request.form
         # data = data.to_dict(flat=False)
         # print(data)
-        # j = {"Rishabh":1, "Math": {'HE': '44'}, "Est":1}
-        # new_entry = test_table(j)
         # db.session.add(new_entry)
         # db.session.commit()
         # new_entry = test_table(data)

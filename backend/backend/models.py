@@ -59,12 +59,14 @@ class Users(db.Model, UserMixin):
     name = db.Column(db.String(150), nullable=False)
     department = db.Column(db.String(150), nullable=False)
     permission = db.Column(db.Integer, nullable=False)
+    signature = db.Column(db.String, nullable=True)
     # signature = db.Column(db.String(300), nullable=True)
 
     def __init__(self, email, name, dept):
         self.email = email
         self.name = name
         self.department = dept
+        self.signature = None
 
 
 """Design 1
@@ -121,6 +123,7 @@ class LTCRequests(db.Model):
     ->with user(not submitted): None
     -> declined: -1
     """
+    is_active = db.Column(db.Boolean)
     form = db.Column(MutableDict.as_mutable(JSON))
     # will store comments from every section in a JSON file
     comments = db.Column(MutableDict.as_mutable(JSON))
@@ -130,6 +133,7 @@ class LTCRequests(db.Model):
         self.user_id = user_id
         self.created_on = datetime.now()
         self.stage = stage
+        self.is_active = True
         self.comments = comments  # nested JSON
 
     def generate_comments_template(stage):
@@ -155,12 +159,12 @@ class LTCApproved(db.Model):
     """
     relative path to office order document
     """
-    office_order_path = None  # path to office order
+    office_order = None  # path to office order
 
     def __init__(self, request_id):
         self.request_id = request_id
         self.approved_on = datetime.now()
-        self.office_order_path = None
+        self.office_order = None
 
 
 class EstablishmentLogs(db.Model):
