@@ -4,12 +4,30 @@ import { useStyles } from './LoginStyles';
 import LockIcon from "@material-ui/icons/Lock";
 import {Link} from 'react-router-dom';
 import {useForm, Controller} from 'react-hook-form';
+import axios from "axios"
 
-function Login() {
+function Login(props) {
   const classes = useStyles();
   const {handleSubmit, control} = useForm();
 
   const onSubmit = (data) => {
+    axios({
+      method: "POST",
+      url:"/api/login",
+      data:{
+        email: data.email,
+        password: data.password
+       }
+    })
+    .then((response) => {
+      props.setToken(response.data.access_token)
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+        }
+    })
     console.log(data);
   }
 
@@ -24,7 +42,7 @@ function Login() {
           <h3>Sign In</h3>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Controller
-              name="username"
+              name="email"
               control={control}
               defaultValue=""
               render={({
