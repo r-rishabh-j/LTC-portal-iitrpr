@@ -7,18 +7,25 @@ import AddIcon from "@material-ui/icons/Add";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import { NavLink } from 'react-router-dom';
 import { useStyles } from './HeaderStyles';
+import useToken from '../Tokens/useToken';
+import Logout from '../Body/Dashboard/Logout';
+
 
 
 export default function SideNavData({handleDrawerClose}) {
+    
     const classes = useStyles();
+    const { token, removeToken, setToken } = useToken();
+    
     const listItemData = [
       { label: "Home", link: "/home", icon: <HomeIcon /> },
       { label: "New Application", link: "/create", icon: <AddIcon /> },
       { label: "Past Applications", link: "/past", icon: <HistoryIcon /> },
       { label: "Notifications", link: "/notifications", icon: <NotificationsIcon /> },
-      { label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
+      //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
     ];
   return (
+    <>
     <List>
       {listItemData.map((item, i) => (
         <Button
@@ -32,14 +39,18 @@ export default function SideNavData({handleDrawerClose}) {
             component={NavLink}
             to={item.link}
             className={classes.navlinks}
-            activeClassName={classes.activeNavlinks}
+            // activeClassName={classes.activeNavlinks}
             sx = {{width: "100%", textTransform: "capitalize"}}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText>{item.label}</ListItemText>
           </ListItem>
         </Button>
+        
       ))}
     </List>
+    <Logout token={removeToken}/>
+    
+    </>
   );
 }

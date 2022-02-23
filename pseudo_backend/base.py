@@ -3,13 +3,11 @@ from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
                                unset_jwt_cookies, jwt_required, JWTManager
-from flask_cors import CORS, cross_origin
+
 
 api = Flask(__name__)
-CORS(api)
 
 api.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
-api.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 jwt = JWTManager(api)
 
 @api.after_request
@@ -30,10 +28,11 @@ def refresh_expiring_jwts(response):
         return response
 
 @api.route('/token', methods=["POST"])
-@cross_origin(origin='*')
 def create_token():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
+
+    ###write a db here
     if email != "test" or password != "test":
         return {"msg": "Wrong email or password"}, 401
 
@@ -47,8 +46,9 @@ def logout():
     unset_jwt_cookies(response)
     return response
 
+
 @api.route('/profile')
-@jwt_required()
+@jwt_required() #new line
 def my_profile():
     response_body = {
         "name": "Nagato",
