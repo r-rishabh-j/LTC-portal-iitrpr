@@ -263,7 +263,7 @@ export default function CreateApplication() {
                   }) => (
                     <>
                       <span>Estimated Fare plan</span>
-                      <FileUpload value={null} onChange={onChange} />
+                      <FileUpload value={value} onChange={onChange} />
 
                     </>
                   )}
