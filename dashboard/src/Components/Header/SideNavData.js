@@ -49,7 +49,7 @@ export default function SideNavData({handleDrawerClose}) {
         
       ))}
     </List>
-    <Logout token={removeToken}/>
+    <Logout token={token} removeToken={removeToken}/>
     
     </>
   );

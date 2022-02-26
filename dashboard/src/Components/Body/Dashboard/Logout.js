@@ -22,11 +22,13 @@ export default function Logout(props) {
     axios({
       method: "POST",
       url: "/logout",
+      headers: {
+        Authorization: "Bearer " + props.token,
+      },
     })
       .then((response) => {
-        props.token();
+        props.removeToken();
         logout();
-        
       })
       .catch((error) => {
         if (error.response) {

@@ -41,6 +41,7 @@ def create_token():
     return response
 
 @api.route("/logout", methods=["POST"])
+@jwt_required() #new line
 def logout():
     response = jsonify({"msg": "logout successful"})
     unset_jwt_cookies(response)
