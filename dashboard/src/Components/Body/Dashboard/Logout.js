@@ -13,20 +13,32 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 export default function Logout(props) {
   const classes = useStyles();
-
   const logout = () => {
     console.log("Logout");
     window.location.reload();
   }
   function logOut() {
+
+    // axios({
+    //   method: "POST",
+    //   url: "/api/logout",
+    //   data: {
+    //     Authorization: "Bearer " + props.token,
+    //   },
+    // })
     axios({
       method: "POST",
-      url: "/logout",
+      url: "/api/test",
+      headers: {
+        Authorization: "Bearer " + props.token,
+      },
     })
       .then((response) => {
-        props.token();
+        // const res = response.data;
+        // console.log(res);
+        // res.access_token && props.setToken(res.access_token);
+        props.removeToken();
         logout();
-        
       })
       .catch((error) => {
         if (error.response) {
@@ -35,7 +47,7 @@ export default function Logout(props) {
           console.log(error.response.headers);
         }
       });
-      
+
   }
   return (
     <>

@@ -13,7 +13,7 @@ function Login(props) {
   const onSubmit = (data) => {
     axios({
       method: "POST",
-      url: "/token",
+      url: "/api/login",
       data: {
         email: data.email,
         password: data.password,

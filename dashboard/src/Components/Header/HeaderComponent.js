@@ -30,7 +30,7 @@ export default function HeaderComponent(props) {
   function getData(){
     axios({
       method: "GET",
-      url: "/profile",
+      url: "/api/test",
       headers: {
         Authorization: "Bearer " + props.token,
       },

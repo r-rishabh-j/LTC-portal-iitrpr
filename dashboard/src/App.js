@@ -16,7 +16,6 @@ function App() {
         :(
           <HeaderComponent token={token} setToken={setToken}/>
         )}
-        <Logout token={removeToken}/>
     </Router>
   );
 }
