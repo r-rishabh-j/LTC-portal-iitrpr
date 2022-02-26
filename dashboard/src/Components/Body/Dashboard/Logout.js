@@ -34,9 +34,6 @@ export default function Logout(props) {
       },
     })
       .then((response) => {
-        // const res = response.data;
-        // console.log(res);
-        // res.access_token && props.setToken(res.access_token);
         props.removeToken();
         logout();
       })
