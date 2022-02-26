@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme) => ({
     padding: "auto",
     height: "90%",
     width: "90%",
-    margin: "auto",
+    margin: "10vh",
   },
   div:{
     backgroundColor:"black",
