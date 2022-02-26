@@ -39,7 +39,7 @@ def create_app():
     api.add_resource(Login, '/api/login')
     api.add_resource(Logout, '/api/logout')
     api.add_resource(TestInsert, '/api/test')
-
+    
     # @login_manager.user_loader
     # def load_user(id):
     #     return Users.query.get(int(id))

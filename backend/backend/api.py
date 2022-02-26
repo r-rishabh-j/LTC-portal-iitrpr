@@ -1,8 +1,9 @@
+import re
 from flask import Flask, jsonify, request, flash
 from flask_login import login_required, login_user, logout_user
 from flask_restful import Resource, reqparse, marshal_with, abort, fields
 import json
-from .models import Users, LTCRequests, test_table
+from .models import Users, LTCRequests, test_table, UserCredentials
 from . import db
 from .reqParser import register_user_args, login_user_args
 from flask_jwt_extended import create_access_token, unset_access_cookies, jwt_required, set_access_cookies, unset_jwt_cookies, get_jwt_identity
@@ -52,10 +53,11 @@ class ApplyForLTC(Resource):
 
 class Logout(Resource):
     @jwt_required()
-    def get(self):
+    def post(self):
+        print(response)
         response = jsonify({"msg": "logout successful"})
         unset_jwt_cookies(response)
-        return response, 200
+        return response
 
 
 class Login(Resource):
@@ -74,14 +76,17 @@ class Login(Resource):
         if not user:
             abort(409, message="user does not exist")
 
-        if str(args['password']) != user.password:
+        user_cred = UserCredentials.query.filter_by(
+            email=args['email']).first()
+        if str(args['password']) != user_cred.password:
             abort(409, message='invalid password')
 
         # login_user(user)
         access_token = create_access_token(identity=args['email'])
-        response = {'login': 'user logged in successfully'}
-        set_access_cookies(response, access_token)
-        return response, 201
+        return {
+            'login': 'user logged in successfully',
+             "access_token": access_token
+        }, 201
 
 
 p = reqparse.RequestParser()
@@ -91,7 +96,14 @@ p.add_argument('c', type=dict)
 
 
 class TestInsert(Resource):
-    def put(self):
+    @jwt_required()
+    def get(self):
+        print("TEST")
+
+        return {},200
+
+    @jwt_required()
+    def post(self):
 
         # data = request.form
         # data = data.to_dict(flat=False)
