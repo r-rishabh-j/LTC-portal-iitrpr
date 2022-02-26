@@ -12,7 +12,7 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'abcd234i34-81-4 #$'
     app.config['JWT_SECRET_KEY'] = 'some-random-string#$$@!!'
-    pgsql_path = "postgresql+psycopg2://postgres:password@localhost:5432/ltc_app"
+    pgsql_path = "postgresql+psycopg2://postgres:pgh1h2@localhost:5432/ltc_app"
     app.config['SQLALCHEMY_DATABASE_URI'] = pgsql_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

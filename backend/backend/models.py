@@ -68,42 +68,9 @@ class Users(db.Model, UserMixin):
         self.department = dept
         self.signature = None
 
-
-"""Design 1
-This creates all comment fields in the comment column at the time of request generation
 """
-# class LTCRequests(db.Model):
-#     __tablename__ = 'ltc_requests'
-#     request_id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-#     created_on = db.Column(db.DateTime)
-#     status = db.Column(db.String(20))  # in-review, declined, approved-> -1,
-#     form = db.Column(MutableDict.as_mutable(JSON))
-#     # will store comments from every section in a JSON file
-#     comments = db.Column(MutableDict.as_mutable(JSON))
-#     # nested JSON, contains comments from every section
-
-#     def __init__(self, user_id):
-#         self.user_id = user_id
-#         self.created_on = datetime.now()
-#         self.status = 'in-review'
-#         self.comments = self.generate_comments_template()
-
-#     def generate_comments_template():
-#         comments = dict()
-#         for stage in STAGES:
-#             comments[stage] = {
-#                 "approved": get_stage_roles(),
-#                 "comments": get_stage_roles(),
-#                 "signature": get_stage_roles()
-#             }
-#         return comments
-
-
-"""Design 2
 This creates next stage comment fields in the comment column onlt at the time of forward
 """
-
 
 class LTCRequests(db.Model):
     __tablename__ = 'ltc_requests'
@@ -153,8 +120,6 @@ class LTCApproved(db.Model):
     """
     __tablename__ = 'ltc_approved'
     request_id = db.Column(db.Integer, primary_key=True)
-    # request_id = db.Column(db.Integer, db.ForeignKey(
-    #     'ltc_requests.request_id'), primary_key=True)
     approved_on = db.Column(db.DateTime)  # timestamp of approval
     """
     relative path to office order document
@@ -195,8 +160,6 @@ class AuditLogs(db.Model):
     """
     __tablename__ = 'audit_logs'
     request_id = db.Column(db.Integer, primary_key=True)
-    # request_id = db.Column(db.Integer, db.ForeignKey(
-    #     'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -219,8 +182,6 @@ class AccountsLogs(db.Model):
     """
     __tablename__ = 'accounts_logs'
     request_id = db.Column(db.Integer, primary_key=True)
-    # request_id = db.Column(db.Integer, db.ForeignKey(
-    #     'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -240,8 +201,6 @@ class AccountsLogs(db.Model):
 class RegistrarLogs(db.Model):
     __tablename__ = 'registrar_logs'
     request_id = db.Column(db.Integer, primary_key=True)
-    # request_id = db.Column(db.Integer, db.ForeignKey(
-    #     'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -261,8 +220,6 @@ class RegistrarLogs(db.Model):
 class DeanLogs(db.Model):
     __tablename__ = 'dean_logs'
     request_id = db.Column(db.Integer, primary_key=True)
-    # request_id = db.Column(db.Integer, db.ForeignKey(
-    #     'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -298,8 +255,6 @@ class DepartmentLogs(db.Model):
     """
     __tablename__ = 'department_logs'
     request_id = db.Column(db.Integer, primary_key=True)
-    # request_id = db.Column(db.Integer, db.ForeignKey(
-    #     'ltc_requests.request_id'), primary_key=True)
     department = db.Column(db.String(20))
     status = db.Column(db.String(50))
     """
