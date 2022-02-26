@@ -252,7 +252,7 @@ export default function CreateApplication() {
                   )}
                 />
               </div>
-              <div>
+              {/* <div>
                 <Controller
                   name="EstFare"
                   control={control}
@@ -268,7 +268,7 @@ export default function CreateApplication() {
                     </>
                   )}
                 />
-              </div>
+              </div> */}
               <div>
                 <Controller
                   name="Adv"
@@ -282,7 +282,7 @@ export default function CreateApplication() {
                       <span>Advance Required</span>
                       <Checkbox
                         label="Advance Required"
-                        
+
                         onChange={onChange}
                         inputProps={{ "aria-label": "primary checkbox" }}
                       />
@@ -303,7 +303,7 @@ export default function CreateApplication() {
                       <span>Encashment of earned leave required</span>
                       <Checkbox
                         label="Encashment Required"
-                        
+
                         onChange={onChange}
                         inputProps={{ "aria-label": "primary checkbox" }}
                       />
