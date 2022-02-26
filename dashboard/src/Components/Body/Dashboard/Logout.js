@@ -28,7 +28,7 @@ export default function Logout(props) {
     // })
     axios({
       method: "POST",
-      url: "/api/test",
+      url: "/api/logout",
       headers: {
         Authorization: "Bearer " + props.token,
       },

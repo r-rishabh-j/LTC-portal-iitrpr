@@ -16,16 +16,35 @@ import { useStyles } from "./FormStyles";
 import FileUpload from "react-material-file-upload";
 
 
-export default function CreateApplication() {
+export default function CreateApplication(props) {
   const classes = useStyles();
   const { handleSubmit, control } = useForm();
 
   const onSubmit = (data) => {
     console.log(data);
+    axios({
+      method: "POST",
+      url: "/api/apply",
+      headers: {
+        Authorization: "Bearer " + props.token,
+      },
+      data: data
+    })
+      .then((response) => {
+        console.log(response)
+        
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
   };
   return (
     <>
-      <Grid container>
+      <Grid container style={{ margin: "0 10vw" }}>
         <Paper elevation={10}>
           <Grid container>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
@@ -252,7 +271,7 @@ export default function CreateApplication() {
                   )}
                 />
               </div>
-              <div>
+              {/* <div>
                 <Controller
                   name="EstFare"
                   control={control}
@@ -261,14 +280,14 @@ export default function CreateApplication() {
                     field: { onChange, value },
                     fieldState: { error },
                   }) => (
-                    <>
+                      <>
                       <span>Estimated Fare plan</span>
                       <FileUpload value={value} onChange={onChange} />
 
                     </>
                   )}
                 />
-              </div>
+              </div> */}
               <div>
                 <Controller
                   name="Adv"
@@ -282,7 +301,6 @@ export default function CreateApplication() {
                       <span>Advance Required</span>
                       <Checkbox
                         label="Advance Required"
-                        
                         onChange={onChange}
                         inputProps={{ "aria-label": "primary checkbox" }}
                       />
@@ -303,7 +321,6 @@ export default function CreateApplication() {
                       <span>Encashment of earned leave required</span>
                       <Checkbox
                         label="Encashment Required"
-                        
                         onChange={onChange}
                         inputProps={{ "aria-label": "primary checkbox" }}
                       />

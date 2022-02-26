@@ -39,11 +39,14 @@ class ApplyForLTC(Resource):
     @jwt_required()
     def post(self):
         data = json.loads(request.data)
+        print(data)
         email = get_jwt_identity()
         # user_id = data['userID']
-        user = Users.query.filter(email=email).first()
+        user = Users.query.filter_by(email=email).first()
         if user:
-            new_request = LTCRequests(userID=user.id)
+
+            new_request = LTCRequests(user_id=user.id)
+            new_request.form = data
             db.session.add(new_request)
             db.session.commit()
             flash('Request send', category='success')
@@ -52,10 +55,11 @@ class ApplyForLTC(Resource):
 
 
 class Logout(Resource):
-    @jwt_required()
+    # @jwt_required()
     def post(self):
-        print(response)
+        
         response = jsonify({"msg": "logout successful"})
+        print(response)
         unset_jwt_cookies(response)
         return response
 

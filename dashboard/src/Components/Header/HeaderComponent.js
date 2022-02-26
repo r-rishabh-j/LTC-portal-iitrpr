@@ -62,14 +62,20 @@ export default function HeaderComponent(props) {
         handleDrawerClose={handleDrawerClose}
       />
       <Box className={classes.wrapper}>
-        <button onClick={getData}>Profile</button>
-        
+        {/* <button onClick={getData}>Profile</button> */}
+
         <Routes>
           <Route path="/home" element={<Home />}></Route>
-          <Route path="/create" element={<CreateApplication />}></Route>
+          <Route
+            path="/create"
+            element={<CreateApplication token={token} setToken={setToken} />}
+          ></Route>
           <Route path="/past" element={<PastApplications />}></Route>
-          <Route path="/notifications" element={<Notifications />}></Route>
-          <Route path="/logout" element={<Navigate to="/"/>}></Route>
+          <Route
+            path="/notifications"
+            element={<Notifications token={token} setToken={setToken} />}
+          ></Route>
+          <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
       </Box>
