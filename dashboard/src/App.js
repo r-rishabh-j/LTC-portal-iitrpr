@@ -1,4 +1,4 @@
-import { BrowserRouter as Router} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import Login from './Components/Login/Login'
 import HeaderComponent from './Components/Header/HeaderComponent';
@@ -11,11 +11,11 @@ function App() {
     <Router>
       {/* <HeaderComponent/> */}
       {/* <Login setToken={setToken}/> */}
-      {!token && token!=="" &&token!== undefined?  
-        <Login setToken={setToken} />
-        :(
-          <HeaderComponent token={token} setToken={setToken}/>
-        )}
+      <Login setToken={setToken} />
+      <HeaderComponent token={token} setToken={setToken} />
+      {/* {!token && token !== "" && token !== undefined ?
+        : (
+        )} */}
     </Router>
   );
 }

@@ -19,6 +19,7 @@ export const useStyles = makeStyles((theme) => ({
       width: drawerWidth,
       flexShrink: 0,
     },
+    position: "absolute"
   },
   toolbar: theme.mixins.toolbar,
   drawerPaper: {

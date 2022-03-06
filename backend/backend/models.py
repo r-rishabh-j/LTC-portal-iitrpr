@@ -41,8 +41,6 @@ class ApplicationStatus:
 class UserCredentials(db.Model):
     __tablename__ = 'user_credentials'
     email = db.Column(db.String(150), primary_key=True)
-    # email = db.Column(db.String(150), db.ForeignKey(
-    #     'users.email'), primary_key=True)
     password = db.Column(db.String(250), nullable=False)
 
     def __init__(self, email, password):

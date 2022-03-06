@@ -1,3 +1,4 @@
+import json
 from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 
 register_user_args = reqparse.RequestParser()
@@ -20,4 +21,9 @@ login_user_args.add_argument(
 )
 login_user_args.add_argument(
     "password", type=str, help = "Password", required=True
+)
+
+form_args = reqparse.RequestParser()
+form_args.add_argument(
+    "files"
 )
