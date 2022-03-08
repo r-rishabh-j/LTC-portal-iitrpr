@@ -7,6 +7,7 @@ import {
   Checkbox,
   Button,
   Typography,
+  Box
 } from "@material-ui/core";
 import { DatePicker } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -18,7 +19,6 @@ import axios from "axios";
 import { useStyles } from "./FormStyles";
 import GeneratePDF from "../../Utilities/GeneratePDF";
 import FileUpload from "react-material-file-upload";
-import GeneratePDF from "../../Utilities/GeneratePDF";
 import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputDate } from "../../Utilities/FormInputDate"
 import { FormInputNumber } from "../../Utilities/FormInputNumber" 
@@ -226,6 +226,7 @@ shortest route (proofs need to be attached)."
               <Button type="submit" variant="contained">
                 Upload Proofs
               </Button>
+              </Box>
               {/* <GeneratePDF /> */}
             </form>
           </Grid>
