@@ -7,6 +7,7 @@ const drawerWidth = 280
 export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    backgroundColor: "#efefef",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -24,24 +25,24 @@ export const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     width: drawerWidth,
     marginTop: "65px",
-    [theme.breakpoints.down("sm")]:{
+    [theme.breakpoints.down("sm")]: {
       marginTop: "0px",
-    }
+    },
   },
 
   navButton: {
     width: "100%",
     textTransform: "capitalize",
-    
   },
 
   //wrapper
   wrapper: {
-    height: "100vh", background: "#efefef",
+    height: "100%",
+    background: "#efefef",
     padding: theme.spacing(2, 2, 0, 32),
-    [theme.breakpoints.down("sm")]:{
+    [theme.breakpoints.down("sm")]: {
       padding: theme.spacing(2, 2),
-    }
+    },
   },
 
   navlinks: {
@@ -52,7 +53,6 @@ export const useStyles = makeStyles((theme) => ({
     " & div": {
       color: blueGrey["A400"],
     },
-    
   },
 
   activeNavlinks: {
@@ -61,6 +61,4 @@ export const useStyles = makeStyles((theme) => ({
       color: blue["A700"],
     },
   },
-
-  
 }));

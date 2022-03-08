@@ -3,14 +3,24 @@ import { teal } from "@material-ui/core/colors";
 import { NavigationType } from "react-router-dom";
 
 export const useStyles = makeStyles((theme) => ({
-  form: {
-    padding: "auto",
-    height: "90%",
-    width: "90%",
-    margin: "10vh",
+  contain: {
+    margin: "0 0.5vw 0 3vw",
+    height: "100%",
+    width: "100%",
   },
-  div:{
-    backgroundColor:"black",
+
+  form: {
+    padding: "1vw",
+    // height: "100%",
+    // width: "100%",
+    margin: "auto",
+    "& .MultiFormControl-root": {
+      width: "100%",
+      
+    },
+  },
+  div: {
+    backgroundColor: "black",
   },
   avatar: {
     backgroundColor: teal["500"],
@@ -25,4 +35,5 @@ export const useStyles = makeStyles((theme) => ({
   textFieldPass: {
     margin: "8px 0 8px",
   },
+  
 }));
