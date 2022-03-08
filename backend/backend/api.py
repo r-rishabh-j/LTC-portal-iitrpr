@@ -1,11 +1,12 @@
-import re
-from flask import Flask, jsonify, request, flash, make_response
+from flask import Flask, jsonify, request, flash, make_response, redirect
 from flask_restful import Resource, reqparse, marshal_with, abort, fields
 import json
 from .models import Users, LTCRequests, test_table, UserCredentials
 from . import db
+import requests
 from .reqParser import register_user_args, login_user_args, form_args
 from flask_jwt_extended import create_access_token, unset_access_cookies, jwt_required, set_access_cookies, unset_jwt_cookies, get_jwt_identity
+import os
 
 
 class RegisterUser(Resource):
@@ -28,12 +29,12 @@ class RegisterUser(Resource):
         db.session.commit()
 
         access_token = create_access_token(identity=args['email'])
-        response = make_response({"success": 'User account created successfully'})
+        response = make_response(
+            {"success": 'User account created successfully'})
         set_access_cookies(response, access_token)
         # login_user(new_user, remember=True)
         return response, 201
 
-import os
 
 class ApplyForLTC(Resource):
     @jwt_required()
@@ -47,20 +48,20 @@ class ApplyForLTC(Resource):
         # user_id = data['userID']
         user = Users.query.filter_by(email=email).first()
         if user:
-            # print(data)
+            print(data)
             # file = data['EstimatedFare']
             # request.files['fare_plan'].save(os.path.join('./static', 'pdf_uploaded.pdf'))
-            # new_request = LTCRequests(user_id=user.id)
-            # new_request.form = data
-            # db.session.add(new_request)
-            # db.session.commit()
+            new_request = LTCRequests(user_id=user.id)
+            new_request.form = data
+            db.session.add(new_request)
+            db.session.commit()
             flash('Request send', category='success')
         else:
             flash('Error', category='success')
 
 
 class Logout(Resource):
-    # @jwt_required()
+    @jwt_required()
     def post(self):
         response = jsonify({"msg": "logout successful"})
         print(response)
@@ -68,12 +69,65 @@ class Logout(Resource):
         return response
 
 
-class Login(Resource):
+class IsLoggedIn(Resource):
+    @jwt_required()
     def get(self):
+        email = get_jwt_identity()
+        # user = Users.query.filter_by(email=email).first()
+        # if not user:
+        #     return make_response({}, 401)
+        # TODO: add user details such as profile pic, name, email, etc if logged in
+        return {'status': 'logged-in'}, 200
 
-        return {
-            "login-page": "Login"
-        }, 200
+
+class Login(Resource):
+
+    def is_valid_user(self, email):
+        user = Users.query.filter_by(email=email).first()
+        if not user:
+            return False
+        return True
+
+    def get(self):
+        print(request)
+        args = request.args.to_dict()
+        print(args)
+        code = args['code']
+        data = {
+            'code': code,
+            'client_id': os.environ.get('client_id'),
+            'client_secret': os.environ.get('client_secret'),
+            'redirect_uri': "http://localhost:5000/api/login",
+            'grant_type': 'authorization_code'
+        }
+        response = requests.post(
+            'https://oauth2.googleapis.com/token', data=data)
+        if not response.ok:
+            return make_response(redirect('http://localhost:3000'))
+        access = response.json()['access_token']
+
+        response = requests.get(
+            'https://www.googleapis.com/oauth2/v3/userinfo',
+            params={'access_token': access}
+        )
+
+        if not response.ok:
+            return make_response(redirect('http://localhost:3000'))
+
+        print(response.json())
+
+        email = str(response.json()['email'])
+        print(response.json()['email'])
+        # valid = self.is_valid_user(10)
+        valid = True
+
+        if not valid:
+            return make_response(redirect('http://localhost:3000'))
+
+        access_tk = create_access_token(identity=email)
+        response = make_response(redirect('http://localhost:3000'))
+        set_access_cookies(response, access_tk)
+        return response
 
     def post(self):
         args = login_user_args.parse_args()

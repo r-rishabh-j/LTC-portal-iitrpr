@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from . import db
 from datetime import datetime
-from flask_login import UserMixin
+# from flask_login import UserMixin
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
 
@@ -49,7 +49,7 @@ class UserCredentials(db.Model):
 
 
 # TODO: decide permission column, id values
-class Users(db.Model, UserMixin):
+class Users(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
