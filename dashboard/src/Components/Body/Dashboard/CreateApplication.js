@@ -8,11 +8,15 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
+import { DatePicker } from "@mui/lab";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LockIcon from "@material-ui/icons/Lock";
 import { Link } from "react-router-dom";
 import { useForm} from "react-hook-form";
 import axios from "axios";
 import { useStyles } from "./FormStyles";
+import GeneratePDF from "../../Utilities/GeneratePDF";
 import FileUpload from "react-material-file-upload";
 import GeneratePDF from "../../Utilities/GeneratePDF";
 import { FormInputText } from "../../Utilities/FormInputText";
@@ -218,6 +222,7 @@ shortest route (proofs need to be attached)."
                 />
                 <FormInputNumber name="Encashment Days" control={control} label="No. of days"/>
               </div>
+              <Box display="flex" justifyContent="space-between">
               <Button type="submit" variant="contained">
                 Upload Proofs
               </Button>

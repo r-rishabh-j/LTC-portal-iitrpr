@@ -20,7 +20,7 @@ function Login(props) {
       },
     })
       .then((response) => {
-        props.setToken(response.data.access_token);
+        // props.setToken(response.data.access_token);
       })
       .catch((error) => {
         if (error.response) {

@@ -20,9 +20,9 @@ function GeneratePDF() {
     doc.save('sample-file.pdf')
     }
   return (
-    <div>
-        <button onClick={generatePdf} type="primary">Download PDF</button>
-      </div>
+        <>
+        <Button variant='contained' onClick={generatePdf} type="primary">Download PDF</Button>
+        </>
   )
 }
 

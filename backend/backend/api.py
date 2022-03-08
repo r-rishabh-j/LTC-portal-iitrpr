@@ -1,11 +1,10 @@
 import re
-from flask import Flask, jsonify, request, flash
-from flask_login import login_required, login_user, logout_user
+from flask import Flask, jsonify, request, flash, make_response
 from flask_restful import Resource, reqparse, marshal_with, abort, fields
 import json
 from .models import Users, LTCRequests, test_table, UserCredentials
 from . import db
-from .reqParser import register_user_args, login_user_args
+from .reqParser import register_user_args, login_user_args, form_args
 from flask_jwt_extended import create_access_token, unset_access_cookies, jwt_required, set_access_cookies, unset_jwt_cookies, get_jwt_identity
 
 
@@ -29,35 +28,40 @@ class RegisterUser(Resource):
         db.session.commit()
 
         access_token = create_access_token(identity=args['email'])
-        response = {"success": 'User account created successfully'}
+        response = make_response({"success": 'User account created successfully'})
         set_access_cookies(response, access_token)
         # login_user(new_user, remember=True)
         return response, 201
 
+import os
 
 class ApplyForLTC(Resource):
     @jwt_required()
     def post(self):
-        data = json.loads(request.data)
+        # data = form_args.parse_args()
+        # print(data)
+        data = request.files
         print(data)
+        # data = request.json
         email = get_jwt_identity()
         # user_id = data['userID']
         user = Users.query.filter_by(email=email).first()
         if user:
-
-            new_request = LTCRequests(user_id=user.id)
-            new_request.form = data
-            db.session.add(new_request)
-            db.session.commit()
+            # print(data)
+            # file = data['EstimatedFare']
+            # request.files['fare_plan'].save(os.path.join('./static', 'pdf_uploaded.pdf'))
+            # new_request = LTCRequests(user_id=user.id)
+            # new_request.form = data
+            # db.session.add(new_request)
+            # db.session.commit()
             flash('Request send', category='success')
         else:
-            flash('Error', category='error')
+            flash('Error', category='success')
 
 
 class Logout(Resource):
     # @jwt_required()
     def post(self):
-        
         response = jsonify({"msg": "logout successful"})
         print(response)
         unset_jwt_cookies(response)
@@ -86,11 +90,15 @@ class Login(Resource):
             abort(409, message='invalid password')
 
         # login_user(user)
-        access_token = create_access_token(identity=args['email'])
-        return {
-            'login': 'user logged in successfully',
-             "access_token": access_token
-        }, 201
+        # access_token = create_access_token(identity=args['email'])
+        # return {
+        #     'login': 'user logged in successfully',
+        #      "access_token": access_token
+        # }, 201
+        response = make_response({'login': 'user logged in successfully'})
+        set_access_cookies(
+            response, create_access_token(identity=args['email']))
+        return response
 
 
 p = reqparse.RequestParser()
@@ -104,7 +112,7 @@ class TestInsert(Resource):
     def get(self):
         print("TEST")
 
-        return {},200
+        return {}, 200
 
     @jwt_required()
     def post(self):

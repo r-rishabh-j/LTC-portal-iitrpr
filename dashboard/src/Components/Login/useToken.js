@@ -8,7 +8,7 @@ function useToken() {
   }
 
   const [token, setToken] = useState(getToken());
-  
+
   function saveToken(userToken) {
     localStorage.setItem('token', userToken);
     setToken(userToken);

@@ -6,26 +6,26 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import SettingsIcon from '@material-ui/icons/Settings';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import {ListItem, ListItemIcon, ListItemText, Avatar} from "@mui/material";
+import { ListItem, ListItemIcon, ListItemText, Avatar } from "@mui/material";
 
 import image from "./avatar.png";
 
 export default function Profile() {
 
-    const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-    const dropDownData = [
-        {label:"Profile", icon: <SettingsIcon/>},
-        {label:"Logout", icon: <ExitToAppIcon/>}
-    ]
+  const dropDownData = [
+    { label: "Profile", icon: <SettingsIcon /> },
+    { label: "Logout", icon: <ExitToAppIcon /> }
+  ]
 
   return (
     <Box>
@@ -35,7 +35,7 @@ export default function Profile() {
         onClick={handleClick}
         startIcon={<Avatar src={image}></Avatar>}
       >
-        
+
       </Button>
       <Menu
         id="simple-menu"
@@ -45,9 +45,9 @@ export default function Profile() {
         onClose={handleClose}
       >
         {dropDownData.map((item, i) => (
-          <MenuItem key= {i} component={ListItem} onClick={handleClose}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText>{item.label}</ListItemText>
+          <MenuItem key={i} component={ListItem} onClick={handleClose}>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText>{item.label}</ListItemText>
           </MenuItem>
         ))}
 
