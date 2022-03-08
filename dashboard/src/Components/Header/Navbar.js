@@ -14,21 +14,12 @@ export default function Navbar({ handleDrawerToggle }) {
   const classes = useStyles();
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky">
       <Toolbar>
-        {/* <IconButton
-          edge="start"
-          className={classes.menuButton}
-          color="inherit"
-          aria-label="menu"
-        >
-          <MenuIcon />
-        </IconButton> */}
 
         <Typography variant="h6" className={classes.title}>
           LTC Portal
         </Typography>
-        {/* <Button color="inherit">Login</Button> */}
         <Hidden smDown>
           <Notification />
           <Profile />

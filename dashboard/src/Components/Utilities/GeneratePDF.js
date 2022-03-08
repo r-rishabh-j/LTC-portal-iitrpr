@@ -1,6 +1,6 @@
 import React from 'react'
 import jsPDF from 'jspdf';
-import { Button } from '@material-ui/core';
+import {Button} from '@material-ui/core'
 
 function GeneratePDF() {
     const generatePdf = () => {
