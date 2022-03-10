@@ -5,35 +5,54 @@ from .models import Users, LTCRequests, test_table, UserCredentials
 from . import db
 import requests
 from .reqParser import register_user_args, login_user_args, form_args
-from flask_jwt_extended import create_access_token, unset_access_cookies, jwt_required, set_access_cookies, unset_jwt_cookies, get_jwt_identity
+from flask_jwt_extended import create_access_token, unset_access_cookies, jwt_required, set_access_cookies, unset_jwt_cookies, get_jwt_identity, verify_jwt_in_request
 import os
+from functools import wraps
 
+def admin_required():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            verify_jwt_in_request()
+            # claims = get_jwt()
+            # if claims["is_administrator"]:
+            #     return fn(*args, **kwargs)
+            # else:
+            #     return jsonify(msg="Admins only!"), 403
 
+        return decorator
+
+    return wrapper
+# TODO: Covert to ADMIN 
 class RegisterUser(Resource):
+
+    @jwt_required()
+    @admin_required()
     def post(self):
-        args = register_user_args.parse_args()
-        if not args['email'] or len(args['email']) < 4:
-            abort(409, message="invalid email")
+        pass
+        # args = register_user_args.parse_args()
+        # if not args['email'] or len(args['email']) < 4:
+        #     abort(409, message="invalid email")
 
-        if Users.query.filter_by(email=args['email']).first():
-            abort(409, message="user already exists")
-        # TODO: ensure password is hashed
-        # validate credential lengths
-        if not args['password'] or len(args['password']) < 3:
-            abort(409, message='invalid password')
+        # if Users.query.filter_by(email=args['email']).first():
+        #     abort(409, message="user already exists")
+        # # TODO: ensure password is hashed
+        # # validate credential lengths
+        # if not args['password'] or len(args['password']) < 3:
+        #     abort(409, message='invalid password')
 
-        new_user = Users(
-            email=args['email'], name=args['name'], department=args['department'])
-        new_user_cred = Users(email=args['email'], password=args['password'])
-        db.session.add(new_user)
-        db.session.commit()
+        # new_user = Users(
+        #     email=args['email'], name=args['name'], department=args['department'])
+        # new_user_cred = Users(email=args['email'], password=args['password'])
+        # db.session.add(new_user)
+        # db.session.commit()
 
-        access_token = create_access_token(identity=args['email'])
-        response = make_response(
-            {"success": 'User account created successfully'})
-        set_access_cookies(response, access_token)
-        # login_user(new_user, remember=True)
-        return response, 201
+        # access_token = create_access_token(identity=args['email'])
+        # response = make_response(
+        #     {"success": 'User account created successfully'})
+        # set_access_cookies(response, access_token)
+        # # login_user(new_user, remember=True)
+        # return response, 201
 
 
 class ApplyForLTC(Resource):
@@ -89,9 +108,9 @@ class Login(Resource):
         return True
 
     def get(self):
-        print(request)
+        # print(request)
         args = request.args.to_dict()
-        print(args)
+        # print(args)
         code = args['code']
         data = {
             'code': code,
@@ -118,8 +137,7 @@ class Login(Resource):
 
         email = str(response.json()['email'])
         print(response.json()['email'])
-        # valid = self.is_valid_user(10)
-        valid = True
+        valid = self.is_valid_user(email)
 
         if not valid:
             return make_response(redirect('http://localhost:3000'))
@@ -129,36 +147,36 @@ class Login(Resource):
         set_access_cookies(response, access_tk)
         return response
 
-    def post(self):
-        args = login_user_args.parse_args()
-        if not args['email'] or len(args['email']) < 4:
-            abort(409, 'invalid email')
-        user = Users.query.filter_by(email=args['email']).first()
+    # def post(self):
+    #     args = login_user_args.parse_args()
+    #     if not args['email'] or len(args['email']) < 4:
+    #         abort(409, 'invalid email')
+    #     user = Users.query.filter_by(email=args['email']).first()
 
-        if not user:
-            abort(409, message="user does not exist")
+    #     if not user:
+    #         abort(409, message="user does not exist")
 
-        user_cred = UserCredentials.query.filter_by(
-            email=args['email']).first()
-        if str(args['password']) != user_cred.password:
-            abort(409, message='invalid password')
+    #     user_cred = UserCredentials.query.filter_by(
+    #         email=args['email']).first()
+    #     if str(args['password']) != user_cred.password:
+    #         abort(409, message='invalid password')
 
-        # login_user(user)
-        # access_token = create_access_token(identity=args['email'])
-        # return {
-        #     'login': 'user logged in successfully',
-        #      "access_token": access_token
-        # }, 201
-        response = make_response({'login': 'user logged in successfully'})
-        set_access_cookies(
-            response, create_access_token(identity=args['email']))
-        return response
+    #     # login_user(user)
+    #     # access_token = create_access_token(identity=args['email'])
+    #     # return {
+    #     #     'login': 'user logged in successfully',
+    #     #      "access_token": access_token
+    #     # }, 201
+    #     response = make_response({'login': 'user logged in successfully'})
+    #     set_access_cookies(
+    #         response, create_access_token(identity=args['email']))
+    #     return response
 
 
-p = reqparse.RequestParser()
-p.add_argument('a', type=int)
-p.add_argument('b', type=dict)
-p.add_argument('c', type=dict)
+# p = reqparse.RequestParser()
+# p.add_argument('a', type=int)
+# p.add_argument('b', type=dict)
+# p.add_argument('c', type=dict)
 
 
 class TestInsert(Resource):

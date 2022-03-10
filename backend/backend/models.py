@@ -38,17 +38,24 @@ class ApplicationStatus:
     complete = 'complete'
 
 
-class UserCredentials(db.Model):
+# class UserCredentials(db.Model):
+#     __tablename__ = 'user_credentials'
+#     email = db.Column(db.String(150), primary_key=True)
+#     password = db.Column(db.String(250), nullable=False)
+
+#     def __init__(self, email, password):
+#         self.email = email
+#         self.password = password
+# class Admin(db.Model):
+
+
+class Permissions(db.Model):
     __tablename__ = 'user_credentials'
-    email = db.Column(db.String(150), primary_key=True)
-    password = db.Column(db.String(250), nullable=False)
-
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
-
+    permission = db.Column(db.Integer, primary_key=True)
 
 # TODO: decide permission column, id values
+
+
 class Users(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -58,6 +65,7 @@ class Users(db.Model):
     department = db.Column(db.String(150), nullable=False)
     permission = db.Column(db.Integer, nullable=False)
     signature = db.Column(db.String, nullable=True)
+    picture = db.Column(db.String, nullable=True)
     # signature = db.Column(db.String(300), nullable=True)
 
     def __init__(self, email, name, dept):
@@ -66,9 +74,11 @@ class Users(db.Model):
         self.department = dept
         self.signature = None
 
+
 """
 This creates next stage comment fields in the comment column onlt at the time of forward
 """
+
 
 class LTCRequests(db.Model):
     __tablename__ = 'ltc_requests'
