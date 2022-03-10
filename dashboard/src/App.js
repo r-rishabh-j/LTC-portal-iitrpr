@@ -19,6 +19,7 @@ function App() {
         : (
           <HeaderComponent token={token} setToken={setToken} />
         )}
+      {/* <HeaderComponent token={token} setToken={setToken} /> */}
     </Router>
   );
 }

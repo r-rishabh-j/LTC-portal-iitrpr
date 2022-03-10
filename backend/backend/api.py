@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, flash, make_response, redirect
 from flask_restful import Resource, reqparse, marshal_with, abort, fields
 import json
-from .models import Users, LTCRequests, test_table, UserCredentials
+from .models import Users, LTCRequests, test_table
 from . import db
 import requests
 from .reqParser import register_user_args, login_user_args, form_args

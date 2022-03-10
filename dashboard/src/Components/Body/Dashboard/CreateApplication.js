@@ -7,14 +7,15 @@ import {
   Checkbox,
   Button,
   Typography,
-  Box
+  Box,
+  Fab
 } from "@material-ui/core";
 import { DatePicker } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LockIcon from "@material-ui/icons/Lock";
 import { Link } from "react-router-dom";
-import { useForm} from "react-hook-form";
+import { useForm, Controller} from "react-hook-form";
 import axios from "axios";
 import { useStyles } from "./FormStyles";
 import GeneratePDF from "../../Utilities/GeneratePDF";
@@ -23,6 +24,7 @@ import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputDate } from "../../Utilities/FormInputDate"
 import { FormInputNumber } from "../../Utilities/FormInputNumber" 
 import { FormInputRadio } from "../../Utilities/FormInputRadio"; 
+import Add from "@material-ui/icons/Add";
 
 const defaultValues = {
   textValue: "",
@@ -67,18 +69,44 @@ export default function CreateApplication(props) {
               </Typography>
               <div>
                 {/* <h4>Leave Required</h4> */}
-                <FormInputText
-                  name={"Name"}
-                  control={control}
-                  label={"Name"}
-                  required={true}
-                />
-                <FormInputText
-                  name="Employee Code"
-                  control={control}
-                  label="Employee Code"
-                  required={true}
-                />
+
+                <Grid item xs={12}>
+                  <FormInputText
+                    name={"Name"}
+                    control={control}
+                    label={"Name"}
+                    required={true}
+                  />
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <FormInputText
+                      name={"Designation"}
+                      control={control}
+                      label={"Designation"}
+                      required={true}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormInputText
+                      name="Department"
+                      control={control}
+                      label="Department"
+                      required={true}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <FormInputText
+                    name="Employee Code"
+                    control={control}
+                    label="Employee Code"
+                    required={true}
+                  />
+                </Grid>
+                <Grid item xs={8}>
                 <FormInputDate
                   name="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
@@ -87,6 +115,8 @@ Service/Date of Joining with IIT Ropar"
 Service/Date of Joining with IIT Ropar"
                   required={true}
                 />
+                </Grid>
+                </Grid>
                 <FormInputText
                   name="Band Pay + AGP/GP"
                   control={control}
@@ -208,6 +238,31 @@ headquarter to Home Town/Place of visit by
 shortest route (proofs need to be attached)."
                   required={true}
                 />
+                <Controller
+                  name="attachments"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                  
+                      <Fab
+                        variant="extended"
+                        component="label"
+                        size="small"
+                        color="primary"
+                      >
+                        <input
+                          type="file"
+                          onChange={(e) => {
+                            field.onChange(e.target.files);
+                          }}
+                          // style={{ display: "none" }}
+                        />
+                        <Add />
+                        Upload Proofs
+                      </Fab>
+                    
+                  )}
+                />
                 <Typography>Advance Required</Typography>
                 <FormInputRadio
                   name="Advance Required"
@@ -228,7 +283,7 @@ shortest route (proofs need to be attached)."
               </div>
               <Box display="flex" justifyContent="space-between">
                 <Button type="submit" variant="contained">
-                  Upload Proofs
+                  Submit
                 </Button>
               </Box>
               {/* <GeneratePDF /> */}
