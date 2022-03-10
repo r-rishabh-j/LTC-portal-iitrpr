@@ -220,12 +220,16 @@ shortest route (proofs need to be attached)."
                   control={control}
                   label="Encashment Required"
                 />
-                <FormInputNumber name="Encashment Days" control={control} label="No. of days"/>
+                <FormInputNumber
+                  name="Encashment Days"
+                  control={control}
+                  label="No. of days"
+                />
               </div>
               <Box display="flex" justifyContent="space-between">
-              <Button type="submit" variant="contained">
-                Upload Proofs
-              </Button>
+                <Button type="submit" variant="contained">
+                  Upload Proofs
+                </Button>
               </Box>
               {/* <GeneratePDF /> */}
             </form>
