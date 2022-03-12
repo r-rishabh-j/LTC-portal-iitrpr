@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from . import db
 from datetime import datetime
-# from flask_login import UserMixin
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
 
@@ -63,16 +62,17 @@ class Users(db.Model):
     # name for higher level employees to be their designation
     name = db.Column(db.String(150), nullable=False)
     department = db.Column(db.String(150), nullable=False)
-    permission = db.Column(db.Integer, nullable=False)
+    permission = db.Column(db.String, nullable=False)
     signature = db.Column(db.String, nullable=True)
     picture = db.Column(db.String, nullable=True)
     # signature = db.Column(db.String(300), nullable=True)
 
-    def __init__(self, email, name, dept):
+    def __init__(self, email, name, dept, permission):
         self.email = email
         self.name = name
         self.department = dept
         self.signature = None
+        self.permission = permission
 
     def lookUpByEmail(email):
         user = Users.query.filter_by(email=email).one_or_none()
@@ -86,8 +86,8 @@ This creates next stage comment fields in the comment column onlt at the time of
 class LTCRequests(db.Model):
     __tablename__ = 'ltc_requests'
     request_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
-    # user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # user_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_on = db.Column(db.DateTime)
     stage = db.Column(db.Integer)
     """
@@ -102,10 +102,10 @@ class LTCRequests(db.Model):
     -> declined: -1
     """
     is_active = db.Column(db.Boolean)
-    form = db.Column(MutableDict.as_mutable(JSON))
-    # will store comments from every section in a JSON file
-    comments = db.Column(MutableDict.as_mutable(JSON))
-    # nested JSON, contains comments from every section
+    form:dict = db.Column(MutableDict.as_mutable(JSON))
+    comments:dict = db.Column(MutableDict.as_mutable(JSON))
+    attachments:str = db.Column(db.String, nullable=True) # stores path to attachments
+
 
     def __init__(self, user_id: int, stage: int = None, comments: dict = None):
         self.user_id = user_id

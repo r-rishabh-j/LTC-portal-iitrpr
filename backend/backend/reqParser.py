@@ -1,5 +1,4 @@
-import json
-from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
+from flask_restful import reqparse
 
 register_user_args = reqparse.RequestParser()
 register_user_args.add_argument(

@@ -23,7 +23,7 @@ def create_app():
     auth = Api(app)
     jwt = JWTManager(app)
     from .auth import TestInsert, RegisterUser, Logout, Login, IsLoggedIn
-    from .ltc_manager import ApplyForLTC
+    from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser
 
     create_database(app)
 
@@ -33,6 +33,9 @@ def create_app():
     auth.add_resource(Logout, '/api/logout')
     auth.add_resource(TestInsert, '/api/test')
     auth.add_resource(IsLoggedIn, '/api/is-logged-in')
+    auth.add_resource(GetLtcFormMetaDataForUser, '/api/get-form-meta')
+    auth.add_resource(GetLtcFormMetaData, '/api/getmyforms')
+    auth.add_resource(GetLtcFormData, '/api/getformdata')
 
     return app
 

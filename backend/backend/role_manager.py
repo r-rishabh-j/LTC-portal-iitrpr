@@ -25,7 +25,7 @@ def role_required(role):
         def decorator(*args, **kwargs):
             verify_jwt_in_request()
             claims = get_jwt()['claims']
-            if claims["permission"] == permissions[role]:
+            if claims['permission'] == role:
                 return fn(*args, **kwargs)
             else:
                 return make_response(jsonify(msg="Forbidden"), 403)
@@ -38,10 +38,22 @@ def roles_required(roles: list):
         @wraps(fn)
         def decorator(*args, **kwargs):
             verify_jwt_in_request()
-            claims = get_jwt()['claims']
-            if claims["permission"] in [permissions[role] for role in roles]:
+            permission = get_jwt()['claims']['permission']
+            if permission in roles:
+                kwargs['permission'] = permission
                 return fn(*args, **kwargs)
             else:
                 return make_response(jsonify(msg="Forbidden"), 403)
+        return decorator
+    return wrapper
+
+def check_role():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            verify_jwt_in_request()
+            permission = get_jwt()['claims']['permission']
+            kwargs['permission'] = permission
+            return fn(*args, **kwargs)
         return decorator
     return wrapper
