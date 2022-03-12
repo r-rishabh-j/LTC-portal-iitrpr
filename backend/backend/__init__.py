@@ -1,15 +1,17 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import path
-from flask_restful import Resource, Api
+from flask_restful import  Api
 from flask_jwt_extended import JWTManager
-import os
+from flask_cors import CORS
+from .file_manager import FileManager
 
 db = SQLAlchemy()
-
+filemanager = FileManager('./static')
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')
     pgsql_path = os.environ.get('POSTGRES_PATH')
     app.config['SQLALCHEMY_DATABASE_URI'] = pgsql_path
@@ -18,18 +20,19 @@ def create_app():
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 
     db.init_app(app)
-    api = Api(app)
+    auth = Api(app)
     jwt = JWTManager(app)
-    from .api import ApplyForLTC, TestInsert, RegisterUser, Logout, Login, IsLoggedIn
+    from .auth import TestInsert, RegisterUser, Logout, Login, IsLoggedIn
+    from .ltc_manager import ApplyForLTC
 
     create_database(app)
 
-    api.add_resource(ApplyForLTC, '/api/apply')
-    api.add_resource(RegisterUser, '/api/register')
-    api.add_resource(Login, '/api/login')
-    api.add_resource(Logout, '/api/logout')
-    api.add_resource(TestInsert, '/api/test')
-    api.add_resource(IsLoggedIn, '/api/is-logged-in')
+    auth.add_resource(ApplyForLTC, '/api/apply')
+    auth.add_resource(RegisterUser, '/api/register')
+    auth.add_resource(Login, '/api/login')
+    auth.add_resource(Logout, '/api/logout')
+    auth.add_resource(TestInsert, '/api/test')
+    auth.add_resource(IsLoggedIn, '/api/is-logged-in')
 
     return app
 

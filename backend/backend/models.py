@@ -74,6 +74,9 @@ class Users(db.Model):
         self.department = dept
         self.signature = None
 
+    def lookUpByEmail(email):
+        user = Users.query.filter_by(email=email).one_or_none()
+        return user
 
 """
 This creates next stage comment fields in the comment column onlt at the time of forward

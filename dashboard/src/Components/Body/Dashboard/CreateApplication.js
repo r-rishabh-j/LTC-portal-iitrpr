@@ -15,48 +15,54 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LockIcon from "@material-ui/icons/Lock";
 import { Link } from "react-router-dom";
-import { useForm, Controller} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { useStyles } from "./FormStyles";
 import GeneratePDF from "../../Utilities/GeneratePDF";
 import FileUpload from "react-material-file-upload";
 import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputDate } from "../../Utilities/FormInputDate"
-import { FormInputNumber } from "../../Utilities/FormInputNumber" 
-import { FormInputRadio } from "../../Utilities/FormInputRadio"; 
+import { FormInputNumber } from "../../Utilities/FormInputNumber"
+import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import Add from "@material-ui/icons/Add";
 
 const defaultValues = {
   textValue: "",
-  radioValue: "No",
-  dateValue: new Date()
+  // dateValue: new Date()
 }
 
 export default function CreateApplication(props) {
   const classes = useStyles();
-  const { handleSubmit, control } = useForm({defaultValues: defaultValues});
+  const { handleSubmit, control } = useForm({ defaultValues: defaultValues });
 
   const onSubmit = (data) => {
+    const formData = new FormData();
+
+    console.log('data: ', JSON.stringify(data))
+    formData.append('attachments', data.attachments);
+    formData.append('form', JSON.stringify(data));
+
+    console.log("onSubmit")
     console.log(data);
-    // axios({
-    //   method: "POST",
-    //   url: "/api/apply",
-    //   headers: {
-    //     Authorization: "Bearer " + props.token,
-    //   },
-    //   data: data
-    // })
-    //   .then((response) => {
-    //     console.log(response)
-        
-    //   })
-    //   .catch((error) => {
-    //     if (error.response) {
-    //       console.log(error.response);
-    //       console.log(error.response.status);
-    //       console.log(error.response.headers);
-    //     }
-    //   });
+    axios({
+      method: "POST",
+      url: "/api/apply",
+      data: formData
+    })
+      .then((response) => {
+        console.log('s', response.status)
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          alert('Error. Please try logging in again');
+          // if (error.response.status === 401) {
+          //   window.location = `http://localhost:3000`
+          // }
+        }
+      });
   };
   return (
     <>
@@ -98,24 +104,24 @@ export default function CreateApplication(props) {
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  <FormInputText
-                    name="Employee Code"
-                    control={control}
-                    label="Employee Code"
-                    required={true}
-                  />
-                </Grid>
-                <Grid item xs={8}>
-                <FormInputDate
-                  name="Date of entering the Central Government
+                  <Grid item xs={4}>
+                    <FormInputText
+                      name="Employee Code"
+                      control={control}
+                      label="Employee Code"
+                      required={true}
+                    />
+                  </Grid>
+                  <Grid item xs={8}>
+                    <FormInputDate
+                      name="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
-                  control={control}
-                  label="Date of entering the Central Government
+                      control={control}
+                      label="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
-                  required={true}
-                />
-                </Grid>
+                      required={true}
+                    />
+                  </Grid>
                 </Grid>
                 <FormInputText
                   name="Band Pay + AGP/GP"
@@ -143,7 +149,7 @@ Service/Date of Joining with IIT Ropar"
                   required={true}
                 />
                 <FormInputNumber
-                  name="No. of Days"
+                  name="No of Days"
                   control={control}
                   label="No. of Days"
                   required={true}
@@ -243,24 +249,24 @@ shortest route (proofs need to be attached)."
                   control={control}
                   defaultValue=""
                   render={({ field }) => (
-                  
-                      <Fab
-                        variant="extended"
-                        component="label"
-                        size="small"
-                        color="primary"
-                      >
-                        <input
-                          type="file"
-                          onChange={(e) => {
-                            field.onChange(e.target.files);
-                          }}
-                          // style={{ display: "none" }}
-                        />
-                        <Add />
-                        Upload Proofs
-                      </Fab>
-                    
+
+                    <Fab
+                      variant="extended"
+                      component="label"
+                      size="small"
+                      color="primary"
+                    >
+                      <input
+                        type="file"
+                        onChange={(e) => {
+                          field.onChange(e.target.files[0]);
+                        }}
+                      // style={{ display: "none" }}
+                      />
+                      <Add />
+                      Upload Proofs
+                    </Fab>
+
                   )}
                 />
                 <Typography>Advance Required</Typography>
