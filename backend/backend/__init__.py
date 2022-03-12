@@ -1,13 +1,14 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import  Api
+from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from .file_manager import FileManager
 
 db = SQLAlchemy()
 filemanager = FileManager('./static')
+
 
 def create_app():
     app = Flask(__name__)
