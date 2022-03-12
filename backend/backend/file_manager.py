@@ -3,6 +3,7 @@ import shutil
 import os
 from werkzeug.utils import secure_filename
 
+
 class FileManager():
     def __init__(self, data_dir):
         self.data_dir = data_dir
@@ -19,10 +20,14 @@ class FileManager():
             os.mkdir(user_dir)
         store_dir = self.__getNextDirPath(user_dir)
         os.mkdir(store_dir)
+        _, ext = os.path.splitext(file.filename)
         filename = secure_filename(file.filename)
         if filename == '' or filename == None:
-            filename = f'upload_{u_id}'
+            filename = f'upload_{u_id}'+ext
         filepath = os.path.join(store_dir, filename)
         file.save(filepath)
         return filepath
-        
+
+    def getFile(self, db_path):
+        os.path.relpath()
+        pass

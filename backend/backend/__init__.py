@@ -19,24 +19,26 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
+    app.config['UPLOAD_FOLDER'] = './static'
 
     db.init_app(app)
-    auth = Api(app)
+    api = Api(app)
     jwt = JWTManager(app)
     from .auth import TestInsert, RegisterUser, Logout, Login, IsLoggedIn
-    from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser
+    from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser, GetLtcFormAttachments
 
     create_database(app)
 
-    auth.add_resource(ApplyForLTC, '/api/apply')
-    auth.add_resource(RegisterUser, '/api/register')
-    auth.add_resource(Login, '/api/login')
-    auth.add_resource(Logout, '/api/logout')
-    auth.add_resource(TestInsert, '/api/test')
-    auth.add_resource(IsLoggedIn, '/api/is-logged-in')
-    auth.add_resource(GetLtcFormMetaDataForUser, '/api/get-form-meta')
-    auth.add_resource(GetLtcFormMetaData, '/api/getmyforms')
-    auth.add_resource(GetLtcFormData, '/api/getformdata')
+    api.add_resource(ApplyForLTC, '/api/apply')
+    api.add_resource(RegisterUser, '/api/register')
+    api.add_resource(Login, '/api/login')
+    api.add_resource(Logout, '/api/logout')
+    api.add_resource(TestInsert, '/api/test')
+    api.add_resource(IsLoggedIn, '/api/is-logged-in')
+    api.add_resource(GetLtcFormMetaDataForUser, '/api/get-form-meta')
+    api.add_resource(GetLtcFormMetaData, '/api/getmyforms')
+    api.add_resource(GetLtcFormData, '/api/getformdata')
+    api.add_resource(GetLtcFormAttachments, '/api/getattachments')
 
     return app
 

@@ -1,9 +1,8 @@
 import json
-from tabnanny import check
-from wsgiref.util import request_uri
+import os
 from . import db
 from . import filemanager
-from flask import jsonify, request, make_response, redirect
+from flask import jsonify, request, make_response, redirect, send_from_directory, send_file
 from flask_restful import Resource, reqparse, abort, fields
 from .models import Users, LTCRequests
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
@@ -36,26 +35,6 @@ class ApplyForLTC(Resource):
                 {'status': 'error', 'msg': 'user not found'}))
 
 
-class GetLtcFormMetaDataForUser(Resource):
-    @role_required('client')
-    def get(self):
-        email = get_jwt_identity()
-        user: Users = Users.lookUpByEmail(email)
-        forms = LTCRequests.query.filter_by(user_id=user.id)
-        results = []
-        for form in forms:
-            form: LTCRequests
-            results.append({
-                'request_id': form.request_id,
-                'created_on': form.created_on,
-                'stage': form.stage,
-                'is_active': form.is_active,
-            })
-        response = {'data': results}
-
-        return jsonify(response)
-
-
 class GetLtcFormData(Resource):
     @check_role()
     def post(self, **kwargs):
@@ -80,6 +59,49 @@ class GetLtcFormData(Resource):
             'comments': form.comments
         }
         response = {'data': result}
+
+        return jsonify(response)
+
+
+class GetLtcFormAttachments(Resource):
+    @check_role()
+    def post(self, **kwargs):
+        request_id = json.loads(request.json)['request_id']
+        form: LTCRequests = LTCRequests.query.get(request_id)
+        if kwargs['permission'] == 'client':
+            user_email = get_jwt_identity()
+            check_user: Users = Users.lookUpByEmail(user_email)
+            if form.user_id != check_user.id:
+                return abort(403, status={'error': 'Forbidden resource'})
+        attachment_path = form.attachments
+        _, ext = os.path.splitext(attachment_path)
+        filename = f'ltc_{request_id}_proofs'+ext
+        abs_path = os.path.abspath(attachment_path)
+        return send_file(abs_path, as_attachment=True, attachment_filename=filename)
+
+
+class temp_files(Resource):
+    def get(self):
+        return send_file(os.path.abspath('./static/1/1/Design document.pdf'), as_attachment=True)
+        # return send_file('./static/1/1/Design document.pdf', as_attachment=False)
+
+
+class GetLtcFormMetaDataForUser(Resource):
+    @role_required('client')
+    def get(self):
+        email = get_jwt_identity()
+        user: Users = Users.lookUpByEmail(email)
+        forms = LTCRequests.query.filter_by(user_id=user.id)
+        results = []
+        for form in forms:
+            form: LTCRequests
+            results.append({
+                'request_id': form.request_id,
+                'created_on': form.created_on,
+                'stage': form.stage,
+                'is_active': form.is_active,
+            })
+        response = {'data': results}
 
         return jsonify(response)
 
