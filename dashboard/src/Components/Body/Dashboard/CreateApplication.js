@@ -16,6 +16,7 @@ import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LockIcon from "@material-ui/icons/Lock";
 import { Link } from "react-router-dom";
 import { useForm, Controller} from "react-hook-form";
+import { useState } from "react";
 import axios from "axios";
 import { useStyles } from "./FormStyles";
 import GeneratePDF from "../../Utilities/GeneratePDF";
@@ -35,6 +36,7 @@ const defaultValues = {
 export default function CreateApplication(props) {
   const classes = useStyles();
   const { handleSubmit, control } = useForm({defaultValues: defaultValues});
+  const [File, setFile] = useState(null)
 
   const onSubmit = (data) => {
     console.log(data);
@@ -64,9 +66,12 @@ export default function CreateApplication(props) {
         <Paper elevation={10} className={classes.contain}>
           <Grid container>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
-              <Typography variant="h4">
-                Application for Leave Travel Concession{" "}
-              </Typography>
+              <Box display="flex" justifyContent="center">
+                <Typography variant="h5" style={{ fontWeight: "bold" }}>
+                  Application for Leave Travel Concession{" "}
+                </Typography>
+              </Box>
+
               <div>
                 {/* <h4>Leave Required</h4> */}
 
@@ -76,6 +81,8 @@ export default function CreateApplication(props) {
                     control={control}
                     label={"Name"}
                     required={true}
+                    defaultValue={"Name"}
+                    disabled={true}
                   />
                 </Grid>
 
@@ -86,6 +93,8 @@ export default function CreateApplication(props) {
                       control={control}
                       label={"Designation"}
                       required={true}
+                      defaultValue={"Designation"}
+                      disabled={true}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -94,28 +103,32 @@ export default function CreateApplication(props) {
                       control={control}
                       label="Department"
                       required={true}
+                      defaultValue={"Department"}
+                      disabled={true}
                     />
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  <FormInputText
-                    name="Employee Code"
-                    control={control}
-                    label="Employee Code"
-                    required={true}
-                  />
-                </Grid>
-                <Grid item xs={8}>
-                <FormInputDate
-                  name="Date of entering the Central Government
+                  <Grid item xs={4}>
+                    <FormInputText
+                      name="Employee Code"
+                      control={control}
+                      label="Employee Code"
+                      required={true}
+                      defaultValue={"123456"}
+                      disabled={true}
+                    />
+                  </Grid>
+                  <Grid item xs={8}>
+                    <FormInputDate
+                      name="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
-                  control={control}
-                  label="Date of entering the Central Government
+                      control={control}
+                      label="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
-                  required={true}
-                />
-                </Grid>
+                      required={true}
+                    />
+                  </Grid>
                 </Grid>
                 <FormInputText
                   name="Band Pay + AGP/GP"
@@ -123,57 +136,81 @@ Service/Date of Joining with IIT Ropar"
                   label="Band Pay + AGP/GP"
                   required={true}
                 />
-                <Typography>Leave Required</Typography>
+                <Typography style={{ fontWeight: "bold" }}>
+                  Leave Required
+                </Typography>
+
                 <FormInputText
                   name="Nature"
                   control={control}
                   label="Nature"
                   required={true}
                 />
-                <FormInputDate
-                  name="Nature From"
-                  control={control}
-                  label="From"
-                  required={true}
-                />
-                <FormInputDate
-                  name="Nature To"
-                  control={control}
-                  label="To"
-                  required={true}
-                />
-                <FormInputNumber
-                  name="No. of Days"
-                  control={control}
-                  label="No. of Days"
-                  required={true}
-                />
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
+                    <FormInputDate
+                      name="Nature From"
+                      control={control}
+                      label="From"
+                      required={true}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <FormInputDate
+                      name="Nature To"
+                      control={control}
+                      label="To"
+                      required={true}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <FormInputNumber
+                      name="No. of Days"
+                      control={control}
+                      label="No. of Days"
+                      required={true}
+                    />
+                  </Grid>
+                </Grid>
+
                 <Typography>Prefix:</Typography>
-                <FormInputDate
-                  name="Prefix From"
-                  control={control}
-                  label="From"
-                  required={true}
-                />
-                <FormInputDate
-                  name="Prefix To"
-                  control={control}
-                  label="To"
-                  required={true}
-                />
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <FormInputDate
+                      name="Prefix From"
+                      control={control}
+                      label="From"
+                      required={true}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormInputDate
+                      name="Prefix To"
+                      control={control}
+                      label="To"
+                      required={true}
+                    />
+                  </Grid>
+                </Grid>
                 <Typography>Suffix:</Typography>
-                <FormInputDate
-                  name="Suffix From"
-                  control={control}
-                  label="From"
-                  required={true}
-                />
-                <FormInputDate
-                  name="Suffix To"
-                  control={control}
-                  label="To"
-                  required={true}
-                />
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <FormInputDate
+                      name="Suffix From"
+                      control={control}
+                      label="From"
+                      required={true}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormInputDate
+                      name="Suffix To"
+                      control={control}
+                      label="To"
+                      required={true}
+                    />
+                  </Grid>
+                </Grid>
                 <Typography>
                   Whether spouse is employed, if yes whether entitled to LTC
                 </Typography>
@@ -184,33 +221,50 @@ entitled to LTC"
                   label="Whether spouse is employed, if yes whether
 entitled to LTC"
                 />
-                <Typography>Proposed dates of Journey</Typography>
+
+                <Typography style={{ fontWeight: "bold" }}>
+                  Proposed dates of Journey
+                </Typography>
                 <Typography>Self:</Typography>
-                <FormInputDate
-                  name="Date of Outward journey"
-                  control={control}
-                  label="Date of Outward journey"
-                  required={true}
-                />
-                <FormInputDate
-                  name="Date of Intward journey"
-                  control={control}
-                  label="Date of Intward journey"
-                  required={true}
-                />
+
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <FormInputDate
+                      name="Self Date of Outward journey"
+                      control={control}
+                      label="Date of Outward journey"
+                      required={true}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormInputDate
+                      name="Self Date of Inward journey"
+                      control={control}
+                      label="Date of Inward journey"
+                      required={true}
+                    />
+                  </Grid>
+                </Grid>
+
                 <Typography>Family:</Typography>
-                <FormInputDate
-                  name="Date of Outward journey"
-                  control={control}
-                  label="Date of Outward journey"
-                  required={true}
-                />
-                <FormInputDate
-                  name="Date of Intward journey"
-                  control={control}
-                  label="Date of Intward journey"
-                  required={true}
-                />
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <FormInputDate
+                      name="Family Date of Outward journey"
+                      control={control}
+                      label="Date of Outward journey"
+                      required={true}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormInputDate
+                      name="Family Date of Inward journey"
+                      control={control}
+                      label="Date of Inward journey"
+                      required={true}
+                    />
+                  </Grid>
+                </Grid>
                 <FormInputText
                   name="Home Town"
                   control={control}
@@ -230,58 +284,287 @@ Anywhere in India with Block Year"
                   label="If, anywhere in India, the place to be visited"
                   required={true}
                 />
-                <FormInputText
-                  name="Estimated Fare"
-                  control={control}
-                  label="Estimated fare of entitled class from the
+                <Grid container spacing={2}>
+                  <Grid item xs={9}>
+                    <FormInputText
+                      name="Estimated Fare"
+                      control={control}
+                      label="Estimated fare of entitled class from the
 headquarter to Home Town/Place of visit by
 shortest route (proofs need to be attached)."
-                  required={true}
-                />
-                <Controller
-                  name="attachments"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                  
-                      <Fab
-                        variant="extended"
-                        component="label"
-                        size="small"
-                        color="primary"
-                      >
-                        <input
-                          type="file"
-                          onChange={(e) => {
-                            field.onChange(e.target.files);
-                          }}
-                          // style={{ display: "none" }}
-                        />
-                        <Add />
-                        Upload Proofs
-                      </Fab>
-                    
-                  )}
-                />
-                <Typography>Advance Required</Typography>
-                <FormInputRadio
-                  name="Advance Required"
-                  control={control}
-                  label="Advance Required"
-                />
-                <Typography>Encashment of earned leave required</Typography>
-                <FormInputRadio
-                  name="Encashment Required"
-                  control={control}
-                  label="Encashment Required"
-                />
+                      required={true}
+                    />
+                  </Grid>
+
+                  <Grid item xs={3} style={{ margin: "auto" }}>
+                    <Controller
+                      name="attachments"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <>
+                          <Fab
+                            variant="extended"
+                            component="label"
+                            size="small"
+                            color="primary"
+                          >
+                            <input
+                              type="file"
+                              onChange={(e) => {
+                                field.onChange(e.target.files);
+                                if (!e.target.files[0]) {
+                                  setFile("No file chosen");
+                                } else {
+                                  setFile(e.target.files[0].name);
+                                }
+                              }}
+                              style={{ display: "none" }}
+                            />
+                            <Add />
+                            Upload Proofs
+                          </Fab>
+                        </>
+                      )}
+                    />
+
+                    <Typography>{File}</Typography>
+                  </Grid>
+                </Grid>
+                <Typography style={{ fontWeight: "bold" }}>
+                  Person(s) in respect of whom LTC is proposed to be availed:
+                </Typography>
+                <Grid container spacing={1}>
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="SNo1"
+                      control={control}
+                      label="S.No."
+                      required={false}
+                      disabled={true}
+                      defaultValue={"1"}
+                    />
+                  </Grid>
+
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Name1"
+                      control={control}
+                      label="Name"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="Age1"
+                      control={control}
+                      label="Age"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Relationship1"
+                      control={control}
+                      label="Relationship"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Travelling From1"
+                      control={control}
+                      label="Travelling(Place) From"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Travelling To1"
+                      control={control}
+                      label="Travelling(Place) To"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="Back1"
+                      control={control}
+                      label="Back(Yes/No)"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="Mode of Travel1"
+                      control={control}
+                      label="Mode of Travel"
+                      required={false}
+                    />
+                  </Grid>
+
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="SNo2"
+                      control={control}
+                      label="S.No."
+                      required={false}
+                      disabled={true}
+                      defaultValue={"2"}
+                    />
+                  </Grid>
+
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Name2"
+                      control={control}
+                      label="Name"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="Age2"
+                      control={control}
+                      label="Age"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Relationship2"
+                      control={control}
+                      label="Relationship"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Travelling From2"
+                      control={control}
+                      label="Travelling(Place) From"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Travelling To2"
+                      control={control}
+                      label="Travelling(Place) To"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="Back2"
+                      control={control}
+                      label="Back(Yes/No)"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="Mode of Travel2"
+                      control={control}
+                      label="Mode of Travel"
+                      required={false}
+                    />
+                  </Grid>
+
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="SNo3"
+                      control={control}
+                      label="S.No."
+                      required={false}
+                      disabled={true}
+                      defaultValue={"3"}
+                    />
+                  </Grid>
+
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Name3"
+                      control={control}
+                      label="Name"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="Age3"
+                      control={control}
+                      label="Age"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Relationship3"
+                      control={control}
+                      label="Relationship"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Travelling From3"
+                      control={control}
+                      label="Travelling(Place) From"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormInputText
+                      name="Travelling To3"
+                      control={control}
+                      label="Travelling(Place) To"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="Back3"
+                      control={control}
+                      label="Back(Yes/No)"
+                      required={false}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormInputText
+                      name="Mode of Travel3"
+                      control={control}
+                      label="Mode of Travel"
+                      required={false}
+                    />
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Typography>Advance Required</Typography>
+                    <FormInputRadio
+                      name="Advance Required"
+                      control={control}
+                      label="Advance Required"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography>Encashment of earned leave required</Typography>
+                    <FormInputRadio
+                      name="Encashment Required"
+                      control={control}
+                      label="Encashment Required"
+                    />
+                  </Grid>
+                </Grid>
                 <FormInputNumber
                   name="Encashment Days"
                   control={control}
-                  label="No. of days"
+                  label="No. of encashment of leave days "
                 />
               </div>
-              <Box display="flex" justifyContent="space-between">
+              <Box display="flex" justifyContent="center">
                 <Button type="submit" variant="contained">
                   Submit
                 </Button>

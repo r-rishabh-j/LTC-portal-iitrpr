@@ -1,18 +1,19 @@
 import { TextField } from "@mui/material"
 import {Controller} from "react-hook-form"
 
-export const FormInputText = ({name, control, label, required}) => {
+export const FormInputText = ({name, control, label, required, disabled, defaultValue}) => {
     return(
         <Controller
             name={name}
             control={control}
-            defaultValue=""
+            defaultValue={defaultValue}
             render={({
                 field: { onChange, value },
                 fieldState: { error },
                 }) => (
                 <>
                 <TextField
+                    disabled={disabled}
                     label={label}
                     value={value}
                     onChange={onChange}

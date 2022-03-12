@@ -12,8 +12,8 @@ export const useStyles = makeStyles((theme) => ({
   form: {
     padding: "1vw",
     // height: "100%",
-    // width: "100%",
-    margin: "auto",
+    width: "100%",
+    margin: "1vw",
     "& .MultiFormControl-root": {
       width: "100%",
       

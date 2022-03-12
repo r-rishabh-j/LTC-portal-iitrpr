@@ -1,22 +1,22 @@
 import React from 'react'
 import DateFnsUtils from "@date-io/date-fns";
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+
 import { Controller } from "react-hook-form";
-import { alpha } from "@material-ui/core/styles";
-const DATE_FORMAT = "dd-MMM-yy";
+
 
 
 export const FormInputDate = ({name, control, label, required}) => {
+  let today = new Date().toISOString().slice(0, 10)
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Controller
         name={name}
         control={control}
+        defaultValue={today}
         render={({ field: { onChange, value } }) => (
           <KeyboardDatePicker
+            format="dd-MM-yyyy"
             onChange={onChange}
             value={value}
             label={label}
