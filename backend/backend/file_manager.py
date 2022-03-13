@@ -17,6 +17,7 @@ class FileManager():
     def saveFile(self, file,  u_id):
         user_dir = os.path.join(self.data_dir, str(u_id))
         if not os.path.exists(user_dir):
+            print("Not exists")
             os.mkdir(user_dir)
         store_dir = self.__getNextDirPath(user_dir)
         os.mkdir(store_dir)

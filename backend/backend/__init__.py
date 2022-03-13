@@ -7,7 +7,7 @@ from flask_jwt_extended import JWTManager
 from .file_manager import FileManager
 
 db = SQLAlchemy()
-filemanager = FileManager('./static')
+filemanager = FileManager(os.path.abspath('./static'))
 
 
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
