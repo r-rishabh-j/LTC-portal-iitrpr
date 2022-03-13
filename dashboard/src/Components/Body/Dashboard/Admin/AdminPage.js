@@ -36,7 +36,7 @@ export default function AdminPage() {
         {/* <button onClick={getData}>Profile</button> */}
 
         <Routes>
-          <Route path="/home" element={<Home />}></Route>
+          <Route path="/home" element={<Charts />}></Route>
           {/* <Route
             path="/create"
             element={<CreateApplication token={token} setToken={setToken} />}
@@ -49,13 +49,7 @@ export default function AdminPage() {
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
-        <Grid container>
-          <Paper elevation={10}
-            style={{ margin: "0 0.5vw 0 3vw", height: "45vh", width: "100%" }}
-          >
-            <Charts />
-          </Paper>
-        </Grid>
+        
       </Box>
     </div>
   );

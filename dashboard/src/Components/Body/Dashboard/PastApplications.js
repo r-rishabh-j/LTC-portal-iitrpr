@@ -9,7 +9,7 @@ const columns = [
   /*
   id, email, created on, is active, stage, view form, download(button)*/
   { field: 'id', headerName: 'Application ID', width: 100},
-  { field: 'date', headerName: 'Updated on', width: 150},
+  { field: 'email', headerName: 'Updated on', width: 150},
   { field: 'status', headerName: "Status", width: 200},
   { field: 'download', headerName: "Download PDF", width: 150}
 
@@ -25,11 +25,11 @@ const PastApplications = () => {
 
   const [tableData, setTableData] = useState([])
 
-  // useEffect(() => {
-  //   fetch("/")
-  //   .then((data) => data.json())
-  //   .then((data) => setTableData(data))
-  // })
+  useEffect(() => {
+    fetch("/api/getmyforms")
+    .then((data) => data.json())
+    .then((data) => console.log(data))
+  }, [])
 
   //rows = {tableData}
   return (

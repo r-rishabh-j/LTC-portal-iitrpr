@@ -10,17 +10,25 @@ import AdminPage from './Components/Body/Dashboard/Admin/AdminPage';
 
 function App() {
   const { token, removeToken, setToken } = useToken();
-  const { isLoggedIn } = useAuthCookie();
+  const [isLoggedIn, profileInfo] = useAuthCookie();
   return (
     <Router>
       {/* <HeaderComponent/> */}
       {/* <Login setToken={setToken}/> */}
       {!isLoggedIn && isLoggedIn !== true && isLoggedIn !== undefined ? (
         <GoogleLogin />
+      ) : profileInfo.permission == 1 ? (
+        <HeaderComponent
+          token={token}
+          setToken={setToken}
+          profileInfo={profileInfo}
+        />
       ) : (
-        // <HeaderComponent token={token} setToken={setToken} />
         <AdminPage />
-      )}
+      )
+
+      // <AdminPage />
+      }
     </Router>
   );
 }

@@ -116,7 +116,7 @@ function GoogleLogin() {
                         {" "}
                         New User?
                         <Link to="/register"> Sign Up</Link>
-                    </Typography> */}
+                    </Typography>
 
                     {/* google login here */}
                     {/* <h2 className={classes.btnHeader}>Login with Google</h2> */}
