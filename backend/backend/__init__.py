@@ -1,18 +1,16 @@
 import os
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Api
-from flask_jwt_extended import JWTManager, verify_jwt_in_request
 from flask_cors import CORS
-
+from flask_restful import Api
+from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
 from .file_manager import FileManager
-# from .models import DepartmentLogs
 
 db = SQLAlchemy()
 filemanager = FileManager('./static')
 
 
-def create_app(db_path = os.environ.get('POSTGRES_PATH')):
+def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app = Flask(__name__)
     CORS(app)
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')
@@ -28,7 +26,7 @@ def create_app(db_path = os.environ.get('POSTGRES_PATH')):
     jwt = JWTManager(app)
     from .auth import TestInsert, RegisterUser, Logout, Login, IsLoggedIn
     from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser, GetLtcFormAttachments
-    from .models import Users, DepartmentLogs
+    from .models import Users
     create_database(app)
 
     api.add_resource(ApplyForLTC, '/api/apply')
