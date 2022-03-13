@@ -5,7 +5,7 @@ from . import filemanager
 from flask import jsonify, request, make_response, redirect, send_from_directory, send_file
 from flask_restful import Resource, reqparse, abort, fields
 from .models import Users, LTCRequests
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import current_user
 from .role_manager import role_required, roles_required, check_role
 
 
@@ -13,11 +13,9 @@ class ApplyForLTC(Resource):
     @role_required('client')
     def post(self):
         file = request.files.get('attachments')
-        print(request.data)
         print(file)
         form_data = json.loads(request.form.get('form'))
-        email = get_jwt_identity()
-        user: Users = Users.lookUpByEmail(email)
+        user: Users = current_user
         if user:
             filepath = None
             if file != None:
@@ -42,10 +40,9 @@ class GetLtcFormData(Resource):
         form: LTCRequests = LTCRequests.query.get(request_id)
         user_email = None
         if kwargs['permission'] == 'client':
-            user_email = get_jwt_identity()
-            check_user: Users = Users.lookUpByEmail(user_email)
-            if form.user_id != check_user.id:
+            if form.user_id != current_user.id:
                 return abort(403, status={'error': 'Forbidden resource'})
+            user_email = current_user.email
         form_data = dict(form.form)
         if not user_email:
             user_email = Users.query.get(form.user_id).email
@@ -69,9 +66,7 @@ class GetLtcFormAttachments(Resource):
         request_id = json.loads(request.json)['request_id']
         form: LTCRequests = LTCRequests.query.get(request_id)
         if kwargs['permission'] == 'client':
-            user_email = get_jwt_identity()
-            check_user: Users = Users.lookUpByEmail(user_email)
-            if form.user_id != check_user.id:
+            if form.user_id != current_user.id:
                 return abort(403, status={'error': 'Forbidden resource'})
         attachment_path = form.attachments
         _, ext = os.path.splitext(attachment_path)
@@ -89,8 +84,9 @@ class temp_files(Resource):
 class GetLtcFormMetaDataForUser(Resource):
     @role_required('client')
     def get(self):
-        email = get_jwt_identity()
-        user: Users = Users.lookUpByEmail(email)
+        # email = get_jwt_identity()
+        # user: Users = Users.lookUpByEmail(email)
+        user:Users = current_user
         forms = LTCRequests.query.filter_by(user_id=user.id)
         results = []
         for form in forms:
