@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import Navbar from './Navbar'
 import SideNav from './SideNav'
 import {Routes, Route, Navigate} from 'react-router-dom';
@@ -7,7 +7,6 @@ import Home from '../Body/Dashboard/Home';
 import CreateApplication from '../Body/Dashboard/CreateApplication';
 import PastApplications from '../Body/Dashboard/PastApplications';
 import Notifications from '../Body/Dashboard/Notifications';
-import Logout from '../Body/Dashboard/Logout';
 import { Box } from "@material-ui/core";
 import {useStyles} from './HeaderStyles';
 import axios from "axios";
@@ -23,7 +22,7 @@ export default function HeaderComponent(props) {
   };
   const handleDrawerClose = (i) => {
     setMobileOpen(false);
-    console.log(i)
+    // console.log(i)
   }
 
   const [profileData, setProfileData] = useState(null);
