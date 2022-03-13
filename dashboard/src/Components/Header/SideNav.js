@@ -4,7 +4,7 @@ import SideNavData from './SideNavData';
 import { useStyles } from './HeaderStyles';
 
 
-export default function SideNav({mobileOpen, handleDrawerToggle, handleDrawerClose}) {
+export default function SideNav({mobileOpen, handleDrawerToggle, handleDrawerClose, userType}) {
     const classes = useStyles();
     
 
@@ -24,7 +24,10 @@ export default function SideNav({mobileOpen, handleDrawerToggle, handleDrawerClo
             keepMounted: true, // Better open performance on mobile.
           }}
         >
-          <SideNavData handleDrawerClose={handleDrawerClose} />
+          <SideNavData
+            handleDrawerClose={handleDrawerClose}
+            userType={userType}
+          />
         </Drawer>
       </Hidden>
       <Hidden smDown implementation="css">
@@ -35,7 +38,10 @@ export default function SideNav({mobileOpen, handleDrawerToggle, handleDrawerClo
           variant="permanent"
           open
         >
-          <SideNavData handleDrawerClose={handleDrawerClose} />
+          <SideNavData
+            handleDrawerClose={handleDrawerClose}
+            userType={userType}
+          />
         </Drawer>
       </Hidden>
     </nav>

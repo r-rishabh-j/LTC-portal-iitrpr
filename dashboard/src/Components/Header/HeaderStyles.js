@@ -39,6 +39,7 @@ export const useStyles = makeStyles((theme) => ({
   //wrapper
   wrapper: {
     height: "100%",
+    // width: "100%",
     background: "#efefef",
     padding: theme.spacing(2, 2, 0, 32),
     [theme.breakpoints.down("sm")]: {

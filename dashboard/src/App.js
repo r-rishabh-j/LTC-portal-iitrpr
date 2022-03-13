@@ -6,6 +6,7 @@ import HeaderComponent from './Components/Header/HeaderComponent';
 import useToken from './Components/Tokens/useToken';
 import Logout from './Components/Body/Dashboard/Logout';
 import useAuthCookie from './Components/Login/useAuthCookie';
+import AdminPage from './Components/Body/Dashboard/Admin/AdminPage';
 
 function App() {
   const { token, removeToken, setToken } = useToken();
@@ -14,12 +15,12 @@ function App() {
     <Router>
       {/* <HeaderComponent/> */}
       {/* <Login setToken={setToken}/> */}
-      {!isLoggedIn && isLoggedIn !== true && isLoggedIn !== undefined ?
+      {!isLoggedIn && isLoggedIn !== true && isLoggedIn !== undefined ? (
         <GoogleLogin />
-        : (
-          <HeaderComponent token={token} setToken={setToken} />
-        )}
-      {/* <HeaderComponent token={token} setToken={setToken} /> */}
+      ) : (
+        // <HeaderComponent token={token} setToken={setToken} />
+        <AdminPage />
+      )}
     </Router>
   );
 }

@@ -2,7 +2,6 @@ import React from 'react'
 import { Button, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import HistoryIcon from "@material-ui/icons/History";
 import HomeIcon from "@material-ui/icons/Home";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AddIcon from "@material-ui/icons/Add";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import { NavLink } from 'react-router-dom';
@@ -12,18 +11,43 @@ import Logout from '../Body/Dashboard/Logout';
 
 
 
-export default function SideNavData({handleDrawerClose}) {
+export default function SideNavData({handleDrawerClose, userType}) {
     
     const classes = useStyles();
     const { token, removeToken, setToken } = useToken();
-    
-    const listItemData = [
+
+    const applicantList = [
       { label: "Home", link: "/home", icon: <HomeIcon /> },
       { label: "New Application", link: "/create", icon: <AddIcon /> },
       { label: "Past Applications", link: "/past", icon: <HistoryIcon /> },
-      { label: "Notifications", link: "/notifications", icon: <NotificationsIcon /> },
+      {
+        label: "Notifications",
+        link: "/notifications",
+        icon: <NotificationsIcon />,
+      },
       //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
     ];
+
+    const adminList = [
+      { label: "Home", link: "/home", icon: <HomeIcon /> },
+      { label: "Users", link: "/users", icon: <AddIcon /> },
+      { label: "Current Applications", link: "/current", icon: <HistoryIcon /> },
+      {
+        label: "Past Applications",
+        link: "/past",
+        icon: <NotificationsIcon />,
+      },
+      //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
+    ];
+    let listItemData;
+    if(userType === "admin"){
+      listItemData = adminList;
+    }
+    else{
+      listItemData = applicantList;
+    }
+    
+    
   return (
     <>
     <List>

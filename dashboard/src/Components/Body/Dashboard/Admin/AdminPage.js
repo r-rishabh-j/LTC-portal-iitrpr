@@ -1,0 +1,62 @@
+import React from 'react'
+import { useState } from 'react'
+import {Routes, Route, Navigate} from  'react-router-dom'
+import { Box, Grid, Paper } from '@material-ui/core';
+import Navbar from '../../../Header/Navbar';
+import SideNav from '../../../Header/SideNav';
+import { useStyles } from "../../../Header/HeaderStyles"
+import Home from "../Home"
+import Charts from './Charts';
+
+export default function AdminPage() {
+
+    const classes = useStyles();
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    const handleDrawerToggle = () => {
+      setMobileOpen(!mobileOpen);
+    };
+
+    const handleDrawerClose = (i) => {
+      setMobileOpen(false);
+     
+    };
+
+
+  return (
+    <div>
+      <Navbar handleDrawerToggle={handleDrawerToggle} />
+      <SideNav
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+        handleDrawerClose={handleDrawerClose}
+        userType="admin"
+      />
+      <Box className={classes.wrapper}>
+        {/* <button onClick={getData}>Profile</button> */}
+
+        <Routes>
+          <Route path="/home" element={<Home />}></Route>
+          {/* <Route
+            path="/create"
+            element={<CreateApplication token={token} setToken={setToken} />}
+          ></Route>
+          <Route path="/past" element={<PastApplications />}></Route>
+          <Route
+            path="/notifications"
+            element={<Notifications token={token} setToken={setToken} />}
+          ></Route> */}
+          <Route path="/logout" element={<Navigate to="/" />}></Route>
+          <Route path="*" element={<Home />}></Route>
+        </Routes>
+        <Grid container>
+          <Paper elevation={10}
+            style={{ margin: "0 0.5vw 0 3vw", height: "45vh", width: "100%" }}
+          >
+            <Charts />
+          </Paper>
+        </Grid>
+      </Box>
+    </div>
+  );
+}
