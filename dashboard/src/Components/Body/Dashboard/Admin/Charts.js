@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography } from '@material-ui/core'
+import { Typography, Grid, Paper } from '@material-ui/core'
 import {
   LineChart,
   Line,
@@ -58,33 +58,39 @@ function Charts() {
       },
     ];
   return (
-      <>
-      <Typography style={{fontWeight: "bold"}}>User Analytics</Typography>
-    <ResponsiveContainer width="100%" height="100%">
-      <LineChart
-        
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line
-          type="monotone"
-          dataKey="pv"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
-        />
-        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-      </LineChart>
-    </ResponsiveContainer>
+    <>
+      <Grid container>
+        <Paper
+          elevation={10}
+          style={{ margin: "0 0.5vw 0 3vw", height: "45vh", width: "100%" }}
+        >
+          <Typography style={{ fontWeight: "bold" }}>User Analytics</Typography>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={data}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="pv"
+                stroke="#8884d8"
+                activeDot={{ r: 8 }}
+              />
+              <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+            </LineChart>
+          </ResponsiveContainer>
+        </Paper>
+      </Grid>
     </>
   );
 }

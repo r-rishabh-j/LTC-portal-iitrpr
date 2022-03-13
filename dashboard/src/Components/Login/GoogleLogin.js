@@ -65,7 +65,7 @@ function GoogleLogin() {
                         <LockIcon />
                     </Avatar>
                     <h3>Sign In</h3>
-                    {/* <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                         <Controller
                             name="email"
                             control={control}
@@ -112,12 +112,12 @@ function GoogleLogin() {
                                 Sign In
                             </Button>
                         </div>
-                    </form> */}
+                    </form>
                     {/* <Typography>
                         {" "}
                         New User?
                         <Link to="/register"> Sign Up</Link>
-                    </Typography> */}
+                    </Typography>
 
                     {/* google login here */}
                     {/* <h2 className={classes.btnHeader}>Login with Google</h2> */}
