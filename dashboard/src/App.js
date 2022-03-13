@@ -17,7 +17,7 @@ function App() {
       {/* <Login setToken={setToken}/> */}
       {!isLoggedIn && isLoggedIn !== true && isLoggedIn !== undefined ? (
         <GoogleLogin />
-      ) : profileInfo.permission == 1 ? (
+      ) : profileInfo.permission == "client" ? (
         <HeaderComponent
           token={token}
           setToken={setToken}

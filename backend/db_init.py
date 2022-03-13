@@ -7,7 +7,7 @@ import os
 load_dotenv()
 
 user_list = [
-    Users(email='2019csb1286@iitrpr.ac.in', name='Rishabh Jain', dept='cse', permission='client'),
+    Users(email='2019csb1152@iitrpr.ac.in', name='Bhumika', dept='cse', permission='client'),
     Users(email='admin', name='Admin', dept='admin', permission='admin'),
     Users(email='deanfa', name='Dean FA', dept='deanfa', permission='deanfa'),
     Users(email='registrar', name='Registrar', dept='registrar', permission='registrar'),
