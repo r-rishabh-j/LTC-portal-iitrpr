@@ -41,7 +41,7 @@ export default function CreateApplication(props) {
     const formData = new FormData();
 
     console.log('data: ', JSON.stringify(data))
-    formData.append('attachments', data.attachments);
+    formData.append('attachments', data.attachments[0]);
     formData.append('form', JSON.stringify(data));
 
     console.log("onSubmit")
@@ -60,9 +60,6 @@ export default function CreateApplication(props) {
           console.log(error.response.status);
           console.log(error.response.headers);
           alert('Error. Please try logging in again');
-          // if (error.response.status === 401) {
-          //   window.location = `http://localhost:3000`
-          // }
         }
       });
   };

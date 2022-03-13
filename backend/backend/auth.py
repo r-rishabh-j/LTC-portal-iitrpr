@@ -7,8 +7,13 @@ from flask import jsonify, request, make_response, redirect
 from flask_restful import Resource, reqparse, marshal_with, abort, fields
 from .models import Users
 from flask_jwt_extended import create_access_token, unset_access_cookies, jwt_required, \
-    set_access_cookies, unset_jwt_cookies, get_jwt_identity, verify_jwt_in_request, get_jwt
+    set_access_cookies, unset_jwt_cookies, get_jwt_identity, verify_jwt_in_request, get_jwt, current_user
 from .role_manager import permissions, role_required, roles_required
+
+
+# def user_loader():
+#     identity = get_jwt_identity()
+#     return identity['email'], identity['user_id']
 
 
 class RegisterUser(Resource):
@@ -20,7 +25,6 @@ class RegisterUser(Resource):
 class Logout(Resource):
     def post(self):
         response = jsonify({"msg": "logout successful"})
-        print(response)
         unset_jwt_cookies(response)
         return response
 
@@ -28,15 +32,18 @@ class Logout(Resource):
 class IsLoggedIn(Resource):
     @jwt_required()
     def get(self):
-        email = get_jwt_identity()
-        claims = get_jwt()
-        # user = Users.query.filter_by(email=email).first()
-        # if not user:
-        #     return make_response({}, 401)
+        user: Users = current_user
+        if not user:
+            return abort(401)
         # TODO: add user details such as profile pic, name, email, etc if logged in
         return jsonify({
             'status': 'logged-in',
-            'claims': claims['claims']
+            'claims': {
+                'permission': user.permission,
+                'name': user.name,
+                'department': user.department,
+                'picture': user.picture
+            }
         })
 
 
@@ -75,15 +82,9 @@ class Login(Resource):
         user: Users = Users.lookUpByEmail(email)
         if not user:
             return make_response(redirect('http://localhost:3000'))
-        access_tk = create_access_token(
-            identity=email, additional_claims={
-                'claims': {
-                    'permission': user.permission,
-                    'name': user.name,
-                    'department': user.department,
-                    'picture': user.picture
-                }
-            })
+
+        # identity = {'email':email, 'user_id':user.id}
+        access_tk = create_access_token(identity=user)
         response = make_response(redirect('http://localhost:3000'))
         set_access_cookies(response, access_tk)
         return response
