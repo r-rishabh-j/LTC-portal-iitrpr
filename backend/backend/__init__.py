@@ -4,17 +4,19 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from flask_jwt_extended import JWTManager, verify_jwt_in_request
 from flask_cors import CORS
+
 from .file_manager import FileManager
+# from .models import DepartmentLogs
 
 db = SQLAlchemy()
 filemanager = FileManager('./static')
 
 
-def create_app():
+def create_app(db_path = os.environ.get('POSTGRES_PATH')):
     app = Flask(__name__)
     CORS(app)
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')
-    pgsql_path = os.environ.get('POSTGRES_PATH')
+    pgsql_path = db_path
     app.config['SQLALCHEMY_DATABASE_URI'] = pgsql_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
@@ -26,8 +28,7 @@ def create_app():
     jwt = JWTManager(app)
     from .auth import TestInsert, RegisterUser, Logout, Login, IsLoggedIn
     from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser, GetLtcFormAttachments
-    from .models import Users
-
+    from .models import Users, DepartmentLogs
     create_database(app)
 
     api.add_resource(ApplyForLTC, '/api/apply')
@@ -47,7 +48,7 @@ def create_app():
 
     @jwt.user_lookup_loader
     def user_lookup_callback(_jwt_header, jwt_data):
-        email = jwt_data['sub']
+        email = jwt_data.get('sub', None)
         return Users.query.filter_by(email=email).one_or_none()
 
     return app

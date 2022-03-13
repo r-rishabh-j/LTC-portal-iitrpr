@@ -1,7 +1,16 @@
 {
-    "comments": {
-        "approved": {},
-        "comments": {},
-        "signature": {}
+    "department": {
+        "approved": {
+            "u1": null,
+            "u2": null
+        },
+        "comments": {
+            "u1": null,
+            "u2": null
+        },
+        "signature": {
+            "u1": null,
+            "u2": null
+        }
     }
 }

@@ -1,5 +1,5 @@
 from functools import wraps
-from flask_jwt_extended import verify_jwt_in_request, get_jwt, current_user
+from flask_jwt_extended import verify_jwt_in_request, current_user
 from flask import make_response, jsonify
 from .models import Users
 
@@ -12,7 +12,7 @@ permissions = {
     'audit': 6,
     'dept_head': 7,
     'leaf': 8,
-    'applicant':8,
+    'applicant': 8,
     'client': 8,
 }
 """
@@ -25,10 +25,7 @@ def role_required(role):
         @wraps(fn)
         def decorator(*args, **kwargs):
             verify_jwt_in_request()
-            # claims = get_jwt()['claims']
-            user:Users = current_user
-            # if claims['permission'] == role:
-            #     return fn(*args, **kwargs)
+            user: Users = current_user
             print(user.id)
             if user.permission == role:
                 return fn(*args, **kwargs)
@@ -43,8 +40,7 @@ def roles_required(roles: list):
         @wraps(fn)
         def decorator(*args, **kwargs):
             verify_jwt_in_request()
-            # permission = get_jwt()['claims']['permission']
-            user:Users = current_user
+            user: Users = current_user
             if user.permission in roles:
                 kwargs['permission'] = str(user.permission)
                 return fn(*args, **kwargs)
@@ -53,13 +49,13 @@ def roles_required(roles: list):
         return decorator
     return wrapper
 
+
 def check_role():
     def wrapper(fn):
         @wraps(fn)
         def decorator(*args, **kwargs):
             verify_jwt_in_request()
-            # permission = str(get_jwt()['claims']['permission'])
-            user:Users = current_user
+            user: Users = current_user
             if user.permission in permissions:
                 kwargs['permission'] = user.permission
                 return fn(*args, **kwargs)

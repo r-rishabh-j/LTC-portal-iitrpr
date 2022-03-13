@@ -11,11 +11,6 @@ from flask_jwt_extended import create_access_token, unset_access_cookies, jwt_re
 from .role_manager import permissions, role_required, roles_required
 
 
-# def user_loader():
-#     identity = get_jwt_identity()
-#     return identity['email'], identity['user_id']
-
-
 class RegisterUser(Resource):
     @role_required(role='admin')
     def post(self):
@@ -82,61 +77,32 @@ class Login(Resource):
         user: Users = Users.lookUpByEmail(email)
         if not user:
             return make_response(redirect('http://localhost:3000'))
+        user.picture = googleResponse['picture']
+        access_tk = create_access_token(identity=user)
+        response = make_response(redirect('http://localhost:3000'))
+        set_access_cookies(response, access_tk)
+        db.session.commit()
+        return response
 
-        # identity = {'email':email, 'user_id':user.id}
+    def post(self):
+        args = json.loads(request.form.get('auth'))
+        if not args['email'] or len(args['email']) < 4:
+            abort(409, 'invalid email')
+        user = Users.query.filter_by(email=args['email']).one_or_none()
+
+        if not user:
+            abort(409, message="user does not exist")
+
         access_tk = create_access_token(identity=user)
         response = make_response(redirect('http://localhost:3000'))
         set_access_cookies(response, access_tk)
         return response
 
-    # def post(self):
-    #     args = login_user_args.parse_args()
-    #     if not args['email'] or len(args['email']) < 4:
-    #         abort(409, 'invalid email')
-    #     user = Users.query.filter_by(email=args['email']).first()
-
-    #     if not user:
-    #         abort(409, message="user does not exist")
-
-    #     user_cred = UserCredentials.query.filter_by(
-    #         email=args['email']).first()
-    #     if str(args['password']) != user_cred.password:
-    #         abort(409, message='invalid password')
-
-    #     # login_user(user)
-    #     # access_token = create_access_token(identity=args['email'])
-    #     # return {
-    #     #     'login': 'user logged in successfully',
-    #     #      "access_token": access_token
-    #     # }, 201
-    #     response = make_response({'login': 'user logged in successfully'})
-    #     set_access_cookies(
-    #         response, create_access_token(identity=args['email']))
-    #     return response
-
-
-# p = reqparse.RequestParser()
-# p.add_argument('a', type=int)
-# p.add_argument('b', type=dict)
-# p.add_argument('c', type=dict)
-
-
 class TestInsert(Resource):
     @jwt_required()
     def get(self):
         print("TEST")
-
         return {}, 200
-
     @jwt_required()
     def post(self):
-
-        # data = request.form
-        # data = data.to_dict(flat=False)
-        # print(data)
-        # db.session.add(new_entry)
-        # db.session.commit()
-        # new_entry = test_table(data)
-        # db.session.add(new_entry)
-        # db.session.commit()
         return {"success": "inserted"}, 201

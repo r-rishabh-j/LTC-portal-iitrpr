@@ -13,17 +13,16 @@ const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL } = process.env;
 function GoogleLogin() {
     const classes = useStyles();
     const { handleSubmit, control } = useForm();
-
+    
     const onSubmit = (data) => {
+        const formData = new FormData();
+        formData.append('auth', JSON.stringify(data))
         axios({
             method: "POST",
             url: "/api/login",
-            data: {
-                email: data.email,
-                password: data.password,
-            },
+            data: formData
         }).then((response) => {
-            // props.setToken(response.data.access_token);
+            window.location = 'http://localhost:3000'
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response);
@@ -109,7 +108,7 @@ function GoogleLogin() {
                                 fullWidth
                                 className={classes.btn}
                             >
-                                Sign In
+                                Sign In (testing)
                             </Button>
                         </div>
                     </form>
