@@ -4,12 +4,35 @@ from . import db
 from . import filemanager
 from flask import jsonify, request, make_response, redirect, send_from_directory, send_file
 from flask_restful import Resource, reqparse, abort, fields
-from .models import Users, LTCRequests
+from .models import Stages, Users, LTCRequests, DepartmentLogs, EstablishmentLogs, Departments
 from flask_jwt_extended import current_user
 from .role_manager import role_required, roles_required, check_role
 
 
 class ApplyForLTC(Resource):
+
+    def initialiseApplication(self, new_request: LTCRequests):
+        stage = Stages.firstStage()
+        new_request.stage = stage['id']
+        new_request.comments = {}
+
+        # notify first stage
+        department = stage['department']
+        first_stage_users = Users.query.filter_by(department=department)
+        dept_comments = {
+            'approved': {},
+            'comments': {},
+        }
+        for user in first_stage_users:
+            dept_comments['approved'][user.email] = None
+            dept_comments['comments'][user.email] = None
+
+        new_request.comments[department] = {department: dept_comments}
+
+        db.session.add(new_request)
+        db.session.commit()
+        db.session.refresh(new_request)
+
     @role_required('client')
     def post(self):
         file = request.files.get('attachments')
@@ -23,10 +46,8 @@ class ApplyForLTC(Resource):
             print(form_data)
             form_data.pop('attachments')
             new_request: LTCRequests = LTCRequests(user_id=user.id)
-            new_request.form = form_data
-            new_request.attachments = filepath
-            db.session.add(new_request)
-            db.session.commit()
+            new_request.form, new_request.attachments = form_data, filepath
+            self.initialiseApplication(new_request)
             return make_response(jsonify({'status': 'ok', 'msg': 'Applied for LTC'}), 200)
         else:
             abort(400, status=jsonify(
@@ -43,7 +64,6 @@ class GetLtcFormData(Resource):
             if form.user_id != current_user.id:
                 return abort(403, status={'error': 'Forbidden resource'})
             user_email = current_user.email
-        form_data = dict(form.form)
         if not user_email:
             user_email = Users.query.get(form.user_id).email
         result = {
@@ -52,7 +72,7 @@ class GetLtcFormData(Resource):
             'created_on': form.created_on,
             'stage': form.stage,
             'is_active': form.is_active,
-            'form_data': form_data,
+            'form_data': form.form,
             'comments': form.comments
         }
         response = {'data': result}
@@ -86,7 +106,7 @@ class GetLtcFormMetaDataForUser(Resource):
     def get(self):
         # email = get_jwt_identity()
         # user: Users = Users.lookUpByEmail(email)
-        user:Users = current_user
+        user: Users = current_user
         forms = LTCRequests.query.filter_by(user_id=user.id)
         results = []
         for form in forms:

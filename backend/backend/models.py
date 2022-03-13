@@ -5,18 +5,88 @@ from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
 
 
-class Stages:
-    STAGES = {
-        "department": 0,
-        "establishment": 1,
-        "audit": 2,
-        "accounts": 3,
-        "registrar": 4,
-        "deanfa": 5,
-        "approved": 6,
-    }
+class Stage:
+    def __init__(self, id, name, department):
+        self.id = id
+        self.name = name
+        self.department = department
 
-    HIGHEST_STAGE = STAGES['deanfa']
+
+class Stages:
+    # ordered list of heirarchy
+    STAGES = [
+        # {
+        #     'id': 'department',
+        #     'name': 'Department',
+        #     'department': 'department'
+        # },
+        {
+            'id': 'establishment',
+            'name': 'Establishment Section Approval Pending',
+            'department': 'establishment',
+        },
+        {
+            'id': 'audit',
+            'name': 'Audit Section Approval Pending',
+            'department': 'audit'
+        },
+        {
+            'id': 'accounts',
+            'name': 'Accounts Section Approval Pending',
+            'department': 'accounts'
+        },
+        {
+            'id': 'registar',
+            'name': 'Registrar Approval Pending',
+            'department': 'registrar'
+        },
+        {
+            'id': 'deanfa',
+            'name': 'Dean FA Approval Pending',
+            'department': 'deanfa'
+        },
+        {
+            'id': 'office_order_pending',
+            'name': 'Approved, office order pending',
+            'approval_status': True,
+            'department': 'establishment'
+        },
+        {
+            'id': 'office_order_generated',
+            'name': 'Approved, office order generated',
+            'approval_status': True,
+            'department': 'establishment'
+        },
+        {
+            'id': 'advance_pending',
+            'name': 'Advance sum pending',
+            'approval_status': True,
+            'department': 'accounts'
+        },
+        {
+            'id': 'advance_paid',
+            'name': 'Advance sum issued',
+            'approval_status': True,
+            'department': 'accounts'
+        },
+    ]
+
+    def getStageIndex(current_stage):
+        for stage in Stages.STAGES:
+            if stage['id'] == current_stage:
+                return stage
+        return None
+
+    def getNextStage(current_stage: str):
+        stage_id = Stages.getStageIndex(current_stage)
+        if not stage_id:
+            return None
+        next_stage = None if (
+            stage_id+1) >= len(Stages.STAGES) else Stages.STAGES[stage_id+1]
+        return next_stage
+
+    def firstStage():
+        return Stages.STAGES[0]
 
 
 def get_stage_roles(stage) -> dict:
@@ -78,6 +148,7 @@ class Users(db.Model):
         user = Users.query.filter_by(email=email).one_or_none()
         return user
 
+
 """
 This creates next stage comment fields in the comment column onlt at the time of forward
 """
@@ -86,26 +157,25 @@ This creates next stage comment fields in the comment column onlt at the time of
 class LTCRequests(db.Model):
     __tablename__ = 'ltc_requests'
     request_id = db.Column(db.Integer, primary_key=True)
-    # user_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_on = db.Column(db.DateTime)
-    stage = db.Column(db.Integer)
+    stage = db.Column(db.String)
     """
     stage: int
-    -> est: 1
+    -> establishment: 1
     -> audit: 2
     -> accounts: 3
     -> registrar: 4
     -> deanfa: 5
     -> approved and sent for office order generation: 6
-    ->with user(not submitted): None
+    -> with user(not submitted): None
     -> declined: -1
     """
     is_active = db.Column(db.Boolean)
-    form:dict = db.Column(MutableDict.as_mutable(JSON))
-    comments:dict = db.Column(MutableDict.as_mutable(JSON))
-    attachments:str = db.Column(db.String, nullable=True) # stores path to attachments
-
+    form: dict = db.Column(MutableDict.as_mutable(JSON))
+    comments: dict = db.Column(MutableDict.as_mutable(JSON))
+    # stores path to attachments
+    attachments: str = db.Column(db.String, nullable=True)
 
     def __init__(self, user_id: int, stage: int = None, comments: dict = None):
         self.user_id = user_id
@@ -259,6 +329,11 @@ class Departments(db.Model):
         self.name = name
         self.dept_head = dept_head
 
+    def create_departments_from_list(dept_list):
+        for dept in dept_list:
+            d = Departments(name=dept['name'], dept_head=dept['head_id'])
+            db.session.add(d)
+    
 
 class DepartmentLogs(db.Model):
     """
