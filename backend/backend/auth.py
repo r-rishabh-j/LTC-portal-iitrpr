@@ -97,11 +97,13 @@ class Login(Resource):
         set_access_cookies(response, access_tk)
         return response
 
+
 class TestInsert(Resource):
     @jwt_required()
     def get(self):
         print("TEST")
         return {}, 200
+
     @jwt_required()
     def post(self):
         return {"success": "inserted"}, 201

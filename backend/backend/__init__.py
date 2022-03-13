@@ -14,8 +14,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app = Flask(__name__)
     CORS(app)
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')
-    pgsql_path = db_path
-    app.config['SQLALCHEMY_DATABASE_URI'] = pgsql_path
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
