@@ -8,13 +8,13 @@ load_dotenv()
 
 user_list = [
     Users(email='2019csb1286@iitrpr.ac.in', name='Rishabh Jain', dept='cse', permission='client'),
-    Users(email='admin', name='Admin', dept='admin', permission='admin'),
-    Users(email='deanfa', name='Dean FA', dept='deanfa', permission='deanfa'),
-    Users(email='registrar', name='Registrar', dept='registrar', permission='registrar'),
-    Users(email='establishment', name='Establishment Section', dept='establishment', permission='establishment'),
-    Users(email='accounts', name='Accounts Section', dept='accounts', permission='accounts'),
-    Users(email='audit', name='audit Section', dept='audit', permission='audit'),
-    Users(email='hod_cse', name='HOD CSE', dept='cse', permission='dept_head'),
+    Users(email='admin@email', name='Admin', dept='admin', permission='admin'),
+    Users(email='deanfa@email', name='Dean FA', dept='deanfa', permission='deanfa'),
+    Users(email='registrar@email', name='Registrar', dept='registrar', permission='registrar'),
+    Users(email='establishment@email', name='Establishment Section', dept='establishment', permission='establishment'),
+    Users(email='accounts@email', name='Accounts Section', dept='accounts', permission='accounts'),
+    Users(email='audit@email', name='audit Section', dept='audit', permission='audit'),
+    Users(email='hod_cse@email', name='HOD CSE', dept='cse', permission='dept_head'),
 ]
 
 app = create_app(db_path=os.environ.get('POSTGRES_PATH'))

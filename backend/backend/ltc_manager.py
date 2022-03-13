@@ -27,7 +27,7 @@ class ApplyForLTC(Resource):
             dept_comments['approved'][user.email] = None
             dept_comments['comments'][user.email] = None
 
-        new_request.comments[department] = {department: dept_comments}
+        new_request.comments[department] = dept_comments
 
         db.session.add(new_request)
         db.session.commit()
