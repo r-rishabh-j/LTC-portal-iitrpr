@@ -112,12 +112,6 @@ class GetLtcFormAttachments(Resource):
         return send_file(abs_path, as_attachment=True, attachment_filename=filename)
 
 
-# class temp_files(Resource):
-#     def get(self):
-#         return send_file(os.path.abspath('./static/1/1/Design document.pdf'), as_attachment=True)
-#         # return send_file('./static/1/1/Design document.pdf', as_attachment=False)
-
-
 class GetLtcFormMetaDataForUser(Resource):
     @role_required('client')
     def get(self):

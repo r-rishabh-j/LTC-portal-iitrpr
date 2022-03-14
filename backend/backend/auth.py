@@ -5,8 +5,8 @@ from . import db
 from flask import jsonify, request, make_response, redirect
 from flask_restful import Resource, reqparse, marshal_with, abort, fields
 from .models import Users
-from flask_jwt_extended import create_access_token, unset_access_cookies, jwt_required, \
-    set_access_cookies, unset_jwt_cookies, get_jwt_identity, verify_jwt_in_request, get_jwt, current_user
+from flask_jwt_extended import create_access_token, jwt_required, \
+    set_access_cookies, unset_jwt_cookies, current_user
 from .role_manager import role_required
 
 
@@ -28,7 +28,7 @@ class IsLoggedIn(Resource):
     def get(self):
         user: Users = current_user
         if not user:
-            return abort(401)
+            return abort(401, msg='Login again')
         # TODO: add user details such as profile pic, name, email, etc if logged in
         return jsonify({
             'status': 'logged-in',

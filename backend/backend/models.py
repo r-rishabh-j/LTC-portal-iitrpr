@@ -135,7 +135,6 @@ class Users(db.Model):
     permission = db.Column(db.String, nullable=False)
     signature = db.Column(db.String, nullable=True)
     picture = db.Column(db.String, nullable=True)
-    # signature = db.Column(db.String(300), nullable=True)
 
     def __init__(self, email, name, dept, permission):
         self.email = email
