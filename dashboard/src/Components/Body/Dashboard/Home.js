@@ -1,7 +1,7 @@
 import React from 'react'
 import {useState, useEffect} from 'react'
 import axios from 'axios'
-import {Grid, Paper, Typography} from '@material-ui/core'
+import {Grid, Paper, Typography, Box} from '@material-ui/core'
 
 export default function Home() {
 
@@ -31,18 +31,44 @@ export default function Home() {
 
   return (
     <Grid container>
-      <Paper
+      <Grid item xs={3}>
+        <Box style={{ margin: "3vw 0 0 5vw" }}>
+          <img
+            src={profileInfo.picture}
+            alt="Profile image"
+            style={{ width: "10vw" }}
+          ></img>
+          <Typography
+            variant="h5"
+            style={{ fontWeight: "bold", margin: "auto" }}
+          >
+            {" "}
+            {profileInfo.name}
+          </Typography>
+          <Typography variant="h6" style={{ margin: "auto" }}>
+            {" "}
+            {profileInfo.department}
+          </Typography>
+        </Box>
+      </Grid>
+      <Grid item xs={9}>
+        <Paper
+          elevation={10}
+          style={{ margin: "0 0.5vw 0 0", height: "100vh", width: "100%" }}
+        >
+          <Box style={{ margin: "0 0 0 30vw" }}>
+            <Typography variant="h4" style={{ fontWeight: "bold" }}>
+              Welcome
+            </Typography>
+          </Box>
+        </Paper>
+      </Grid>
+      {/* <Paper
         elevation={10}
-        style={{ margin: "0 0.5vw 0 3vw", height: "100vh", width: "100%" }}
+        style={{ margin: "3vh 0.5vw 0 3vw", height: "50vh", width: "100%" }}
       >
-        <Typography style={{ fontWeight: "bold" }}>
-          Welcome {profileInfo.name}, {profileInfo.department}
-        </Typography>
-        <img
-          src={profileInfo.picture}
-          alt="Profile image" width = "100vw" 
-        ></img>
-      </Paper>
+        <Typography>Recent</Typography>
+      </Paper> */}
     </Grid>
   );
 }

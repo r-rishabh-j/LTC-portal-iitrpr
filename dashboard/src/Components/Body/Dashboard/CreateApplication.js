@@ -2,45 +2,46 @@ import React from "react";
 import {
   Grid,
   Paper,
-  Avatar,
-  TextField,
-  Checkbox,
   Button,
   Typography,
   Box,
   Fab
 } from "@material-ui/core";
-import { DatePicker } from "@mui/lab";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
-import LockIcon from "@material-ui/icons/Lock";
-import { Link } from "react-router-dom";
 import { useForm, Controller} from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useStyles } from "./FormStyles";
 import GeneratePDF from "../../Utilities/GeneratePDF";
-import FileUpload from "react-material-file-upload";
 import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputDate } from "../../Utilities/FormInputDate"
 import { FormInputNumber } from "../../Utilities/FormInputNumber"
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import Add from "@material-ui/icons/Add";
+import useAuthCookie from "../../Login/useAuthCookie"
 
-const defaultValues = {
-  textValue: "",
-  // dateValue: new Date()
-}
+
 
 export default function CreateApplication(props) {
   const classes = useStyles();
-  const { handleSubmit, control } = useForm({defaultValues: defaultValues});
+  const { handleSubmit, control } = useForm({});
   const [File, setFile] = useState(null)
+  const [isLoggedIn, profileInfo] = useAuthCookie();
+  const name = profileInfo.name;
+  const department  = profileInfo.department
+ 
 
+  
   const onSubmit = (data) => {
+    
     const formData = new FormData();
 
-    console.log('data: ', JSON.stringify(data))
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
+    data.Name = profile.name;
+    data.Designation = profile.permission;
+    data.Department = profile.department;
+    data["Employee Code"] = "123";
+
+    console.log('data: ', JSON.stringify(data));
     formData.append('attachments', data.attachments[0]);
     formData.append('form', JSON.stringify(data));
 
@@ -63,7 +64,7 @@ export default function CreateApplication(props) {
         }
       });
   };
-  return (
+  return profileInfo === {} ? null : (
     <>
       <Grid container>
         <Paper elevation={10} className={classes.contain}>
@@ -71,21 +72,21 @@ export default function CreateApplication(props) {
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
               <Box display="flex" justifyContent="center">
                 <Typography variant="h5" style={{ fontWeight: "bold" }}>
-                  Application for Leave Travel Concession{" "}
+                  Application for Leave Travel Concession
                 </Typography>
               </Box>
 
               <div>
                 {/* <h4>Leave Required</h4> */}
-
                 <Grid item xs={12}>
                   <FormInputText
                     name={"Name"}
                     control={control}
                     label={"Name"}
                     required={true}
-                    defaultValue={"Name"}
+                    autofill={true}
                     disabled={true}
+                    defaultValue={"Name"}
                   />
                 </Grid>
 
@@ -96,7 +97,7 @@ export default function CreateApplication(props) {
                       control={control}
                       label={"Designation"}
                       required={true}
-                      defaultValue={"Designation"}
+                      autofill={true}
                       disabled={true}
                     />
                   </Grid>
@@ -106,7 +107,7 @@ export default function CreateApplication(props) {
                       control={control}
                       label="Department"
                       required={true}
-                      defaultValue={"Department"}
+                      autofill={true}
                       disabled={true}
                     />
                   </Grid>
@@ -118,7 +119,7 @@ export default function CreateApplication(props) {
                       control={control}
                       label="Employee Code"
                       required={true}
-                      defaultValue={"123456"}
+                      autofill={true}
                       disabled={true}
                     />
                   </Grid>
