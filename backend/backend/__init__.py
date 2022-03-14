@@ -5,6 +5,7 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from .file_manager import FileManager
+from datetime import timedelta
 
 db = SQLAlchemy()
 filemanager = FileManager(os.path.abspath('./static'))
@@ -18,6 +19,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=5)
     app.config['UPLOAD_FOLDER'] = './static'
 
     db.init_app(app)

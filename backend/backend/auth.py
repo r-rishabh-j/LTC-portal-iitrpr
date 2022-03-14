@@ -35,6 +35,7 @@ class IsLoggedIn(Resource):
             'claims': {
                 'permission': user.permission,
                 'name': user.name,
+                'email': user.email,
                 'department': user.department,
                 'picture': user.picture
             }
