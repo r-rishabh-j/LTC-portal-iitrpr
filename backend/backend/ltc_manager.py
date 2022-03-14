@@ -96,7 +96,11 @@ class GetLtcFormData(Resource):
 class GetLtcFormAttachments(Resource):
     @check_role()
     def post(self, **kwargs):
-        request_id = json.loads(request.json)['request_id']
+        # print(request.data)
+        # print(type(request.json))
+        request_id = request.json['request_id']
+        #request_id = request.data['request_id']
+        print(request_id)
         if not request_id:
             abort(404, msg='Request ID not sent')
         form: LTCRequests = LTCRequests.query.get(request_id)
@@ -106,6 +110,8 @@ class GetLtcFormAttachments(Resource):
             if form.user_id != current_user.id:
                 return abort(403, status={'error': 'Forbidden resource'})
         attachment_path = form.attachments
+        if not attachment_path or attachment_path =="":
+            return abort(404, status={'error': 'No attachment'})
         _, ext = os.path.splitext(attachment_path)
         filename = f'ltc_{request_id}_proofs'+ext
         abs_path = os.path.abspath(attachment_path)
@@ -130,7 +136,7 @@ class GetLtcFormMetaDataForUser(Resource):
                 'request_id': form.request_id,
                 'created_on': form.created_on,
                 'stage': form.stage,
-                'is_active': form.is_active,
+                'is_active': "Active" if form.is_active else "Not Active",
             })
         response = {'data': results}
 
