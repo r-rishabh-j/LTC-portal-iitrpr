@@ -1,40 +1,40 @@
-import React, {useState, useEffect} from 'react'
-import {DataGrid} from "@mui/x-data-grid"
-import { Grid, Paper, Typography } from '@material-ui/core'
-import { useStyles } from "./DataGridStyles";
-import { Button } from '@mui/material';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import { Grid, Paper, Typography } from "@material-ui/core";
+import { Button } from "@mui/material";
+import axios from "axios";
 
 const handleAttachmentClick = (event, cellValues) => {
   console.log(cellValues.row.request_id);
-  const data = {request_id : cellValues.row.request_id}
+  const data = { request_id: cellValues.row.request_id };
   // console.log(JSON.stringify(data))
   axios({
-    method: 'post',
-    url: 'api/getattachments',
+    method: "post",
+    url: "api/getattachments",
     data: JSON.stringify(data),
-    headers: {'Content-type': 'application/json'},
-    responseType: 'blob'
-  }).then((response) => {
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "file.pdf"); //or any other extension
-    document.body.appendChild(link);
-    link.click();
-  }).catch((error) => {
-        if (error.response) {
-          console.log(error.response);
-          console.log(error.response.status);
-          alert('No attachments');
-        }
-      })
+    headers: { "Content-type": "application/json" },
+    responseType: "blob",
+  })
+    .then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.pdf"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response);
+        console.log(error.response.status);
+        alert("No attachments");
+      }
+    });
 };
 
 const handleFormClick = (event, cellValues) => {
   console.log(cellValues.row.request_id);
-}
-
+};
 
 const handleCellClick = (param, event) => {
   event.stopPropagation();
@@ -48,8 +48,10 @@ const columns = [
   /*
   id, email, created on, is active, stage, view form, download(button)*/
   { field: "request_id", headerName: "Application ID", width: 150 },
-  { field: "created_on", headerName: "Created on", width: 250 },
-  { field: "stage", headerName: "Stage", width: 200 },
+  { field: "user", headerName: "User Email", width: 150 },
+  { field: "user_id", headerName: "User ID", width: 90 },
+  { field: "created_on", headerName: "Created on", width: 200 },
+  { field: "stage", headerName: "Stage", width: 150 },
   { field: "is_active", headerName: "Status", width: 150 },
   {
     field: "form",
@@ -89,25 +91,18 @@ const columns = [
   },
 ];
 
-const rows = [
-  {id: 1, date: '11-03-2022'},
-  {id: 2, date: '12-03-2022'}
-]
+function PreviousApplications() {
+     const [tableData, setTableData] = useState([]);
 
-const PastApplications = () => {
-  const classes = useStyles();
+     useEffect(() => {
+       fetch("/api/get-form-meta")
+         .then((data) => data.json())
+         .then((data) => {
+           console.log(data);
+        setTableData(data.data);
+         });
+     }, []);
 
-  const [tableData, setTableData] = useState([])
-
-  useEffect(() => {
-    fetch("/api/getmyforms")
-    .then((data) => data.json())
-    .then((data) => {console.log(data.data);
-      setTableData(data.data)})
-  }, [])
-
-  //rows = {tableData}
-  
   return (
     <>
       <Paper
@@ -120,7 +115,7 @@ const PastApplications = () => {
         </Grid>
       </Paper>
     </>
-  );
+  )
 }
 
-export default PastApplications
+export default PreviousApplications

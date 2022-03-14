@@ -155,7 +155,7 @@ class GetLtcFormMetaData(Resource):
     ]
 
     @roles_required(roles=allowed_roles)
-    def get(self):
+    def get(self, **kwargs):
         forms = db.session.query(LTCRequests, Users).join(Users).all()
         results = []
         for form, user in forms:

@@ -33,8 +33,8 @@ export default function SideNavData({handleDrawerClose, userType}) {
       { label: "Users", link: "/users", icon: <AddIcon /> },
       { label: "Current Applications", link: "/current", icon: <HistoryIcon /> },
       {
-        label: "Past Applications",
-        link: "/past",
+        label: "Previous Applications",
+        link: "/previous",
         icon: <NotificationsIcon />,
       },
       //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
