@@ -66,7 +66,8 @@ class ForwardLTC(Resource):
 class GetLtcFormData(Resource):
     @check_role()
     def post(self, **kwargs):
-        request_id = json.loads(request.json)['request_id']
+        # request_id = json.loads(request.json)['request_id']
+        request_id = request.json['request_id']
         if not request_id:
             abort(404, msg='Request ID not sent')
         form: LTCRequests = LTCRequests.query.get(int(request_id))
