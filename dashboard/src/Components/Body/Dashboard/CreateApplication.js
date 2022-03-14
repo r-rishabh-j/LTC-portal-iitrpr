@@ -169,7 +169,7 @@ Service/Date of Joining with IIT Ropar"
                   </Grid>
                   <Grid item xs={4}>
                     <FormInputNumber
-                      name="No. of Days"
+                      name="No of Days"
                       control={control}
                       label="No. of Days"
                       required={true}

@@ -31,7 +31,7 @@ export default function Home() {
 
   return (
     <Grid container>
-      <Grid item xs={3}>
+      <Grid item xs={4}>
         <Box style={{ margin: "3vw 0 0 5vw" }}>
           <img
             src={profileInfo.picture}
@@ -49,9 +49,13 @@ export default function Home() {
             {" "}
             {profileInfo.department}
           </Typography>
+          <Typography variant="h6" style={{ margin: "auto" }}>
+            {" "}
+            {profileInfo.email}
+          </Typography>
         </Box>
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={8}>
         <Paper
           elevation={10}
           style={{ margin: "0 0.5vw 0 0", height: "100vh", width: "100%" }}
