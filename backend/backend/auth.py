@@ -53,7 +53,8 @@ class Login(Resource):
         response = requests.post(
             'https://oauth2.googleapis.com/token', data=data)
         if not response.ok:
-            return make_response(redirect(os.environ.get('FRONTEND_URL')))
+            # return make_response(redirect(os.environ.get('FRONTEND_URL')))
+            return None
         access = response.json()['access_token']
 
         response = requests.get(
@@ -62,7 +63,8 @@ class Login(Resource):
         )
 
         if not response.ok:
-            return make_response(redirect(os.environ.get('FRONTEND_URL')))
+            # return make_response(redirect(os.environ.get('FRONTEND_URL')))
+            return None
 
         return response.json()
 
@@ -71,6 +73,8 @@ class Login(Resource):
         if not code:
             return make_response(redirect(os.environ.get('FRONTEND_URL')))
         googleResponse = self.googleLogin(code)
+        if not googleResponse:
+            return make_response(redirect(os.environ.get('FRONTEND_URL')))
         print(googleResponse)
         email = str(googleResponse['email'])
         user: Users = Users.lookUpByEmail(email)
