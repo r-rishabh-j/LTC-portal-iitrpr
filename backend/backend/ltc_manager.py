@@ -27,11 +27,15 @@ class ApplyForLTC(Resource):
             dept_comments['approved'][user.email] = None
             dept_comments['comments'][user.email] = None
 
-        new_request.comments[department] = {department: dept_comments}
-
+        new_request.comments[department] = dept_comments
         db.session.add(new_request)
         db.session.commit()
         db.session.refresh(new_request)
+
+        establishment_entry = EstablishmentLogs(
+            request_id=new_request.request_id)
+        db.session.add(establishment_entry)
+        db.session.commit()
 
     @role_required('client')
     def post(self):
@@ -54,11 +58,20 @@ class ApplyForLTC(Resource):
                 {'status': 'error', 'msg': 'user not found'}))
 
 
+class ForwardLTC(Resource):
+    def post(self):
+        pass
+
+
 class GetLtcFormData(Resource):
     @check_role()
     def post(self, **kwargs):
         request_id = json.loads(request.json)['request_id']
-        form: LTCRequests = LTCRequests.query.get(request_id)
+        if not request_id:
+            abort(404, msg='Request ID not sent')
+        form: LTCRequests = LTCRequests.query.get(int(request_id))
+        if not form:
+            abort(404, msg='Form not found')
         user_email = None
         if kwargs['permission'] == 'client':
             if form.user_id != current_user.id:
@@ -84,7 +97,11 @@ class GetLtcFormAttachments(Resource):
     @check_role()
     def post(self, **kwargs):
         request_id = json.loads(request.json)['request_id']
+        if not request_id:
+            abort(404, msg='Request ID not sent')
         form: LTCRequests = LTCRequests.query.get(request_id)
+        if not form:
+            abort(404, msg='Form not found')
         if kwargs['permission'] == 'client':
             if form.user_id != current_user.id:
                 return abort(403, status={'error': 'Forbidden resource'})
@@ -95,17 +112,15 @@ class GetLtcFormAttachments(Resource):
         return send_file(abs_path, as_attachment=True, attachment_filename=filename)
 
 
-class temp_files(Resource):
-    def get(self):
-        return send_file(os.path.abspath('./static/1/1/Design document.pdf'), as_attachment=True)
-        # return send_file('./static/1/1/Design document.pdf', as_attachment=False)
+# class temp_files(Resource):
+#     def get(self):
+#         return send_file(os.path.abspath('./static/1/1/Design document.pdf'), as_attachment=True)
+#         # return send_file('./static/1/1/Design document.pdf', as_attachment=False)
 
 
 class GetLtcFormMetaDataForUser(Resource):
     @role_required('client')
     def get(self):
-        # email = get_jwt_identity()
-        # user: Users = Users.lookUpByEmail(email)
         user: Users = current_user
         forms = LTCRequests.query.filter_by(user_id=user.id)
         results = []

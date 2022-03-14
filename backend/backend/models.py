@@ -333,7 +333,7 @@ class Departments(db.Model):
         for dept in dept_list:
             d = Departments(name=dept['name'], dept_head=dept['head_id'])
             db.session.add(d)
-    
+
 
 class DepartmentLogs(db.Model):
     """
