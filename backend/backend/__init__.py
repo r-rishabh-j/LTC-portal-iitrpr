@@ -25,7 +25,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     db.init_app(app)
     api = Api(app)
     jwt = JWTManager(app)
-    from .auth import TestInsert, RegisterUser, Logout, Login, IsLoggedIn
+    from .auth import RegisterUser, Logout, Login, IsLoggedIn
     from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser, GetLtcFormAttachments
     from .models import Users
     create_database(app)
@@ -34,7 +34,6 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(RegisterUser, '/api/register')
     api.add_resource(Login, '/api/login')
     api.add_resource(Logout, '/api/logout')
-    api.add_resource(TestInsert, '/api/test')
     api.add_resource(IsLoggedIn, '/api/is-logged-in')
     api.add_resource(GetLtcFormMetaData, '/api/get-form-meta')
     api.add_resource(GetLtcFormMetaDataForUser, '/api/getmyforms')

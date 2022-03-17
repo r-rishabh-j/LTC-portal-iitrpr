@@ -1,6 +1,7 @@
 from dataclasses import dataclass
+from multiprocessing import AuthenticationError
 from . import db
-from datetime import datetime
+from datetime import date, datetime
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
 
@@ -24,39 +25,48 @@ class Stages:
             'id': 'establishment',
             'name': 'Establishment Section Approval Pending',
             'department': 'establishment',
+            'role': 'establishment'
         },
         {
             'id': 'audit',
             'name': 'Audit Section Approval Pending',
-            'department': 'audit'
+            'department': 'audit',
+            'role': 'audit'
         },
         {
             'id': 'accounts',
             'name': 'Accounts Section Approval Pending',
-            'department': 'accounts'
+            'department': 'accounts',
+            'role': 'accounts'
         },
         {
             'id': 'registar',
             'name': 'Registrar Approval Pending',
-            'department': 'registrar'
+            'department': 'registrar',
+            'role': 'registrar'
         },
         {
             'id': 'deanfa',
             'name': 'Dean FA Approval Pending',
-            'department': 'deanfa'
+            'department': 'deanfa',
+            'role': 'deanfa'
         },
         {
             'id': 'office_order_pending',
             'name': 'Approved, office order pending',
             'approval_status': True,
-            'department': 'establishment'
+            'department': 'establishment',
+            'role': 'establishment',
         },
         {
             'id': 'office_order_generated',
             'name': 'Approved, office order generated',
             'approval_status': True,
-            'department': 'establishment'
-        },
+            'department': 'establishment',
+            'role': 'establishment',
+        }, ]
+
+    ADVANCE_PAYMENT_STAGES = [
         {
             'id': 'advance_pending',
             'name': 'Advance sum pending',
@@ -87,11 +97,6 @@ class Stages:
 
     def firstStage():
         return Stages.STAGES[0]
-
-
-def get_stage_roles(stage) -> dict:
-    # lookup STAGES dict to get the dept level, query table of the department and insert all stage representatives
-    return dict()
 
 
 """
@@ -151,65 +156,6 @@ class Users(db.Model):
 """
 This creates next stage comment fields in the comment column onlt at the time of forward
 """
-
-
-class LTCRequests(db.Model):
-    __tablename__ = 'ltc_requests'
-    request_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    created_on = db.Column(db.DateTime)
-    stage = db.Column(db.String)
-    """
-    stage: int
-    -> establishment: 1
-    -> audit: 2
-    -> accounts: 3
-    -> registrar: 4
-    -> deanfa: 5
-    -> approved and sent for office order generation: 6
-    -> with user(not submitted): None
-    -> declined: -1
-    """
-    is_active = db.Column(db.Boolean)
-    form: dict = db.Column(MutableDict.as_mutable(JSON))
-    comments: dict = db.Column(MutableDict.as_mutable(JSON))
-    # stores path to attachments
-    attachments: str = db.Column(db.String, nullable=True)
-
-    def __init__(self, user_id: int, stage: int = None, comments: dict = None):
-        self.user_id = user_id
-        self.created_on = datetime.now()
-        self.stage = stage
-        self.is_active = True
-        self.comments = comments  # nested JSON
-
-    def generate_comments_template(stage):
-        if stage not in Stages.STAGES:
-            return None
-        comments = {
-            "approved": get_stage_roles(stage),
-            "comments": get_stage_roles(stage),
-            "signature": get_stage_roles(stage),
-        }
-        return comments
-
-
-class LTCApproved(db.Model):
-    """
-    Stores all approved LTC requests and office order
-    """
-    __tablename__ = 'ltc_approved'
-    request_id = db.Column(db.Integer, primary_key=True)
-    approved_on = db.Column(db.DateTime)  # timestamp of approval
-    """
-    relative path to office order document
-    """
-    office_order = None  # path to office order
-
-    def __init__(self, request_id):
-        self.request_id = request_id
-        self.approved_on = datetime.now()
-        self.office_order = None
 
 
 class EstablishmentLogs(db.Model):
@@ -351,10 +297,205 @@ class DepartmentLogs(db.Model):
     """
     updated_on = db.Column(db.DateTime)
 
-    def __init__(self, request_id):
+    def __init__(self, request_id, department):
         self.request_id = request_id
+        self.department = department
         self.status = ApplicationStatus.new
         self.updated_on = datetime.now()
+
+
+def get_stage_roles(department) -> dict:
+    # lookup STAGES dict to get the dept level, query table of the department and insert all stage representatives
+    stage_users = Users.query.filter_by(department=department)
+    users = {}
+    for user in stage_users:
+        users[user.email] = None
+    return users
+
+
+class LTCRequests(db.Model):
+    __tablename__ = 'ltc_requests'
+    request_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_on = db.Column(db.DateTime)
+    stage = db.Column(db.String)
+    """
+    stage: int
+    -> establishment: 1
+    -> audit: 2
+    -> accounts: 3
+    -> registrar: 4
+    -> deanfa: 5
+    -> approved and sent for office order generation: 6
+    -> with user(not submitted): None
+    -> declined: -1
+    """
+    is_active = db.Column(db.Boolean)
+    form: dict = db.Column(MutableDict.as_mutable(JSON))
+    comments: dict = db.Column(MutableDict.as_mutable(JSON))
+    # stores path to attachments
+    attachments: str = db.Column(db.String, nullable=True)
+
+    def __init__(self, user_id: int):
+        self.user_id = user_id
+        self.created_on = datetime.now()
+        self.stage = ''
+        self.is_active = True
+        self.comments = {}  # nested JSON
+
+    def generate_comments_template(self, dept):
+        comments = {
+            "approved": get_stage_roles(dept),
+            "comments": get_stage_roles(dept),
+        }
+        return comments
+
+    STAGES = [
+        {
+            'id': 'establishment',
+            'name': 'Establishment Section Approval Pending',
+            'department': 'establishment',
+            'role': 'establishment',
+            'table': EstablishmentLogs
+        },
+        {
+            'id': 'audit',
+            'name': 'Audit Section Approval Pending',
+            'department': 'audit',
+            'role': 'audit',
+            'table': AuditLogs
+        },
+        {
+            'id': 'accounts',
+            'name': 'Accounts Section Approval Pending',
+            'department': 'accounts',
+            'role': 'accounts',
+            'table': AccountsLogs
+        },
+        {
+            'id': 'registar',
+            'name': 'Registrar Approval Pending',
+            'department': 'registrar',
+            'role': 'registrar',
+            'table': RegistrarLogs
+        },
+        {
+            'id': 'deanfa',
+            'name': 'Dean FA Approval Pending',
+            'department': 'deanfa',
+            'role': 'deanfa',
+            'table': DeanLogs
+        },
+        {
+            'id': 'office_order_pending',
+            'name': 'Approved, office order pending',
+            'approval_status': True,
+            'department': 'establishment',
+            'role': 'establishment',
+        },
+        {
+            'id': 'office_order_generated',
+            'name': 'Approved, office order generated',
+            'approval_status': True,
+            'department': 'establishment',
+            'role': 'establishment',
+        },
+        {
+            'id': 'advance_pending',
+            'name': 'Advance sum pending',
+            'approval_status': True,
+            'advance_payment_stage': False,
+            'department': 'accounts'
+        },
+        {
+            'id': 'advance_paid',
+            'name': 'Advance sum issued',
+            'approval_status': True,
+            'advance_payment_stage': False,
+            'department': 'accounts',
+        },
+    ]
+
+    def forward(self, current_user:Users):
+        current_stage = self.stage
+
+        if current_stage == '':
+            self.stage = 'establishment'
+            self.comments['establishment'] = self.generate_comments_template(
+                'establishment')
+            est_log: EstablishmentLogs = EstablishmentLogs(
+                request_id=self.request_id)
+            dept_log: DepartmentLogs = DepartmentLogs(
+            request_id=self.request_id, department=current_user.department)
+            # add dept comments
+            db.session.add(est_log)
+            db.session.add(dept_log)
+            return True, {'msg': 'Forwarded to Establishment Section'}
+        elif current_stage == 'establishment':
+            est_log = EstablishmentLogs.query.get(self.request_id)
+            est_log.status = 'forwarded'
+            est_log.updated_on = datetime.now()
+            self.stage = 'audit'
+            self.comments['audit'] = self.generate_comments_template('audit')
+            audit_log: AuditLogs = AuditLogs(request_id=self.request_id)
+            db.session.add(audit_log)
+            return True, {'msg': 'Forwarded to Audit Section'}
+        elif current_stage == 'audit':
+            au_log: AuditLogs = AuditLogs.query.get(self.request_id)
+            au_log.status = 'forwarded'
+            au_log.updated_on = datetime.now()
+            self.stage = 'accounts'
+            self.comments['accounts'] = self.generate_comments_template(
+                'accounts')
+            log: AccountsLogs = AccountsLogs(request_id=self.request_id)
+            db.session.add(log)
+            return True, {'msg': 'Forwarded to Accounts Section'}
+        elif current_stage == 'accounts':
+            ac_log: AccountsLogs = AccountsLogs.query.get(self.request_id)
+            ac_log.status = 'forwarded'
+            self.stage = 'registrar'
+            self.comments['registrar'] = self.generate_comments_template(
+                'registrar')
+            log: RegistrarLogs = RegistrarLogs(request_id=self.request_id)
+            db.session.add(log)
+            return True, {'msg': 'Forwarded to Registrar Section'}
+        elif current_stage == 'registrar':
+            reg_log: RegistrarLogs = RegistrarLogs.query.get(self.request_id)
+            reg_log.status = 'forwarded'
+            reg_log.updated_on = datetime.now()
+            self.stage = 'deanfa'
+            self.comments['deanfa'] = self.generate_comments_template('deanfa')
+            log: DeanLogs = DeanLogs(request_id=self.request_id)
+            db.session.add(log)
+            return True, {'msg': 'Forwarded to Dean FA Section'}
+        elif current_stage == 'deanfa':
+            dean_log: DeanLogs = DeanLogs.query.get(self.request_id)
+            dean_log.status = 'forwarded'
+            dean_log.updated_on = datetime.now()
+            self.stage = 'approved'
+            log: LTCApproved = LTCApproved(request_id=self.request_id)
+            db.session.add(log)
+            return True, {'msg': 'LTC Approved'}
+        elif current_stage == 'approved':
+            return False, {'msg': 'Already Approved'}
+
+
+class LTCApproved(db.Model):
+    """
+    Stores all approved LTC requests and office order
+    """
+    __tablename__ = 'ltc_approved'
+    request_id = db.Column(db.Integer, primary_key=True)
+    approved_on = db.Column(db.DateTime)  # timestamp of approval
+    """
+    relative path to office order document
+    """
+    office_order = db.Column(db.String, nullable=True)  # path to office order
+
+    def __init__(self, request_id):
+        self.request_id = request_id
+        self.approved_on = datetime.now()
+        self.office_order = None
 
 
 class test_table(db.Model):

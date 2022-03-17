@@ -29,7 +29,6 @@ class IsLoggedIn(Resource):
         user: Users = current_user
         if not user:
             return abort(401, msg='Login again')
-        # TODO: add user details such as profile pic, name, email, etc if logged in
         return jsonify({
             'status': 'logged-in',
             'claims': {
@@ -54,7 +53,6 @@ class Login(Resource):
         response = requests.post(
             'https://oauth2.googleapis.com/token', data=data)
         if not response.ok:
-            # return make_response(redirect(os.environ.get('FRONTEND_URL')))
             return None
         access = response.json()['access_token']
 
@@ -64,7 +62,6 @@ class Login(Resource):
         )
 
         if not response.ok:
-            # return make_response(redirect(os.environ.get('FRONTEND_URL')))
             return None
 
         return response.json()
@@ -101,14 +98,3 @@ class Login(Resource):
         response = make_response(redirect(os.environ.get('FRONTEND_URL')))
         set_access_cookies(response, access_tk)
         return response
-
-
-class TestInsert(Resource):
-    @jwt_required()
-    def get(self):
-        print("TEST")
-        return {}, 200
-
-    @jwt_required()
-    def post(self):
-        return {"success": "inserted"}, 201

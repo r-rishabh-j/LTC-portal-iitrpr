@@ -3,6 +3,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Grid, Paper, Typography } from "@material-ui/core";
 import { Button } from "@mui/material";
 import axios from "axios";
+import GeneratePDF from "../../../Utilities/GeneratePDF";
 
 const handleAttachmentClick = (event, cellValues) => {
   console.log(cellValues.row.request_id);
@@ -34,6 +35,22 @@ const handleAttachmentClick = (event, cellValues) => {
 
 const handleFormClick = (event, cellValues) => {
   console.log(cellValues.row.request_id);
+  const data = { request_id: cellValues.row.request_id };
+   axios({
+     method: "post",
+     url: "api/getformdata",
+     data: JSON.stringify(data),
+     headers: { "Content-type": "application/json" },
+   }).then((response) => {
+     console.log(response.data.data.form_data)
+     GeneratePDF(response.data.data.form_data);
+   }).catch((error) => {
+    if (error.response) {
+      console.log(error.response);
+      console.log(error.response.status);
+      alert("Form not found");
+    }
+  });
 };
 
 const handleCellClick = (param, event) => {

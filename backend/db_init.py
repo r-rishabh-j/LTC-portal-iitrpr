@@ -20,6 +20,9 @@ user_list = [
           dept='accounts', permission='accounts'),
     Users(email='audit@email', name='audit Section',
           dept='audit', permission='audit'),
+]
+
+hod_list = [
     Users(email='hod_cse@email', name='HOD CSE',
           dept='cse', permission='dept_head'),
 ]
@@ -41,6 +44,19 @@ with app.app_context() as ctx:
         {'name': 'cse', 'head_id': None},
         {'name': 'ee', 'head_id': None},
     ])
+
     for u in user_list:
         db.session.add(u)
+
+    for head in hod_list:
+        db.session.add(head)
+    db.session.commit()
+
+    for head in hod_list:
+        db.session.refresh(head)
+
+    for head in hod_list:
+        dept: Departments = Departments.query.get(head.department)
+        dept.dept_head = head.id
+
     db.session.commit()
