@@ -14,9 +14,8 @@ export default function Navbar({ handleDrawerToggle }) {
   const classes = useStyles();
 
   return (
-    <AppBar position="sticky">
+    <AppBar position="sticky" style={{ background: '#0c979c' }}>
       <Toolbar>
-
         <Typography variant="h6" className={classes.title}>
           LTC Portal
         </Typography>

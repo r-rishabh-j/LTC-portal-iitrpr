@@ -4,7 +4,7 @@ import requests
 from . import db
 from flask import jsonify, request, make_response, redirect
 from flask_restful import Resource, reqparse, marshal_with, abort, fields
-from .models import Users
+from .models import Departments, Users
 from flask_jwt_extended import create_access_token, jwt_required, \
     set_access_cookies, unset_jwt_cookies, current_user
 from .role_manager import role_required
@@ -29,13 +29,14 @@ class IsLoggedIn(Resource):
         user: Users = current_user
         if not user:
             return abort(401, msg='Login again')
+        user_dept: Departments = Departments.query.get(user.department)
         return jsonify({
             'status': 'logged-in',
             'claims': {
                 'permission': user.permission,
                 'name': user.name,
                 'email': user.email,
-                'department': user.department,
+                'department': user_dept.full_name,
                 'picture': user.picture
             }
         })

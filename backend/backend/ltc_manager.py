@@ -191,7 +191,7 @@ class GetLtcFormMetaData(Resource):
                 'user_id': form.user_id,
                 'created_on': form.created_on,
                 'stage': form.stage,
-                'is_active': form.is_active,
+                'is_active': "Active" if form.is_active else "Not Active",
             })
         response = {'data': results}
 

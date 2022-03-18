@@ -4,6 +4,7 @@ from flask_cors import CORS
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
+
 from .file_manager import FileManager
 from datetime import timedelta
 
@@ -27,7 +28,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     jwt = JWTManager(app)
     from .auth import RegisterUser, Logout, Login, IsLoggedIn
     from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser, GetLtcFormAttachments
-    from .models import Users
+    from .models import Users, Departments
     create_database(app)
 
     api.add_resource(ApplyForLTC, '/api/apply')

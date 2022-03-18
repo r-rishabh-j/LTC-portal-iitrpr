@@ -269,16 +269,18 @@ class Departments(db.Model):
     dept_head = db.Column(db.Integer)  # userID of the department head
     # whether the dept belongs to a stage in the heirarchy
     is_stage = db.Column(db.Boolean)
+    full_name = db.Column(db.String)
 
-    def __init__(self, name, is_stage, dept_head=None):
+    def __init__(self, name, is_stage, full_name, dept_head=None):
         self.name = name
         self.is_stage = is_stage
+        self.full_name = full_name
         self.dept_head = dept_head
 
     def create_departments_from_list(dept_list):
         for dept in dept_list:
             d = Departments(
-                name=dept['name'], is_stage=dept['is_stage'], dept_head=dept['head_id'])
+                name=dept['name'], is_stage=dept['is_stage'], full_name=dept['full_name'], dept_head=dept['head_id'])
             db.session.add(d)
 
 
