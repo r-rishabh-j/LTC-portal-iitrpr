@@ -59,7 +59,7 @@ export default function HeaderComponent(props) {
 
   return (
     <div>
-      <Navbar handleDrawerToggle={handleDrawerToggle} />
+      <Navbar handleDrawerToggle={handleDrawerToggle} profileInfo={props.profileInfo.permission}/>
       <SideNav
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}

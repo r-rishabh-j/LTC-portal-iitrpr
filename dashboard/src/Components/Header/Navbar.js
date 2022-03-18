@@ -10,14 +10,14 @@ import { IconButton } from '@material-ui/core';
 import { useStyles } from './HeaderStyles';
 
 
-export default function Navbar({ handleDrawerToggle }) {
+export default function Navbar({ handleDrawerToggle, profileInfo }) {
   const classes = useStyles();
 
   return (
     <AppBar position="sticky" style={{ background: '#0c979c' }}>
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
-          LTC Portal
+          LTC Portal: {profileInfo}
         </Typography>
         <Hidden smDown>
           <Notification />

@@ -26,7 +26,7 @@ export default function AdminPage() {
 
   return (
     <div>
-      <Navbar handleDrawerToggle={handleDrawerToggle} />
+      <Navbar handleDrawerToggle={handleDrawerToggle} profileInfo="admin"/>
       <SideNav
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
