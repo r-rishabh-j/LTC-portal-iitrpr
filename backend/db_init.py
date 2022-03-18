@@ -34,15 +34,15 @@ with app.app_context() as ctx:
     Users.__table__.drop(db.engine)
     db.create_all(app=app)
     Departments.create_departments_from_list([
-        {'name': 'establishment', 'head_id': None},
-        {'name': 'registrar', 'head_id': None},
-        {'name': 'accounts', 'head_id': None},
-        {'name': 'deanfa', 'head_id': None},
-        {'name': 'audit', 'head_id': None},
-        {'name': 'admin', 'head_id': None},
-        {'name': 'math', 'head_id': None},
-        {'name': 'cse', 'head_id': None},
-        {'name': 'ee', 'head_id': None},
+        {'name': 'establishment', 'head_id': None, 'is_stage': True},
+        {'name': 'registrar', 'head_id': None, 'is_stage': True},
+        {'name': 'accounts', 'head_id': None, 'is_stage': True},
+        {'name': 'deanfa', 'head_id': None, 'is_stage': True},
+        {'name': 'audit', 'head_id': None, 'is_stage': True},
+        {'name': 'admin', 'head_id': None, 'is_stage': False},
+        {'name': 'math', 'head_id': None, 'is_stage': False},
+        {'name': 'cse', 'head_id': None, 'is_stage': False},
+        {'name': 'ee', 'head_id': None, 'is_stage': False},
     ])
 
     for u in user_list:

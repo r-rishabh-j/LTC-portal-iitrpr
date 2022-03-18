@@ -1,7 +1,5 @@
-from dataclasses import dataclass
-from multiprocessing import AuthenticationError
 from . import db
-from datetime import date, datetime
+from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
 
@@ -269,14 +267,18 @@ class Departments(db.Model):
     __tablename__ = 'departments'
     name = db.Column(db.String(20), primary_key=True)
     dept_head = db.Column(db.Integer)  # userID of the department head
+    # whether the dept belongs to a stage in the heirarchy
+    is_stage = db.Column(db.Boolean)
 
-    def __init__(self, name, dept_head=None):
+    def __init__(self, name, is_stage, dept_head=None):
         self.name = name
+        self.is_stage = is_stage
         self.dept_head = dept_head
 
     def create_departments_from_list(dept_list):
         for dept in dept_list:
-            d = Departments(name=dept['name'], dept_head=dept['head_id'])
+            d = Departments(
+                name=dept['name'], is_stage=dept['is_stage'], dept_head=dept['head_id'])
             db.session.add(d)
 
 
@@ -416,7 +418,7 @@ class LTCRequests(db.Model):
         },
     ]
 
-    def forward(self, current_user:Users):
+    def forward(self, current_user: Users):
         current_stage = self.stage
 
         if current_stage == '':
@@ -425,11 +427,14 @@ class LTCRequests(db.Model):
                 'establishment')
             est_log: EstablishmentLogs = EstablishmentLogs(
                 request_id=self.request_id)
-            dept_log: DepartmentLogs = DepartmentLogs(
-            request_id=self.request_id, department=current_user.department)
-            # add dept comments
+            user_dept: Departments = Departments.query.get(
+                current_user.department)
+            if not user_dept.is_stage:
+                # add dept comments
+                dept_log: DepartmentLogs = DepartmentLogs(
+                    request_id=self.request_id, department=current_user.department)
+                db.session.add(dept_log)
             db.session.add(est_log)
-            db.session.add(dept_log)
             return True, {'msg': 'Forwarded to Establishment Section'}
         elif current_stage == 'establishment':
             est_log = EstablishmentLogs.query.get(self.request_id)

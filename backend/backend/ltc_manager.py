@@ -23,23 +23,24 @@ class ApplyForLTC(Resource):
 
     @role_required('client')
     def post(self):
-        file = request.files.get('attachments')
-        print(file)
-        form_data = json.loads(request.form.get('form'))
+        # gets file tagged with name attachments
         user: Users = current_user
-        if user:
-            filepath = None
-            if file != None:
-                filepath = filemanager.saveFile(file, user.id)
-            print(form_data)
-            form_data.pop('attachments')
-            new_request: LTCRequests = LTCRequests(user_id=user.id)
-            new_request.form, new_request.attachments = form_data, filepath
-            self.initialiseApplication(new_request, user)
-            return make_response(jsonify({'status': 'ok', 'msg': 'Applied for LTC'}), 200)
-        else:
-            abort(400, status=jsonify(
-                {'status': 'error', 'msg': 'user not found'}))
+        file = request.files.get('attachments')
+        # get form data
+        form_data = json.loads(request.form.get('form'))
+        filepath = None
+        # save file at filepath
+        if file != None:
+            filepath = filemanager.saveFile(file, user.id)
+        print(form_data)
+        # remove key attachments (which is redudant) from form json
+        form_data.pop('attachments')
+        # add LTC request to table
+        new_request: LTCRequests = LTCRequests(user_id=user.id)
+        new_request.form, new_request.attachments = form_data, filepath
+        # initialise the application
+        self.initialiseApplication(new_request, user)
+        return make_response(jsonify({'status': 'ok', 'msg': 'Applied for LTC'}), 200)
 
 
 class CommentOnLTC(Resource):
@@ -53,6 +54,7 @@ class CommentOnLTC(Resource):
 
     @roles_required(roles=allowed_roles)
     def post(self, **kwargs):
+        # post request ID, comment, and approval of the user
         current_user: Users
         request_id = request.json['request_id']
         if not request_id:
@@ -60,16 +62,17 @@ class CommentOnLTC(Resource):
         form: LTCRequests = LTCRequests.query.get(int(request_id))
         if not form:
             abort(404, msg='Form not found')
-        comment = request_id.json['comment']
-        approval = True if str(
-            request_id.json.get['approval']) == 'yes' else False
-        dept = current_user.department
-        commentor_id = current_user.email
-        form.comments[dept]['comments'][commentor_id] = str(comment)
-        form.comments[dept]['approved'][commentor_id] = approval
+        user_dept: Departments = Departments.query.get(current_user.department)
+        if not user_dept.is_stage:
+            abort(401, msg='Only stage users allowed')
 
-        dept_head: Departments = Departments.query.get(current_user.department)
-        if current_user.id == dept_head.dept_head:
+        comment = request_id.json['comment']
+        approval = True if str(request_id.json.get['approval']) == 'yes' else False
+
+        form.comments[current_user.department]['comments'][current_user.email] = str(comment)
+        form.comments[current_user.department]['approved'][current_user.email] = approval
+
+        if current_user.id == user_dept.dept_head:
             if not approval:
                 # decline application
                 return {"Error": "Not implemented decline"}, 400
@@ -82,6 +85,9 @@ class CommentOnLTC(Resource):
 
 
 class GetLtcFormData(Resource):
+    """
+    Get LTC form data by request ID
+    """
     @check_role()
     def post(self, **kwargs):
         request_id = request.json['request_id']
@@ -112,8 +118,11 @@ class GetLtcFormData(Resource):
 
 
 class GetLtcFormAttachments(Resource):
+    """
+    Get LTC form attachments by request ID
+    """
     @check_role()
-    def post(self, **kwargs):
+    def post(self, permission):
         request_id = request.json['request_id']
         print(request_id)
         if not request_id:
@@ -121,7 +130,7 @@ class GetLtcFormAttachments(Resource):
         form: LTCRequests = LTCRequests.query.get(request_id)
         if not form:
             abort(404, msg='Form not found')
-        if kwargs['permission'] == 'client':
+        if permission == 'client':
             if form.user_id != current_user.id:
                 return abort(403, status={'error': 'Forbidden resource'})
         attachment_path = form.attachments
@@ -134,6 +143,9 @@ class GetLtcFormAttachments(Resource):
 
 
 class GetLtcFormMetaDataForUser(Resource):
+    """
+    Get LTC form data by user ID
+    """
     @role_required('client')
     def get(self):
         user: Users = current_user
@@ -153,6 +165,9 @@ class GetLtcFormMetaDataForUser(Resource):
 
 
 class GetLtcFormMetaData(Resource):
+    """
+    Get LTC form metadata from LTC table
+    """
     allowed_roles = [
         'admin',
         'deanfa',
