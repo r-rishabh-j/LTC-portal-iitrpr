@@ -68,14 +68,20 @@ const cellElement = (cellValues) => {
     </div>
   );
 }
-
+const timeElement = (cellValues) => {
+  return (
+    <div title={cellValues.formattedValue.replace('GMT', 'IST')} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+      {cellValues.formattedValue.replace('GMT', 'IST')}
+    </div>
+  );
+}
 const columns = [
   /*
   id, email, created on, is active, stage, view form, download(button)*/
   { field: "request_id", headerName: "Application ID", width: 100, flex: 1, renderCell: cellElement },
   { field: "user", headerName: "User Email", width: 150, flex: 1, renderCell: cellElement },
   { field: "user_id", headerName: "User ID", width: 150, flex: 1, renderCell: cellElement },
-  { field: "created_on", headerName: "Created on", width: 150, flex: 1, renderCell: cellElement },
+  { field: "created_on", headerName: "Created on", width: 150, flex: 1, renderCell: timeElement },
   { field: "stage", headerName: "Stage", flex: 1, width: 150, renderCell: cellElement },
   { field: "is_active", headerName: "Status", width: 150, flex: 1, renderCell: cellElement },
   {

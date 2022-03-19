@@ -1,8 +1,8 @@
 from . import db
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
-
+from zoneinfo import ZoneInfo
 
 class Stage:
     def __init__(self, id, name, department):
@@ -316,7 +316,7 @@ def get_stage_roles(department) -> dict:
         users[user.email] = None
     return users
 
-
+import pytz
 class LTCRequests(db.Model):
     __tablename__ = 'ltc_requests'
     request_id = db.Column(db.Integer, primary_key=True)
@@ -339,7 +339,6 @@ class LTCRequests(db.Model):
     comments: dict = db.Column(MutableDict.as_mutable(JSON))
     # stores path to attachments
     attachments: str = db.Column(db.String, nullable=True)
-
     def __init__(self, user_id: int):
         self.user_id = user_id
         self.created_on = datetime.now()
