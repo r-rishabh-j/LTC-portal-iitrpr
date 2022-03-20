@@ -1,3 +1,4 @@
+from datetime import timezone
 import os
 import json
 from time import timezone
@@ -68,9 +69,11 @@ class CommentOnLTC(Resource):
             abort(401, msg='Only stage users allowed')
 
         comment = request_id.json['comment']
-        approval = True if str(request_id.json.get['approval']) == 'yes' else False
+        approval = True if str(
+            request_id.json.get['approval']) == 'yes' else False
 
-        form.comments[current_user.department]['comments'][current_user.email] = str(comment)
+        form.comments[current_user.department]['comments'][current_user.email] = str(
+            comment)
         form.comments[current_user.department]['approved'][current_user.email] = approval
 
         if current_user.id == user_dept.dept_head:
@@ -142,7 +145,7 @@ class GetLtcFormAttachments(Resource):
         abs_path = os.path.abspath(attachment_path)
         return send_file(abs_path, as_attachment=True, attachment_filename=filename)
 
-from datetime import timezone
+
 class GetLtcFormMetaDataForUser(Resource):
     """
     Get LTC form data by user ID

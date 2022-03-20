@@ -19,7 +19,7 @@ export default function HeaderComponent(props) {
   };
   const handleDrawerClose = (i) => {
     setMobileOpen(false);
-    
+
   }
   // const printProfile = () =>{
   //   console.log("in Header")
@@ -29,7 +29,7 @@ export default function HeaderComponent(props) {
 
   return (
     <div>
-      <Navbar handleDrawerToggle={handleDrawerToggle} profileInfo={props.profileInfo}/>
+      <Navbar handleDrawerToggle={handleDrawerToggle} profileInfo={props.profileInfo} />
       <SideNav
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
@@ -37,18 +37,18 @@ export default function HeaderComponent(props) {
       />
       <Box className={classes.wrapper}>
         {/* <button onClick={getData}>Profile</button> */}
-        
-  
+
+
         <Routes>
-          <Route path="/home" element={<Home profileInfo={props.profileInfo}/>}></Route>
+          <Route path="/home" element={<Home profileInfo={props.profileInfo} />}></Route>
           <Route
             path="/create"
-            element={<CreateApplication token={token} setToken={setToken} />}
+            element={<CreateApplication />}
           ></Route>
           <Route path="/past" element={<PastApplications />}></Route>
           <Route
             path="/notifications"
-            element={<Notifications token={token} setToken={setToken} />}
+            element={<Notifications />}
           ></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
