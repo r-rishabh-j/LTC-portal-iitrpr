@@ -25,9 +25,10 @@ export default function CreateApplication(props) {
   const classes = useStyles();
   const { handleSubmit, control } = useForm({});
   const [File, setFile] = useState(null)
-  const [isLoggedIn, profileInfo] = useAuthCookie();
+  // const [isLoggedIn, profileInfo] = useAuthCookie();
+  const profileInfo = JSON.parse(sessionStorage.getItem('profile'));
   const name = profileInfo.name;
-  const department  = profileInfo.department
+  const department  = profileInfo.department;
  
 
   
