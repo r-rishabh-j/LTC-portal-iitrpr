@@ -22,44 +22,17 @@ export default function HeaderComponent(props) {
   };
   const handleDrawerClose = (i) => {
     setMobileOpen(false);
-    console.log("close")
     
   }
-  const printProfile = () =>{
-    console.log("in Header")
-    //console.log(props.profileInfo)
-  }
+  // const printProfile = () =>{
+  //   console.log("in Header")
+  //   //console.log(props.profileInfo)
+  // }
 
-  // const [profileData, setProfileData] = useState(null);
-  // function getData(){
-  //   axios({
-  //     method: "GET",
-  //     url: "/api/test",
-  //     headers: {
-  //       Authorization: "Bearer " + props.token,
-  //     },
-  //   })
-  //     .then((response) => {
-  //       const res = response.data;
-  //       console.log(res);
-  //       res.access_token && props.setToken(res.access_token);
-  //       setProfileData({
-  //         profile_name: res.name,
-  //         about_me: res.about,
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.log(error.response);
-  //         console.log(error.response.status);
-  //         console.log(error.response.headers);
-  //       }
-  //     });
-  // } 
 
   return (
     <div>
-      <Navbar handleDrawerToggle={handleDrawerToggle} profileInfo={props.profileInfo.permission}/>
+      <Navbar handleDrawerToggle={handleDrawerToggle} profileInfo={props.profileInfo}/>
       <SideNav
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}

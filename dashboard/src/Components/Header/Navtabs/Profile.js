@@ -10,7 +10,9 @@ import { ListItem, ListItemIcon, ListItemText, Avatar } from "@mui/material";
 
 import image from "./avatar.png";
 
-export default function Profile() {
+export default function Profile({user}) {
+
+  // const avatar_letter = user.charAt(0)
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -33,7 +35,7 @@ export default function Profile() {
         aria-controls="simple-menu"
         aria-haspopup="true"
         onClick={handleClick}
-        startIcon={<Avatar src={image}></Avatar>}
+        startIcon={<Avatar ></Avatar>}
       >
 
       </Button>

@@ -13,13 +13,13 @@ export const FormInputText = ({name, control, label, required, disabled, default
       console.log("SessionStorage" + inputName)
       if(inputName){
           setInputName(inputName)
-          if(name === "Name"){
+          if(name === "name"){
             setValue(inputName.name)
           }
-          else if(name === "Department"){
+          else if(name === "department"){
             setValue(inputName.department)
           }
-          else if(name === "Designation"){
+          else if(name === "designation"){
             setValue(inputName.permission)
           }
           

@@ -36,10 +36,10 @@ export default function CreateApplication(props) {
     const formData = new FormData();
 
     const profile = JSON.parse(sessionStorage.getItem('profile'));
-    data.Name = profile.name;
-    data.Designation = profile.permission;
-    data.Department = profile.department;
-    data["Employee Code"] = "123";
+    data.name = profile.name;
+    data.designation = profile.permission;
+    data.department = profile.department;
+    data["emp_code"] = "123";
 
     console.log('data: ', JSON.stringify(data));
     formData.append('attachments', data.attachments[0]);
@@ -80,7 +80,7 @@ export default function CreateApplication(props) {
                 {/* <h4>Leave Required</h4> */}
                 <Grid item xs={12}>
                   <FormInputText
-                    name={"Name"}
+                    name={"name"}
                     control={control}
                     label={"Name"}
                     required={true}
@@ -93,7 +93,7 @@ export default function CreateApplication(props) {
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <FormInputText
-                      name={"Designation"}
+                      name={"designation"}
                       control={control}
                       label={"Designation"}
                       required={true}
@@ -103,7 +103,7 @@ export default function CreateApplication(props) {
                   </Grid>
                   <Grid item xs={6}>
                     <FormInputText
-                      name="Department"
+                      name="department"
                       control={control}
                       label="Department"
                       required={true}
@@ -115,7 +115,7 @@ export default function CreateApplication(props) {
                 <Grid container spacing={2}>
                   <Grid item xs={4}>
                     <FormInputText
-                      name="Employee Code"
+                      name="emp_code"
                       control={control}
                       label="Employee Code"
                       required={true}
@@ -125,8 +125,7 @@ export default function CreateApplication(props) {
                   </Grid>
                   <Grid item xs={8}>
                     <FormInputDate
-                      name="Date of entering the Central Government
-Service/Date of Joining with IIT Ropar"
+                      name="joining_date"
                       control={control}
                       label="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
@@ -135,7 +134,7 @@ Service/Date of Joining with IIT Ropar"
                   </Grid>
                 </Grid>
                 <FormInputText
-                  name="Band Pay + AGP/GP"
+                  name="band_pay"
                   control={control}
                   label="Band Pay + AGP/GP"
                   required={true}
@@ -145,7 +144,7 @@ Service/Date of Joining with IIT Ropar"
                 </Typography>
 
                 <FormInputText
-                  name="Nature"
+                  name="nature"
                   control={control}
                   label="Nature"
                   required={true}
@@ -153,7 +152,7 @@ Service/Date of Joining with IIT Ropar"
                 <Grid container spacing={2}>
                   <Grid item xs={4}>
                     <FormInputDate
-                      name="Nature From"
+                      name="nature_from"
                       control={control}
                       label="From"
                       required={true}
@@ -161,7 +160,7 @@ Service/Date of Joining with IIT Ropar"
                   </Grid>
                   <Grid item xs={4}>
                     <FormInputDate
-                      name="Nature To"
+                      name="nature_to"
                       control={control}
                       label="To"
                       required={true}
@@ -169,7 +168,7 @@ Service/Date of Joining with IIT Ropar"
                   </Grid>
                   <Grid item xs={4}>
                     <FormInputNumber
-                      name="No of Days"
+                      name="num_days"
                       control={control}
                       label="No. of Days"
                       required={true}
@@ -181,7 +180,7 @@ Service/Date of Joining with IIT Ropar"
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <FormInputDate
-                      name="Prefix From"
+                      name="prefix_from"
                       control={control}
                       label="From"
                       required={true}
@@ -189,7 +188,7 @@ Service/Date of Joining with IIT Ropar"
                   </Grid>
                   <Grid item xs={6}>
                     <FormInputDate
-                      name="Prefix To"
+                      name="prefix_to"
                       control={control}
                       label="To"
                       required={true}
@@ -200,7 +199,7 @@ Service/Date of Joining with IIT Ropar"
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <FormInputDate
-                      name="Suffix From"
+                      name="suffix_from"
                       control={control}
                       label="From"
                       required={true}
@@ -208,7 +207,7 @@ Service/Date of Joining with IIT Ropar"
                   </Grid>
                   <Grid item xs={6}>
                     <FormInputDate
-                      name="Suffix To"
+                      name="suffix_to"
                       control={control}
                       label="To"
                       required={true}
@@ -219,8 +218,7 @@ Service/Date of Joining with IIT Ropar"
                   Whether spouse is employed, if yes whether entitled to LTC
                 </Typography>
                 <FormInputRadio
-                  name="Whether spouse is employed, if yes whether
-entitled to LTC"
+                  name="spouse_is_employed"
                   control={control}
                   label="Whether spouse is employed, if yes whether
 entitled to LTC"
@@ -234,7 +232,7 @@ entitled to LTC"
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <FormInputDate
-                      name="Self Date of Outward journey"
+                      name="self_date_outward"
                       control={control}
                       label="Date of Outward journey"
                       required={true}
@@ -242,7 +240,7 @@ entitled to LTC"
                   </Grid>
                   <Grid item xs={6}>
                     <FormInputDate
-                      name="Self Date of Inward journey"
+                      name="self_date_inward"
                       control={control}
                       label="Date of Inward journey"
                       required={true}
@@ -254,7 +252,7 @@ entitled to LTC"
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <FormInputDate
-                      name="Family Date of Outward journey"
+                      name="family_date_outward"
                       control={control}
                       label="Date of Outward journey"
                       required={true}
@@ -262,7 +260,7 @@ entitled to LTC"
                   </Grid>
                   <Grid item xs={6}>
                     <FormInputDate
-                      name="Family Date of Inward journey"
+                      name="family_date_inward"
                       control={control}
                       label="Date of Inward journey"
                       required={true}
@@ -270,20 +268,20 @@ entitled to LTC"
                   </Grid>
                 </Grid>
                 <FormInputText
-                  name="Home Town"
+                  name="home_town"
                   control={control}
                   label="Home Town as recorded in the Service Book"
                   required={true}
                 />
                 <FormInputText
-                  name="Nature of LTC"
+                  name="ltc_nature"
                   control={control}
                   label="Nature of LTC to be availed, Home Town /
 Anywhere in India with Block Year"
                   required={true}
                 />
                 <FormInputText
-                  name="Place"
+                  name="place"
                   control={control}
                   label="If, anywhere in India, the place to be visited"
                   required={true}
@@ -291,7 +289,7 @@ Anywhere in India with Block Year"
                 <Grid container spacing={2}>
                   <Grid item xs={9}>
                     <FormInputText
-                      name="Estimated Fare"
+                      name="est_fare"
                       control={control}
                       label="Estimated fare of entitled class from the
 headquarter to Home Town/Place of visit by
@@ -341,7 +339,7 @@ shortest route (proofs need to be attached)."
                 <Grid container spacing={1}>
                   <Grid item xs={1}>
                     <FormInputText
-                      name="SNo1"
+                      name="sno_1"
                       control={control}
                       label="S.No."
                       required={false}
@@ -352,7 +350,7 @@ shortest route (proofs need to be attached)."
 
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Name1"
+                      name="name_1"
                       control={control}
                       label="Name"
                       required={false}
@@ -360,7 +358,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
-                      name="Age1"
+                      name="age_1"
                       control={control}
                       label="Age"
                       required={false}
@@ -368,7 +366,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Relationship1"
+                      name="relationship_1"
                       control={control}
                       label="Relationship"
                       required={false}
@@ -376,7 +374,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Travelling From1"
+                      name="travelling_from_1"
                       control={control}
                       label="Travelling(Place) From"
                       required={false}
@@ -384,7 +382,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Travelling To1"
+                      name="travelling_to_1"
                       control={control}
                       label="Travelling(Place) To"
                       required={false}
@@ -392,7 +390,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
-                      name="Back1"
+                      name="back_1"
                       control={control}
                       label="Back(Yes/No)"
                       required={false}
@@ -400,7 +398,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
-                      name="Mode of Travel1"
+                      name="travel_mode_1"
                       control={control}
                       label="Mode of Travel"
                       required={false}
@@ -409,7 +407,7 @@ shortest route (proofs need to be attached)."
 
                   <Grid item xs={1}>
                     <FormInputText
-                      name="SNo2"
+                      name="sno_2"
                       control={control}
                       label="S.No."
                       required={false}
@@ -420,7 +418,7 @@ shortest route (proofs need to be attached)."
 
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Name2"
+                      name="name_2"
                       control={control}
                       label="Name"
                       required={false}
@@ -428,7 +426,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
-                      name="Age2"
+                      name="age_2"
                       control={control}
                       label="Age"
                       required={false}
@@ -436,7 +434,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Relationship2"
+                      name="relationship_2"
                       control={control}
                       label="Relationship"
                       required={false}
@@ -444,7 +442,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Travelling From2"
+                      name="travelling_from_2"
                       control={control}
                       label="Travelling(Place) From"
                       required={false}
@@ -452,7 +450,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Travelling To2"
+                      name="travelling_to_2"
                       control={control}
                       label="Travelling(Place) To"
                       required={false}
@@ -460,7 +458,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
-                      name="Back2"
+                      name="back_2"
                       control={control}
                       label="Back(Yes/No)"
                       required={false}
@@ -468,7 +466,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
-                      name="Mode of Travel2"
+                      name="travel_mode_2"
                       control={control}
                       label="Mode of Travel"
                       required={false}
@@ -477,7 +475,7 @@ shortest route (proofs need to be attached)."
 
                   <Grid item xs={1}>
                     <FormInputText
-                      name="SNo3"
+                      name="sno_3"
                       control={control}
                       label="S.No."
                       required={false}
@@ -488,7 +486,7 @@ shortest route (proofs need to be attached)."
 
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Name3"
+                      name="name_3"
                       control={control}
                       label="Name"
                       required={false}
@@ -496,7 +494,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
-                      name="Age3"
+                      name="age_3"
                       control={control}
                       label="Age"
                       required={false}
@@ -504,7 +502,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Relationship3"
+                      name="relationship_3"
                       control={control}
                       label="Relationship"
                       required={false}
@@ -512,7 +510,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Travelling From3"
+                      name="travelling_from_3"
                       control={control}
                       label="Travelling(Place) From"
                       required={false}
@@ -520,7 +518,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
-                      name="Travelling To3"
+                      name="travelling_to_3"
                       control={control}
                       label="Travelling(Place) To"
                       required={false}
@@ -528,7 +526,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
-                      name="Back3"
+                      name="back_3"
                       control={control}
                       label="Back(Yes/No)"
                       required={false}
@@ -536,7 +534,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
-                      name="Mode of Travel3"
+                      name="travel_mode_3"
                       control={control}
                       label="Mode of Travel"
                       required={false}
@@ -548,7 +546,7 @@ shortest route (proofs need to be attached)."
                   <Grid item xs={6}>
                     <Typography>Advance Required</Typography>
                     <FormInputRadio
-                      name="Advance Required"
+                      name="adv_is_required"
                       control={control}
                       label="Advance Required"
                     />
@@ -556,14 +554,14 @@ shortest route (proofs need to be attached)."
                   <Grid item xs={6}>
                     <Typography>Encashment of earned leave required</Typography>
                     <FormInputRadio
-                      name="Encashment Required"
+                      name="encashment_is_required"
                       control={control}
                       label="Encashment Required"
                     />
                   </Grid>
                 </Grid>
                 <FormInputNumber
-                  name="Encashment Days"
+                  name="encashment_days"
                   control={control}
                   label="No. of encashment of leave days "
                 />
