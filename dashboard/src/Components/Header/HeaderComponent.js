@@ -1,21 +1,18 @@
 import React from 'react'
-import { useState} from 'react';
+import { useState } from 'react';
 import Navbar from './Navbar'
 import SideNav from './SideNav'
-import {Routes, Route, Navigate} from 'react-router-dom';
+import { Routes, Route, Navigate, BrowserRouter as Router } from 'react-router-dom';
 import Home from '../Body/Dashboard/Home';
 import CreateApplication from '../Body/Dashboard/CreateApplication';
 import PastApplications from '../Body/Dashboard/PastApplications';
 import Notifications from '../Body/Dashboard/Notifications';
 import { Box } from "@material-ui/core";
-import {useStyles} from './HeaderStyles';
+import { useStyles } from './HeaderStyles';
 import axios from "axios";
-import useToken from '../Tokens/useToken';
 
 export default function HeaderComponent(props) {
   const classes = useStyles();
-  const { token, removeToken, setToken } = useToken();
-
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);

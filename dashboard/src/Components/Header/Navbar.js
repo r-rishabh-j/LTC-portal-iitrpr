@@ -21,7 +21,7 @@ export default function Navbar({ handleDrawerToggle, profileInfo }) {
         </Typography>
         <Hidden smDown>
           <Notification />
-          <Profile user={profileInfo.name}/>
+          <Profile picture = {profileInfo.picture}/>
         </Hidden>
         <Hidden mdUp>
           <IconButton onClick={handleDrawerToggle}>

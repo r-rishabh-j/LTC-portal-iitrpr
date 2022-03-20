@@ -1,5 +1,6 @@
 import os
 import json
+from time import timezone
 from . import db
 from . import filemanager
 from flask import jsonify, request, make_response, send_file
@@ -141,7 +142,7 @@ class GetLtcFormAttachments(Resource):
         abs_path = os.path.abspath(attachment_path)
         return send_file(abs_path, as_attachment=True, attachment_filename=filename)
 
-
+from datetime import timezone
 class GetLtcFormMetaDataForUser(Resource):
     """
     Get LTC form data by user ID
@@ -155,7 +156,7 @@ class GetLtcFormMetaDataForUser(Resource):
             form: LTCRequests
             results.append({
                 'request_id': form.request_id,
-                'created_on': form.created_on,
+                'created_on': (form.created_on),
                 'stage': form.stage,
                 'is_active': "Active" if form.is_active else "Not Active",
             })

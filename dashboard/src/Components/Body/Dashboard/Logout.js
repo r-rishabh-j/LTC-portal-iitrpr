@@ -18,23 +18,11 @@ export default function Logout(props) {
     window.location.reload();
   }
   function logOut() {
-
-    // axios({
-    //   method: "POST",
-    //   url: "/api/logout",
-    //   data: {
-    //     Authorization: "Bearer " + props.token,
-    //   },
-    // })
     axios({
       method: "POST",
       url: "/api/logout",
-      headers: {
-        Authorization: "Bearer " + props.token,
-      },
     })
       .then((response) => {
-        props.removeToken();
         logout();
       })
       .catch((error) => {

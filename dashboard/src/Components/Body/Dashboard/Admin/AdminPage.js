@@ -9,7 +9,7 @@ import Home from "../Home"
 import Charts from './Charts';
 import PreviousApplications from './PreviousApplications';
 
-export default function AdminPage() {
+export default function AdminPage(props) {
 
     const classes = useStyles();
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -26,7 +26,7 @@ export default function AdminPage() {
 
   return (
     <div>
-      <Navbar handleDrawerToggle={handleDrawerToggle} profileInfo="admin"/>
+      <Navbar handleDrawerToggle={handleDrawerToggle} profileInfo={props.profileInfo}/>
       <SideNav
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}

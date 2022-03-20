@@ -8,13 +8,13 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { ListItem, ListItemIcon, ListItemText, Avatar } from "@mui/material";
 
-import image from "./avatar.png";
+import altImage from "./avatar.png";
 
-export default function Profile({user}) {
-
-  // const avatar_letter = user.charAt(0)
+export default function Profile(props) {
 
   const [anchorEl, setAnchorEl] = useState(null);
+  // const image = JSON.parse(sessionStorage.getItem('profile')).picture;
+  const image = props.picture;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,7 +25,6 @@ export default function Profile({user}) {
   };
 
   const dropDownData = [
-    { label: "Profile", icon: <SettingsIcon /> },
     { label: "Logout", icon: <ExitToAppIcon /> }
   ]
 
@@ -35,7 +34,7 @@ export default function Profile({user}) {
         aria-controls="simple-menu"
         aria-haspopup="true"
         onClick={handleClick}
-        startIcon={<Avatar ></Avatar>}
+        startIcon={<Avatar src={image} alt={altImage}></Avatar>}
       >
 
       </Button>

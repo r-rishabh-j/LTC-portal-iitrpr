@@ -1,21 +1,33 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
-import Login from './Components/Login/Login'
 import GoogleLogin from './Components/Login/GoogleLogin';
 import HeaderComponent from './Components/Header/HeaderComponent';
-import useToken from './Components/Tokens/useToken';
-import Logout from './Components/Body/Dashboard/Logout';
 import useAuthCookie from './Components/Login/useAuthCookie';
 import AdminPage from './Components/Body/Dashboard/Admin/AdminPage';
+import LoadingPage from './Components/Login/LoadingPage';
 
 function App() {
-  const { token, removeToken, setToken } = useToken();
   const [isLoggedIn, profileInfo] = useAuthCookie();
+  // const profileInfo = JSON.parse(sessionStorage.getItem('profile'));
   return (
     <Router>
-      {/* <HeaderComponent/> */}
-      {/* <Login setToken={setToken}/> */}
-      {!isLoggedIn && isLoggedIn !== true && isLoggedIn !== undefined ? (
+      {isLoggedIn === null ? (<LoadingPage />) :
+        (isLoggedIn === false ? (<GoogleLogin />) :
+          (
+            profileInfo.permission === "client" ? (
+              <HeaderComponent
+                profileInfo={profileInfo}
+              />
+            ) : (
+              <AdminPage profileInfo={profileInfo}/>
+            )
+          )
+
+        )
+
+      }
+
+      {/* {!isLoggedIn && isLoggedIn !== true && isLoggedIn !== undefined ? (
         <GoogleLogin />
       ) : profileInfo.permission == "client" ? (
         <HeaderComponent
@@ -27,9 +39,9 @@ function App() {
         <AdminPage />
       )
 
-      // <AdminPage />
-      }
-    </Router>
+        // <AdminPage />
+      } */}
+      </Router>
   );
 }
 

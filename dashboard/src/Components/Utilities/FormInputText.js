@@ -10,7 +10,6 @@ export const FormInputText = ({name, control, label, required, disabled, default
 
   useEffect(()=> {
       const inputName = JSON.parse(sessionStorage.getItem('profile'))
-      console.log("SessionStorage" + inputName)
       if(inputName){
           setInputName(inputName)
           if(name === "name"){

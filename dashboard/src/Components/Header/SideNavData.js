@@ -6,7 +6,6 @@ import AddIcon from "@material-ui/icons/Add";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import { NavLink } from 'react-router-dom';
 import { useStyles } from './HeaderStyles';
-import useToken from '../Tokens/useToken';
 import Logout from '../Body/Dashboard/Logout';
 
 
@@ -14,7 +13,6 @@ import Logout from '../Body/Dashboard/Logout';
 export default function SideNavData({handleDrawerClose, userType}) {
     
     const classes = useStyles();
-    const { token, removeToken, setToken } = useToken();
 
     const applicantList = [
       { label: "Home", link: "/home", icon: <HomeIcon /> },
@@ -73,7 +71,7 @@ export default function SideNavData({handleDrawerClose, userType}) {
         
       ))}
     </List>
-    <Logout removeToken={removeToken} token={token} setToken={setToken}/>
+    <Logout/>
     </>
   );
 }
