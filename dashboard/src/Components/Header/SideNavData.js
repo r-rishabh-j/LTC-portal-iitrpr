@@ -135,7 +135,7 @@ export default function SideNavData({handleDrawerClose, userType}) {
       case "deanfa":
         listItemData = deanfaList;
         break;
-      case "client":
+      default:
         listItemData = applicantList;
         break;
     }

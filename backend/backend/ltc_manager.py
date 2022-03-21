@@ -221,6 +221,7 @@ class GetPendingApprovalRequests(Resource):
         if kwargs['permission'] == 'dept_head':
             department = 'department'
         table_ref = Departments.getDeptRequestTableByName(department)
+        #print(table_ref)
         if not table_ref:
             abort(
                 404, msg={'Error': 'user department not registered as stage dept'})
@@ -231,6 +232,7 @@ class GetPendingApprovalRequests(Resource):
             new = db.session.query(table_ref, LTCRequests).join(
                 table_ref).filter_by(status='new')
         pending = []
+        print(new)
         for dept_log, form in new:
             if form.comments[user.department]['approved'].get(user.email, None) != None:
                 pending.append({
@@ -241,4 +243,5 @@ class GetPendingApprovalRequests(Resource):
                     'stage': form.stage,
                     'is_active': "Active" if form.is_active else "Not Active",
                 })
+        #print(pending)
         return jsonify({'pending': pending})
