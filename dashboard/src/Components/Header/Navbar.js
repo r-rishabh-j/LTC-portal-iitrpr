@@ -17,7 +17,7 @@ export default function Navbar({ handleDrawerToggle, profileInfo }) {
     <AppBar position="sticky" style={{ background: '#0c979c' }}>
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
-          LTC Portal: {profileInfo.permission}
+          LTC Portal: {profileInfo.designation}
         </Typography>
         <Hidden smDown>
           <Notification />

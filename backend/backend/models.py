@@ -1,8 +1,8 @@
 from . import db
-from datetime import datetime, timezone
+from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
-from zoneinfo import ZoneInfo
+
 
 class Stage:
     def __init__(self, id, name, department):
@@ -133,18 +133,22 @@ class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     # name for higher level employees to be their designation
+    employee_code = db.Column(db.Integer, unique=True)
     name = db.Column(db.String(150), nullable=False)
     department = db.Column(db.String(150), nullable=False)
     permission = db.Column(db.String, nullable=False)
+    designation = db.Column(db.String, nullable=False)
     signature = db.Column(db.String, nullable=True)
     picture = db.Column(db.String, nullable=True)
 
-    def __init__(self, email, name, dept, permission):
+    def __init__(self, email, name, dept, permission, designation='Faculty', employee_code=None):
         self.email = email
         self.name = name
         self.department = dept
         self.signature = None
         self.permission = permission
+        self.designation = designation
+        self.employee_code = employee_code
 
     def lookUpByEmail(email):
         user = Users.query.filter_by(email=email).one_or_none()
@@ -316,7 +320,7 @@ def get_stage_roles(department) -> dict:
         users[user.email] = None
     return users
 
-import pytz
+
 class LTCRequests(db.Model):
     __tablename__ = 'ltc_requests'
     request_id = db.Column(db.Integer, primary_key=True)
@@ -339,6 +343,7 @@ class LTCRequests(db.Model):
     comments: dict = db.Column(MutableDict.as_mutable(JSON))
     # stores path to attachments
     attachments: str = db.Column(db.String, nullable=True)
+
     def __init__(self, user_id: int):
         self.user_id = user_id
         self.created_on = datetime.now()
