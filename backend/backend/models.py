@@ -1,8 +1,8 @@
 from . import db
-from datetime import datetime, timezone
+from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
-from zoneinfo import ZoneInfo
+
 
 class Stage:
     def __init__(self, id, name, department):
@@ -133,18 +133,22 @@ class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     # name for higher level employees to be their designation
+    employee_code = db.Column(db.Integer, unique=True)
     name = db.Column(db.String(150), nullable=False)
     department = db.Column(db.String(150), nullable=False)
     permission = db.Column(db.String, nullable=False)
+    designation = db.Column(db.String, nullable=False)
     signature = db.Column(db.String, nullable=True)
     picture = db.Column(db.String, nullable=True)
 
-    def __init__(self, email, name, dept, permission):
+    def __init__(self, email, name, dept, permission, designation='Faculty', employee_code=None):
         self.email = email
         self.name = name
         self.department = dept
         self.signature = None
         self.permission = permission
+        self.designation = designation
+        self.employee_code = employee_code
 
     def lookUpByEmail(email):
         user = Users.query.filter_by(email=email).one_or_none()
@@ -161,7 +165,8 @@ class EstablishmentLogs(db.Model):
     Establishment section logs
     """
     __tablename__ = 'establishment_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -183,7 +188,8 @@ class AuditLogs(db.Model):
     Audit section logs
     """
     __tablename__ = 'audit_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -205,7 +211,8 @@ class AccountsLogs(db.Model):
     Accounts section logs
     """
     __tablename__ = 'accounts_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -224,7 +231,8 @@ class AccountsLogs(db.Model):
 
 class RegistrarLogs(db.Model):
     __tablename__ = 'registrar_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -243,7 +251,8 @@ class RegistrarLogs(db.Model):
 
 class DeanLogs(db.Model):
     __tablename__ = 'dean_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True, )
     status = db.Column(db.String(50))
     """
     status: String
@@ -283,13 +292,23 @@ class Departments(db.Model):
                 name=dept['name'], is_stage=dept['is_stage'], full_name=dept['full_name'], dept_head=dept['head_id'])
             db.session.add(d)
 
+    def getDeptRequestTableByName(dept_name):
+        dept_name = dept_name+'_logs'
+        for table in db.Model.registry._class_registry.values():
+            if hasattr(table, '__tablename__'):
+                name = table.__tablename__
+                if name == dept_name:
+                    return table
+        return None
+
 
 class DepartmentLogs(db.Model):
     """
     Stores HOD and department head logs
     """
     __tablename__ = 'department_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     department = db.Column(db.String(20))
     status = db.Column(db.String(50))
     """
@@ -316,7 +335,7 @@ def get_stage_roles(department) -> dict:
         users[user.email] = None
     return users
 
-import pytz
+
 class LTCRequests(db.Model):
     __tablename__ = 'ltc_requests'
     request_id = db.Column(db.Integer, primary_key=True)
@@ -339,6 +358,7 @@ class LTCRequests(db.Model):
     comments: dict = db.Column(MutableDict.as_mutable(JSON))
     # stores path to attachments
     attachments: str = db.Column(db.String, nullable=True)
+
     def __init__(self, user_id: int):
         self.user_id = user_id
         self.created_on = datetime.now()
@@ -491,7 +511,8 @@ class LTCApproved(db.Model):
     Stores all approved LTC requests and office order
     """
     __tablename__ = 'ltc_approved'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     approved_on = db.Column(db.DateTime)  # timestamp of approval
     """
     relative path to office order document

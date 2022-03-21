@@ -8,18 +8,18 @@ load_dotenv()
 
 user_list = [
     Users(email='2019csb1286@iitrpr.ac.in',
-          name='Rishabh Jain', dept='cse', permission='client'),
-    Users(email='admin@email', name='Admin', dept='admin', permission='admin'),
+          name='Rishabh Jain', dept='cse', permission='client', designation='Faculty', employee_code=1),
+    Users(email='admin@email', name='Admin', dept='admin', permission='admin', designation='Admin'),
     Users(email='deanfa@email', name='Dean FA',
-          dept='deanfa', permission='deanfa'),
+          dept='deanfa', permission='deanfa', designation='Dean FA'),
     Users(email='registrar@email', name='Registrar',
-          dept='registrar', permission='registrar'),
+          dept='registrar', permission='registrar', designation='Registrar'),
     Users(email='establishment@email', name='Establishment Section',
-          dept='establishment', permission='establishment'),
+          dept='establishment', permission='establishment', designation='Establishment Section'),
     Users(email='accounts@email', name='Accounts Section',
-          dept='accounts', permission='accounts'),
+          dept='accounts', permission='accounts', designation='Accounts Section'),
     Users(email='audit@email', name='audit Section',
-          dept='audit', permission='audit'),
+          dept='audit', permission='audit', designation='Audit Section'),
 ]
 
 hod_list = [

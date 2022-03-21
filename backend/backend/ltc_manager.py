@@ -1,3 +1,5 @@
+from datetime import timezone
+from distutils import dep_util
 import os
 import json
 from time import timezone
@@ -68,9 +70,11 @@ class CommentOnLTC(Resource):
             abort(401, msg='Only stage users allowed')
 
         comment = request_id.json['comment']
-        approval = True if str(request_id.json.get['approval']) == 'yes' else False
+        approval = True if str(
+            request_id.json.get['approval']) == 'yes' else False
 
-        form.comments[current_user.department]['comments'][current_user.email] = str(comment)
+        form.comments[current_user.department]['comments'][current_user.email] = str(
+            comment)
         form.comments[current_user.department]['approved'][current_user.email] = approval
 
         if current_user.id == user_dept.dept_head:
@@ -142,7 +146,7 @@ class GetLtcFormAttachments(Resource):
         abs_path = os.path.abspath(attachment_path)
         return send_file(abs_path, as_attachment=True, attachment_filename=filename)
 
-from datetime import timezone
+
 class GetLtcFormMetaDataForUser(Resource):
     """
     Get LTC form data by user ID
@@ -181,6 +185,7 @@ class GetLtcFormMetaData(Resource):
 
     @roles_required(roles=allowed_roles)
     def get(self, **kwargs):
+        user: Users = current_user
         forms = db.session.query(LTCRequests, Users).join(Users).all()
         results = []
         for form, user in forms:
@@ -197,3 +202,43 @@ class GetLtcFormMetaData(Resource):
         response = {'data': results}
 
         return jsonify(response)
+
+
+class GetPendingApprovalRequests(Resource):
+    allowed_roles = [
+        'deanfa',
+        'registrar',
+        'establishment',
+        'accounts',
+        'audit',
+        'dept_head'
+    ]
+
+    @roles_required(roles=allowed_roles)
+    def get(self, **kwargs):
+        user: Users = current_user
+        department = user.department
+        if kwargs['permission'] == 'dept_head':
+            department = 'department'
+        table_ref = Departments.getDeptRequestTableByName(department)
+        if not table_ref:
+            abort(
+                404, msg={'Error': 'user department not registered as stage dept'})
+        new = None
+        if kwargs['permission'] == 'dept_head':
+            new = db.session.query(table_ref, LTCRequests).join(table_ref).filter_by(status='new', department=user.department)
+        else:
+            new = db.session.query(table_ref, LTCRequests).join(
+                table_ref).filter_by(status='new')
+        pending = []
+        for dept_log, form in new:
+            if form.comments[user.department]['approved'].get(user.email, None) != None:
+                pending.append({
+                    'request_id': form.request_id,
+                    'user': user.email,
+                    'user_id': form.user_id,
+                    'created_on': form.created_on,
+                    'stage': form.stage,
+                    'is_active': "Active" if form.is_active else "Not Active",
+                })
+        return jsonify({'pending': pending})

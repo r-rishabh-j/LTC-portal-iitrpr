@@ -27,8 +27,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api = Api(app)
     jwt = JWTManager(app)
     from .auth import RegisterUser, Logout, Login, IsLoggedIn
-    from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser, GetLtcFormAttachments
-    from .models import Users, Departments
+    from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser, GetLtcFormAttachments, GetPendingApprovalRequests
+    from .models import Users
     create_database(app)
 
     api.add_resource(ApplyForLTC, '/api/apply')
@@ -40,6 +40,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(GetLtcFormMetaDataForUser, '/api/getmyforms')
     api.add_resource(GetLtcFormData, '/api/getformdata')
     api.add_resource(GetLtcFormAttachments, '/api/getattachments')
+    api.add_resource(GetPendingApprovalRequests, '/api/getpendingltc')
 
     @jwt.user_identity_loader
     def user_identity_loader(user: Users):

@@ -34,10 +34,12 @@ class IsLoggedIn(Resource):
             'status': 'logged-in',
             'claims': {
                 'permission': user.permission,
+                'designation': user.designation,
                 'name': user.name,
                 'email': user.email,
                 'department': user_dept.full_name,
-                'picture': user.picture
+                'picture': user.picture,
+                'employee_code':user.employee_code
             }
         })
 
