@@ -165,7 +165,8 @@ class EstablishmentLogs(db.Model):
     Establishment section logs
     """
     __tablename__ = 'establishment_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -187,7 +188,8 @@ class AuditLogs(db.Model):
     Audit section logs
     """
     __tablename__ = 'audit_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -209,7 +211,8 @@ class AccountsLogs(db.Model):
     Accounts section logs
     """
     __tablename__ = 'accounts_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -228,7 +231,8 @@ class AccountsLogs(db.Model):
 
 class RegistrarLogs(db.Model):
     __tablename__ = 'registrar_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
     """
     status: String
@@ -247,7 +251,8 @@ class RegistrarLogs(db.Model):
 
 class DeanLogs(db.Model):
     __tablename__ = 'dean_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True, )
     status = db.Column(db.String(50))
     """
     status: String
@@ -287,13 +292,23 @@ class Departments(db.Model):
                 name=dept['name'], is_stage=dept['is_stage'], full_name=dept['full_name'], dept_head=dept['head_id'])
             db.session.add(d)
 
+    def getDeptRequestTableByName(dept_name):
+        dept_name = dept_name+'_logs'
+        for table in db.Model.registry._class_registry.values():
+            if hasattr(table, '__tablename__'):
+                name = table.__tablename__
+                if name == dept_name:
+                    return table
+        return None
+
 
 class DepartmentLogs(db.Model):
     """
     Stores HOD and department head logs
     """
     __tablename__ = 'department_logs'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     department = db.Column(db.String(20))
     status = db.Column(db.String(50))
     """
@@ -496,7 +511,8 @@ class LTCApproved(db.Model):
     Stores all approved LTC requests and office order
     """
     __tablename__ = 'ltc_approved'
-    request_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
     approved_on = db.Column(db.DateTime)  # timestamp of approval
     """
     relative path to office order document
