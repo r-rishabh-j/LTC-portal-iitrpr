@@ -277,9 +277,9 @@ const PastApplications = () => {
             <Button onClick={handleClose} color="primary">
               Close
             </Button>
-            <Button onClick={handleClose} color="primary" autoFocus>
+            {/* <Button onClick={handleClose} color="primary" autoFocus>
               Approve
-            </Button>
+            </Button> */}
           </DialogActions>
         </Dialog>
       </Paper>

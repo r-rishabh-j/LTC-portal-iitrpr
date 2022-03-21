@@ -1,5 +1,5 @@
 from backend import create_app
-from backend.models import Departments, Users, LTCRequests, EstablishmentLogs, DeanLogs, DepartmentLogs, AuditLogs, AccountsLogs
+from backend.models import Departments, Users, LTCRequests, EstablishmentLogs, DeanLogs, DepartmentLogs, AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs
 from backend.models import db
 from dotenv import load_dotenv
 import os
@@ -9,6 +9,8 @@ load_dotenv()
 user_list = [
     Users(email='2019csb1286@iitrpr.ac.in',
           name='Rishabh Jain', dept='cse', permission='client', designation='Faculty', employee_code=1),
+    Users(email='2019csb1152@iitrpr.ac.in',
+          name='Bhumika', dept='cse', permission='client', designation='Faculty', employee_code=2),
     Users(email='admin@email', name='Admin', dept='admin', permission='admin', designation='Admin'),
     Users(email='deanfa@email', name='Dean FA',
           dept='deanfa', permission='deanfa', designation='Dean FA'),
@@ -29,14 +31,17 @@ hod_list = [
 
 app = create_app(db_path=os.environ.get('POSTGRES_PATH'))
 with app.app_context() as ctx:
-    Departments.__table__.drop(db.engine)
+    
     EstablishmentLogs.__table__.drop(db.engine)
     DeanLogs.__table__.drop(db.engine)
     DepartmentLogs.__table__.drop(db.engine)
     AuditLogs.__table__.drop(db.engine)
     AccountsLogs.__table__.drop(db.engine)
+    LTCApproved.__table__.drop(db.engine)
+    RegistrarLogs.__table__.drop(db.engine)
     LTCRequests.__table__.drop(db.engine)
     Users.__table__.drop(db.engine)
+    Departments.__table__.drop(db.engine)
     db.create_all(app=app)
     Departments.create_departments_from_list([
         {'name': 'establishment', 'head_id': None, 'is_stage': True, 'full_name':'Establishment Section'},

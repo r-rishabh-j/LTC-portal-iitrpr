@@ -38,9 +38,9 @@ export default function CreateApplication(props) {
 
     const profile = JSON.parse(sessionStorage.getItem('profile'));
     data.name = profile.name;
-    data.designation = profile.permission;
+    //data.designation = profile.permission;
     data.department = profile.department;
-    data["emp_code"] = "123";
+    data.emp_code = profile.emp_code;
 
     console.log('data: ', JSON.stringify(data));
     formData.append('attachments', data.attachments[0]);
@@ -55,6 +55,13 @@ export default function CreateApplication(props) {
     })
       .then((response) => {
         console.log('s', response.status)
+        if(response.status === 200){
+          alert("Application submitted!")
+          window.location.reload()
+        }
+        else{
+          alert("Error submitting, try again")
+        }
       })
       .catch((error) => {
         if (error.response) {
@@ -98,8 +105,7 @@ export default function CreateApplication(props) {
                       control={control}
                       label={"Designation"}
                       required={true}
-                      autofill={true}
-                      disabled={true}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -139,6 +145,7 @@ Service/Date of Joining with IIT Ropar"
                   control={control}
                   label="Band Pay + AGP/GP"
                   required={true}
+                  defaultValue={""}
                 />
                 <Typography style={{ fontWeight: "bold" }}>
                   Leave Required
@@ -149,6 +156,7 @@ Service/Date of Joining with IIT Ropar"
                   control={control}
                   label="Nature"
                   required={true}
+                  defaultValue={""}
                 />
                 <Grid container spacing={2}>
                   <Grid item xs={4}>
@@ -173,6 +181,7 @@ Service/Date of Joining with IIT Ropar"
                       control={control}
                       label="No. of Days"
                       required={true}
+                      defaultValue={0}
                     />
                   </Grid>
                 </Grid>
@@ -273,6 +282,7 @@ entitled to LTC"
                   control={control}
                   label="Home Town as recorded in the Service Book"
                   required={true}
+                  defaultValue={""}
                 />
                 <FormInputText
                   name="ltc_nature"
@@ -280,12 +290,14 @@ entitled to LTC"
                   label="Nature of LTC to be availed, Home Town /
 Anywhere in India with Block Year"
                   required={true}
+                  defaultValue={""}
                 />
                 <FormInputText
                   name="place"
                   control={control}
                   label="If, anywhere in India, the place to be visited"
                   required={true}
+                  defaultValue={""}
                 />
                 <Grid container spacing={2}>
                   <Grid item xs={9}>
@@ -296,6 +308,7 @@ Anywhere in India with Block Year"
 headquarter to Home Town/Place of visit by
 shortest route (proofs need to be attached)."
                       required={true}
+                      defaultValue={""}
                     />
                   </Grid>
 
@@ -355,6 +368,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Name"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={1}>
@@ -363,6 +377,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Age"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -371,6 +386,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Relationship"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -379,6 +395,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Travelling(Place) From"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -387,6 +404,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Travelling(Place) To"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={1}>
@@ -395,6 +413,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Back(Yes/No)"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={1}>
@@ -403,6 +422,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Mode of Travel"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
 
@@ -423,6 +443,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Name"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={1}>
@@ -431,6 +452,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Age"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -439,6 +461,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Relationship"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -447,6 +470,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Travelling(Place) From"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -455,6 +479,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Travelling(Place) To"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={1}>
@@ -463,6 +488,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Back(Yes/No)"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={1}>
@@ -471,6 +497,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Mode of Travel"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
 
@@ -491,6 +518,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Name"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={1}>
@@ -499,6 +527,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Age"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -507,6 +536,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Relationship"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -515,6 +545,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Travelling(Place) From"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={2}>
@@ -523,6 +554,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Travelling(Place) To"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={1}>
@@ -531,6 +563,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Back(Yes/No)"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                   <Grid item xs={1}>
@@ -539,6 +572,7 @@ shortest route (proofs need to be attached)."
                       control={control}
                       label="Mode of Travel"
                       required={false}
+                      defaultValue={""}
                     />
                   </Grid>
                 </Grid>
@@ -565,6 +599,7 @@ shortest route (proofs need to be attached)."
                   name="encashment_days"
                   control={control}
                   label="No. of encashment of leave days "
+                  defaultValue={0}
                 />
               </div>
               <Box display="flex" justifyContent="center">
