@@ -43,12 +43,12 @@ export default function HeaderComponent(props) {
           <Route path="/home" element={<Home profileInfo={props.profileInfo}/>}></Route>
           <Route
             path="/create"
-            element={<CreateApplication token={token} setToken={setToken} />}
+            element={<CreateApplication/>}
           ></Route>
           <Route path="/past" element={<PastApplications />}></Route>
           <Route
             path="/notifications"
-            element={<Notifications token={token} setToken={setToken} />}
+            element={<Notifications />}
           ></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
