@@ -4,6 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import GeneratePDF from "../../../Utilities/GeneratePDF";
 import {useStyles} from '../DataGridStyles'
+import DialogBox from '../DialogBox';
 
 function Pending() {
   const classes = useStyles();
@@ -244,7 +245,7 @@ function Pending() {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          {/* <DialogBox request_id={id} /> */}
+          <DialogBox request_id={id} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close

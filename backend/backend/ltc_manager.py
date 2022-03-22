@@ -55,7 +55,7 @@ class CommentOnLTC(Resource):
     @roles_required(roles=allowed_roles)
     def post(self, **kwargs):
         # post request ID, comment, and approval of the user
-        current_user: Users
+        # current_user: Users
         request_id = request.json['request_id']
         if not request_id:
             abort(404, msg='Request ID not sent')
@@ -66,9 +66,9 @@ class CommentOnLTC(Resource):
         if not user_dept.is_stage:
             abort(401, msg='Only stage users allowed')
 
-        comment = request_id.json['comment']
+        comment = request.json['comment']
         approval = True if str(
-            request_id.json.get['approval']) == 'yes' else False
+            request.json.get('approval')) == 'yes' else False
 
         form.comments[current_user.department]['comments'][current_user.email] = str(
             comment)
