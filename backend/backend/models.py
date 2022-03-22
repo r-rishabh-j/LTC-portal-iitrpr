@@ -140,6 +140,15 @@ class Users(db.Model):
     designation = db.Column(db.String, nullable=False)
     signature = db.Column(db.String, nullable=True)
     picture = db.Column(db.String, nullable=True)
+    """
+    [
+        {
+            'time': <timestamp>,
+            'content': <text>
+        }
+    ]
+    """
+    notifications = db.Column(MutableDict.as_mutable(JSON))
 
     def __init__(self, email, name, dept, permission, designation='Faculty', employee_code=None):
         self.email = email
@@ -149,10 +158,21 @@ class Users(db.Model):
         self.permission = permission
         self.designation = designation
         self.employee_code = employee_code
+        self.notifications = {'notifications': []}
 
     def lookUpByEmail(email):
         user = Users.query.filter_by(email=email).one_or_none()
         return user
+    
+    def addNotification(self, text):
+        self.notifications['notifications'].append({
+            'time': datetime.today(),
+            'content': text
+        })
+        return True
+    
+    def clearNotifications(self):
+        self.notifications['notifications'].clear()
 
 
 """

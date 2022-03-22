@@ -1,12 +1,12 @@
 import React from 'react'
-import { Hidden, Drawer} from "@material-ui/core";
+import { Hidden, Drawer } from "@material-ui/core";
 import SideNavData from './SideNavData';
 import { useStyles } from './HeaderStyles';
 
 
-export default function SideNav({mobileOpen, handleDrawerToggle, handleDrawerClose, userType}) {
-    const classes = useStyles();
-    
+export default function SideNav({ mobileOpen, handleDrawerToggle, handleDrawerClose, userType }) {
+  const classes = useStyles();
+
 
   return (
     <nav className={classes.drawer} aria-label="mailbox folders">

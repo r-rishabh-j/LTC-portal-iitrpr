@@ -1,8 +1,5 @@
-from datetime import timezone
-from distutils import dep_util
 import os
 import json
-from time import timezone
 from . import db
 from . import filemanager
 from flask import jsonify, request, make_response, send_file
@@ -221,21 +218,21 @@ class GetPendingApprovalRequests(Resource):
         if kwargs['permission'] == 'dept_head':
             department = 'department'
         table_ref = Departments.getDeptRequestTableByName(department)
-        #print(table_ref)
         if not table_ref:
             abort(
                 404, msg={'Error': 'user department not registered as stage dept'})
         new = None
         if kwargs['permission'] == 'dept_head':
-            new = db.session.query(table_ref, LTCRequests).join(table_ref).filter_by(status='new', department=user.department)
+            new = db.session.query(table_ref, LTCRequests, Users).join(Users).join(
+                table_ref).filter_by(status='new', department=user.department)
         else:
-            new = db.session.query(table_ref, LTCRequests).join(
-                table_ref).filter_by(status='new')
+            new = db.session.query(table_ref, LTCRequests, Users).join(
+                Users).join(table_ref).filter_by(status='new')
         pending = []
-        print(new)
-        for dept_log, form in new:
+        # print(new)
+        for dept_log, form, applicant in new:
             if form.comments[user.department]['approved'].get(user.email, True) == None:
-                applicant = Users.query.get(form.user_id)
+                # applicant = Users.query.get(form.user_id)
                 pending.append({
                     'request_id': form.request_id,
                     'user': applicant.email,
@@ -244,5 +241,4 @@ class GetPendingApprovalRequests(Resource):
                     'stage': form.stage,
                     'is_active': "Active" if form.is_active else "Not Active",
                 })
-        #print(pending)
         return jsonify({'pending': pending})
