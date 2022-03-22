@@ -40,7 +40,7 @@ export default function CreateApplication(props) {
     data.name = profile.name;
     //data.designation = profile.permission;
     data.department = profile.department;
-    data.emp_code = profile.emp_code;
+    data.emp_code = profile.employee_code;
 
     console.log('data: ', JSON.stringify(data));
     formData.append('attachments', data.attachments[0]);

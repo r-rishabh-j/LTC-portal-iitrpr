@@ -97,7 +97,7 @@ const DialogBox = ({ request_id }) => {
         <Grid item xs={12}>
           <TextField
             label="Name"
-            value={formInfo.form_data["name"]}
+            value={formInfo.form_data["name"]?? ' '}
             fullWidth
             InputProps={{
               readOnly: true,
@@ -110,7 +110,7 @@ const DialogBox = ({ request_id }) => {
           <Grid item xs={6}>
             <TextField
               label="Designation"
-              value={formInfo.form_data["designation"]}
+              value={formInfo.form_data["designation"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -121,7 +121,7 @@ const DialogBox = ({ request_id }) => {
           <Grid item xs={6}>
             <TextField
               label="Department"
-              value={formInfo.form_data["department"]}
+              value={formInfo.form_data["department"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -134,7 +134,7 @@ const DialogBox = ({ request_id }) => {
           <Grid item xs={4}>
             <TextField
               label="Employee Code"
-              value={formInfo.form_data["emp_code"]}
+              value={formInfo.form_data["emp_code"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -146,7 +146,7 @@ const DialogBox = ({ request_id }) => {
             <TextField
               label="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
-              value={formInfo.form_data["joining_date"]}
+              value={formInfo.form_data["joining_date"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -157,7 +157,7 @@ Service/Date of Joining with IIT Ropar"
         </Grid>
         <TextField
           label="Band Pay + AGP/GP"
-          value={formInfo.form_data["band_pay"]}
+          value={formInfo.form_data["band_pay"]?? ' '}
           fullWidth
           InputProps={{
             readOnly: true,
@@ -168,7 +168,7 @@ Service/Date of Joining with IIT Ropar"
 
         <TextField
           label="Nature"
-          value={formInfo.form_data["nature"]}
+          value={formInfo.form_data["nature"]?? ' '}
           fullWidth
           InputProps={{
             readOnly: true,
@@ -179,7 +179,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="From"
-              value={formInfo.form_data["nature_from"]}
+              value={formInfo.form_data["nature_from"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -190,7 +190,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="To"
-              value={formInfo.form_data["nature_to"]}
+              value={formInfo.form_data["nature_to"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -201,7 +201,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="No. of Days"
-              value={formInfo.form_data["num_days"]}
+              value={formInfo.form_data["num_days"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -217,7 +217,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="From"
-              value={formInfo.form_data["prefix_from"]}
+              value={formInfo.form_data["prefix_from"] ?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -228,7 +228,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="To"
-              value={formInfo.form_data["prefix_to"]}
+              value={formInfo.form_data["prefix_to"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -242,7 +242,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="From"
-              value={formInfo.form_data["suffix_from"]}
+              value={formInfo.form_data["suffix_from"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -253,7 +253,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="To"
-              value={formInfo.form_data["suffix_to"]}
+              value={formInfo.form_data["suffix_to"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -266,7 +266,7 @@ Service/Date of Joining with IIT Ropar"
         <TextField
           label="Whether spouse is employed, if yes whether
 entitled to LTC"
-          value={formInfo.form_data["spouse_is_employed"]}
+          value={formInfo.form_data["spouse_is_employed"]?? ' '}
           fullWidth
           InputProps={{
             readOnly: true,
@@ -280,7 +280,7 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Outward journey"
-              value={formInfo.form_data["self_date_outward"]}
+              value={formInfo.form_data["self_date_outward"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -291,7 +291,7 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Inward journey"
-              value={formInfo.form_data["self_date_inward"]}
+              value={formInfo.form_data["self_date_inward"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -307,7 +307,7 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Outward journey"
-              value={formInfo.form_data["family_date_outward"]}
+              value={formInfo.form_data["family_date_outward"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -318,7 +318,7 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Inward journey"
-              value={formInfo.form_data["family_date_inward"]}
+              value={formInfo.form_data["family_date_inward"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -329,7 +329,7 @@ entitled to LTC"
         </Grid>
         <TextField
           label="Home Town as recorded in the Service Book"
-          value={formInfo.form_data["home_town"]}
+          value={formInfo.form_data["home_town"]?? ' '}
           fullWidth
           InputProps={{
             readOnly: true,
@@ -338,7 +338,7 @@ entitled to LTC"
         <TextField
           label="Nature of LTC to be availed, Home Town /
 Anywhere in India with Block Year"
-          value={formInfo.form_data["ltc_nature"]}
+          value={formInfo.form_data["ltc_nature"]?? ' '}
           fullWidth
           InputProps={{
             readOnly: true,
@@ -347,7 +347,7 @@ Anywhere in India with Block Year"
 
         <TextField
           label="If, anywhere in India, the place to be visited"
-          value={formInfo.form_data["place"]}
+          value={formInfo.form_data["place"]?? ' '}
           fullWidth
           InputProps={{
             readOnly: true,
@@ -359,7 +359,7 @@ Anywhere in India with Block Year"
               label="Estimated fare of entitled class from the
 headquarter to Home Town/Place of visit by
 shortest route "
-              value={formInfo.form_data["est_fare"]}
+              value={formInfo.form_data["est_fare"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -391,7 +391,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Name"
-              value={formInfo.form_data["name_1"]}
+              value={formInfo.form_data["name_1"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -402,7 +402,7 @@ shortest route "
           <Grid item xs={1}>
             <TextField
               label="Age"
-              value={formInfo.form_data["age_1"]}
+              value={formInfo.form_data["age_1"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -413,7 +413,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Relationship"
-              value={formInfo.form_data["relationship_1"]}
+              value={formInfo.form_data["relationship_1"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -424,7 +424,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Travelling(Place) From"
-              value={formInfo.form_data["travelling_from_1"]}
+              value={formInfo.form_data["travelling_from_1"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -435,7 +435,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Travelling(Place) To"
-              value={formInfo.form_data["travelling_to_1"]}
+              value={formInfo.form_data["travelling_to_1"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -446,7 +446,7 @@ shortest route "
           <Grid item xs={1}>
             <TextField
               label="Back(Yes/No)"
-              value={formInfo.form_data["back_1"]}
+              value={formInfo.form_data["back_1"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -457,7 +457,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Mode of Travel"
-              value={formInfo.form_data["travel_mode_1"]}
+              value={formInfo.form_data["travel_mode_1"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -469,7 +469,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Name"
-              value={formInfo.form_data["name_2"]}
+              value={formInfo.form_data["name_2"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -480,7 +480,7 @@ shortest route "
           <Grid item xs={1}>
             <TextField
               label="Age"
-              value={formInfo.form_data["age_2"]}
+              value={formInfo.form_data["age_2"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -491,7 +491,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Relationship"
-              value={formInfo.form_data["relationship_2"]}
+              value={formInfo.form_data["relationship_2"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -502,7 +502,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Travelling(Place) From"
-              value={formInfo.form_data["travelling_from_2"]}
+              value={formInfo.form_data["travelling_from_2"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -513,7 +513,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Travelling(Place) To"
-              value={formInfo.form_data["travelling_to_2"]}
+              value={formInfo.form_data["travelling_to_2"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -524,7 +524,7 @@ shortest route "
           <Grid item xs={1}>
             <TextField
               label="Back(Yes/No)"
-              value={formInfo.form_data["back_2"]}
+              value={formInfo.form_data["back_2"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -535,7 +535,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Mode of Travel"
-              value={formInfo.form_data["travel_mode_2"]}
+              value={formInfo.form_data["travel_mode_2"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -547,7 +547,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Name"
-              value={formInfo.form_data["name_3"]}
+              value={formInfo.form_data["name_3"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -558,7 +558,7 @@ shortest route "
           <Grid item xs={1}>
             <TextField
               label="Age"
-              value={formInfo.form_data["age_3"]}
+              value={formInfo.form_data["age_3"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -569,7 +569,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Relationship"
-              value={formInfo.form_data["relationship_3"]}
+              value={formInfo.form_data["relationship_3"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -580,7 +580,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Travelling(Place) From"
-              value={formInfo.form_data["travelling_from_3"]}
+              value={formInfo.form_data["travelling_from_3"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -591,7 +591,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Travelling(Place) To"
-              value={formInfo.form_data["travelling_to_3"]}
+              value={formInfo.form_data["travelling_to_3"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -602,7 +602,7 @@ shortest route "
           <Grid item xs={1}>
             <TextField
               label="Back(Yes/No)"
-              value={formInfo.form_data["back_3"]}
+              value={formInfo.form_data["back_3"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -613,7 +613,7 @@ shortest route "
           <Grid item xs={2}>
             <TextField
               label="Mode of Travel"
-              value={formInfo.form_data["travel_mode_3"]}
+              value={formInfo.form_data["travel_mode_3"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -627,7 +627,7 @@ shortest route "
           <Grid item xs={6}>
             <TextField
               label="Advance Required"
-              value={formInfo.form_data["adv_is_required"]}
+              value={formInfo.form_data["adv_is_required"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -638,7 +638,7 @@ shortest route "
           <Grid item xs={6}>
             <TextField
               label="Encashment Required"
-              value={formInfo.form_data["encashment_is_required"]}
+              value={formInfo.form_data["encashment_is_required"]?? ' '}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -649,7 +649,7 @@ shortest route "
         </Grid>
         <TextField
           label="No. of encashment of leave days "
-          value={formInfo.form_data["encashment_days"]}
+          value={formInfo.form_data["encashment_days"]?? ' '}
           fullWidth
           InputProps={{
             readOnly: true,

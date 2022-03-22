@@ -1,29 +1,32 @@
 import { TextField } from "@mui/material"
-import {Controller} from "react-hook-form"
-import {useState, useEffect} from 'react'
+import { Controller } from "react-hook-form"
+import { useState, useEffect } from 'react'
 
 
-export const FormInputText = ({name, control, label, required, disabled, defaultValue, autofill, multiline, rows}) => {
+export const FormInputText = ({ name, control, label, required, disabled, defaultValue, autofill, multiline, rows }) => {
 
   const [inputName, setInputName] = useState({});
   const [value, setValue] = useState(label);
 
-  useEffect(()=> {
-      const inputName = JSON.parse(sessionStorage.getItem('profile'))
-      if(inputName){
-          setInputName(inputName)
-          if(name === "name"){
-            setValue(inputName.name)
-          }
-          else if(name === "department"){
-            setValue(inputName.department)
-          }
-          else if(name === "designation"){
-            setValue(inputName.permission)
-          }
-          
+  useEffect(() => {
+    const inputName = JSON.parse(sessionStorage.getItem('profile'))
+    if (inputName) {
+      setInputName(inputName)
+      if (name === "name") {
+        setValue(inputName.name)
       }
-      
+      else if (name === "department") {
+        setValue(inputName.department)
+      }
+      else if (name === "designation") {
+        setValue(inputName.permission)
+      }
+      else if (name === "emp_code") {
+        setValue(inputName.employee_code)
+      }
+
+    }
+
   }, [name]);
   return autofill === true ? (
     <Controller

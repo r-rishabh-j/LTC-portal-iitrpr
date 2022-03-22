@@ -1,7 +1,7 @@
 from backend import create_app
 from backend.models import Departments, Users, LTCRequests, EstablishmentLogs, DeanLogs, DepartmentLogs, \
-      AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs,\
-      AuditReview, AccountsReview
+    AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs,\
+    AuditReview, AccountsReview
 from backend.models import db
 from dotenv import load_dotenv
 import os
@@ -13,11 +13,8 @@ user_list = [
           name='Rishabh Jain', dept='cse', permission='client', designation='Faculty', employee_code=1),
     Users(email='2019csb1152@iitrpr.ac.in',
           name='Bhumika', dept='cse', permission='client', designation='Faculty', employee_code=2),
-    Users(email='admin@email', name='Admin', dept='admin', permission='admin', designation='Admin'),
-    Users(email='deanfa@email', name='Dean FA',
-          dept='deanfa', permission='deanfa', designation='Dean FA'),
-    Users(email='registrar@email', name='Registrar',
-          dept='registrar', permission='registrar', designation='Registrar'),
+    Users(email='admin@email', name='Admin', dept='admin',
+          permission='admin', designation='Admin'),
     Users(email='establishment@email', name='Establishment Section',
           dept='establishment', permission='establishment', designation='Establishment Section'),
     Users(email='accounts@email', name='Accounts Section',
@@ -29,11 +26,21 @@ user_list = [
 hod_list = [
     Users(email='hod_cse@email', name='HOD CSE',
           dept='cse', permission='dept_head'),
+    Users(email='establishment_head@email', name='Establishment Section Head',
+          dept='establishment', permission='establishment', designation='Establishment Section'),
+    Users(email='deanfa@email', name='Dean FA',
+                dept='deanfa', permission='deanfa', designation='Dean FA'),
+    Users(email='registrar@email', name='Registrar',
+          dept='registrar', permission='registrar', designation='Registrar'),
+    Users(email='accounts_head@email', name='Accounts Section',
+          dept='accounts', permission='accounts', designation='Accounts Section Head'),
+    Users(email='audit_head@email', name='Audit Section Head',
+          dept='audit', permission='audit', designation='Audit Section'),
 ]
 
 app = create_app(db_path=os.environ.get('POSTGRES_PATH'))
 with app.app_context() as ctx:
-    
+
     EstablishmentLogs.__table__.drop(db.engine)
     DeanLogs.__table__.drop(db.engine)
     DepartmentLogs.__table__.drop(db.engine)
@@ -48,15 +55,23 @@ with app.app_context() as ctx:
     Departments.__table__.drop(db.engine)
     db.create_all(app=app)
     Departments.create_departments_from_list([
-        {'name': 'establishment', 'head_id': None, 'is_stage': True, 'full_name':'Establishment Section'},
-        {'name': 'registrar', 'head_id': None, 'is_stage': True, 'full_name':'Registrar'},
-        {'name': 'accounts', 'head_id': None, 'is_stage': True, 'full_name':'Accounts Section'},
-        {'name': 'deanfa', 'head_id': None, 'is_stage': True, 'full_name':'Dean FA'},
-        {'name': 'audit', 'head_id': None, 'is_stage': True, 'full_name':'Audit Section'},
-        {'name': 'admin', 'head_id': None, 'is_stage': False, 'full_name':'Admin'},
-        {'name': 'math', 'head_id': None, 'is_stage': False, 'full_name':'Mathematics Department'},
-        {'name': 'cse', 'head_id': None, 'is_stage': False, 'full_name':'Computer Science and Engineering'},
-        {'name': 'ee', 'head_id': None, 'is_stage': False, 'full_name':'Electrical Engineering'},
+        {'name': 'establishment', 'head_id': None,
+            'is_stage': True, 'full_name': 'Establishment Section'},
+        {'name': 'registrar', 'head_id': None,
+            'is_stage': True, 'full_name': 'Registrar'},
+        {'name': 'accounts', 'head_id': None,
+            'is_stage': True, 'full_name': 'Accounts Section'},
+        {'name': 'deanfa', 'head_id': None,
+            'is_stage': True, 'full_name': 'Dean FA'},
+        {'name': 'audit', 'head_id': None,
+            'is_stage': True, 'full_name': 'Audit Section'},
+        {'name': 'admin', 'head_id': None, 'is_stage': False, 'full_name': 'Admin'},
+        {'name': 'math', 'head_id': None, 'is_stage': False,
+            'full_name': 'Mathematics Department'},
+        {'name': 'cse', 'head_id': None, 'is_stage': False,
+            'full_name': 'Computer Science and Engineering'},
+        {'name': 'ee', 'head_id': None, 'is_stage': False,
+            'full_name': 'Electrical Engineering'},
     ])
 
     for u in user_list:

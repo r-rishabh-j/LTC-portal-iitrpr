@@ -1,16 +1,36 @@
 {
-    "department": {
-        "approved": {
-            "u1": null,
-            "u2": null
+    "comments": [
+        {
+            "department1": {
+                "approved": {
+                    "u1": null,
+                    "u2": null
+                },
+                "comments": {
+                    "u1": null,
+                    "u2": null
+                },
+                "signature": {
+                    "u1": null,
+                    "u2": null
+                }
+            }
         },
-        "comments": {
-            "u1": null,
-            "u2": null
-        },
-        "signature": {
-            "u1": null,
-            "u2": null
+        {
+            "department2": {
+                "approved": {
+                    "u1": null,
+                    "u2": null
+                },
+                "comments": {
+                    "u1": null,
+                    "u2": null
+                },
+                "signature": {
+                    "u1": null,
+                    "u2": null
+                }
+            }
         }
-    }
+    ]
 }

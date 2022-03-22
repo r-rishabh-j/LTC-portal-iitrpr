@@ -148,13 +148,13 @@ function Pending() {
       flex: 1,
       renderCell: timeElement,
     },
-    {
-      field: "stage",
-      headerName: "Stage",
-      flex: 1,
-      minWidth: 150,
-      renderCell: cellElement,
-    },
+    // {
+    //   field: "stage",
+    //   headerName: "Stage",
+    //   flex: 1,
+    //   minWidth: 150,
+    //   renderCell: cellElement,
+    // },
     {
       field: "is_active",
       headerName: "Status",

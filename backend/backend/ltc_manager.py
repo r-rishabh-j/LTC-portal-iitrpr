@@ -4,9 +4,10 @@ from . import db
 from . import filemanager
 from flask import jsonify, request, make_response, send_file
 from flask_restful import Resource, reqparse, abort, fields
-from .models import Users, LTCRequests, Departments
+from .models import DeanLogs, Users, LTCRequests, Departments
 from flask_jwt_extended import current_user
 from .role_manager import role_required, roles_required, check_role
+from sqlalchemy.orm.attributes import flag_modified
 
 
 class ApplyForLTC(Resource):
@@ -19,6 +20,8 @@ class ApplyForLTC(Resource):
         db.session.commit()
         db.session.refresh(new_request)
         new_request.forward(current_user=current_user)
+        flag_modified(new_request, "comments")
+        db.session.merge(new_request)
         db.session.commit()
 
     @role_required('client')
@@ -57,6 +60,7 @@ class CommentOnLTC(Resource):
         # post request ID, comment, and approval of the user
         # current_user: Users
         request_id = request.json['request_id']
+        print(request_id)
         if not request_id:
             abort(404, msg='Request ID not sent')
         form: LTCRequests = LTCRequests.query.get(int(request_id))
@@ -67,21 +71,34 @@ class CommentOnLTC(Resource):
             abort(401, msg='Only stage users allowed')
 
         comment = request.json['comment']
+        print(comment)
         approval = True if str(
             request.json.get('approval')) == 'yes' else False
+        print(approval)
 
-        form.comments[current_user.department]['comments'][current_user.email] = str(
-            comment)
-        form.comments[current_user.department]['approved'][current_user.email] = approval
+        form.addComment(current_user.department,
+                        current_user, comment, approval)
+        # table_comments = (form.comments)
+        # table_comments[current_user.department]['comments'][current_user.email] = str(
+        #     comment)
+        # table_comments[current_user.department]['approved'][current_user.email] = approval
 
+        # form.comments = table_comments
+        print(form.comments)
+        approval = True
         if current_user.id == user_dept.dept_head:
             if not approval:
                 # decline application
                 return {"Error": "Not implemented decline"}, 400
             else:
                 status, comment = form.forward(current_user)
+                flag_modified(form, "comments")
+                db.session.merge(form)
                 db.session.commit()
                 return {"Status": comment['msg']}, 200
+        print('comitting....')
+        flag_modified(form, "comments")
+        db.session.merge(form)
         db.session.commit()
         return {"Status": 'Comment added'}, 200
 
@@ -218,6 +235,7 @@ class GetPendingApprovalRequests(Resource):
         if kwargs['permission'] == 'dept_head':
             department = 'department'
         table_ref = Departments.getDeptRequestTableByName(department)
+
         if not table_ref:
             abort(
                 404, msg={'Error': 'user department not registered as stage dept'})
@@ -231,14 +249,25 @@ class GetPendingApprovalRequests(Resource):
         pending = []
         # print(new)
         for dept_log, form, applicant in new:
-            if form.comments[user.department]['approved'].get(user.email, True) == None:
-                # applicant = Users.query.get(form.user_id)
-                pending.append({
-                    'request_id': form.request_id,
-                    'user': applicant.email,
-                    'name': applicant.name,
-                    'created_on': form.created_on,
-                    'stage': form.stage,
-                    'is_active': "Active" if form.is_active else "Not Active",
-                })
+            if len(form.comments['comments']) > 0 and form.comments['comments'][-1].get(user.department, None) != None:
+                if form.comments['comments'][-1][user.department]['approved'].get(user.email, True) == None:
+                    pending.append({
+                        'request_id': form.request_id,
+                        'user': applicant.email,
+                        'name': applicant.name,
+                        'created_on': form.created_on,
+                        'stage': form.stage,
+                        'is_active': "Active" if form.is_active else "Not Active",
+                    })
+
+            # if form.comments[user.department]['approved'].get(user.email, True) == None:
+            #     # applicant = Users.query.get(form.user_id)
+            #     pending.append({
+            #         'request_id': form.request_id,
+            #         'user': applicant.email,
+            #         'name': applicant.name,
+            #         'created_on': form.created_on,
+            #         'stage': form.stage,
+            #         'is_active': "Active" if form.is_active else "Not Active",
+            #     })
         return jsonify({'pending': pending})

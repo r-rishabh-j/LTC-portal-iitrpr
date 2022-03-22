@@ -298,7 +298,7 @@ class RegistrarLogs(db.Model):
 
 
 class DeanLogs(db.Model):
-    __tablename__ = 'dean_logs'
+    __tablename__ = 'deanfa_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
         'ltc_requests.request_id'), primary_key=True, )
     status = db.Column(db.String(50))
@@ -412,7 +412,7 @@ class LTCRequests(db.Model):
         self.created_on = datetime.now()
         self.stage = ''
         self.is_active = True
-        self.comments = {}  # nested JSON
+        self.comments = {'comments': []}  # nested JSON
 
     def generate_comments_template(self, dept):
         comments = {
@@ -487,13 +487,21 @@ class LTCRequests(db.Model):
         },
     ]
 
+    def addComment(self, department, user, comment, approval):
+        self.comments['comments'][-1][department]['approved'][user.email] = approval
+        self.comments['comments'][-1][department]['comments'][user.email] = comment
+
+
     def forward(self, current_user: Users):
         current_stage = self.stage
 
         if current_stage == '':
             self.stage = 'establishment'
-            self.comments['establishment'] = self.generate_comments_template(
-                'establishment')
+            self.comments['comments'].append({
+                'establishment': self.generate_comments_template('establishment')
+            })
+            # self.comments['establishment'] = self.generate_comments_template(
+            #     'establishment')
             est_log: EstablishmentLogs = EstablishmentLogs(
                 request_id=self.request_id)
             user_dept: Departments = Departments.query.get(
@@ -512,7 +520,10 @@ class LTCRequests(db.Model):
             est_log.status = 'forwarded'
             est_log.updated_on = datetime.now()
             self.stage = 'audit'
-            self.comments['audit'] = self.generate_comments_template('audit')
+            self.comments['comments'].append({
+                'audit': self.generate_comments_template('audit')
+            })
+            # self.comments['audit'] = self.generate_comments_template('audit')
             audit_log: AuditLogs = AuditLogs(request_id=self.request_id)
             db.session.add(audit_log)
             current_user.addNotification(
@@ -523,8 +534,11 @@ class LTCRequests(db.Model):
             au_log.status = 'forwarded'
             au_log.updated_on = datetime.now()
             self.stage = 'accounts'
-            self.comments['accounts'] = self.generate_comments_template(
-                'accounts')
+            self.comments['comments'].append({
+                'accounts': self.generate_comments_template('accounts')
+            })
+            # self.comments['accounts'] = self.generate_comments_template(
+            #     'accounts')
             log: AccountsLogs = AccountsLogs(request_id=self.request_id)
             db.session.add(log)
             current_user.addNotification(
@@ -533,9 +547,13 @@ class LTCRequests(db.Model):
         elif current_stage == 'accounts':
             ac_log: AccountsLogs = AccountsLogs.query.get(self.request_id)
             ac_log.status = 'forwarded'
+            ac_log.updated_on = datetime.now()
             self.stage = 'registrar'
-            self.comments['registrar'] = self.generate_comments_template(
-                'registrar')
+            self.comments['comments'].append({
+                'registrar': self.generate_comments_template('registrar')
+            })
+            # self.comments['registrar'] = self.generate_comments_template(
+            #     'registrar')
             log: RegistrarLogs = RegistrarLogs(request_id=self.request_id)
             db.session.add(log)
             current_user.addNotification(
@@ -546,6 +564,9 @@ class LTCRequests(db.Model):
             reg_log.status = 'forwarded'
             reg_log.updated_on = datetime.now()
             self.stage = 'deanfa'
+            self.comments['comments'].append({
+                'deanfa': self.generate_comments_template('deanfa')
+            })
             self.comments['deanfa'] = self.generate_comments_template('deanfa')
             log: DeanLogs = DeanLogs(request_id=self.request_id)
             db.session.add(log)
