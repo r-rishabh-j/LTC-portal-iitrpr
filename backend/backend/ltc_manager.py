@@ -234,11 +234,12 @@ class GetPendingApprovalRequests(Resource):
         pending = []
         print(new)
         for dept_log, form in new:
-            if form.comments[user.department]['approved'].get(user.email, None) != None:
+            if form.comments[user.department]['approved'].get(user.email, True) == None:
+                applicant = Users.query.get(form.user_id)
                 pending.append({
                     'request_id': form.request_id,
-                    'user': user.email,
-                    'user_id': form.user_id,
+                    'user': applicant.email,
+                    'name': applicant.name,
                     'created_on': form.created_on,
                     'stage': form.stage,
                     'is_active': "Active" if form.is_active else "Not Active",

@@ -134,8 +134,8 @@ function Pending() {
       renderCell: cellElement,
     },
     {
-      field: "user_id",
-      headerName: "User ID",
+      field: "name",
+      headerName: "Name",
       minWidth: 150,
       flex: 1,
       renderCell: cellElement,

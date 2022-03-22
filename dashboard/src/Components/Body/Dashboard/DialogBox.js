@@ -15,7 +15,12 @@ const DialogBox = ({ request_id }) => {
     created_on: "",
     request_id: "",
     form_data: {},
+    comments: {}
   });
+
+  
+  
+  
 
   useEffect(() => {
     const data = { request_id: request_id };
@@ -37,6 +42,10 @@ const DialogBox = ({ request_id }) => {
         }
       });
   }, []);
+
+  // if(formInfo.comments !== {})
+  //   console.log("Hi", formInfo.comments["establishment"]["comments"]["establishment@email"]);
+  
   return (
     <>
       <DialogTitle>LTC Application ID {formInfo.request_id}</DialogTitle>
@@ -51,6 +60,7 @@ const DialogBox = ({ request_id }) => {
             InputProps={{
               readOnly: true,
             }}
+            InputLabelProps={{ shrink: true }}
           />
         </Grid>
 
@@ -603,6 +613,7 @@ shortest route "
             readOnly: true,
           }}
         />
+        <Typography>comments</Typography>
       </DialogContent>
     </>
   );
