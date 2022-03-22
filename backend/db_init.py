@@ -1,5 +1,7 @@
 from backend import create_app
-from backend.models import Departments, Users, LTCRequests, EstablishmentLogs, DeanLogs, DepartmentLogs, AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs
+from backend.models import Departments, Users, LTCRequests, EstablishmentLogs, DeanLogs, DepartmentLogs, \
+      AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs,\
+      AuditReview, AccountsReview
 from backend.models import db
 from dotenv import load_dotenv
 import os
@@ -39,6 +41,8 @@ with app.app_context() as ctx:
     AccountsLogs.__table__.drop(db.engine)
     LTCApproved.__table__.drop(db.engine)
     RegistrarLogs.__table__.drop(db.engine)
+    AccountsReview.__table__.drop(db.engine)
+    AuditReview.__table__.drop(db.engine)
     LTCRequests.__table__.drop(db.engine)
     Users.__table__.drop(db.engine)
     Departments.__table__.drop(db.engine)

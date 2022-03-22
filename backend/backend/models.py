@@ -143,7 +143,7 @@ class Users(db.Model):
     """
     [
         {
-            'time': <timestamp>,
+            'time': <timestamp as str>,
             'content': <text>
         }
     ]
@@ -163,16 +163,18 @@ class Users(db.Model):
     def lookUpByEmail(email):
         user = Users.query.filter_by(email=email).one_or_none()
         return user
-    
+
     def addNotification(self, text):
-        self.notifications['notifications'].append({
-            'time': datetime.today(),
+        print('hello')
+        notifs = self.notifications['notifications']
+        notifs.insert(0, {
+            'time': f'{datetime.today().date()}',
             'content': text
         })
-        return True
-    
+        self.notifications['notifications'] = notifs
+
     def clearNotifications(self):
-        self.notifications['notifications'].clear()
+        self.notifications['notifications'] = []
 
 
 """
@@ -226,6 +228,19 @@ class AuditLogs(db.Model):
         self.updated_on = datetime.now()
 
 
+class AuditReview(db.Model):
+    __tablename__ = 'audit_review'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
+    review_from = db.Column(db.String, db.ForeignKey('departments.name'))
+    message = db.Column(db.String)
+
+    def __init__(self, request_id, review_from, message):
+        self.request_id = request_id
+        self.message = message
+        self.review_from = review_from
+
+
 class AccountsLogs(db.Model):
     """
     Accounts section logs
@@ -247,6 +262,19 @@ class AccountsLogs(db.Model):
         self.request_id = request_id
         self.status = ApplicationStatus.new
         self.updated_on = datetime.now()
+
+
+class AccountsReview(db.Model):
+    __tablename__ = 'accounts_review'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
+    review_from = db.Column(db.String, db.ForeignKey('departments.name'))
+    message = db.Column(db.String)
+
+    def __init__(self, request_id, review_from, message):
+        self.request_id = request_id
+        self.message = message
+        self.review_from = review_from
 
 
 class RegistrarLogs(db.Model):
@@ -476,6 +504,8 @@ class LTCRequests(db.Model):
                     request_id=self.request_id, department=current_user.department)
                 db.session.add(dept_log)
             db.session.add(est_log)
+            current_user.addNotification(
+                f'Your request {self.request_id} forwarded to Establishment Section')
             return True, {'msg': 'Forwarded to Establishment Section'}
         elif current_stage == 'establishment':
             est_log = EstablishmentLogs.query.get(self.request_id)
@@ -485,6 +515,8 @@ class LTCRequests(db.Model):
             self.comments['audit'] = self.generate_comments_template('audit')
             audit_log: AuditLogs = AuditLogs(request_id=self.request_id)
             db.session.add(audit_log)
+            current_user.addNotification(
+                f'Your request {self.request_id} forwarded to Audit Section')
             return True, {'msg': 'Forwarded to Audit Section'}
         elif current_stage == 'audit':
             au_log: AuditLogs = AuditLogs.query.get(self.request_id)
@@ -495,6 +527,8 @@ class LTCRequests(db.Model):
                 'accounts')
             log: AccountsLogs = AccountsLogs(request_id=self.request_id)
             db.session.add(log)
+            current_user.addNotification(
+                f'Your request {self.request_id} forwarded to Accounts Section')
             return True, {'msg': 'Forwarded to Accounts Section'}
         elif current_stage == 'accounts':
             ac_log: AccountsLogs = AccountsLogs.query.get(self.request_id)
@@ -504,6 +538,8 @@ class LTCRequests(db.Model):
                 'registrar')
             log: RegistrarLogs = RegistrarLogs(request_id=self.request_id)
             db.session.add(log)
+            current_user.addNotification(
+                f'Your request {self.request_id} forwarded to Registrar')
             return True, {'msg': 'Forwarded to Registrar Section'}
         elif current_stage == 'registrar':
             reg_log: RegistrarLogs = RegistrarLogs.query.get(self.request_id)
@@ -513,6 +549,8 @@ class LTCRequests(db.Model):
             self.comments['deanfa'] = self.generate_comments_template('deanfa')
             log: DeanLogs = DeanLogs(request_id=self.request_id)
             db.session.add(log)
+            current_user.addNotification(
+                f'Your request {self.request_id} forwarded to Dean FA')
             return True, {'msg': 'Forwarded to Dean FA Section'}
         elif current_stage == 'deanfa':
             dean_log: DeanLogs = DeanLogs.query.get(self.request_id)
@@ -521,6 +559,8 @@ class LTCRequests(db.Model):
             self.stage = 'approved'
             log: LTCApproved = LTCApproved(request_id=self.request_id)
             db.session.add(log)
+            current_user.addNotification(
+                f'Your request {self.request_id} is now approved!')
             return True, {'msg': 'LTC Approved'}
         elif current_stage == 'approved':
             return False, {'msg': 'Already Approved'}
