@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
 import { FormInputText } from "../../Utilities/FormInputText";
+import { FormInputRadio } from "../../Utilities/FormInputRadio";
 
 
 const DialogBox = ({ request_id, permission }) => {
@@ -86,7 +87,7 @@ const DialogBox = ({ request_id, permission }) => {
 
   const onSubmit = (data) => {
     console.log(data)
-    const req_data = {request_id: request_id, comment: data.comment}
+    const req_data = {request_id: request_id, comment: data.comment, approval: data.approval}
     axios({
       method: "POST",
       url: "/api/comment",
@@ -696,7 +697,17 @@ shortest route "
               </div>
           )
         })))} */}
-        {comments.map((d) => Object.keys(d).map(( prop, i) => (d[prop] !== null ? <li key={i}>{prop}:&nbsp;{d[prop]}</li>: <div key={i}/>)))}
+        {comments.map((d) =>
+          Object.keys(d).map((prop, i) =>
+            d[prop] !== null ? (
+              <li key={i}>
+                {prop}:&nbsp;{d[prop]}
+              </li>
+            ) : (
+              <div key={i} />
+            )
+          )
+        )}
         {permission !== "client" ? (
           <div>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -707,6 +718,12 @@ shortest route "
                 defaultValue=""
                 multiline={true}
                 rows={4}
+              />
+              <Typography style={{fontWeight: "bold"}}>Approve</Typography>
+              <FormInputRadio
+                name="approval"
+                control={control}
+                label="Approve"
               />
               <Button type="submit" variant="contained" color="primary">
                 Send
