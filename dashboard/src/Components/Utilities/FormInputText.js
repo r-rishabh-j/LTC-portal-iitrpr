@@ -3,7 +3,7 @@ import {Controller} from "react-hook-form"
 import {useState, useEffect} from 'react'
 
 
-export const FormInputText = ({name, control, label, required, disabled, defaultValue, autofill}) => {
+export const FormInputText = ({name, control, label, required, disabled, defaultValue, autofill, multiline, rows}) => {
 
   const [inputName, setInputName] = useState({});
   const [value, setValue] = useState(label);
@@ -30,7 +30,7 @@ export const FormInputText = ({name, control, label, required, disabled, default
       name={name}
       control={control}
       defaultValue={defaultValue}
-      render={({ field: { onChange}, fieldState: { error } }) => (
+      render={({ field: { onChange }, fieldState: { error } }) => (
         <>
           <TextField
             disabled={disabled}
@@ -43,6 +43,8 @@ export const FormInputText = ({name, control, label, required, disabled, default
             color="primary"
             fullWidth
             margin="normal"
+            multiline={multiline}
+            rows={rows}
           />
         </>
       )}
@@ -65,6 +67,8 @@ export const FormInputText = ({name, control, label, required, disabled, default
             color="primary"
             fullWidth
             margin="normal"
+            multiline={multiline}
+            rows={rows}
           />
         </>
       )}

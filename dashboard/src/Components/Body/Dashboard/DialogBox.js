@@ -8,7 +8,11 @@ import {
   TextField,
   Grid,
   Typography,
+  Button
 } from "@material-ui/core";
+import { useForm, Controller } from "react-hook-form";
+import { FormInputText } from "../../Utilities/FormInputText";
+
 
 const DialogBox = ({ request_id }) => {
   const [formInfo, setFormInfo] = useState({
@@ -18,8 +22,7 @@ const DialogBox = ({ request_id }) => {
     comments: {}
   });
 
-  
-  
+  const { handleSubmit, control } = useForm({});
   
 
   useEffect(() => {
@@ -45,6 +48,45 @@ const DialogBox = ({ request_id }) => {
 
   // if(formInfo.comments !== {})
   //   console.log("Hi", formInfo.comments["establishment"]["comments"]["establishment@email"]);
+  var obj = formInfo.comments;
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      var val = obj[key];
+      console.log(val);
+
+      if(val.hasOwnProperty("comments")){
+        var comments = val["comments"];
+        console.log(comments)
+      }
+    }
+  }
+
+  const onSubmit = (data) => {
+    console.log(data)
+    const req_data = {request_id: request_id, comment: data.comment}
+    axios({
+      method: "POST",
+      url: "/api/comment",
+      data: req_data,
+    })
+      .then((response) => {
+        console.log("s", response.status);
+        if (response.status === 200) {
+          alert("Comment added!");
+          window.location.reload();
+        } else {
+          alert("Error submitting, try again");
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          alert("Error. Please try again");
+        }
+      });
+  }
   
   return (
     <>
@@ -613,7 +655,23 @@ shortest route "
             readOnly: true,
           }}
         />
-        <Typography>comments</Typography>
+        <Typography style={{ margin: "5vh 0 0 0", fontWeight: "bold" }}>
+          Comment History
+        </Typography>
+        {/*make component for react flow chart*/}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormInputText
+            name="comment"
+            control={control}
+            label="Add new comment"
+            defaultValue=""
+            multiline={true}
+            rows={4}
+          />
+          <Button type="submit" variant="contained" color="primary">
+            Send
+          </Button>
+        </form>
       </DialogContent>
     </>
   );
