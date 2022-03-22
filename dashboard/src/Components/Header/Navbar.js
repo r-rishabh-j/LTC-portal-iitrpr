@@ -6,9 +6,10 @@ import Profile from './Navtabs/Profile';
 import Notification from './Navtabs/Notification';
 import Hidden from "@material-ui/core/Hidden";
 import MenuIcon from "@material-ui/icons/Menu";
-import { IconButton } from '@material-ui/core';
+import { Avatar, IconButton } from '@material-ui/core';
 import { useStyles } from './HeaderStyles';
 
+import image from './cover.jpg';
 
 export default function Navbar({ handleDrawerToggle, profileInfo }) {
   const classes = useStyles();
@@ -16,12 +17,13 @@ export default function Navbar({ handleDrawerToggle, profileInfo }) {
   return (
     <AppBar position="sticky" style={{ background: '#0c979c' }}>
       <Toolbar>
+        <Avatar src={image} />
         <Typography variant="h6" className={classes.title}>
-          LTC Portal: {profileInfo.designation}
+          &nbsp; LTC Portal: {profileInfo.designation}
         </Typography>
         <Hidden smDown>
           <Notification />
-          <Profile picture = {profileInfo.picture}/>
+          <Profile picture={profileInfo.picture} />
         </Hidden>
         <Hidden mdUp>
           <IconButton onClick={handleDrawerToggle}>
