@@ -190,17 +190,30 @@ function PreviousApplications() {
 
   return (
     <>
+      <div style={{ textAlign: "center" }}>
+        <Typography variant="h5" style={{ margin: "auto" }}>
+          Previous Applications
+        </Typography>
+      </div>
       <Paper
         elevation={10}
         style={{ display: "flex", height: "100vh", margin: "0 0.5vw 0 3vw" }}
       >
         <Grid container style={{ flexGrow: 1 }}>
-          <DataGrid initialState={{ sorting: { sortModel: [{ field: 'request_id', sort: 'desc' }] } }} columns={columns} rows={tableData}
-            getRowId={(row) => row.request_id} onCellClick={handleCellClick} onRowClick={handleRowClick} />
+          <DataGrid
+            initialState={{
+              sorting: { sortModel: [{ field: "request_id", sort: "desc" }] },
+            }}
+            columns={columns}
+            rows={tableData}
+            getRowId={(row) => row.request_id}
+            onCellClick={handleCellClick}
+            onRowClick={handleRowClick}
+          />
         </Grid>
       </Paper>
     </>
-  )
+  );
 }
 
 export default PreviousApplications

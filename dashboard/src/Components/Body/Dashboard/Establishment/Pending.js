@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {Grid, Paper, Button, Dialog, DialogActions} from '@material-ui/core'
+import {Grid, Paper, Button, Dialog, DialogActions, Typography} from '@material-ui/core'
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import GeneratePDF from "../../../Utilities/GeneratePDF";
@@ -224,6 +224,11 @@ function Pending() {
  
   return (
     <>
+      <div style={{textAlign: "center"}}>
+        <Typography variant="h5" style={{ margin: "auto" }}>
+          New Applications
+        </Typography>
+      </div>
       <Paper
         elevation={10}
         style={{ display: "flex", height: "100vh", margin: "0 0.5vw 0 3vw" }}
@@ -250,7 +255,6 @@ function Pending() {
             <Button onClick={handleClose} color="primary">
               Close
             </Button>
-            
           </DialogActions>
         </Dialog>
       </Paper>
