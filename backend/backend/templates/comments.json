@@ -16,7 +16,8 @@
                 }
             }
         },
-        {
+        {   
+            "review": false, 
             "department2": {
                 "approved": {
                     "u1": null,

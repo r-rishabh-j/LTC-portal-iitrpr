@@ -491,8 +491,7 @@ class LTCRequests(db.Model):
         self.comments['comments'][-1][department]['approved'][user.email] = approval
         self.comments['comments'][-1][department]['comments'][user.email] = comment
 
-
-    def forward(self, current_user: Users):
+    def forward(self, applicant: Users):
         current_stage = self.stage
 
         if current_stage == '':
@@ -500,19 +499,17 @@ class LTCRequests(db.Model):
             self.comments['comments'].append({
                 'establishment': self.generate_comments_template('establishment')
             })
-            # self.comments['establishment'] = self.generate_comments_template(
-            #     'establishment')
             est_log: EstablishmentLogs = EstablishmentLogs(
                 request_id=self.request_id)
             user_dept: Departments = Departments.query.get(
-                current_user.department)
+                applicant.department)
             if not user_dept.is_stage:
                 # add dept comments
                 dept_log: DepartmentLogs = DepartmentLogs(
-                    request_id=self.request_id, department=current_user.department)
+                    request_id=self.request_id, department=applicant.department)
                 db.session.add(dept_log)
             db.session.add(est_log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Establishment Section')
             return True, {'msg': 'Forwarded to Establishment Section'}
         elif current_stage == 'establishment':
@@ -526,7 +523,7 @@ class LTCRequests(db.Model):
             # self.comments['audit'] = self.generate_comments_template('audit')
             audit_log: AuditLogs = AuditLogs(request_id=self.request_id)
             db.session.add(audit_log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Audit Section')
             return True, {'msg': 'Forwarded to Audit Section'}
         elif current_stage == 'audit':
@@ -541,7 +538,7 @@ class LTCRequests(db.Model):
             #     'accounts')
             log: AccountsLogs = AccountsLogs(request_id=self.request_id)
             db.session.add(log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Accounts Section')
             return True, {'msg': 'Forwarded to Accounts Section'}
         elif current_stage == 'accounts':
@@ -556,7 +553,7 @@ class LTCRequests(db.Model):
             #     'registrar')
             log: RegistrarLogs = RegistrarLogs(request_id=self.request_id)
             db.session.add(log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Registrar')
             return True, {'msg': 'Forwarded to Registrar Section'}
         elif current_stage == 'registrar':
@@ -570,7 +567,7 @@ class LTCRequests(db.Model):
             self.comments['deanfa'] = self.generate_comments_template('deanfa')
             log: DeanLogs = DeanLogs(request_id=self.request_id)
             db.session.add(log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Dean FA')
             return True, {'msg': 'Forwarded to Dean FA Section'}
         elif current_stage == 'deanfa':
@@ -580,7 +577,7 @@ class LTCRequests(db.Model):
             self.stage = 'approved'
             log: LTCApproved = LTCApproved(request_id=self.request_id)
             db.session.add(log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} is now approved!')
             return True, {'msg': 'LTC Approved'}
         elif current_stage == 'approved':
