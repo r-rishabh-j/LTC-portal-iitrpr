@@ -2,6 +2,7 @@ from . import db
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
+from sqlalchemy.orm.attributes import flag_modified
 
 
 class Stage:
@@ -165,16 +166,20 @@ class Users(db.Model):
         return user
 
     def addNotification(self, text):
-        print('hello')
         notifs = self.notifications['notifications']
         notifs.insert(0, {
             'time': f'{datetime.today().date()}',
             'content': text
         })
         self.notifications['notifications'] = notifs
+        db.session.merge(self)
+        flag_modified(self, "notifications")
+        
 
     def clearNotifications(self):
-        self.notifications['notifications'] = []
+        self.notifications['notifications'].clear()
+        db.session.merge(self)
+        flag_modified(self, "notifications")
 
 
 """

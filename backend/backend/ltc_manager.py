@@ -19,7 +19,7 @@ class ApplyForLTC(Resource):
         db.session.add(new_request)
         db.session.commit()
         db.session.refresh(new_request)
-        new_request.forward(current_user=current_user)
+        new_request.forward(current_user)
         flag_modified(new_request, "comments")
         db.session.merge(new_request)
         db.session.commit()
@@ -76,7 +76,7 @@ class CommentOnLTC(Resource):
 
         form.addComment(current_user.department,
                         current_user, comment, approval)
-        
+
         print(form.comments)
         approval = True
         if current_user.id == user_dept.dept_head:
@@ -212,6 +212,67 @@ class GetLtcFormMetaData(Resource):
         return jsonify(response)
 
 
+class GetPastApprovalRequests(Resource):
+    allowed_roles = [
+        'deanfa',
+        'registrar',
+        'establishment',
+        'accounts',
+        'audit',
+        'dept_head'
+    ]
+
+    @roles_required(roles=allowed_roles)
+    def get(self, **kwargs):
+        user: Users = current_user
+        department = user.department
+        if kwargs['permission'] == 'dept_head':
+            department = 'department'
+        table_ref = Departments.getDeptRequestTableByName(department)
+
+        if not table_ref:
+            abort(
+                404, msg={'Error': 'user department not registered as stage dept'})
+        previous = []
+
+        past = None
+        new = None
+        if kwargs['permission'] == 'dept_head':
+            past = db.session.query(table_ref, LTCRequests, Users).join(Users).join(
+                table_ref).filter(table_ref.status != 'new', table_ref.department == user.department)
+            new = db.session.query(table_ref, LTCRequests, Users).join(Users).join(
+                table_ref).filter_by(status='new', department=user.department)
+        else:
+            past = db.session.query(table_ref, LTCRequests, Users).join(
+                Users).join(table_ref).filter(table_ref.status != 'new')
+            new = db.session.query(table_ref, LTCRequests, Users).join(
+                Users).join(table_ref).filter_by(status='new')
+
+        for dept_log, form, applicant in past:
+            previous.append({
+                'request_id': form.request_id,
+                'user': applicant.email,
+                'name': applicant.name,
+                'created_on': form.created_on,
+                'stage': form.stage,
+                'is_active': "Active" if form.is_active else "Not Active",
+            })
+
+        for dept_log, form, applicant in new:
+            for comment in form.comments['comments']:
+                if comment.get(user.department, None) and comment.get('review', False) == False\
+                        and comment[user.department]['approved'].get(user.email, None) != None:
+                    previous.append({
+                        'request_id': form.request_id,
+                        'user': applicant.email,
+                        'name': applicant.name,
+                        'created_on': form.created_on,
+                        'stage': form.stage,
+                        'is_active': "Active" if form.is_active else "Not Active",
+                    })
+        return jsonify({'pending': previous})
+
+
 class GetPendingApprovalRequests(Resource):
     allowed_roles = [
         'deanfa',
@@ -245,7 +306,7 @@ class GetPendingApprovalRequests(Resource):
         for dept_log, form, applicant in new:
             for comment in form.comments['comments']:
                 if comment.get(user.department, None) and comment.get('review', False) == False\
-                    and comment[user.department]['approved'].get(user.email, True) == None:
+                        and comment[user.department]['approved'].get(user.email, True) == None:
                     pending.append({
                         'request_id': form.request_id,
                         'user': applicant.email,

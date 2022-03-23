@@ -27,7 +27,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api = Api(app)
     jwt = JWTManager(app)
     from .auth import RegisterUser, Logout, Login, IsLoggedIn
-    from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser, GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC
+    from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser, GetLtcFormAttachments, GetPendingApprovalRequests, \
+        CommentOnLTC, GetPastApprovalRequests
     from .notifications import ClearUserNotifications, GetUserNotifications
     from .models import Users
     create_database(app)
@@ -42,6 +43,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(GetLtcFormData, '/api/getformdata')
     api.add_resource(GetLtcFormAttachments, '/api/getattachments')
     api.add_resource(GetPendingApprovalRequests, '/api/getpendingltc')
+    api.add_resource(GetPastApprovalRequests, '/api/getpastltc')
     api.add_resource(CommentOnLTC, '/api/comment')
     api.add_resource(GetUserNotifications, '/api/getnotifications')
     api.add_resource(ClearUserNotifications, '/api/clearnotifications')
