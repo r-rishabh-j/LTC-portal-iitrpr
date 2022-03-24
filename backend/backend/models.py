@@ -174,7 +174,6 @@ class Users(db.Model):
         self.notifications['notifications'] = notifs
         db.session.merge(self)
         flag_modified(self, "notifications")
-        
 
     def clearNotifications(self):
         self.notifications['notifications'].clear()
