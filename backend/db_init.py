@@ -1,7 +1,6 @@
 from backend import create_app
 from backend.models import Departments, Users, LTCRequests, EstablishmentLogs, DeanLogs, DepartmentLogs, \
-    AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs,\
-    AuditReview, AccountsReview
+    AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs, EstablishmentReview
 from backend.models import db
 from dotenv import load_dotenv
 import os
@@ -40,7 +39,6 @@ hod_list = [
 
 app = create_app(db_path=os.environ.get('POSTGRES_PATH'))
 with app.app_context() as ctx:
-
     EstablishmentLogs.__table__.drop(db.engine)
     DeanLogs.__table__.drop(db.engine)
     DepartmentLogs.__table__.drop(db.engine)
@@ -48,8 +46,7 @@ with app.app_context() as ctx:
     AccountsLogs.__table__.drop(db.engine)
     LTCApproved.__table__.drop(db.engine)
     RegistrarLogs.__table__.drop(db.engine)
-    AccountsReview.__table__.drop(db.engine)
-    AuditReview.__table__.drop(db.engine)
+    EstablishmentReview.__table__.drop(db.engine)
     LTCRequests.__table__.drop(db.engine)
     Users.__table__.drop(db.engine)
     Departments.__table__.drop(db.engine)

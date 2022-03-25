@@ -46,6 +46,34 @@ class ApplyForLTC(Resource):
         return make_response(jsonify({'status': 'ok', 'msg': 'Applied for LTC'}), 200)
 
 
+class FillStageForm(Resource):
+    allowed_roles = [
+        'establishment',
+        'accounts',
+    ]
+
+    @roles_required(roles=allowed_roles)
+    def post(self, permission):
+        request_id = request.json['request_id']
+        if not request_id:
+            abort(404, msg='Request ID not sent')
+
+        content = request.json.get(permission, None)
+        if not content:
+            abort(404, msg='No form content sent!')
+
+        form: LTCRequests = LTCRequests.query.get(int(request_id))
+
+        if not form:
+            abort(404, msg="Invalid Request ID")
+
+        form.form[permission] = content
+        flag_modified(form, "form")
+        db.session.merge(form)
+        db.session.commit()
+        return jsonify({"msg": "updated!"})
+
+
 class CommentOnLTC(Resource):
     allowed_roles = [
         'deanfa',

@@ -209,6 +209,25 @@ class EstablishmentLogs(db.Model):
         self.updated_on = datetime.now()
 
 
+class EstablishmentReview(db.Model):
+    """
+    Establishment section logs
+    """
+    __tablename__ = 'establishment_review'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
+    received_from = db.Column(db.String, db.ForeignKey('departments.name'))
+    message = db.Column(db.String)
+    status = db.Column(db.String(50))
+    updated_on = db.Column(db.DateTime)
+
+    def __init__(self, request_id, received_from, message):
+        self.request_id = request_id
+        self.received_from = received_from
+        self.message = message
+        self.updated_on = datetime.now()
+
+
 class AuditLogs(db.Model):
     """
     Audit section logs
@@ -232,17 +251,17 @@ class AuditLogs(db.Model):
         self.updated_on = datetime.now()
 
 
-class AuditReview(db.Model):
-    __tablename__ = 'audit_review'
-    request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
-    review_from = db.Column(db.String, db.ForeignKey('departments.name'))
-    message = db.Column(db.String)
+# class AuditReview(db.Model):
+#     __tablename__ = 'audit_review'
+#     request_id = db.Column(db.Integer, db.ForeignKey(
+#         'ltc_requests.request_id'), primary_key=True)
+#     review_from = db.Column(db.String, db.ForeignKey('departments.name'))
+#     message = db.Column(db.String)
 
-    def __init__(self, request_id, review_from, message):
-        self.request_id = request_id
-        self.message = message
-        self.review_from = review_from
+#     def __init__(self, request_id, review_from, message):
+#         self.request_id = request_id
+#         self.message = message
+#         self.review_from = review_from
 
 
 class AccountsLogs(db.Model):
@@ -268,17 +287,17 @@ class AccountsLogs(db.Model):
         self.updated_on = datetime.now()
 
 
-class AccountsReview(db.Model):
-    __tablename__ = 'accounts_review'
-    request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
-    review_from = db.Column(db.String, db.ForeignKey('departments.name'))
-    message = db.Column(db.String)
+# class AccountsReview(db.Model):
+#     __tablename__ = 'accounts_review'
+#     request_id = db.Column(db.Integer, db.ForeignKey(
+#         'ltc_requests.request_id'), primary_key=True)
+#     review_from = db.Column(db.String, db.ForeignKey('departments.name'))
+#     message = db.Column(db.String)
 
-    def __init__(self, request_id, review_from, message):
-        self.request_id = request_id
-        self.message = message
-        self.review_from = review_from
+#     def __init__(self, request_id, review_from, message):
+#         self.request_id = request_id
+#         self.message = message
+#         self.review_from = review_from
 
 
 class RegistrarLogs(db.Model):
@@ -606,13 +625,3 @@ class LTCApproved(db.Model):
         self.approved_on = datetime.now()
         self.office_order = None
 
-
-class test_table(db.Model):
-    __tabelname__ = 'test_table'
-    id = db.Column(db.Integer, primary_key=True)
-    json_col = db.Column(MutableDict.as_mutable(JSON))
-    time = db.Column(db.DateTime)
-
-    def __init__(self, json_col):
-        self.json_col = json_col
-        self.time = datetime.now()
