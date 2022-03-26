@@ -1,9 +1,11 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Grid, Paper, Typography, Box } from '@material-ui/core'
+import { Grid, Paper, Typography, Box, Drawer, Hidden } from '@material-ui/core'
+import { useStyles } from "../../Header/HeaderStyles.js";
 
 export default function Home() {
+  const classes = useStyles();
 
   const loadingProfile = {}
   const [profileInfo, setProfileInfo] = useState(loadingProfile);
@@ -30,73 +32,100 @@ export default function Home() {
   }, []);
 
   return (
-    <Grid container>
-      {/* <Grid item xs={4}>
-        <Box style={{ margin: "3vw 0 0 5vw" }}>
-          <img
-            src={profileInfo.picture}
-            alt="Profile image"
-            style={{ width: "10vw" }}
-          ></img>
-          <Typography
-            variant="h5"
-            style={{ fontWeight: "bold", margin: "auto" }}
-          >
-            {" "}
-            {profileInfo.name}
-          </Typography>
-          <Typography variant="h6" style={{ margin: "auto" }}>
-            {" "}
-            {profileInfo.department}
-          </Typography>
-          <Typography variant="h6" style={{ margin: "auto" }}>
-            {" "}
-            {profileInfo.email}
-          </Typography>
-        </Box>
-      </Grid> */}
-      <Grid item xs={8}>
-        <Paper
-          elevation={10}
-          style={{ margin: "0 0.5vw 0 0", height: "100vh", width: "100%" }}
-        >
-          <Box style={{ margin: "0 0 0 30vw" }}>
-            <Typography variant="h4" style={{ fontWeight: "bold" }}>
-              Welcome
+    <>
+      {/* <Box style={{ margin: "3vw 0 0 5vw" }}> */}
+      {/* <img
+        src={profileInfo.picture}
+        alt="Profile image"
+        style={{ width: "10vw" }}
+      ></img> */}
+      {/* <Typography
+              variant="h5"
+              style={{ fontWeight: "bold", margin: "auto" }}
+            >
+              {" "}
+              {profileInfo.name}
             </Typography>
+            <Typography variant="h6" style={{ margin: "auto" }}>
+              {" "}
+              {profileInfo.department}
+            </Typography>
+            <Typography variant="h6" style={{ margin: "auto" }}>
+              {" "}
+              {profileInfo.email}
+            </Typography> */}
+      {/* </Box> */}
+
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        style={{ margin: "1vh 0 0 0" }}
+      >
+        <Paper
+          // elevation={10}
+          style={{
+            margin: "0 0 0 3vw",
+            height: "100vh",
+            width: "70vw",
+            backgroundColor: "#efefef",
+          }}
+        >
+          <Box display="flex" justifyContent="center">
+            <Typography variant="h5">Notifications</Typography>
+          </Box>
+          <Box display="flex" justifyContent="center">
+            {/* <Typography variant="h4" style={{ fontWeight: "bold" }}>
+              Welcome
+            </Typography> */}
+            <Paper
+              elevation={10}
+              style={{ height: "20vh", width: "100%", margin: "1vw" }}
+            ></Paper>
+          </Box>
+          <Box display="flex" justifyContent="center">
+            {/* <Typography variant="h4" style={{ fontWeight: "bold" }}>
+              Welcome
+            </Typography> */}
+            <Paper
+              elevation={10}
+              style={{ height: "20vh", width: "100%", margin: "1vw" }}
+            ></Paper>
+          </Box>
+          <Box display="flex" justifyContent="center">
+            {/* <Typography variant="h4" style={{ fontWeight: "bold" }}>
+              Welcome
+            </Typography> */}
+            <Paper
+              elevation={10}
+              style={{ height: "20vh", width: "100%", margin: "1vw" }}
+            ></Paper>
           </Box>
         </Paper>
-      </Grid>
-      <Grid item xs={4}>
-        <Box style={{ margin: "3vw 0 0 5vw" }}>
-          <img
-            src={profileInfo.picture}
-            alt="Profile image"
-            style={{ width: "10vw" }}
-          ></img>
-          <Typography
-            variant="h5"
-            style={{ fontWeight: "bold", margin: "auto" }}
-          >
-            {" "}
-            {profileInfo.name}
-          </Typography>
-          <Typography variant="h6" style={{ margin: "auto" }}>
-            {" "}
-            {profileInfo.department}
-          </Typography>
-          <Typography variant="h6" style={{ margin: "auto" }}>
-            {" "}
-            {profileInfo.email}
-          </Typography>
+        <Box>
+          <center>
+            <img
+              src={profileInfo.picture}
+              alt="Profile image"
+              style={{ width: "10vw" }}
+            ></img>
+            <Typography
+              variant="h5"
+              style={{ fontWeight: "bold", margin: "auto" }}
+            >
+              {" "}
+              {profileInfo.name}
+            </Typography>
+            <Typography variant="h6" style={{ margin: "auto" }}>
+              {" "}
+              {profileInfo.department}
+            </Typography>
+            <Typography variant="h6" style={{ margin: "auto" }}>
+              {" "}
+              {profileInfo.email}
+            </Typography>
+          </center>
         </Box>
-      </Grid>
-      {/* <Paper
-        elevation={10}
-        style={{ margin: "3vh 0.5vw 0 3vw", height: "50vh", width: "100%" }}
-      >
-        <Typography>Recent</Typography>
-      </Paper> */}
-    </Grid>
+      </Box>
+    </>
   );
 }
