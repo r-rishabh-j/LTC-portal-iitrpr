@@ -711,6 +711,19 @@ shortest route "
         {permission !== "client" ? (
           <div>
             <form onSubmit={handleSubmit(onSubmit)}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography>
+                    Fresh Recruit i.e. joining Govt. Service after 01.09.2008
+                    /otherwise,
+                  </Typography>
+                  <FormInputText
+                  name = "est_data_joining_date"
+                  label="Date of joining"
+                  control={control}
+                  defaultValue=""/>
+                </Grid>
+              </Grid>
               <FormInputText
                 name="comment"
                 control={control}
@@ -719,7 +732,7 @@ shortest route "
                 multiline={true}
                 rows={4}
               />
-              <Typography style={{fontWeight: "bold"}}>Approve</Typography>
+              <Typography style={{ fontWeight: "bold" }}>Approve</Typography>
               <FormInputRadio
                 name="approval"
                 control={control}

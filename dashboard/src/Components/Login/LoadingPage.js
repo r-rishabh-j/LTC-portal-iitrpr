@@ -4,7 +4,7 @@ import { Typography } from '@material-ui/core';
 
 const LoadingPage = () => {
   return (
-    <div>
+    <div >
       <Typography variant="h5">
         <HourglassEmptyIcon />
          Loading...
