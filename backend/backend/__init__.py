@@ -1,7 +1,7 @@
 import os
 from flask_cors import CORS
 from flask_restful import Api
-from flask import Flask, make_response
+from flask import Flask, make_response, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
@@ -28,7 +28,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     jwt = JWTManager(app)
     from .auth import RegisterUser, Logout, Login, IsLoggedIn
     from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser,\
-        GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC, GetPastApprovalRequests
+        GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC, GetPastApprovalRequests, FillStageForm
     from .notifications import ClearUserNotifications, GetUserNotifications
     from .models import Users
     create_database(app)
@@ -45,8 +45,10 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(GetPendingApprovalRequests, '/api/getpendingltc')
     api.add_resource(GetPastApprovalRequests, '/api/getpastltc')
     api.add_resource(CommentOnLTC, '/api/comment')
+    api.add_resource(FillStageForm, '/api/fill-stage-form')
     api.add_resource(GetUserNotifications, '/api/getnotifications')
     api.add_resource(ClearUserNotifications, '/api/clearnotifications')
+
 
     @jwt.user_identity_loader
     def user_identity_loader(user: Users):
@@ -70,6 +72,10 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
             return response
         except:
             return response
+
+    @app.route('/', methods=['GET'])
+    def home():
+        return redirect(os.environ.get('FRONTEND_URL'))
 
     return app
 

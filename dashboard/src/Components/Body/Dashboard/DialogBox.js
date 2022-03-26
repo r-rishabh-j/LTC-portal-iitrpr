@@ -12,9 +12,9 @@ import {
 } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
 import { FormInputText } from "../../Utilities/FormInputText";
-import { FormInputNumber} from "../../Utilities/FormInputNumber";
+import { FormInputNumber } from "../../Utilities/FormInputNumber";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
-import {FormInputDate} from "../../Utilities/FormInputDate";
+import { FormInputDate } from "../../Utilities/FormInputDate";
 
 
 const DialogBox = ({ request_id, permission }) => {
@@ -90,9 +90,9 @@ const DialogBox = ({ request_id, permission }) => {
   // }
 
   const onSubmit = (data) => {
-    
+
     console.log(data)
-    
+
     const req_data = { request_id: request_id, comment: data.comment, approval: data.approval }
     axios({
       method: "POST",
@@ -101,19 +101,17 @@ const DialogBox = ({ request_id, permission }) => {
     })
       .then((response) => {
         console.log("s", response.status);
-        if (response.status === 200) {
-          alert("Comment added!");
-          window.location.reload();
-        } else {
-          alert("Error submitting, try again");
-        }
+        alert("Comment added!");
+        window.location.reload();
+
       })
       .catch((error) => {
         if (error.response) {
+          console.log('e', error.response);
           console.log(error.response);
           console.log(error.response.status);
           console.log(error.response.headers);
-          alert("Error. Please try again");
+          alert(error.response.data.error);
         }
       });
   }

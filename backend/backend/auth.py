@@ -7,6 +7,7 @@ from flask_restful import Resource, reqparse, marshal_with, abort, fields
 from .models import Departments, Users
 from flask_jwt_extended import create_access_token, jwt_required, \
     set_access_cookies, unset_jwt_cookies, current_user
+from markupsafe import escape
 from .role_manager import role_required
 
 
