@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 
-export const FormInputNumber = ({ name, control, label, required }) => {
+export const FormInputNumber = ({ name, control, label, required, disabled }) => {
   return (
     <Controller
       name={name}
@@ -18,6 +18,7 @@ export const FormInputNumber = ({ name, control, label, required }) => {
             required={required}
             color="primary"
             margin="normal"
+            disabled={disabled}
             fullWidth
           />
         </>

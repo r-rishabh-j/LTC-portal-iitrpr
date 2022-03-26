@@ -12,7 +12,9 @@ import {
 } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
 import { FormInputText } from "../../Utilities/FormInputText";
+import { FormInputNumber} from "../../Utilities/FormInputNumber";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
+import {FormInputDate} from "../../Utilities/FormInputDate";
 
 
 const DialogBox = ({ request_id, permission }) => {
@@ -118,6 +120,7 @@ const DialogBox = ({ request_id, permission }) => {
 
   const onSubmitEstData = (data) => {
     console.log(data)
+    setEdit(false)
   }
 
   return (
@@ -716,31 +719,6 @@ shortest route "
           }}
         />
 
-        {permission !== "client" ? (
-          <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <FormInputText
-                name="comment"
-                control={control}
-                label="Add new comment"
-                defaultValue=""
-                multiline={true}
-                rows={4}
-              />
-              <Typography style={{ fontWeight: "bold" }}>Approve</Typography>
-              <FormInputRadio
-                name="approval"
-                control={control}
-                label="Approve"
-              />
-              <Button type="submit" variant="contained" color="primary">
-                Send
-              </Button>
-            </form>
-          </div>
-        ) : (
-          <div />
-        )}
         <Typography style={{ margin: "5vh 0 0 0", fontWeight: "bold" }}>
           Comment History
         </Typography>
@@ -776,17 +754,27 @@ shortest route "
         {permission === "establishment" ? (
           <form
             onSubmit={handleSubmitData(onSubmitEstData)}
-            style={{ width: "100%" }}
+            style={{
+              width: "100%",
+              "& .MultiFormControlRoot": {
+                width: "100%",
+              },
+            }}
           >
             <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button type="button" variant="contained" color="primary">
+              <Button
+                type="button"
+                variant="contained"
+                color="primary"
+                onClick={() => setEdit(true)}
+              >
                 Edit
               </Button>
               &nbsp;
               <Button type="submit" variant="contained" color="primary">
                 Save
               </Button>
-            </Box>):(
+            </Box>
             {/* <Typography style={{fontWeight: "bold"}}>Establishment Data</Typography> */}
             <Typography>
               Fresh Recruit i.e. joining Govt. Service after 01.09.2008
@@ -794,7 +782,7 @@ shortest route "
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputText
+                <FormInputDate
                   name="est_data_joining_date"
                   label="Date of joining"
                   control={controlData}
@@ -838,9 +826,45 @@ shortest route "
             </Grid>
             <Typography>Period </Typography>
             <Grid container spacing={2}>
+              <Grid item xs={3}>
+                <FormInputDate
+                  name="est_data_period_last_from"
+                  label="Last Availed From"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <FormInputDate
+                  name="est_data_period_last_to"
+                  label="Last Availed To"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <FormInputDate
+                  name="est_data_period_current_from"
+                  label="Current LTC From"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+
+              <Grid item xs={3}>
+                <FormInputDate
+                  name="est_data_period_current_to"
+                  label="Current LTC To"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>LTC for Self/Family</Typography>
+            <Grid container spacing={2}>
               <Grid item xs={4}>
                 <FormInputText
-                  name="est_data_period_last_from"
+                  name="est_data_last_ltc_for"
                   label="Last Availed"
                   control={controlData}
                   defaultValue=""
@@ -849,7 +873,51 @@ shortest route "
               </Grid>
               <Grid item xs={4}>
                 <FormInputText
-                  name="est_data_period_last to"
+                  name="est_data_current_ltc_for"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>Earned leave encashment (No. of Days)</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputNumber
+                  name="est_data_last_ltc_days"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputNumber
+                  name="est_data_current_ltc_days"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>
+              Period and nature of leave applied for and need to be sanctioned
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_last_nature"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_current_nature"
                   label="Current LTC"
                   control={controlData}
                   defaultValue=""
@@ -860,6 +928,34 @@ shortest route "
           </form>
         ) : (
           <div>TextFields with autofilled data</div>
+        )}
+
+        {permission !== "client" ? (
+          <div>
+            <br />
+            <Typography style={{ fontWeight: "bold" }}>Comments</Typography>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormInputText
+                name="comment"
+                control={control}
+                label="Add new comment"
+                defaultValue=""
+                multiline={true}
+                rows={4}
+              />
+              <Typography style={{ fontWeight: "bold" }}>Approve</Typography>
+              <FormInputRadio
+                name="approval"
+                control={control}
+                label="Approve"
+              />
+              <Button type="submit" variant="contained" color="primary">
+                Send
+              </Button>
+            </form>
+          </div>
+        ) : (
+          <div />
         )}
       </DialogContent>
     </>
