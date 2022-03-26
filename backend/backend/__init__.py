@@ -1,14 +1,12 @@
 import os
-from flask import Flask, make_response
 from flask_cors import CORS
 from flask_restful import Api
+from flask import Flask, make_response
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager, get_jwt, get_jwt_identity, create_access_token, set_access_cookies, current_user
-from datetime import datetime
-from datetime import timezone
+from datetime import datetime, timedelta
+from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
 
 from .file_manager import FileManager
-from datetime import timedelta
 
 db = SQLAlchemy()
 filemanager = FileManager(os.path.abspath('./static'))
@@ -22,16 +20,15 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
-    # app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=5)
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=5)
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=60)
     app.config['UPLOAD_FOLDER'] = './static'
 
     db.init_app(app)
     api = Api(app)
     jwt = JWTManager(app)
     from .auth import RegisterUser, Logout, Login, IsLoggedIn
-    from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser, GetLtcFormAttachments, GetPendingApprovalRequests, \
-        CommentOnLTC, GetPastApprovalRequests
+    from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser,\
+        GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC, GetPastApprovalRequests
     from .notifications import ClearUserNotifications, GetUserNotifications
     from .models import Users
     create_database(app)
@@ -57,7 +54,6 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
 
     @jwt.user_lookup_loader
     def user_lookup_callback(_jwt_header, jwt_data):
-        print('lookup')
         email = jwt_data.get('sub', None)
         return Users.query.filter_by(email=email).one_or_none()
 
@@ -66,14 +62,13 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
         try:
             exp_timestamp = get_jwt()["exp"]
             now = datetime.now()
-            target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+            target_timestamp = datetime.timestamp(now + timedelta(minutes=10))
             if target_timestamp > exp_timestamp:
                 print('refresh', current_user)
                 access_token = create_access_token(identity=current_user)
                 set_access_cookies(make_response(response), access_token)
             return response
         except:
-            print('No JWT')
             return response
 
     return app
@@ -81,4 +76,3 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
 
 def create_database(app):
     db.create_all(app=app)
-    print('Created database')

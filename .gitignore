@@ -29,3 +29,4 @@ package-lock.json
 client_secret.json
 
 static/
+.vscode

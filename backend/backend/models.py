@@ -98,12 +98,10 @@ class Stages:
         return Stages.STAGES[0]
 
 
-"""
-To be used to indicate status of application in logs tables
-"""
-
-
 class ApplicationStatus:
+    """
+    To be used to indicate status of application in logs tables
+    """
     new = 'new'  # a new LTC request
     review = 'review'  # application sent back for review
     forwarded = 'forwarded'  # application forwarded
@@ -111,36 +109,23 @@ class ApplicationStatus:
     complete = 'complete'
 
 
-# class UserCredentials(db.Model):
-#     __tablename__ = 'user_credentials'
-#     email = db.Column(db.String(150), primary_key=True)
-#     password = db.Column(db.String(250), nullable=False)
-
-#     def __init__(self, email, password):
-#         self.email = email
-#         self.password = password
-# class Admin(db.Model):
-
-
-class Permissions(db.Model):
-    __tablename__ = 'user_credentials'
-    permission = db.Column(db.Integer, primary_key=True)
-
-# TODO: decide permission column, id values
-
-
 class Users(db.Model):
+    """
+    Users table
+    Admin needs to add users to the table so that users can login.
+    Users cannot register themselves.
+    """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True, nullable=False)
-    # name for higher level employees to be their designation
-    employee_code = db.Column(db.Integer, unique=True)
-    name = db.Column(db.String(150), nullable=False)
-    department = db.Column(db.String(150), nullable=False)
-    permission = db.Column(db.String, nullable=False)
-    designation = db.Column(db.String, nullable=False)
-    signature = db.Column(db.String, nullable=True)
-    picture = db.Column(db.String, nullable=True)
+    email = db.Column(db.String(150), unique=True, nullable=False) 
+    employee_code = db.Column(db.Integer, unique=True) # optional
+    name = db.Column(db.String(150), nullable=False) # name for higher level employees to be their designation
+    department = db.Column(db.String(150), db.ForeignKey('departments.name'))
+    permission = db.Column(db.String, nullable=False) # permission level. Defined in role_manager.
+    designation = db.Column(db.String, nullable=False) # designation. Custom
+    signature = db.Column(db.String, nullable=True) # stores signature
+    picture = db.Column(db.String, nullable=True) # picture from google auth
+    notifications = db.Column(MutableDict.as_mutable(JSON)) # stores user notifications
     """
     [
         {
@@ -149,7 +134,6 @@ class Users(db.Model):
         }
     ]
     """
-    notifications = db.Column(MutableDict.as_mutable(JSON))
 
     def __init__(self, email, name, dept, permission, designation='Faculty', employee_code=None):
         self.email = email
@@ -160,6 +144,9 @@ class Users(db.Model):
         self.designation = designation
         self.employee_code = employee_code
         self.notifications = {'notifications': []}
+
+    def __repr__(self) -> str:
+        return f'ID:{self.id}, {self.email}, {self.name}'
 
     def lookUpByEmail(email):
         user = Users.query.filter_by(email=email).one_or_none()
@@ -172,13 +159,13 @@ class Users(db.Model):
             'content': text
         })
         self.notifications['notifications'] = notifs
-        db.session.merge(self)
         flag_modified(self, "notifications")
+        db.session.merge(self)
 
     def clearNotifications(self):
         self.notifications['notifications'].clear()
-        db.session.merge(self)
         flag_modified(self, "notifications")
+        db.session.merge(self)
 
 
 """
@@ -211,7 +198,7 @@ class EstablishmentLogs(db.Model):
 
 class EstablishmentReview(db.Model):
     """
-    Establishment section logs
+    Establishment section review table
     """
     __tablename__ = 'establishment_review'
     request_id = db.Column(db.Integer, db.ForeignKey(
@@ -251,19 +238,6 @@ class AuditLogs(db.Model):
         self.updated_on = datetime.now()
 
 
-# class AuditReview(db.Model):
-#     __tablename__ = 'audit_review'
-#     request_id = db.Column(db.Integer, db.ForeignKey(
-#         'ltc_requests.request_id'), primary_key=True)
-#     review_from = db.Column(db.String, db.ForeignKey('departments.name'))
-#     message = db.Column(db.String)
-
-#     def __init__(self, request_id, review_from, message):
-#         self.request_id = request_id
-#         self.message = message
-#         self.review_from = review_from
-
-
 class AccountsLogs(db.Model):
     """
     Accounts section logs
@@ -285,19 +259,6 @@ class AccountsLogs(db.Model):
         self.request_id = request_id
         self.status = ApplicationStatus.new
         self.updated_on = datetime.now()
-
-
-# class AccountsReview(db.Model):
-#     __tablename__ = 'accounts_review'
-#     request_id = db.Column(db.Integer, db.ForeignKey(
-#         'ltc_requests.request_id'), primary_key=True)
-#     review_from = db.Column(db.String, db.ForeignKey('departments.name'))
-#     message = db.Column(db.String)
-
-#     def __init__(self, request_id, review_from, message):
-#         self.request_id = request_id
-#         self.message = message
-#         self.review_from = review_from
 
 
 class RegistrarLogs(db.Model):
@@ -356,6 +317,9 @@ class Departments(db.Model):
         self.is_stage = is_stage
         self.full_name = full_name
         self.dept_head = dept_head
+
+    def __repr__(self) -> str:
+        return f'{self.name}, {self.full_name}, Stage: {self.is_stage}'
 
     def create_departments_from_list(dept_list):
         for dept in dept_list:
@@ -437,6 +401,9 @@ class LTCRequests(db.Model):
         self.is_active = True
         self.comments = {'comments': []}  # nested JSON
 
+    def __repr__(self) -> str:
+        return f'ID:{self.request_id}, {self.user_id}, {self.stage}'
+
     def generate_comments_template(self, dept):
         comments = {
             "approved": get_stage_roles(dept),
@@ -515,6 +482,9 @@ class LTCRequests(db.Model):
         self.comments['comments'][-1][department]['comments'][user.email] = comment
 
     def forward(self, applicant: Users):
+        """
+        Forward form to next stage
+        """
         current_stage = self.stage
 
         if current_stage == '':
@@ -543,7 +513,6 @@ class LTCRequests(db.Model):
             self.comments['comments'].append({
                 'audit': self.generate_comments_template('audit')
             })
-            # self.comments['audit'] = self.generate_comments_template('audit')
             audit_log: AuditLogs = AuditLogs(request_id=self.request_id)
             db.session.add(audit_log)
             applicant.addNotification(
@@ -557,8 +526,6 @@ class LTCRequests(db.Model):
             self.comments['comments'].append({
                 'accounts': self.generate_comments_template('accounts')
             })
-            # self.comments['accounts'] = self.generate_comments_template(
-            #     'accounts')
             log: AccountsLogs = AccountsLogs(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
@@ -572,8 +539,6 @@ class LTCRequests(db.Model):
             self.comments['comments'].append({
                 'registrar': self.generate_comments_template('registrar')
             })
-            # self.comments['registrar'] = self.generate_comments_template(
-            #     'registrar')
             log: RegistrarLogs = RegistrarLogs(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
@@ -606,6 +571,9 @@ class LTCRequests(db.Model):
         elif current_stage == 'approved':
             return False, {'msg': 'Already Approved'}
 
+    def decline(self):
+        
+        pass
 
 class LTCApproved(db.Model):
     """
@@ -624,4 +592,3 @@ class LTCApproved(db.Model):
         self.request_id = request_id
         self.approved_on = datetime.now()
         self.office_order = None
-

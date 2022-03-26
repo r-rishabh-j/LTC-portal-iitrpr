@@ -4,10 +4,10 @@ from . import db
 from . import filemanager
 from flask import jsonify, request, make_response, send_file
 from flask_restful import Resource, reqparse, abort, fields
-from .models import DeanLogs, Users, LTCRequests, Departments
+from sqlalchemy.orm.attributes import flag_modified
 from flask_jwt_extended import current_user
 from .role_manager import role_required, roles_required, check_role
-from sqlalchemy.orm.attributes import flag_modified
+from .models import Users, LTCRequests, Departments
 
 
 class ApplyForLTC(Resource):
@@ -16,13 +16,15 @@ class ApplyForLTC(Resource):
     """
 
     def initialiseApplication(self, new_request: LTCRequests, current_user: Users):
+        """
+        Initialise a new application.
+        """
         db.session.add(new_request)
         db.session.commit()
         db.session.refresh(new_request)
         new_request.forward(current_user)
         flag_modified(new_request, "comments")
         db.session.merge(new_request)
-        db.session.commit()
 
     @role_required('client')
     def post(self):
@@ -43,6 +45,7 @@ class ApplyForLTC(Resource):
         new_request.form, new_request.attachments = form_data, filepath
         # initialise the application
         self.initialiseApplication(new_request, user)
+        db.session.commit()
         return make_response(jsonify({'status': 'ok', 'msg': 'Applied for LTC'}), 200)
 
 
