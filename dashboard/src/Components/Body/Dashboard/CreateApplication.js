@@ -41,6 +41,7 @@ export default function CreateApplication(props) {
     //data.designation = profile.permission;
     data.department = profile.department;
     data.emp_code = profile.employee_code;
+    
 
     console.log('data: ', JSON.stringify(data));
     formData.append('attachments', data.attachments[0]);
