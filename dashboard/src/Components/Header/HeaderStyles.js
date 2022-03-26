@@ -8,6 +8,7 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: "#efefef",
+    
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -39,7 +40,9 @@ export const useStyles = makeStyles((theme) => ({
   //wrapper
   wrapper: {
     height: "100%",
-    // width: "100%",
+    //width: "100%",
+    overflowWrap: "anywhere",
+    
     background: "#efefef",
     padding: theme.spacing(2, 2, 0, 32),
     [theme.breakpoints.down("sm")]: {
