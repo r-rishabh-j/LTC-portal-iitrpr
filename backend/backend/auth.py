@@ -39,7 +39,7 @@ class IsLoggedIn(Resource):
                 'email': user.email,
                 'department': user_dept.full_name,
                 'picture': user.picture,
-                'employee_code':user.employee_code
+                'employee_code': user.employee_code
             }
         })
 
