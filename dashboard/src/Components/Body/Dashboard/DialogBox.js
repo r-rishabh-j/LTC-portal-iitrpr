@@ -26,7 +26,7 @@ const DialogBox = ({ request_id, permission }) => {
 
   const { handleSubmit, control } = useForm({});
   let array = [];
-  
+
 
   useEffect(() => {
     const data = { request_id: request_id };
@@ -39,7 +39,7 @@ const DialogBox = ({ request_id, permission }) => {
       .then((response) => {
         console.log(response.data.data);
         setFormInfo(response.data.data);
-        
+
         let commentArray = response.data.data.comments.comments ?? [];
 
         commentArray.forEach(function (arrayItem) {
@@ -47,7 +47,7 @@ const DialogBox = ({ request_id, permission }) => {
             if (arrayItem.hasOwnProperty(dept))
               var stageObject = arrayItem[dept];
             //console.log(stageObject)
-              
+
             if (stageObject.hasOwnProperty("comments")) {
               var stageComments = stageObject["comments"];
               array.push(stageComments);
@@ -68,9 +68,9 @@ const DialogBox = ({ request_id, permission }) => {
   // if(formInfo.comments !== {})
   //   console.log("Hi", formInfo.comments["establishment"]["comments"]["establishment@email"]);
   console.log(comments)
-  const comment_data= formInfo.comments.comments ?? []
-  
-  
+  const comment_data = formInfo.comments.comments ?? []
+
+
 
   // var obj = formInfo.comments;
   // for (var key in obj) {
@@ -87,7 +87,7 @@ const DialogBox = ({ request_id, permission }) => {
 
   const onSubmit = (data) => {
     console.log(data)
-    const req_data = {request_id: request_id, comment: data.comment, approval: data.approval}
+    const req_data = { request_id: request_id, comment: data.comment, approval: data.approval }
     axios({
       method: "POST",
       url: "/api/comment",
@@ -111,7 +111,7 @@ const DialogBox = ({ request_id, permission }) => {
         }
       });
   }
-  
+
   return (
     <>
       <DialogTitle>LTC Application ID {formInfo.request_id}</DialogTitle>
@@ -170,7 +170,7 @@ const DialogBox = ({ request_id, permission }) => {
             <TextField
               label="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
-              value={formInfo.form_data["joining_date"] ?? " "}
+              value={String(formInfo.form_data["joining_date"]).slice(0, 10) ?? " "}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -203,7 +203,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="From"
-              value={formInfo.form_data["nature_from"] ?? " "}
+              value={String(formInfo.form_data["nature_from"]).slice(0, 10) ?? " "}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -214,7 +214,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="To"
-              value={formInfo.form_data["nature_to"] ?? " "}
+              value={String(formInfo.form_data["nature_to"]).slice(0, 10) ?? " "}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -241,7 +241,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="From"
-              value={formInfo.form_data["prefix_from"] ?? " "}
+              value={String(formInfo.form_data["prefix_from"]).slice(0, 10) ?? " "}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -252,7 +252,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="To"
-              value={formInfo.form_data["prefix_to"] ?? " "}
+              value={String(formInfo.form_data["prefix_to"]).slice(0, 10) ?? " "}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -266,7 +266,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="From"
-              value={formInfo.form_data["suffix_from"] ?? " "}
+              value={String(formInfo.form_data["suffix_from"]).slice(0, 10) ?? " "}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -277,7 +277,7 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="To"
-              value={formInfo.form_data["suffix_to"] ?? " "}
+              value={String(formInfo.form_data["suffix_to"]).slice(0, 10) ?? " "}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -304,7 +304,7 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Outward journey"
-              value={formInfo.form_data["self_date_outward"] ?? " "}
+              value={String(formInfo.form_data["self_date_outward"]).slice(0, 10) ?? " "}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -315,7 +315,7 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Inward journey"
-              value={formInfo.form_data["self_date_inward"] ?? " "}
+              value={String(formInfo.form_data["self_date_inward"]).slice(0, 10) ?? " "}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -331,7 +331,7 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Outward journey"
-              value={formInfo.form_data["family_date_outward"] ?? " "}
+              value={String(formInfo.form_data["family_date_outward"]).slice(0, 10) ?? " "}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -342,7 +342,7 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Inward journey"
-              value={formInfo.form_data["family_date_inward"] ?? " "}
+              value={String(formInfo.form_data["family_date_inward"]).slice(0, 10) ?? " "}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -680,6 +680,32 @@ shortest route "
           }}
         />
 
+
+        {permission !== "client" ? (
+          <div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormInputText
+                name="comment"
+                control={control}
+                label="Add new comment"
+                defaultValue=""
+                multiline={true}
+                rows={4}
+              />
+              <Typography style={{ fontWeight: "bold" }}>Approve</Typography>
+              <FormInputRadio
+                name="approval"
+                control={control}
+                label="Approve"
+              />
+              <Button type="submit" variant="contained" color="primary">
+                Send
+              </Button>
+            </form>
+          </div>
+        ) : (
+          <div />
+        )}
         <Typography style={{ margin: "5vh 0 0 0", fontWeight: "bold" }}>
           Comment History
         </Typography>

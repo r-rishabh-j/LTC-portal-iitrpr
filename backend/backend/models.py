@@ -2,6 +2,7 @@ from . import db
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
+from sqlalchemy.orm.attributes import flag_modified
 
 
 class Stage:
@@ -165,16 +166,19 @@ class Users(db.Model):
         return user
 
     def addNotification(self, text):
-        print('hello')
         notifs = self.notifications['notifications']
         notifs.insert(0, {
             'time': f'{datetime.today().date()}',
             'content': text
         })
         self.notifications['notifications'] = notifs
+        db.session.merge(self)
+        flag_modified(self, "notifications")
 
     def clearNotifications(self):
-        self.notifications['notifications'] = []
+        self.notifications['notifications'].clear()
+        db.session.merge(self)
+        flag_modified(self, "notifications")
 
 
 """
@@ -205,6 +209,25 @@ class EstablishmentLogs(db.Model):
         self.updated_on = datetime.now()
 
 
+class EstablishmentReview(db.Model):
+    """
+    Establishment section logs
+    """
+    __tablename__ = 'establishment_review'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
+    received_from = db.Column(db.String, db.ForeignKey('departments.name'))
+    message = db.Column(db.String)
+    status = db.Column(db.String(50))
+    updated_on = db.Column(db.DateTime)
+
+    def __init__(self, request_id, received_from, message):
+        self.request_id = request_id
+        self.received_from = received_from
+        self.message = message
+        self.updated_on = datetime.now()
+
+
 class AuditLogs(db.Model):
     """
     Audit section logs
@@ -228,17 +251,17 @@ class AuditLogs(db.Model):
         self.updated_on = datetime.now()
 
 
-class AuditReview(db.Model):
-    __tablename__ = 'audit_review'
-    request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
-    review_from = db.Column(db.String, db.ForeignKey('departments.name'))
-    message = db.Column(db.String)
+# class AuditReview(db.Model):
+#     __tablename__ = 'audit_review'
+#     request_id = db.Column(db.Integer, db.ForeignKey(
+#         'ltc_requests.request_id'), primary_key=True)
+#     review_from = db.Column(db.String, db.ForeignKey('departments.name'))
+#     message = db.Column(db.String)
 
-    def __init__(self, request_id, review_from, message):
-        self.request_id = request_id
-        self.message = message
-        self.review_from = review_from
+#     def __init__(self, request_id, review_from, message):
+#         self.request_id = request_id
+#         self.message = message
+#         self.review_from = review_from
 
 
 class AccountsLogs(db.Model):
@@ -264,17 +287,17 @@ class AccountsLogs(db.Model):
         self.updated_on = datetime.now()
 
 
-class AccountsReview(db.Model):
-    __tablename__ = 'accounts_review'
-    request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
-    review_from = db.Column(db.String, db.ForeignKey('departments.name'))
-    message = db.Column(db.String)
+# class AccountsReview(db.Model):
+#     __tablename__ = 'accounts_review'
+#     request_id = db.Column(db.Integer, db.ForeignKey(
+#         'ltc_requests.request_id'), primary_key=True)
+#     review_from = db.Column(db.String, db.ForeignKey('departments.name'))
+#     message = db.Column(db.String)
 
-    def __init__(self, request_id, review_from, message):
-        self.request_id = request_id
-        self.message = message
-        self.review_from = review_from
+#     def __init__(self, request_id, review_from, message):
+#         self.request_id = request_id
+#         self.message = message
+#         self.review_from = review_from
 
 
 class RegistrarLogs(db.Model):
@@ -491,8 +514,7 @@ class LTCRequests(db.Model):
         self.comments['comments'][-1][department]['approved'][user.email] = approval
         self.comments['comments'][-1][department]['comments'][user.email] = comment
 
-
-    def forward(self, current_user: Users):
+    def forward(self, applicant: Users):
         current_stage = self.stage
 
         if current_stage == '':
@@ -500,19 +522,17 @@ class LTCRequests(db.Model):
             self.comments['comments'].append({
                 'establishment': self.generate_comments_template('establishment')
             })
-            # self.comments['establishment'] = self.generate_comments_template(
-            #     'establishment')
             est_log: EstablishmentLogs = EstablishmentLogs(
                 request_id=self.request_id)
             user_dept: Departments = Departments.query.get(
-                current_user.department)
+                applicant.department)
             if not user_dept.is_stage:
                 # add dept comments
                 dept_log: DepartmentLogs = DepartmentLogs(
-                    request_id=self.request_id, department=current_user.department)
+                    request_id=self.request_id, department=applicant.department)
                 db.session.add(dept_log)
             db.session.add(est_log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Establishment Section')
             return True, {'msg': 'Forwarded to Establishment Section'}
         elif current_stage == 'establishment':
@@ -526,7 +546,7 @@ class LTCRequests(db.Model):
             # self.comments['audit'] = self.generate_comments_template('audit')
             audit_log: AuditLogs = AuditLogs(request_id=self.request_id)
             db.session.add(audit_log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Audit Section')
             return True, {'msg': 'Forwarded to Audit Section'}
         elif current_stage == 'audit':
@@ -541,7 +561,7 @@ class LTCRequests(db.Model):
             #     'accounts')
             log: AccountsLogs = AccountsLogs(request_id=self.request_id)
             db.session.add(log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Accounts Section')
             return True, {'msg': 'Forwarded to Accounts Section'}
         elif current_stage == 'accounts':
@@ -556,7 +576,7 @@ class LTCRequests(db.Model):
             #     'registrar')
             log: RegistrarLogs = RegistrarLogs(request_id=self.request_id)
             db.session.add(log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Registrar')
             return True, {'msg': 'Forwarded to Registrar Section'}
         elif current_stage == 'registrar':
@@ -570,7 +590,7 @@ class LTCRequests(db.Model):
             self.comments['deanfa'] = self.generate_comments_template('deanfa')
             log: DeanLogs = DeanLogs(request_id=self.request_id)
             db.session.add(log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Dean FA')
             return True, {'msg': 'Forwarded to Dean FA Section'}
         elif current_stage == 'deanfa':
@@ -580,7 +600,7 @@ class LTCRequests(db.Model):
             self.stage = 'approved'
             log: LTCApproved = LTCApproved(request_id=self.request_id)
             db.session.add(log)
-            current_user.addNotification(
+            applicant.addNotification(
                 f'Your request {self.request_id} is now approved!')
             return True, {'msg': 'LTC Approved'}
         elif current_stage == 'approved':
@@ -605,13 +625,3 @@ class LTCApproved(db.Model):
         self.approved_on = datetime.now()
         self.office_order = None
 
-
-class test_table(db.Model):
-    __tabelname__ = 'test_table'
-    id = db.Column(db.Integer, primary_key=True)
-    json_col = db.Column(MutableDict.as_mutable(JSON))
-    time = db.Column(db.DateTime)
-
-    def __init__(self, json_col):
-        self.json_col = json_col
-        self.time = datetime.now()
