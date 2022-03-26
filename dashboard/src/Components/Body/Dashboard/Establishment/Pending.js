@@ -6,7 +6,7 @@ import GeneratePDF from "../../../Utilities/GeneratePDF";
 import {useStyles} from '../DataGridStyles'
 import DialogBox from '../DialogBox';
 
-function Pending() {
+function Pending({permission}) {
   const classes = useStyles();
 
   const [tableData, setTableData] = useState([]);
@@ -250,7 +250,7 @@ function Pending() {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} />
+          <DialogBox request_id={id} permission={permission}/>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close

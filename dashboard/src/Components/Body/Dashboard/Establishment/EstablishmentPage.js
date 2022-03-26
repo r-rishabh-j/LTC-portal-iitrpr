@@ -38,7 +38,7 @@ export default function EstablishmentPage(props){
       />
       <Box className={classes.wrapper}>
         <Routes>
-          <Route path="/new" element={<Pending />}></Route>
+          <Route path="/new" element={<Pending permission = {props.profileInfo.permission}/>}></Route>
           <Route path="/past" element={<Past />}></Route>
           <Route path="/review" element={<Review />}></Route>
           <Route path="/office_orders" element={<UploadOfficeOrder />}></Route>

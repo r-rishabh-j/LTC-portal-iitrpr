@@ -8,7 +8,7 @@ import {
   TextField,
   Grid,
   Typography,
-  Button
+  Button, Box
 } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
 import { FormInputText } from "../../Utilities/FormInputText";
@@ -25,7 +25,9 @@ const DialogBox = ({ request_id, permission }) => {
   const [comments, setComments] = useState([])
 
   const { handleSubmit, control } = useForm({});
+  const { handleSubmit: handleSubmitData, control: controlData } = useForm({});
   let array = [];
+  const [edit, setEdit] = useState(false)
 
 
   useEffect(() => {
@@ -86,7 +88,9 @@ const DialogBox = ({ request_id, permission }) => {
   // }
 
   const onSubmit = (data) => {
+    
     console.log(data)
+    
     const req_data = { request_id: request_id, comment: data.comment, approval: data.approval }
     axios({
       method: "POST",
@@ -110,6 +114,10 @@ const DialogBox = ({ request_id, permission }) => {
           alert("Error. Please try again");
         }
       });
+  }
+
+  const onSubmitEstData = (data) => {
+    console.log(data)
   }
 
   return (
@@ -170,7 +178,9 @@ const DialogBox = ({ request_id, permission }) => {
             <TextField
               label="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
-              value={String(formInfo.form_data["joining_date"]).slice(0, 10) ?? " "}
+              value={
+                String(formInfo.form_data["joining_date"]).slice(0, 10) ?? " "
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -203,7 +213,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="From"
-              value={String(formInfo.form_data["nature_from"]).slice(0, 10) ?? " "}
+              value={
+                String(formInfo.form_data["nature_from"]).slice(0, 10) ?? " "
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -214,7 +226,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="To"
-              value={String(formInfo.form_data["nature_to"]).slice(0, 10) ?? " "}
+              value={
+                String(formInfo.form_data["nature_to"]).slice(0, 10) ?? " "
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -241,7 +255,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="From"
-              value={String(formInfo.form_data["prefix_from"]).slice(0, 10) ?? " "}
+              value={
+                String(formInfo.form_data["prefix_from"]).slice(0, 10) ?? " "
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -252,7 +268,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="To"
-              value={String(formInfo.form_data["prefix_to"]).slice(0, 10) ?? " "}
+              value={
+                String(formInfo.form_data["prefix_to"]).slice(0, 10) ?? " "
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -266,7 +284,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="From"
-              value={String(formInfo.form_data["suffix_from"]).slice(0, 10) ?? " "}
+              value={
+                String(formInfo.form_data["suffix_from"]).slice(0, 10) ?? " "
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -277,7 +297,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="To"
-              value={String(formInfo.form_data["suffix_to"]).slice(0, 10) ?? " "}
+              value={
+                String(formInfo.form_data["suffix_to"]).slice(0, 10) ?? " "
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -304,7 +326,10 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Outward journey"
-              value={String(formInfo.form_data["self_date_outward"]).slice(0, 10) ?? " "}
+              value={
+                String(formInfo.form_data["self_date_outward"]).slice(0, 10) ??
+                " "
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -315,7 +340,10 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Inward journey"
-              value={String(formInfo.form_data["self_date_inward"]).slice(0, 10) ?? " "}
+              value={
+                String(formInfo.form_data["self_date_inward"]).slice(0, 10) ??
+                " "
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -331,7 +359,12 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Outward journey"
-              value={String(formInfo.form_data["family_date_outward"]).slice(0, 10) ?? " "}
+              value={
+                String(formInfo.form_data["family_date_outward"]).slice(
+                  0,
+                  10
+                ) ?? " "
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -342,7 +375,10 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Inward journey"
-              value={String(formInfo.form_data["family_date_inward"]).slice(0, 10) ?? " "}
+              value={
+                String(formInfo.form_data["family_date_inward"]).slice(0, 10) ??
+                " "
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -680,7 +716,6 @@ shortest route "
           }}
         />
 
-
         {permission !== "client" ? (
           <div>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -734,43 +769,97 @@ shortest route "
             )
           )
         )}
-        {permission !== "client" ? (
-          <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography>
-                    Fresh Recruit i.e. joining Govt. Service after 01.09.2008
-                    /otherwise,
-                  </Typography>
-                  <FormInputText
-                  name = "est_data_joining_date"
-                  label="Date of joining"
-                  control={control}
-                  defaultValue=""/>
-                </Grid>
-              </Grid>
-              <FormInputText
-                name="comment"
-                control={control}
-                label="Add new comment"
-                defaultValue=""
-                multiline={true}
-                rows={4}
-              />
-              <Typography style={{ fontWeight: "bold" }}>Approve</Typography>
-              <FormInputRadio
-                name="approval"
-                control={control}
-                label="Approve"
-              />
-              <Button type="submit" variant="contained" color="primary">
-                Send
+        <Typography style={{ margin: "5vh 0 0 0", fontWeight: "bold" }}>
+          Establishment Section Data
+        </Typography>
+
+        {permission === "establishment" ? (
+          <form
+            onSubmit={handleSubmitData(onSubmitEstData)}
+            style={{ width: "100%" }}
+          >
+            <Box style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button type="button" variant="contained" color="primary">
+                Edit
               </Button>
-            </form>
-          </div>
+              &nbsp;
+              <Button type="submit" variant="contained" color="primary">
+                Save
+              </Button>
+            </Box>):(
+            {/* <Typography style={{fontWeight: "bold"}}>Establishment Data</Typography> */}
+            <Typography>
+              Fresh Recruit i.e. joining Govt. Service after 01.09.2008
+              /otherwise,
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_joining_date"
+                  label="Date of joining"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_block_year"
+                  label="Block Year"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>
+              Nature of LTC (Home Town/Anywhere in India-place visited/to be
+              visited)
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_nature_last"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_nature_current"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>Period </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_period_last_from"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_period_last to"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+          </form>
         ) : (
-          <div />
+          <div>TextFields with autofilled data</div>
         )}
       </DialogContent>
     </>
