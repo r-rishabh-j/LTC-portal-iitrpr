@@ -5,7 +5,7 @@ from flask import Flask, make_response, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
-
+from flask_migrate import Migrate
 from .file_manager import FileManager
 
 db = SQLAlchemy()
@@ -32,7 +32,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     from .notifications import ClearUserNotifications, GetUserNotifications
     from .models import Users
     create_database(app)
-
+    migrate = Migrate(app, db)
     api.add_resource(ApplyForLTC, '/api/apply')
     api.add_resource(RegisterUser, '/api/register')
     api.add_resource(Login, '/api/login')
@@ -48,7 +48,6 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(FillStageForm, '/api/fill-stage-form')
     api.add_resource(GetUserNotifications, '/api/getnotifications')
     api.add_resource(ClearUserNotifications, '/api/clearnotifications')
-
 
     @jwt.user_identity_loader
     def user_identity_loader(user: Users):
