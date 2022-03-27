@@ -8,8 +8,9 @@ import {
   TextField,
   Grid,
   Typography,
-  Button, Box
+  Button, Box, Tooltip
 } from "@material-ui/core";
+import InfoIcon from "@material-ui/icons/Info";
 import { useForm, Controller } from "react-hook-form";
 import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputNumber } from "../../Utilities/FormInputNumber";
@@ -763,9 +764,18 @@ shortest route "
             )
           )
         )}
-        <Typography style={{ margin: "5vh 0 0 0", fontWeight: "bold" }}>
-          Establishment Section Data
-        </Typography>
+        <Box display="flex" justifyContent="start" style={{ margin: "5vh 0 0 0"}}>
+          <Typography style={{ fontWeight: "bold" }}>
+            Establishment Section Data
+          </Typography>
+          <Tooltip title={<div style={{fontSize: "1.5em"}}>Remember to click save after editing the data</div>} >
+            <InfoIcon />
+        </Tooltip>
+        </Box>
+
+        
+        
+          
 
         {permission === "establishment" ? (
           <form
@@ -1020,7 +1030,12 @@ shortest route "
                 multiline={true}
                 rows={4}
               />
-              <Typography style={{ fontWeight: "bold" }}>Approve</Typography>
+              <Box display="flex" justifyContent="start">
+                <Typography style={{ fontWeight: "bold" }}>Approve</Typography>
+                <Tooltip title={<div style={{fontSize: "1.5em"}}>Section Heads must ensure that the section specific information is filled before sending the form forward</div>}>
+                  <InfoIcon />
+                </Tooltip>
+              </Box>
               <FormInputRadio
                 name="approval"
                 control={control}
@@ -1028,9 +1043,9 @@ shortest route "
                 options={options}
               />
               <Box display="flex" justifyContent="center">
-              <Button type="submit" variant="contained" color="primary">
-                Send
-              </Button>
+                <Button type="submit" variant="contained" color="primary">
+                  Send
+                </Button>
               </Box>
             </form>
           </div>
