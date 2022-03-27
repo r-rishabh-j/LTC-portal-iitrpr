@@ -1,0 +1,47 @@
+{
+    "department": [
+        {   
+            "review": true,
+            "approved": {
+                "u1": null,
+                "u2": null
+            },
+            "comments": {
+                "u1": null,
+                "u2": null
+            }
+        },
+        {
+            "approved": {
+                "u1": null,
+                "u2": null
+            },
+            "comments": {
+                "u1": null,
+                "u2": null
+            }
+        }
+    ],
+    "department2": [
+        {
+            "approved": {
+                "u1": null,
+                "u2": null
+            },
+            "comments": {
+                "u1": null,
+                "u2": null
+            }
+        },
+        {
+            "approved": {
+                "u1": null,
+                "u2": null
+            },
+            "comments": {
+                "u1": null,
+                "u2": null
+            }
+        }
+    ]
+}
