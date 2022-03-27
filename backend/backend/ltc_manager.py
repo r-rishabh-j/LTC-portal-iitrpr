@@ -8,6 +8,7 @@ from sqlalchemy.orm.attributes import flag_modified
 from flask_jwt_extended import current_user
 from .role_manager import role_required, roles_required, check_role
 from .models import Users, LTCRequests, Departments
+from markupsafe import escape
 
 
 class ApplyForLTC(Resource):
@@ -61,7 +62,7 @@ class FillStageForm(Resource):
         if not request_id:
             abort(404, msg='Request ID not sent')
 
-        content = request.json.get(permission, None)
+        content = request.json.get('stage_form', None)
         if not content:
             abort(404, msg='No form content sent!')
 
@@ -103,29 +104,28 @@ class CommentOnLTC(Resource):
         comment = request.json['comment']
         approval = True if str(
             request.json.get('approval')) == 'yes' else False
-        print(approval)
+        print('Approval:', approval)
 
         form.addComment(current_user.department,
                         current_user, comment, approval)
-
-        print(form.comments)
-        approval = True
-        if current_user.id == user_dept.dept_head:
-            if not approval:
-                # decline application
-                return {"Error": "Not implemented decline"}, 400
-            else:
-                applicant: Users = Users.query.get(form.user_id)
-                status, comment = form.forward(applicant)
-                flag_modified(form, "comments")
-                db.session.merge(form)
-                db.session.commit()
-                return {"Status": comment['msg']}, 200
-        print('comitting....')
         flag_modified(form, "comments")
         db.session.merge(form)
+        print('Comments:', form.comments)
+        if current_user.id == user_dept.dept_head:
+            applicant: Users = Users.query.get(form.user_id)
+            if not approval:
+                form.decline(applicant)
+                db.session.commit()
+                return {'status': 'declined'}
+            else:
+                status, comment = form.forward(applicant)
+                # important to call flag modified
+                # flag_modified(form, "comments")
+                # db.session.merge(form)
+                db.session.commit()
+                return {"Status": comment['msg']}, 200
         db.session.commit()
-        return {"Status": 'Comment added'}, 200
+        return {"status": 'Comment added'}, 200
 
 
 class GetLtcFormData(Resource):

@@ -117,15 +117,18 @@ class Users(db.Model):
     """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True, nullable=False) 
-    employee_code = db.Column(db.Integer, unique=True) # optional
-    name = db.Column(db.String(150), nullable=False) # name for higher level employees to be their designation
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    employee_code = db.Column(db.Integer, unique=True)  # optional
+    # name for higher level employees to be their designation
+    name = db.Column(db.String(150), nullable=False)
     department = db.Column(db.String(150), db.ForeignKey('departments.name'))
-    permission = db.Column(db.String, nullable=False) # permission level. Defined in role_manager.
-    designation = db.Column(db.String, nullable=False) # designation. Custom
-    signature = db.Column(db.String, nullable=True) # stores signature
-    picture = db.Column(db.String, nullable=True) # picture from google auth
-    notifications = db.Column(MutableDict.as_mutable(JSON)) # stores user notifications
+    # permission level. Defined in role_manager.
+    permission = db.Column(db.String, nullable=False)
+    designation = db.Column(db.String, nullable=False)  # designation. Custom
+    signature = db.Column(db.String, nullable=True)  # stores signature
+    picture = db.Column(db.String, nullable=True)  # picture from google auth
+    # stores user notifications
+    notifications = db.Column(MutableDict.as_mutable(JSON))
     """
     [
         {
@@ -486,6 +489,7 @@ class LTCRequests(db.Model):
         Forward form to next stage
         """
         current_stage = self.stage
+        message = None
 
         if current_stage == '':
             self.stage = 'establishment'
@@ -504,7 +508,7 @@ class LTCRequests(db.Model):
             db.session.add(est_log)
             applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Establishment Section')
-            return True, {'msg': 'Forwarded to Establishment Section'}
+            message = True, {'msg': 'Forwarded to Establishment Section'}
         elif current_stage == 'establishment':
             est_log = EstablishmentLogs.query.get(self.request_id)
             est_log.status = 'forwarded'
@@ -517,7 +521,7 @@ class LTCRequests(db.Model):
             db.session.add(audit_log)
             applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Audit Section')
-            return True, {'msg': 'Forwarded to Audit Section'}
+            message = True, {'msg': 'Forwarded to Audit Section'}
         elif current_stage == 'audit':
             au_log: AuditLogs = AuditLogs.query.get(self.request_id)
             au_log.status = 'forwarded'
@@ -530,7 +534,7 @@ class LTCRequests(db.Model):
             db.session.add(log)
             applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Accounts Section')
-            return True, {'msg': 'Forwarded to Accounts Section'}
+            message = True, {'msg': 'Forwarded to Accounts Section'}
         elif current_stage == 'accounts':
             ac_log: AccountsLogs = AccountsLogs.query.get(self.request_id)
             ac_log.status = 'forwarded'
@@ -543,7 +547,7 @@ class LTCRequests(db.Model):
             db.session.add(log)
             applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Registrar')
-            return True, {'msg': 'Forwarded to Registrar Section'}
+            message = True, {'msg': 'Forwarded to Registrar Section'}
         elif current_stage == 'registrar':
             reg_log: RegistrarLogs = RegistrarLogs.query.get(self.request_id)
             reg_log.status = 'forwarded'
@@ -557,7 +561,7 @@ class LTCRequests(db.Model):
             db.session.add(log)
             applicant.addNotification(
                 f'Your request {self.request_id} forwarded to Dean FA')
-            return True, {'msg': 'Forwarded to Dean FA Section'}
+            message = True, {'msg': 'Forwarded to Dean FA Section'}
         elif current_stage == 'deanfa':
             dean_log: DeanLogs = DeanLogs.query.get(self.request_id)
             dean_log.status = 'forwarded'
@@ -567,13 +571,58 @@ class LTCRequests(db.Model):
             db.session.add(log)
             applicant.addNotification(
                 f'Your request {self.request_id} is now approved!')
-            return True, {'msg': 'LTC Approved'}
+            message = True, {'msg': 'LTC Approved'}
         elif current_stage == 'approved':
-            return False, {'msg': 'Already Approved'}
+            message = False, {'msg': 'Already Approved'}
+        else:
+            message = False, {
+                'error': 'Application in review. Cannot be forwarded'}
+        flag_modified(self, "comments")
+        db.session.merge(self)
+        return message
 
-    def decline(self):
-        
+    def decline(self, applicant):
+        self.stage = 'declined'
+        stages = [
+            'department',
+            'establishment',
+            'audit',
+            'accounts',
+            'registrar',
+            'deanfa',
+        ]
+
+        for stage in stages:
+            table_ref = Departments.getDeptRequestTableByName(stage)
+            if not table_ref:
+                print('table not found')
+                break
+            form = table_ref.query.get(self.request_id)
+            if not form:
+                break
+            form.status = 'declined'
+
+    def review_to_establishment(self, received_from, message):
+        """
+        send application for review to establishment
+        """
+        review_est = EstablishmentReview(
+            self.request_id, received_from, message)
+        table_ref = Departments.getDeptRequestTableByName(received_from)
+        stage_ref = table_ref.query.get(self.request_id)
+        stage_ref.status = 'review'
+        # self.stage = 'establishment review'
+        db.session.add(review_est)
+
+    def resolve_review_establishment(self, message):
         pass
+
+    def review_to_user(self, received_from, message):
+        self.stage = 'review'
+
+    def resolve_user_review(self, received_from, message):
+        pass
+
 
 class LTCApproved(db.Model):
     """
