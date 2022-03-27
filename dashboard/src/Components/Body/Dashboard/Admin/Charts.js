@@ -62,7 +62,7 @@ function Charts() {
     ];
   return (
     <>
-      <Box style={{ overflowX: "hidden" }}>
+      <Box style={{ overflowX: "hidden", overflowY: 'hidden' }}>
         <Grid container>
           {/* <center>
           <Typography style={{ fontWeight: "bold" }}>User Analytics</Typography>

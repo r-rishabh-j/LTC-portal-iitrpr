@@ -3,12 +3,12 @@ import {Box, Card, CardActions, CardContent, CardMedia, Button, Typography} from
 export default function MediaCard(props) {
     console.log(props)
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 400 }}>
       <center>
         <CardMedia
           component="img"
           height="260"
-          style={{ width: "66%", justifyContent: "center" }}
+          style={{ height: "100%", width: "66%", justifyContent: "center" }}
           image={props.image}
           alt={props.alt}
         />
