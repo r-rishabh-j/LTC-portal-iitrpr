@@ -24,8 +24,6 @@ class ApplyForLTC(Resource):
         db.session.commit()
         db.session.refresh(new_request)
         new_request.forward(current_user)
-        flag_modified(new_request, "comments")
-        db.session.merge(new_request)
 
     @role_required('client')
     def post(self):
@@ -91,41 +89,43 @@ class CommentOnLTC(Resource):
     def post(self, **kwargs):
         # post request ID, comment, and approval of the user
         request_id = request.json['request_id']
-        print(request_id)
-        if not request_id:
-            abort(404, msg='Request ID not sent')
+        comment = request.json['comment']
+        action = request.json.get('approval')
+
+        if not request_id or not comment or not action:
+            abort(404, msg='Incomplete args')
+        
+        if not action in ['review', 'approve', 'decline']:
+            abort(400, error='Invalid action')
+
         form: LTCRequests = LTCRequests.query.get(int(request_id))
         if not form:
             abort(404, msg='Form not found')
+        
         user_dept: Departments = Departments.query.get(current_user.department)
         if not user_dept.is_stage:
             abort(401, msg='Only stage users allowed')
 
-        comment = request.json['comment']
-        approval = True if str(
-            request.json.get('approval')) == 'yes' else False
-        print('Approval:', approval)
-
-        form.addComment(current_user.department,
-                        current_user, comment, approval)
-        flag_modified(form, "comments")
-        db.session.merge(form)
-        print('Comments:', form.comments)
-        if current_user.id == user_dept.dept_head:
-            applicant: Users = Users.query.get(form.user_id)
-            if not approval:
-                form.decline(applicant)
-                db.session.commit()
-                return {'status': 'declined'}
+        applicant: Users = Users.query.get(form.user_id)
+        form.addComment(current_user, comment,
+                        False, is_review=True if action == 'review' else False)
+        if action == 'review':
+            form.send_for_review(current_user, applicant, comment)
+            db.session.commit()
+            return {"status": 'sent for review'}, 200
+        else:
+            if current_user.id == user_dept.dept_head:
+                if action == 'approve':
+                    status, comment = form.forward(applicant)
+                    db.session.commit()
+                    return {"Status": comment['msg']}, 200
+                elif action == 'decline':
+                    form.decline(applicant)
+                    db.session.commit()
+                    return {'status': 'declined'}
             else:
-                status, comment = form.forward(applicant)
-                # important to call flag modified
-                # flag_modified(form, "comments")
-                # db.session.merge(form)
                 db.session.commit()
-                return {"Status": comment['msg']}, 200
-        db.session.commit()
-        return {"status": 'Comment added'}, 200
+                return {"status": 'Comment added'}, 200
 
 
 class GetLtcFormData(Resource):
@@ -301,6 +301,19 @@ class GetPastApprovalRequests(Resource):
                         'stage': form.stage,
                         'is_active': "Active" if form.is_active else "Not Active",
                     })
+        for dept_log, form, applicant in new:
+            if form.comments.get(department, None) != None:
+                if len(form.comments[department]) == 0:
+                    abort(400, 'Not allowed to add comment at this stage')
+                if form.comments[department][-1]['approved'].get(user.email, True) != None:
+                    previous.append({
+                        'request_id': form.request_id,
+                        'user': applicant.email,
+                        'name': applicant.name,
+                        'created_on': form.created_on,
+                        'stage': form.stage,
+                        'is_active': "Active" if form.is_active else "Not Active",
+                    })
         return jsonify({'pending': previous})
 
 
@@ -335,9 +348,10 @@ class GetPendingApprovalRequests(Resource):
         pending = []
 
         for dept_log, form, applicant in new:
-            for comment in form.comments['comments']:
-                if comment.get(user.department, None) and comment.get('review', False) == False\
-                        and comment[user.department]['approved'].get(user.email, True) == None:
+            if form.comments.get(department, None) != None:
+                if len(form.comments[department]) == 0:
+                    abort(400, 'Not allowed to add comment at this stage')
+                if form.comments[department][-1]['approved'].get(user.email, True) == None:
                     pending.append({
                         'request_id': form.request_id,
                         'user': applicant.email,
@@ -346,4 +360,5 @@ class GetPendingApprovalRequests(Resource):
                         'stage': form.stage,
                         'is_active': "Active" if form.is_active else "Not Active",
                     })
+
         return jsonify({'pending': pending})

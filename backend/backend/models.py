@@ -480,9 +480,13 @@ class LTCRequests(db.Model):
         },
     ]
 
-    def addComment(self, department, user, comment, approval):
-        self.comments['comments'][-1][department]['approved'][user.email] = approval
-        self.comments['comments'][-1][department]['comments'][user.email] = comment
+    def addComment(self, user: Users, comment, approval, is_review=False):
+        self.comments[user.department][-1]['approved'][user.email] = approval
+        self.comments[user.department][-1]['comments'][user.email] = comment
+        if is_review:
+            self.comments[user.department][-1]['review'] = True
+        flag_modified(self, "comments")
+        db.session.merge(self)
 
     def forward(self, applicant: Users):
         """
@@ -493,9 +497,13 @@ class LTCRequests(db.Model):
 
         if current_stage == '':
             self.stage = 'establishment'
-            self.comments['comments'].append({
-                'establishment': self.generate_comments_template('establishment')
-            })
+            assert self.comments.get('establishment', None) == None
+            self.comments['establishment'] = []
+
+            self.comments['establishment'].append(
+                self.generate_comments_template('establishment')
+            )
+
             est_log: EstablishmentLogs = EstablishmentLogs(
                 request_id=self.request_id)
             user_dept: Departments = Departments.query.get(
@@ -507,60 +515,69 @@ class LTCRequests(db.Model):
                 db.session.add(dept_log)
             db.session.add(est_log)
             applicant.addNotification(
-                f'Your request {self.request_id} forwarded to Establishment Section')
+                f'Your LTC request, ID {self.request_id} has been forwarded to Establishment Section')
             message = True, {'msg': 'Forwarded to Establishment Section'}
         elif current_stage == 'establishment':
             est_log = EstablishmentLogs.query.get(self.request_id)
             est_log.status = 'forwarded'
             est_log.updated_on = datetime.now()
             self.stage = 'audit'
-            self.comments['comments'].append({
-                'audit': self.generate_comments_template('audit')
-            })
+            assert self.comments.get('audit', None) == None
+            self.comments['audit'] = []
+
+            self.comments['audit'].append(
+                self.generate_comments_template('audit')
+            )
             audit_log: AuditLogs = AuditLogs(request_id=self.request_id)
             db.session.add(audit_log)
             applicant.addNotification(
-                f'Your request {self.request_id} forwarded to Audit Section')
+                f'Your LTC request, ID {self.request_id} has been forwarded to Audit Section')
             message = True, {'msg': 'Forwarded to Audit Section'}
         elif current_stage == 'audit':
             au_log: AuditLogs = AuditLogs.query.get(self.request_id)
             au_log.status = 'forwarded'
             au_log.updated_on = datetime.now()
             self.stage = 'accounts'
-            self.comments['comments'].append({
-                'accounts': self.generate_comments_template('accounts')
-            })
+            assert self.comments.get('accounts', None) == None
+            self.comments['accounts'] = []
+
+            self.comments['accounts'].append(
+                self.generate_comments_template('accounts')
+            )
             log: AccountsLogs = AccountsLogs(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
-                f'Your request {self.request_id} forwarded to Accounts Section')
+                f'Your LTC request, ID {self.request_id} has been forwarded to Accounts Section')
             message = True, {'msg': 'Forwarded to Accounts Section'}
         elif current_stage == 'accounts':
             ac_log: AccountsLogs = AccountsLogs.query.get(self.request_id)
             ac_log.status = 'forwarded'
             ac_log.updated_on = datetime.now()
             self.stage = 'registrar'
-            self.comments['comments'].append({
-                'registrar': self.generate_comments_template('registrar')
-            })
+            assert self.comments.get('registrar', None) == None
+            self.comments['registrar'] = []
+            self.comments['registrar'].append(
+                self.generate_comments_template('registrar')
+            )
             log: RegistrarLogs = RegistrarLogs(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
-                f'Your request {self.request_id} forwarded to Registrar')
+                f'Your LTC request, ID {self.request_id} has been forwarded to Registrar')
             message = True, {'msg': 'Forwarded to Registrar Section'}
         elif current_stage == 'registrar':
             reg_log: RegistrarLogs = RegistrarLogs.query.get(self.request_id)
             reg_log.status = 'forwarded'
             reg_log.updated_on = datetime.now()
             self.stage = 'deanfa'
-            self.comments['comments'].append({
-                'deanfa': self.generate_comments_template('deanfa')
-            })
-            self.comments['deanfa'] = self.generate_comments_template('deanfa')
+            assert self.comments.get('deanfa', None) == None
+            self.comments['deanfa'] = []
+            self.comments['deanfa'].append(
+                self.generate_comments_template('deanfa')
+            )
             log: DeanLogs = DeanLogs(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
-                f'Your request {self.request_id} forwarded to Dean FA')
+                f'Your LTC request, ID {self.request_id} has been forwarded to Dean FA')
             message = True, {'msg': 'Forwarded to Dean FA Section'}
         elif current_stage == 'deanfa':
             dean_log: DeanLogs = DeanLogs.query.get(self.request_id)
@@ -570,7 +587,7 @@ class LTCRequests(db.Model):
             log: LTCApproved = LTCApproved(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
-                f'Your request {self.request_id} is now approved!')
+                f'Your LTC request, ID {self.request_id} is now approved, pending office order generation.')
             message = True, {'msg': 'LTC Approved'}
         elif current_stage == 'approved':
             message = False, {'msg': 'Already Approved'}
@@ -581,7 +598,7 @@ class LTCRequests(db.Model):
         db.session.merge(self)
         return message
 
-    def decline(self, applicant):
+    def decline(self, applicant: Users):
         self.stage = 'declined'
         stages = [
             'department',
@@ -601,6 +618,8 @@ class LTCRequests(db.Model):
             if not form:
                 break
             form.status = 'declined'
+        applicant.addNotification(
+            f'Your LTC request, ID {self.request_id} has been declined.')
 
     def review_to_establishment(self, received_from, message):
         """
@@ -614,11 +633,25 @@ class LTCRequests(db.Model):
         # self.stage = 'establishment review'
         db.session.add(review_est)
 
-    def resolve_review_establishment(self, message):
-        pass
-
     def review_to_user(self, received_from, message):
         self.stage = 'review'
+
+    def send_for_review(self, reviewer: Users, applicant: Users, message):
+        if reviewer.department == 'establishment':
+            """
+            If reviewer is establishment, then send back the application to the user.
+            """
+            self.review_to_user(reviewer.department,  message)
+            applicant.addNotification(
+                f'Your LTC request, ID {self.request_id} has been sent back for review.')
+        else:
+            """
+            else, send back the application to the establishment section.
+            """
+            self.review_to_establishment(reviewer.department, message)
+
+    def resolve_review_establishment(self, message):
+        pass
 
     def resolve_user_review(self, received_from, message):
         pass

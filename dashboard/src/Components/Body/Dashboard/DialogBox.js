@@ -35,8 +35,8 @@ const DialogBox = ({ request_id, permission }) => {
   const options = [
     {
       index: 1,
-      label: "Forward",
-      value: "forward",
+      label: "Approve",
+      value: "approve",
     },
     {
       index: 2,
