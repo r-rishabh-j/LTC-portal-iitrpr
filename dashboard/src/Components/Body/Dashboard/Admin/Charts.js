@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, Grid, Paper } from '@material-ui/core'
+import { Typography, Grid, Paper, Box } from '@material-ui/core'
 import {
   LineChart,
   Line,
@@ -10,6 +10,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import MediaCard from '../../../Utilities/MediaCard';
+
+
 
 function Charts() {
 
@@ -59,38 +62,76 @@ function Charts() {
     ];
   return (
     <>
-      <Grid container>
-        <Paper
-          elevation={10}
-          style={{ margin: "0 0.5vw 0 3vw", height: "45vh", width: "100%" }}
-        >
+      <Box style={{ overflowX: "hidden" }}>
+        <Grid container>
+          {/* <center>
           <Typography style={{ fontWeight: "bold" }}>User Analytics</Typography>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="pv"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
-              />
-              <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-            </LineChart>
-          </ResponsiveContainer>
-        </Paper>
-      </Grid>
+        </center> */}
+
+          <Paper
+            elevation={10}
+            style={{
+              margin: "1vw 0.5vw 0 3vw",
+              height: "50vh",
+              width: "100%",
+              overflowX: "hidden",
+            }}
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={data}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="pv"
+                  stroke="#8884d8"
+                  activeDot={{ r: 8 }}
+                />
+                <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+              </LineChart>
+            </ResponsiveContainer>
+          </Paper>
+        </Grid>
+
+        <Grid
+          container
+          spacing={8}
+          style={{ margin: "2vh 0 0 10vw", height: "50vh" }}
+        >
+          <Grid item xs={3}>
+            <MediaCard
+              image={require("./view_users.png")}
+              alt="View Users"
+              action="View Users"
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <MediaCard
+              image={require("./add_user.png")}
+              alt="Add User"
+              action="Add New User"
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <MediaCard
+              image={require("./edit_user.png")}
+              alt="Edit User"
+              action="Edit User"
+            />
+          </Grid>
+        </Grid>
+      </Box>
     </>
   );
 }
