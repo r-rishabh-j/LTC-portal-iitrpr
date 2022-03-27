@@ -94,21 +94,21 @@ class CommentOnLTC(Resource):
 
         if not request_id or not comment or not action:
             abort(404, msg='Incomplete args')
-        
+
         if not action in ['review', 'approve', 'decline']:
             abort(400, error='Invalid action')
 
         form: LTCRequests = LTCRequests.query.get(int(request_id))
         if not form:
             abort(404, msg='Form not found')
-        
+
         user_dept: Departments = Departments.query.get(current_user.department)
         if not user_dept.is_stage:
             abort(401, msg='Only stage users allowed')
 
         applicant: Users = Users.query.get(form.user_id)
         form.addComment(current_user, comment,
-                        True if action == "approve" else False, is_review=True if action == 'review' else False)
+                        True if action == 'approve' else False, is_review=True if action == 'review' else False)
         if action == 'review':
             form.send_for_review(current_user, applicant, comment)
             db.session.commit()
@@ -268,6 +268,10 @@ class GetPastApprovalRequests(Resource):
 
         past = None
         new = None
+        """
+        Fetch requests, both with status!=new, and also those on which
+        the user has commented already
+        """
         if kwargs['permission'] == 'dept_head':
             past = db.session.query(table_ref, LTCRequests, Users).join(Users).join(
                 table_ref).filter(table_ref.status != 'new', table_ref.department == user.department)
@@ -314,7 +318,7 @@ class GetPastApprovalRequests(Resource):
                         'stage': form.stage,
                         'is_active': "Active" if form.is_active else "Not Active",
                     })
-        return jsonify({'pending': previous})
+        return jsonify({'previous': previous})
 
 
 class GetPendingApprovalRequests(Resource):
