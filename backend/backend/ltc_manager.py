@@ -108,7 +108,7 @@ class CommentOnLTC(Resource):
 
         applicant: Users = Users.query.get(form.user_id)
         form.addComment(current_user, comment,
-                        False, is_review=True if action == 'review' else False)
+                    True if action == 'approve' else False, is_review=True if action == 'review' else False)
         if action == 'review':
             form.send_for_review(current_user, applicant, comment)
             db.session.commit()

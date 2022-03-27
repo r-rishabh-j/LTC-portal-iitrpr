@@ -402,7 +402,7 @@ class LTCRequests(db.Model):
         self.created_on = datetime.now()
         self.stage = ''
         self.is_active = True
-        self.comments = {'comments': []}  # nested JSON
+        self.comments = {}  # nested JSON
 
     def __repr__(self) -> str:
         return f'ID:{self.request_id}, {self.user_id}, {self.stage}'
