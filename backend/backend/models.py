@@ -171,11 +171,6 @@ class Users(db.Model):
         db.session.merge(self)
 
 
-"""
-This creates next stage comment fields in the comment column onlt at the time of forward
-"""
-
-
 class EstablishmentLogs(db.Model):
     """
     Establishment section logs
@@ -499,7 +494,6 @@ class LTCRequests(db.Model):
             self.stage = 'establishment'
             assert self.comments.get('establishment', None) == None
             self.comments['establishment'] = []
-
             self.comments['establishment'].append(
                 self.generate_comments_template('establishment')
             )
@@ -524,7 +518,6 @@ class LTCRequests(db.Model):
             self.stage = 'audit'
             assert self.comments.get('audit', None) == None
             self.comments['audit'] = []
-
             self.comments['audit'].append(
                 self.generate_comments_template('audit')
             )
@@ -540,7 +533,6 @@ class LTCRequests(db.Model):
             self.stage = 'accounts'
             assert self.comments.get('accounts', None) == None
             self.comments['accounts'] = []
-
             self.comments['accounts'].append(
                 self.generate_comments_template('accounts')
             )
@@ -643,7 +635,8 @@ class LTCRequests(db.Model):
             """
             self.review_to_user(reviewer.department,  message)
             applicant.addNotification(
-                f'Your LTC request, ID {self.request_id} has been sent back for review.')
+                f'Your LTC request, ID {self.request_id} has been sent back for your review.'
+                'Read comments in form info for more information.')
         else:
             """
             else, send back the application to the establishment section.

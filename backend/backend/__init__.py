@@ -26,13 +26,16 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     db.init_app(app)
     api = Api(app)
     jwt = JWTManager(app)
+
     from .auth import RegisterUser, Logout, Login, IsLoggedIn
     from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser,\
         GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC, GetPastApprovalRequests, FillStageForm
     from .notifications import ClearUserNotifications, GetUserNotifications
     from .models import Users
+
     create_database(app)
     migrate = Migrate(app, db)
+
     api.add_resource(ApplyForLTC, '/api/apply')
     api.add_resource(RegisterUser, '/api/register')
     api.add_resource(Login, '/api/login')
