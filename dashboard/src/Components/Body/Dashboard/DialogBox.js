@@ -22,15 +22,33 @@ const DialogBox = ({ request_id, permission }) => {
     created_on: "",
     request_id: "",
     form_data: {},
-    comments: {}
+    comments: {},
   });
-  const [comments, setComments] = useState([])
+  const [comments, setComments] = useState([]);
 
   const { handleSubmit, control } = useForm({});
   const { handleSubmit: handleSubmitData, control: controlData } = useForm({});
   let array = [];
-  const [edit, setEdit] = useState(false)
+  const [edit, setEdit] = useState(false);
 
+  //options for radio input
+  const options = [
+    {
+      index: 1,
+      label: "Forward",
+      value: "forward",
+    },
+    {
+      index: 2,
+      label: "Send back for review",
+      value: "review",
+    },
+    {
+      index: 3,
+      label: "Decline",
+      value: "decline",
+    },
+  ];
 
   useEffect(() => {
     const data = { request_id: request_id };
@@ -58,7 +76,7 @@ const DialogBox = ({ request_id, permission }) => {
             }
           }
         });
-        setComments(array)
+        setComments(array);
       })
       .catch((error) => {
         if (error.response) {
@@ -71,10 +89,8 @@ const DialogBox = ({ request_id, permission }) => {
 
   // if(formInfo.comments !== {})
   //   console.log("Hi", formInfo.comments["establishment"]["comments"]["establishment@email"]);
-  console.log(comments)
-  const comment_data = formInfo.comments.comments ?? []
-
-
+  console.log(comments);
+  const comment_data = formInfo.comments.comments ?? [];
 
   // var obj = formInfo.comments;
   // for (var key in obj) {
@@ -90,10 +106,13 @@ const DialogBox = ({ request_id, permission }) => {
   // }
 
   const onSubmit = (data) => {
+    console.log(data);
 
-    console.log(data)
-
-    const req_data = { request_id: request_id, comment: data.comment, approval: data.approval }
+    const req_data = {
+      request_id: request_id,
+      comment: data.comment,
+      approval: data.approval,
+    };
     axios({
       method: "POST",
       url: "/api/comment",
@@ -103,23 +122,22 @@ const DialogBox = ({ request_id, permission }) => {
         console.log("s", response.status);
         alert("Comment added!");
         window.location.reload();
-
       })
       .catch((error) => {
         if (error.response) {
-          console.log('e', error.response);
+          console.log("e", error.response);
           console.log(error.response);
           console.log(error.response.status);
           console.log(error.response.headers);
           alert(error.response.data.error);
         }
       });
-  }
+  };
 
   const onSubmitEstData = (data) => {
-    console.log(data)
-    setEdit(false)
-  }
+    console.log(data);
+    setEdit(false);
+  };
 
   return (
     <>
@@ -900,6 +918,67 @@ shortest route "
                 />
               </Grid>
             </Grid>
+            <Typography>Earned Leave standing to his credit on</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputDate
+                  name="est_data_last_earned_leave_on"
+                  label="Last Availed"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputDate
+                  name="est_data_current_earned_leave_on"
+                  label="Current LTC"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>Balance Earned leave after this encashment</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_last_balance"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_current_balance"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>Earned Leave encashment admissible</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_last_encashment_adm"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_current_encashment_adm"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
             <Typography>
               Period and nature of leave applied for and need to be sanctioned
             </Typography>
@@ -946,10 +1025,13 @@ shortest route "
                 name="approval"
                 control={control}
                 label="Approve"
+                options={options}
               />
+              <Box display="flex" justifyContent="center">
               <Button type="submit" variant="contained" color="primary">
                 Send
               </Button>
+              </Box>
             </form>
           </div>
         ) : (

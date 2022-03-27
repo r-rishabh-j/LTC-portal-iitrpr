@@ -30,7 +30,19 @@ export default function CreateApplication(props) {
   const name = profileInfo.name;
   const department  = profileInfo.department;
  
-
+  //options for radio input
+  const options = [
+    {
+      index: 1,
+      label: "Yes",
+      value: "Yes",
+    },
+    {
+      index: 2,
+      label: "No",
+      value: "No",
+    },
+  ];
   
   const onSubmit = (data) => {
     
@@ -233,6 +245,7 @@ Service/Date of Joining with IIT Ropar"
                   control={control}
                   label="Whether spouse is employed, if yes whether
 entitled to LTC"
+                  options={options}
                 />
 
                 <Typography style={{ fontWeight: "bold" }}>
@@ -585,6 +598,7 @@ shortest route (proofs need to be attached)."
                       name="adv_is_required"
                       control={control}
                       label="Advance Required"
+                      options={options}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -593,6 +607,7 @@ shortest route (proofs need to be attached)."
                       name="encashment_is_required"
                       control={control}
                       label="Encashment Required"
+                      options={options}
                     />
                   </Grid>
                 </Grid>

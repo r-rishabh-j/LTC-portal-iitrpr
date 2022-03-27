@@ -9,23 +9,24 @@ import {
 import { Controller, useFormContext } from "react-hook-form";
 
 
-const options = [
-  {
-    index: 1,
-    label: "Yes",
-    value: "Yes",
-  },
-  {
-    index: 2,
-    label: "No",
-    value: "No",
-  },
-];
+// const options = [
+//   {
+//     index: 1,
+//     label: "Yes",
+//     value: "Yes",
+//   },
+//   {
+//     index: 2,
+//     label: "No",
+//     value: "No",
+//   },
+// ];
 
 export const FormInputRadio = ({
   name,
   control,
   label,
+  options
 }) => {
   const generateRadioOptions = () => {
     return options.map((singleOption) => (
@@ -42,7 +43,7 @@ export const FormInputRadio = ({
     <Controller
       name={name}
       control={control}
-      defaultValue="No"
+      defaultValue={options[0].value}
       render={({ field: { onChange, value } }) => (
         <RadioGroup value={value} onChange={onChange}>
           {generateRadioOptions()}
