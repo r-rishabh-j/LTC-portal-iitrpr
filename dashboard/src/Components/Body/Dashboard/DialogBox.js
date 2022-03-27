@@ -812,7 +812,7 @@ shortest route "
                   name="est_data_joining_date"
                   label="Date of joining"
                   control={controlData}
-                  defaultValue=""
+                  defaultValue={formInfo.form_data ?? ""}
                   disabled={!edit}
                 />
               </Grid>
