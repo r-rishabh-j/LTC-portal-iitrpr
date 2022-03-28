@@ -161,7 +161,7 @@ const DialogBox = ({ request_id, permission }) => {
 
   };
 
-  console.log("This is est data", formInfo.form_data["establishment"]["est_data_block_year"])
+  //console.log("This is est data", formInfo.form_data["establishment"]["est_data_block_year"])
 
   return (
     <>
@@ -837,12 +837,14 @@ shortest route "
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputDate
+                <TextField
                   name="est_data_joining_date"
                   label="Date of joining"
-                  control={controlData}
-                  defaultValue={formInfo.form_data["establishment"] ?? ""}
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"][
+                      "est_data_joining_date"
+                    ] ?? ""
+                  }
                 />
               </Grid>
               <Grid item xs={4}>
@@ -1051,7 +1053,222 @@ shortest route "
             </Grid>
           </form>
         ) : (
-          <div>TextFields with autofilled data</div>
+          <div>
+            <Typography>
+              Fresh Recruit i.e. joining Govt. Service after 01.09.2008
+              /otherwise,
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputDate
+                  name="est_data_joining_date"
+                  label="Date of joining"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_block_year"
+                  label="Block Year"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>
+              Nature of LTC (Home Town/Anywhere in India-place visited/to be
+              visited)
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_nature_last"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue={
+                    formInfo.form_data["est_data_nature_last"] ?? ""
+                  }
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_nature_current"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue={
+                    formInfo.form_data["est_data_nature_current"] ?? ""
+                  }
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>Period </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={3}>
+                <FormInputDate
+                  name="est_data_period_last_from"
+                  label="Last Availed From"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <FormInputDate
+                  name="est_data_period_last_to"
+                  label="Last Availed To"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <FormInputDate
+                  name="est_data_period_current_from"
+                  label="Current LTC From"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+
+              <Grid item xs={3}>
+                <FormInputDate
+                  name="est_data_period_current_to"
+                  label="Current LTC To"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>LTC for Self/Family</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_last_ltc_for"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_current_ltc_for"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>Earned leave encashment (No. of Days)</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputNumber
+                  name="est_data_last_ltc_days"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputNumber
+                  name="est_data_current_ltc_days"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>Earned Leave standing to his credit on</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputDate
+                  name="est_data_last_earned_leave_on"
+                  label="Last Availed"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputDate
+                  name="est_data_current_earned_leave_on"
+                  label="Current LTC"
+                  control={controlData}
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>Balance Earned leave after this encashment</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_last_balance"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_current_balance"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>Earned Leave encashment admissible</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_last_encashment_adm"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_current_encashment_adm"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+            <Typography>
+              Period and nature of leave applied for and need to be sanctioned
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_last_nature"
+                  label="Last Availed"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormInputText
+                  name="est_data_current_nature"
+                  label="Current LTC"
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
+                />
+              </Grid>
+            </Grid>
+          </div>
         )}
 
         {permission !== "client" ? (
