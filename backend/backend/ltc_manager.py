@@ -39,6 +39,8 @@ class ApplyForLTC(Resource):
         print(form_data)
         # remove key attachments (which is redudant) from form json
         form_data.pop('attachments')
+        form_data['establishment'] = {}
+        form_data['accounts'] = {}
         # add LTC request to table
         new_request: LTCRequests = LTCRequests(user_id=user.id)
         new_request.form, new_request.attachments = form_data, filepath
@@ -49,6 +51,9 @@ class ApplyForLTC(Resource):
 
 
 class FillStageForm(Resource):
+    """
+    Fill forms for individual stages
+    """
     allowed_roles = [
         'establishment',
         'accounts',
@@ -293,18 +298,6 @@ class GetPastApprovalRequests(Resource):
                 'is_active': "Active" if form.is_active else "Not Active",
             })
 
-        for dept_log, form, applicant in new:
-            for comment in form.comments['comments']:
-                if comment.get(user.department, None) and comment.get('review', False) == False\
-                        and comment[user.department]['approved'].get(user.email, None) != None:
-                    previous.append({
-                        'request_id': form.request_id,
-                        'user': applicant.email,
-                        'name': applicant.name,
-                        'created_on': form.created_on,
-                        'stage': form.stage,
-                        'is_active': "Active" if form.is_active else "Not Active",
-                    })
         for dept_log, form, applicant in new:
             if form.comments.get(department, None) != None:
                 if len(form.comments[department]) == 0:

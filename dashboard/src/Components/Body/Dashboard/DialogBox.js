@@ -161,7 +161,7 @@ const DialogBox = ({ request_id, permission }) => {
 
   };
 
-  console.log("This is est data", formInfo.form_data["establishment"]["est_data_block_year"])
+  // console.log("This is est data", formInfo.form_data["establishment"]["est_data_block_year"])
 
   return (
     <>
@@ -850,11 +850,7 @@ shortest route "
                   name="est_data_block_year"
                   label="Block Year"
                   control={controlData}
-                  value={
-                    formInfo.form_data["establishment"][
-                      "est_data_block_year"
-                    ] ?? ""
-                  }
+                  defaultValue=""
                   disabled={!edit}
                 />
               </Grid>

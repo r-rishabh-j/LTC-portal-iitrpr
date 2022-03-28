@@ -3,7 +3,7 @@ from flask import jsonify
 from flask_restful import Resource
 from .models import Users
 from flask_jwt_extended import current_user
-from .role_manager import role_required, roles_required, check_role
+from .role_manager import check_role
 
 
 class GetUserNotifications(Resource):

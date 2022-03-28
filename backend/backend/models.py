@@ -520,7 +520,7 @@ class LTCRequests(db.Model):
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been forwarded to Establishment Section')
             for role in stage_roles:
-                role.addNotification(f'LTC request, ID {self.request_id} send for your approval.')
+                role.addNotification(f'LTC request, ID {self.request_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Establishment Section'}
         elif current_stage == 'establishment':
             new_stage = 'audit'
@@ -539,7 +539,7 @@ class LTCRequests(db.Model):
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been forwarded to Audit Section')
             for role in stage_roles:
-                role.addNotification(f'LTC request, ID {self.request_id} send for your approval.')
+                role.addNotification(f'LTC request, ID {self.request_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Audit Section'}
         elif current_stage == 'audit':
             new_stage = 'accounts'
@@ -558,7 +558,7 @@ class LTCRequests(db.Model):
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been forwarded to Accounts Section')
             for role in stage_roles:
-                role.addNotification(f'LTC request, ID {self.request_id} send for your approval.')
+                role.addNotification(f'LTC request, ID {self.request_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Accounts Section'}
         elif current_stage == 'accounts':
             new_stage = 'registrar'
@@ -577,7 +577,7 @@ class LTCRequests(db.Model):
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been forwarded to Registrar')
             for role in stage_roles:
-                role.addNotification(f'LTC request, ID {self.request_id} send for your approval.')
+                role.addNotification(f'LTC request, ID {self.request_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Registrar Section'}
         elif current_stage == 'registrar':
             new_stage = 'deanfa'
@@ -596,7 +596,7 @@ class LTCRequests(db.Model):
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been forwarded to Dean FA')
             for role in stage_roles:
-                role.addNotification(f'LTC request, ID {self.request_id} send for your approval.')
+                role.addNotification(f'LTC request, ID {self.request_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Dean FA Section'}
         elif current_stage == 'deanfa':
             dean_log: DeanLogs = DeanLogs.query.get(self.request_id)
