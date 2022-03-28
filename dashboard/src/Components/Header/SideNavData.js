@@ -22,11 +22,7 @@ export default function SideNavData({handleDrawerClose, userType}) {
       { label: "Home", link: "/home", icon: <HomeIcon /> },
       { label: "New Application", link: "/create", icon: <AddIcon /> },
       { label: "Past Applications", link: "/past", icon: <HistoryIcon /> },
-      {
-        label: "Notifications",
-        link: "/notifications",
-        icon: <NotificationsIcon />,
-      },
+      
       //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
     ];
 

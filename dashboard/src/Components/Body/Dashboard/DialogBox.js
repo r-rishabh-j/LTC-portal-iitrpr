@@ -22,7 +22,7 @@ const DialogBox = ({ request_id, permission }) => {
   const [formInfo, setFormInfo] = useState({
     created_on: "",
     request_id: "",
-    form_data: {},
+    form_data: {establishment: {}},
     comments: {},
   });
   const [comments, setComments] = useState([]);
@@ -138,7 +138,30 @@ const DialogBox = ({ request_id, permission }) => {
   const onSubmitEstData = (data) => {
     console.log(data);
     setEdit(false);
+    const req_data = {request_id: request_id, stage_form: data};
+    axios({
+      method: "POST",
+      url: "/api/fill-stage-form",
+      data: req_data,
+    })
+      .then((response) => {
+        console.log("s", response.status);
+        alert("Data added!");
+        window.location.reload();
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log("e", error.response);
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          alert(error.response.data.error);
+        }
+      });
+
   };
+
+  console.log("This is est data", formInfo.form_data["establishment"]["est_data_block_year"])
 
   return (
     <>
@@ -764,18 +787,24 @@ shortest route "
             )
           )
         )}
-        <Box display="flex" justifyContent="start" style={{ margin: "5vh 0 0 0"}}>
+        <Box
+          display="flex"
+          justifyContent="start"
+          style={{ margin: "5vh 0 0 0" }}
+        >
           <Typography style={{ fontWeight: "bold" }}>
             Establishment Section Data
           </Typography>
-          <Tooltip title={<div style={{fontSize: "1.5em"}}>Remember to click save after editing the data</div>} >
+          <Tooltip
+            title={
+              <div style={{ fontSize: "1.5em" }}>
+                Remember to click save after editing the data
+              </div>
+            }
+          >
             <InfoIcon />
-        </Tooltip>
+          </Tooltip>
         </Box>
-
-        
-        
-          
 
         {permission === "establishment" ? (
           <form
@@ -812,7 +841,7 @@ shortest route "
                   name="est_data_joining_date"
                   label="Date of joining"
                   control={controlData}
-                  defaultValue={formInfo.form_data ?? ""}
+                  defaultValue={formInfo.form_data["establishment"] ?? ""}
                   disabled={!edit}
                 />
               </Grid>
@@ -821,7 +850,11 @@ shortest route "
                   name="est_data_block_year"
                   label="Block Year"
                   control={controlData}
-                  defaultValue=""
+                  value={
+                    formInfo.form_data["establishment"][
+                      "est_data_block_year"
+                    ] ?? ""
+                  }
                   disabled={!edit}
                 />
               </Grid>
@@ -836,7 +869,9 @@ shortest route "
                   name="est_data_nature_last"
                   label="Last Availed"
                   control={controlData}
-                  defaultValue=""
+                  defaultValue={
+                    formInfo.form_data["est_data_nature_last"] ?? ""
+                  }
                   disabled={!edit}
                 />
               </Grid>
@@ -845,7 +880,9 @@ shortest route "
                   name="est_data_nature_current"
                   label="Current LTC"
                   control={controlData}
-                  defaultValue=""
+                  defaultValue={
+                    formInfo.form_data["est_data_nature_current"] ?? ""
+                  }
                   disabled={!edit}
                 />
               </Grid>
@@ -1032,7 +1069,14 @@ shortest route "
               />
               <Box display="flex" justifyContent="start">
                 <Typography style={{ fontWeight: "bold" }}>Approve</Typography>
-                <Tooltip title={<div style={{fontSize: "1.5em"}}>Section Heads must ensure that the section specific information is filled before sending the form forward</div>}>
+                <Tooltip
+                  title={
+                    <div style={{ fontSize: "1.5em" }}>
+                      Section Heads must ensure that the section specific
+                      information is filled before sending the form forward
+                    </div>
+                  }
+                >
                   <InfoIcon />
                 </Tooltip>
               </Box>
