@@ -14,7 +14,7 @@ from .role_manager import role_required
 class RegisterUser(Resource):
     @role_required(role='admin')
     def post(self):
-        return {'Error': 'Not implemented'}
+        return {'error': 'Not implemented'}, 500
 
 
 class Logout(Resource):
@@ -93,7 +93,7 @@ class Login(Resource):
         args = json.loads(request.form.get('auth'))
         if not args['email'] or len(args['email']) < 4:
             abort(409, 'invalid email')
-        user = Users.query.filter_by(email=args['email']).one_or_none()
+        user = Users.query.filter_by(email=str(args['email']).strip().lower()).one_or_none()
 
         if not user:
             abort(409, message="user does not exist")
