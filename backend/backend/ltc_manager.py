@@ -317,7 +317,7 @@ class GetPastApprovalRequests(Resource):
 
 class GetEstablishmentReview(Resource):
     @role_required('establishment')
-    def get(self, permission):
+    def get(self):
         reviews = db.session.query(LTCRequests, EstablishmentReview, Users).join(
             EstablishmentReview).join(Users).all()
         to_review = []
@@ -332,7 +332,7 @@ class GetEstablishmentReview(Resource):
                 }
             )
 
-        return to_review
+        return jsonify({'review': to_review})
 
 
 class GetPendingApprovalRequests(Resource):

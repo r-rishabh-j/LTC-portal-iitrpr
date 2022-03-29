@@ -19,7 +19,7 @@ import { FormInputNumber } from "../../Utilities/FormInputNumber";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import { FormInputDate } from "../../Utilities/FormInputDate";
 
-const DialogBox = ({ request_id, permission }) => {
+const DialogBox = ({ request_id, permission, process }) => {
   const [formInfo, setFormInfo] = useState({
     created_on: "",
     request_id: "",
@@ -804,7 +804,7 @@ shortest route "
           </Tooltip>
         </Box>
 
-        {permission === "establishment" ? (
+        {permission === "establishment" && process !== "new"? (
           <form
             onSubmit={handleSubmitData(onSubmitEstData)}
             style={{

@@ -7,7 +7,7 @@ import SideNav from "../../../Header/SideNav";
 import { useStyles } from "../../../Header/HeaderStyles";
 import Home from "../Home";
 import Pending from '../Establishment/Pending';
-import Past from './Past';
+import Past from '../Establishment/Past';
 import Payment from './Payment';
 
 export default function AccountsPage(props){
@@ -37,8 +37,8 @@ export default function AccountsPage(props){
       <Box className={classes.wrapper}>
         <Routes>
           <Route path="/new" element={<Pending />}></Route>
-          {/* <Route path="/past" element={<Past />}></Route>
-          <Route path="/payment" element={<Payment />}></Route> */}
+          <Route path="/past" element={<Past />}></Route>
+          {/*<Route path="/payment" element={<Payment />}></Route> */}
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
