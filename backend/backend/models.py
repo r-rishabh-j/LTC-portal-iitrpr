@@ -551,7 +551,7 @@ class LTCRequests(db.Model):
             self.comments[new_stage] = []
             stage_roles = get_stage_roles(new_stage)
             self.comments[new_stage].append(
-                self.generate_comments_template(new_stage)
+                self.generate_comments_template(new_stage, stage_roles)
             )
             log: AccountsLogs = AccountsLogs(request_id=self.request_id)
             db.session.add(log)
