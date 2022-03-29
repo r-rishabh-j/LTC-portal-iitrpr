@@ -158,7 +158,7 @@ const DialogBox = ({ request_id, permission }) => {
       .then((response) => {
         console.log("s", response.status);
         alert("Data added!");
-        window.location.reload();
+        
       })
       .catch((error) => {
         if (error.response) {
@@ -1066,25 +1066,39 @@ shortest route "
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_joining_date"
                   label="Date of joining"
                   value={
                     formInfo.form_data["establishment"] === undefined
                       ? ""
-                      : (formInfo.form_data["establishment"][
+                      : formInfo.form_data["establishment"][
                           "est_data_joining_date"
-                        ] ?? "")
+                        ] ?? ""
                   }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_block_year"
                   label="Block Year"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_block_year"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             </Grid>
@@ -1094,164 +1108,310 @@ shortest route "
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_nature_last"
                   label="Last Availed"
-                  control={controlData}
-                  defaultValue={
-                    formInfo.form_data["est_data_nature_last"] ?? ""
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_nature_last"
+                        ] ?? ""
                   }
-                  disabled={!edit}
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_nature_current"
                   label="Current LTC"
-                  control={controlData}
-                  defaultValue={
-                    formInfo.form_data["est_data_nature_current"] ?? ""
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_nature_current"
+                        ] ?? ""
                   }
-                  disabled={!edit}
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             </Grid>
             <Typography>Period </Typography>
             <Grid container spacing={2}>
               <Grid item xs={3}>
-                <FormInputDate
+                <TextField
                   name="est_data_period_last_from"
                   label="Last Availed From"
-                  control={controlData}
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_last_from"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={3}>
-                <FormInputDate
+                <TextField
                   name="est_data_period_last_to"
                   label="Last Availed To"
-                  control={controlData}
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_last_to"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={3}>
-                <FormInputDate
+                <TextField
                   name="est_data_period_current_from"
                   label="Current LTC From"
-                  control={controlData}
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_current_from"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
 
               <Grid item xs={3}>
-                <FormInputDate
+                <TextField
                   name="est_data_period_current_to"
                   label="Current LTC To"
-                  control={controlData}
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_current_to"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             </Grid>
             <Typography>LTC for Self/Family</Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_last_ltc_for"
                   label="Last Availed"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_ltc_for"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_current_ltc_for"
                   label="Current LTC"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_ltc_for"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             </Grid>
             <Typography>Earned leave encashment (No. of Days)</Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputNumber
+                <TextField
                   name="est_data_last_ltc_days"
                   label="Last Availed"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_ltc_days"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormInputNumber
+                <TextField
                   name="est_data_current_ltc_days"
                   label="Current LTC"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_ltc_days"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             </Grid>
             <Typography>Earned Leave standing to his credit on</Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputDate
+                <TextField
                   name="est_data_last_earned_leave_on"
                   label="Last Availed"
-                  control={controlData}
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_earned_leave_on"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormInputDate
+                <TextField
                   name="est_data_current_earned_leave_on"
                   label="Current LTC"
-                  control={controlData}
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_earned_leave_on"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             </Grid>
             <Typography>Balance Earned leave after this encashment</Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_last_balance"
                   label="Last Availed"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_balance"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_current_balance"
                   label="Current LTC"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_balance"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             </Grid>
             <Typography>Earned Leave encashment admissible</Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_last_encashment_adm"
                   label="Last Availed"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_encashment_adm"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_current_encashment_adm"
                   label="Current LTC"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_encashment_adm"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             </Grid>
@@ -1260,21 +1420,39 @@ shortest route "
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_last_nature"
                   label="Last Availed"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_nature"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormInputText
+                <TextField
                   name="est_data_current_nature"
                   label="Current LTC"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_nature"
+                        ] ?? ""
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             </Grid>
