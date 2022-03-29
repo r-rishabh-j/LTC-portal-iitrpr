@@ -13,7 +13,8 @@ export const FormInputNumber = ({ name, control, label, required, disabled }) =>
             label={label}
             value={value}
             onChange={onChange}
-            error={!!error}
+            error={value < 0}
+            helperText={value < 0 ? "Only non negative integers allowed" : ""}
             type="number"
             required={required}
             color="primary"

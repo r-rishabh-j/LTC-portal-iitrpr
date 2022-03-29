@@ -32,6 +32,17 @@ const DialogBox = ({ request_id, permission }) => {
   let array = [];
   const [edit, setEdit] = useState(false);
 
+  //function for accessing dictionary safely
+ function access(parent, child){
+      if(parent === undefined || parent === null || Object.keys(parent).length === 0){
+        return "";
+      }
+      else{
+        return parent[child];
+      }
+      
+  }
+
   //options for radio input
   const options = [
     {
@@ -1049,6 +1060,7 @@ shortest route "
             </Grid>
           </form>
         ) : (
+          //est data for non establishment stages
           <div>
             <Typography>
               Fresh Recruit i.e. joining Govt. Service after 01.09.2008
@@ -1056,12 +1068,16 @@ shortest route "
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputDate
+                <FormInputText
                   name="est_data_joining_date"
                   label="Date of joining"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
+                  value={
+                    formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : (formInfo.form_data["establishment"][
+                          "est_data_joining_date"
+                        ] ?? "")
+                  }
                 />
               </Grid>
               <Grid item xs={4}>
