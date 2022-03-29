@@ -1,5 +1,6 @@
 import os
 import json
+from xml import dom
 import requests
 from . import db
 from flask import jsonify, request, make_response, redirect

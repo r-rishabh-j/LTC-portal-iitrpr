@@ -22,6 +22,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=60)
     app.config['UPLOAD_FOLDER'] = './static'
+    # app.config['JWT_COOKIE_DOMAIN'] =  os.environ.get('COOKIE_DOMAIN')
 
     app.config["flask_profiler"] = {
         "enabled": app.config["DEBUG"],
