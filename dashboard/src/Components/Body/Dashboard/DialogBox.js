@@ -29,7 +29,7 @@ const DialogBox = ({ request_id, permission, process }) => {
   const [comments, setComments] = useState([]);
 
   const { handleSubmit, control } = useForm({});
-  const { handleSubmit: handleSubmitData, control: controlData } = useForm({});
+  const { handleSubmit: handleSubmitData, control: controlData, reset } = useForm();
   let array = [];
   const [edit, setEdit] = useState(false);
 
@@ -804,7 +804,7 @@ shortest route "
           </Tooltip>
         </Box>
 
-        {permission === "establishment" && process !== "new"? (
+        {permission === "establishment" && process !== "new" ? (
           <form
             onSubmit={handleSubmitData(onSubmitEstData)}
             style={{
@@ -849,6 +849,8 @@ shortest route "
                   label="Block Year"
                   control={controlData}
                   defaultValue=""
+                  
+                  
                   disabled={!edit}
                 />
               </Grid>

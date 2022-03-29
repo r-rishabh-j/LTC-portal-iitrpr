@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form"
 import { useState, useEffect } from 'react'
 
 
-export const FormInputText = ({ name, control, label, required, disabled, defaultValue, autofill, multiline, rows }) => {
+export const FormInputText = ({ name, control, label, required, disabled, defaultValue, autofill, multiline, rows}) => {
 
   const [inputName, setInputName] = useState({});
   const [value, setValue] = useState(label);
@@ -26,6 +26,7 @@ export const FormInputText = ({ name, control, label, required, disabled, defaul
       }
 
     }
+    
 
   }, [name]);
   return autofill === true ? (
@@ -38,7 +39,7 @@ export const FormInputText = ({ name, control, label, required, disabled, defaul
           <TextField
             disabled={disabled}
             label={label}
-            onChange={onChange}
+            onChange={(text) => onChange(text)}
             value={value}
             error={!!error}
             type="text"
