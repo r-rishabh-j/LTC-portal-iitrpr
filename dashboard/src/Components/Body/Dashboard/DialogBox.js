@@ -8,7 +8,9 @@ import {
   TextField,
   Grid,
   Typography,
-  Button, Box, Tooltip
+  Button,
+  Box,
+  Tooltip,
 } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import { useForm, Controller } from "react-hook-form";
@@ -16,7 +18,6 @@ import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputNumber } from "../../Utilities/FormInputNumber";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import { FormInputDate } from "../../Utilities/FormInputDate";
-
 
 const DialogBox = ({ request_id, permission }) => {
   const [formInfo, setFormInfo] = useState({
@@ -32,16 +33,16 @@ const DialogBox = ({ request_id, permission }) => {
   let array = [];
   const [edit, setEdit] = useState(false);
 
-  //function for accessing dictionary safely
- function access(parent, child){
-      if(parent === undefined || parent === null || Object.keys(parent).length === 0){
-        return "";
-      }
-      else{
-        return parent[child];
-      }
-      
-  }
+  //   //function for accessing dictionary safely
+  //  function access(parent, child){
+  //       if(parent === undefined || parent === null || Object.keys(parent).length === 0){
+  //         return "";
+  //       }
+  //       else{
+  //         return parent[child];
+  //       }
+
+  //   }
 
   //options for radio input
   const options = [
@@ -74,20 +75,36 @@ const DialogBox = ({ request_id, permission }) => {
         console.log(response.data.data);
         setFormInfo(response.data.data);
 
-        let commentArray = response.data.data.comments.comments ?? [];
-
-        commentArray.forEach(function (arrayItem) {
-          for (var dept in arrayItem) {
-            if (arrayItem.hasOwnProperty(dept))
-              var stageObject = arrayItem[dept];
-            //console.log(stageObject)
-
-            if (stageObject.hasOwnProperty("comments")) {
-              var stageComments = stageObject["comments"];
-              array.push(stageComments);
-            }
+        let commentObject = response.data.data.comments ?? [];
+        console.log(commentObject);
+       
+        for(var dept in commentObject){
+          if(commentObject.hasOwnProperty(dept)){
+            var dept_comments = commentObject[dept]
+            console.log(dept_comments[0].comments)
+            array.push(dept_comments[0].comments ?? {});
           }
-        });
+        }
+       
+        //   commentArray.forEach(function (arrayItem) {
+        //     console.log(arrayItem);
+        //     console.log("hello");
+        //     array.push(arrayItem);
+        //   //   for (var dept in arrayItem) {
+        //   //   // if (arrayItem.hasOwnProperty(dept)){
+        //   //   //      var stageObject = arrayItem[dept];
+        //   //   //      console.log(stageObject);
+        //   //   // }
+
+        //   //   //   if (stageObject.hasOwnProperty("comments")) {
+        //   //   //     var stageComments = stageObject["comments"];
+        //   //   //     array.push(stageComments);
+        //   //   //   }
+        //   //   // }
+        //   //     //console.log(arrayItem);
+
+        //   // }
+        // });
         setComments(array);
       })
       .catch((error) => {
@@ -101,8 +118,8 @@ const DialogBox = ({ request_id, permission }) => {
 
   // if(formInfo.comments !== {})
   //   console.log("Hi", formInfo.comments["establishment"]["comments"]["establishment@email"]);
-  console.log(comments);
-  const comment_data = formInfo.comments.comments ?? [];
+  // console.log(comments);
+  // const comment_data = formInfo.comments.comments ?? [];
 
   // var obj = formInfo.comments;
   // for (var key in obj) {
@@ -158,7 +175,6 @@ const DialogBox = ({ request_id, permission }) => {
       .then((response) => {
         console.log("s", response.status);
         alert("Data added!");
-        
       })
       .catch((error) => {
         if (error.response) {
@@ -169,7 +185,6 @@ const DialogBox = ({ request_id, permission }) => {
           alert(error.response.data.error);
         }
       });
-
   };
 
   // console.log("This is est data", formInfo.form_data["establishment"]["est_data_block_year"])
@@ -770,34 +785,6 @@ shortest route "
           }}
         />
 
-        <Typography style={{ margin: "5vh 0 0 0", fontWeight: "bold" }}>
-          Comment History
-        </Typography>
-        {/*make component for react flow chart*/}
-        {/* <div>{comments.map(function(d, idx){
-          return (<li key={idx}>{d}</li>)
-        })}</div> */}
-        {/* {comment_data.map( sections =>(Object.keys(sections).map((container, i) =>{
-          return (
-            <div key={i}>
-              {container}
-              {Object.keys(sections[container]).map(content => {
-                return <div> {sections[container][content]} </div>;
-              })}
-              </div>
-          )
-        })))} */}
-        {comments.map((d) =>
-          Object.keys(d).map((prop, i) =>
-            d[prop] !== null ? (
-              <li key={i}>
-                {prop}:&nbsp;{d[prop]}
-              </li>
-            ) : (
-              <div key={i} />
-            )
-          )
-        )}
         <Box
           display="flex"
           justifyContent="start"
@@ -1457,6 +1444,35 @@ shortest route "
               </Grid>
             </Grid>
           </div>
+        )}
+
+        <Typography style={{ margin: "5vh 0 0 0", fontWeight: "bold" }}>
+          Comment History
+        </Typography>
+        {/*make component for react flow chart*/}
+        {/* <div>{comments.map(function(d, idx){
+          return (<li key={idx}>{d}</li>)
+        })}</div> */}
+        {/* {comment_data.map( sections =>(Object.keys(sections).map((container, i) =>{
+          return (
+            <div key={i}>
+              {container}
+              {Object.keys(sections[container]).map(content => {
+                return <div> {sections[container][content]} </div>;
+              })}
+              </div>
+          )
+        })))} */}
+        {comments.map((d) =>
+          Object.keys(d).map((prop, i) =>
+            d[prop] !== null ? (
+              <li key={i}>
+                {prop}:&nbsp;{d[prop]}
+              </li>
+            ) : (
+              <div key={i} />
+            )
+          )
         )}
 
         {permission !== "client" ? (
