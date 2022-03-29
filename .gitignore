@@ -28,5 +28,5 @@ yarn-error.log*
 package-lock.json
 client_secret.json
 
-static/
+backend/static/
 .vscode

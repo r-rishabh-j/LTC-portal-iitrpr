@@ -1,7 +1,11 @@
 import {Box, Card, CardActions, CardContent, CardMedia, Button, Typography} from "@material-ui/core"
 
+
 export default function MediaCard(props) {
     console.log(props)
+  function onClk(){
+    window.open(props.url, "_blank")
+  }
   return (
     <Card sx={{ maxWidth: 400 }}>
       <center>
@@ -23,7 +27,7 @@ export default function MediaCard(props) {
         </Typography> */}
         </CardContent>
         <CardActions>
-          <Button size="medium">{props.action}</Button>
+          <Button size="medium" onClick={onClk}>{props.action}</Button>
           {/* <Button size="small">Learn More</Button> */}
         </CardActions>
       </center>

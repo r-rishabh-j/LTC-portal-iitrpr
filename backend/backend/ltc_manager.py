@@ -1,4 +1,3 @@
-from email.mime import application
 import os
 import json
 from . import db
@@ -10,6 +9,7 @@ from flask_jwt_extended import current_user
 from .role_manager import role_required, roles_required, check_role
 from .models import EstablishmentReview, Users, LTCRequests, Departments
 from markupsafe import escape
+from .analytics import analyse
 
 
 class ApplyForLTC(Resource):
@@ -28,6 +28,7 @@ class ApplyForLTC(Resource):
 
     @role_required('client')
     def post(self):
+        analyse()
         # gets file tagged with name attachments
         user: Users = current_user
         file = request.files.get('attachments')
@@ -62,6 +63,7 @@ class FillStageForm(Resource):
 
     @roles_required(roles=allowed_roles)
     def post(self, permission):
+        analyse()
         request_id = request.json['request_id']
         if not request_id:
             abort(404, msg='Request ID not sent')
@@ -93,6 +95,7 @@ class CommentOnLTC(Resource):
 
     @roles_required(roles=allowed_roles)
     def post(self, **kwargs):
+        analyse()
         # post request ID, comment, and approval of the user
         request_id = request.json['request_id']
         comment = request.json['comment']
@@ -140,6 +143,7 @@ class GetLtcFormData(Resource):
     """
     @check_role()
     def post(self, **kwargs):
+        analyse()
         request_id = request.json['request_id']
         if not request_id:
             abort(404, msg='Request ID not sent')
@@ -173,6 +177,7 @@ class GetLtcFormAttachments(Resource):
     """
     @check_role()
     def post(self, permission):
+        analyse()
         request_id = request.json['request_id']
         print(request_id)
         if not request_id:
@@ -198,6 +203,7 @@ class GetLtcFormMetaDataForUser(Resource):
     """
     @role_required('client')
     def get(self):
+        analyse()
         user: Users = current_user
         forms = LTCRequests.query.filter_by(user_id=user.id)
         results = []
@@ -230,6 +236,7 @@ class GetLtcFormMetaData(Resource):
 
     @roles_required(roles=allowed_roles)
     def get(self, **kwargs):
+        analyse()
         user: Users = current_user
         forms = db.session.query(LTCRequests, Users).join(Users).all()
         results = []
@@ -261,6 +268,7 @@ class GetPastApprovalRequests(Resource):
 
     @roles_required(roles=allowed_roles)
     def get(self, **kwargs):
+        analyse()
         user: Users = current_user
         department = user.department
         if kwargs['permission'] == 'dept_head':
@@ -318,6 +326,7 @@ class GetPastApprovalRequests(Resource):
 class GetEstablishmentReview(Resource):
     @role_required('establishment')
     def get(self):
+        analyse()
         reviews = db.session.query(LTCRequests, EstablishmentReview, Users).join(
             EstablishmentReview).join(Users).all()
         to_review = []
@@ -347,6 +356,7 @@ class GetPendingApprovalRequests(Resource):
 
     @roles_required(roles=allowed_roles)
     def get(self, **kwargs):
+        analyse()
         user: Users = current_user
         department = user.department
         if kwargs['permission'] == 'dept_head':

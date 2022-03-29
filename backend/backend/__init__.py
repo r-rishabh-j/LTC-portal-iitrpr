@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
 from flask_migrate import Migrate
 from .file_manager import FileManager
-import backend.flask_profiler as flask_profiler
 
 db = SQLAlchemy()
 filemanager = FileManager(os.path.abspath('./static'))
@@ -27,7 +26,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config["flask_profiler"] = {
         "enabled": app.config["DEBUG"],
         "storage": {
-            "engine": "sqlite"
+            "engine": "sqlalchemy",
+            "db_url": db_path
         },
         "basicAuth": {
             "enabled": True,
@@ -36,6 +36,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
         },
     }
 
+    import backend.flask_profiler as flask_profiler
     flask_profiler.init_app(app)
 
     db.init_app(app)

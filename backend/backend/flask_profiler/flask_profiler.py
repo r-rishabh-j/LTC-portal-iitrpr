@@ -12,12 +12,13 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 from flask_httpauth import HTTPBasicAuth
+from ..role_manager import role_required
 
 from . import storage
 
 CONF = {}
 collection = None
-auth = HTTPBasicAuth()
+# auth = HTTPBasicAuth()
 
 logger = logging.getLogger("flask-profiler")
 
@@ -25,16 +26,16 @@ logger = logging.getLogger("flask-profiler")
 def _is_initialized(): return True if CONF else False
 
 
-@auth.verify_password
-def verify_password(username, password):
-    if "basicAuth" not in CONF or not CONF["basicAuth"]["enabled"]:
-        return True
+# @auth.verify_password
+# def verify_password(username, password):
+#     if "basicAuth" not in CONF or not CONF["basicAuth"]["enabled"]:
+#         return True
 
-    c = CONF["basicAuth"]
-    if username == c["username"] and password == c["password"]:
-        return True
-    logging.warn("flask-profiler authentication failed")
-    return False
+#     c = CONF["basicAuth"]
+#     if username == c["username"] and password == c["password"]:
+#         return True
+#     logging.warn("flask-profiler authentication failed")
+#     return False
 
 
 class Measurement(object):
@@ -175,52 +176,59 @@ def registerInternalRouters(app):
     :param app: Flask application instance
     :return:
     """
-    urlPath = CONF.get("endpointRoot", "flask-profiler")
+    urlPath = CONF.get("endpointRoot", "analytics")
 
     fp = Blueprint(
-        'flask-profiler', __name__,
+        'analytics', __name__,
         url_prefix="/" + urlPath,
         static_folder="static/dist/", static_url_path='/static/dist')
 
     @fp.route("/".format(urlPath))
-    @auth.login_required
+    @role_required(role='admin')
+    # @auth.login_required
     def index():
         return fp.send_static_file("index.html")
 
     @fp.route("/api/measurements/".format(urlPath))
-    @auth.login_required
+    @role_required(role='admin')
+    # @auth.login_required
     def filterMeasurements():
         args = dict(request.args.items())
         measurements = collection.filter(args)
         return jsonify({"measurements": list(measurements)})
 
     @fp.route("/api/measurements/grouped".format(urlPath))
-    @auth.login_required
+    @role_required(role='admin')
+    # @auth.login_required
     def getMeasurementsSummary():
         args = dict(request.args.items())
         measurements = collection.getSummary(args)
         return jsonify({"measurements": list(measurements)})
 
     @fp.route("/api/measurements/<measurementId>".format(urlPath))
-    @auth.login_required
+    @role_required(role='admin')
+    # @auth.login_required
     def getContext(measurementId):
         return jsonify(collection.get(measurementId))
 
     @fp.route("/api/measurements/timeseries/".format(urlPath))
-    @auth.login_required
+    @role_required(role='admin')
+    # @auth.login_required
     def getRequestsTimeseries():
         args = dict(request.args.items())
         return jsonify({"series": collection.getTimeseries(args)})
 
     @fp.route("/api/measurements/methodDistribution/".format(urlPath))
-    @auth.login_required
+    @role_required(role='admin')
+    # @auth.login_required
     def getMethodDistribution():
         args = dict(request.args.items())
         return jsonify({
             "distribution": collection.getMethodDistribution(args)})
 
     @fp.route("/db/dumpDatabase")
-    @auth.login_required
+    @role_required(role='admin')
+    # @auth.login_required
     def dumpDatabase():
         response = jsonify({
             "summary": collection.getSummary()})
@@ -228,7 +236,8 @@ def registerInternalRouters(app):
         return response
 
     @fp.route("/db/deleteDatabase")
-    @auth.login_required
+    @role_required(role='admin')
+    # @auth.login_required
     def deleteDatabase():
         response = jsonify({
             "status": collection.truncate()})

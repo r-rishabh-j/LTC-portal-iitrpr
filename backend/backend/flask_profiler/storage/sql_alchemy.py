@@ -184,7 +184,8 @@ class Sqlalchemy(BaseStorage):
         )
 
         if filters["startedAt"]:
-            query = query.filter(Measurements.startedAt >= filters["startedAt"])
+            query = query.filter(Measurements.startedAt >=
+                                 filters["startedAt"])
         if filters["endedAt"]:
             query = query.filter(Measurements.endedAt <= filters["endedAt"])
         if filters["elapsed"]:
@@ -251,7 +252,8 @@ class Sqlalchemy(BaseStorage):
             Measurements.startedAt.asc()
         ).all()
 
-        rows = [datetime.utcfromtimestamp(row[0]).strftime(dateFormat) for row in rows]
+        rows = [datetime.utcfromtimestamp(
+            row[0]).strftime(dateFormat) for row in rows]
         temp = set(rows)
         rows = [(time, rows.count(time)) for time in temp]
         series = {}

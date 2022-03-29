@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import MediaCard from '../../../Utilities/MediaCard';
 
-
+const { REACT_APP_BASE_BACKEND_URL } = process.env;
 
 function Charts() {
 
@@ -109,21 +109,29 @@ function Charts() {
           spacing={8}
           style={{ margin: "2vh 0 0 10vw", height: "50vh" }}
         >
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             <MediaCard
               image={require("./view_users.png")}
-              alt="View Users"
-              action="View Users"
+              alt="View API analytics"
+              action="View API analytics"
+              url = {REACT_APP_BASE_BACKEND_URL+"/analytics"}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={2}>
+            <MediaCard
+              image={require("./edit_user.png")}
+              alt="Edit User"
+              action="Edit User"
+            />
+          </Grid>
+          <Grid item xs={2}>
             <MediaCard
               image={require("./add_user.png")}
               alt="Add User"
               action="Add New User"
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             <MediaCard
               image={require("./edit_user.png")}
               alt="Edit User"
