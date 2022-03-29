@@ -29,7 +29,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
 
     from .auth import RegisterUser, Logout, Login, IsLoggedIn
     from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser,\
-        GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC, GetPastApprovalRequests, FillStageForm
+        GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC, GetPastApprovalRequests, FillStageForm, GetEstablishmentReview
     from .notifications import ClearUserNotifications, GetUserNotifications
     from .models import Users
 
@@ -51,6 +51,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(FillStageForm, '/api/fill-stage-form')
     api.add_resource(GetUserNotifications, '/api/getnotifications')
     api.add_resource(ClearUserNotifications, '/api/clearnotifications')
+    api.add_resource(GetEstablishmentReview, '/api/establishment-review')
 
     @jwt.user_identity_loader
     def user_identity_loader(user: Users):

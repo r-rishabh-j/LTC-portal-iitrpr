@@ -1,3 +1,4 @@
+from email.mime import application
 import os
 import json
 from . import db
@@ -7,7 +8,7 @@ from flask_restful import Resource, reqparse, abort, fields
 from sqlalchemy.orm.attributes import flag_modified
 from flask_jwt_extended import current_user
 from .role_manager import role_required, roles_required, check_role
-from .models import Users, LTCRequests, Departments
+from .models import EstablishmentReview, Users, LTCRequests, Departments
 from markupsafe import escape
 
 
@@ -312,6 +313,26 @@ class GetPastApprovalRequests(Resource):
                         'is_active': "Active" if form.is_active else "Not Active",
                     })
         return jsonify({'previous': previous})
+
+
+class GetEstablishmentReview(Resource):
+    @role_required('establishment')
+    def get(self, permission):
+        reviews = db.session.query(LTCRequests, EstablishmentReview, Users).join(
+            EstablishmentReview).join(Users).all()
+        to_review = []
+        for form, review, applicant in reviews:
+            to_review.append(
+                {
+                    'request_id': form.request_id,
+                    'user': applicant.email,
+                    'name': applicant.name,
+                    'created_on': form.created_on,
+                    'received_from': review.received_from,
+                }
+            )
+
+        return to_review
 
 
 class GetPendingApprovalRequests(Resource):

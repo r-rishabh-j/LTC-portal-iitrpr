@@ -22,7 +22,7 @@ const DialogBox = ({ request_id, permission }) => {
   const [formInfo, setFormInfo] = useState({
     created_on: "",
     request_id: "",
-    form_data: {establishment: {}},
+    form_data: { establishment: {} },
     comments: {},
   });
   const [comments, setComments] = useState([]);
@@ -149,7 +149,7 @@ const DialogBox = ({ request_id, permission }) => {
   const onSubmitEstData = (data) => {
     console.log(data);
     setEdit(false);
-    const req_data = {request_id: request_id, stage_form: data};
+    const req_data = { request_id: request_id, stage_form: data };
     axios({
       method: "POST",
       url: "/api/fill-stage-form",
@@ -848,14 +848,12 @@ shortest route "
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <TextField
+                <FormInputDate
                   name="est_data_joining_date"
                   label="Date of joining"
-                  value={
-                    formInfo.form_data["establishment"][
-                      "est_data_joining_date"
-                    ] ?? ""
-                  }
+                  control={controlData}
+                  defaultValue=""
+                  disabled={!edit}
                 />
               </Grid>
               <Grid item xs={4}>
