@@ -9,6 +9,7 @@ from flask_jwt_extended import create_access_token, jwt_required, \
     set_access_cookies, unset_jwt_cookies, current_user
 from markupsafe import escape
 from .role_manager import role_required
+import backend.flask_profiler as flask_profiler
 
 
 class RegisterUser(Resource):
@@ -25,11 +26,16 @@ class Logout(Resource):
 
 
 class IsLoggedIn(Resource):
+    @flask_profiler.profile()
+    def func():
+        pass
+
     @jwt_required()
     def get(self):
         user: Users = current_user
         if not user:
             return abort(401, msg='Login again')
+        IsLoggedIn.func()
         user_dept: Departments = Departments.query.get(user.department)
         return jsonify({
             'status': 'logged-in',
