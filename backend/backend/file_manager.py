@@ -1,4 +1,3 @@
-from fileinput import filename
 import shutil
 import os
 from werkzeug.utils import secure_filename

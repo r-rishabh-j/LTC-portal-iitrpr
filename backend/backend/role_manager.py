@@ -3,6 +3,19 @@ from flask_jwt_extended import verify_jwt_in_request, current_user
 from flask import make_response, jsonify
 from .models import Users
 
+class Permissions:
+    admin = 'admin'
+    deanfa = 'deanfa'
+    registrar = 'deanfa'
+    establishment = 'establishment'
+    accounts = 'accounts'
+    audit = 'audit'
+    dept_head = 'dept_head'
+    leaf = 'leaf'
+    applicant = 'applicant'
+    client = 'client'
+
+
 permissions = {
     'admin': 1,
     'deanfa': 2,

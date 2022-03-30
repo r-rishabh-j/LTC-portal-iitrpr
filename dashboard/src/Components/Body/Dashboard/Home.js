@@ -93,7 +93,7 @@ export default function Home() {
             <Typography variant="h5" style={{ visibility: "hidden" }}>
               Notifications
             </Typography>
-            <Typography variant="h5">Notifications</Typography>
+            {/* <Typography variant="h5">Notifications</Typography> */}
             <Button
               variant="contained"
               color="primary"

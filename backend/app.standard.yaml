@@ -1,0 +1,12 @@
+runtime: python39
+entrypoint: gunicorn -b :$PORT main:app
+
+# add only while deploying!
+env_variables:
+  COOKIE_DOMAIN: _
+  FRONTEND_URL: _
+  BACKEND_URL: _
+  client_secret:
+  client_id:
+  POSTGRES_PATH:
+  JWT_SECRET:

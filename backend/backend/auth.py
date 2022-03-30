@@ -1,10 +1,9 @@
 import os
 import json
-from xml import dom
 import requests
 from . import db
 from flask import jsonify, request, make_response, redirect
-from flask_restful import Resource, reqparse, marshal_with, abort, fields
+from flask_restful import Resource, abort
 from .models import Departments, Users
 from flask_jwt_extended import create_access_token, jwt_required, \
     set_access_cookies, unset_jwt_cookies, current_user

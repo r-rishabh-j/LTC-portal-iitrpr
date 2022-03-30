@@ -172,7 +172,7 @@ class Users(db.Model):
         db.session.merge(self)
 
 class Measurements(db.Model):
-    __tablename__ = 'flask_profiler_measurements'
+    __tablename__ = 'analytics'
 
     id = db.Column(Integer, primary_key=True)
     startedAt = db.Column(Numeric)

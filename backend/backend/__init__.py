@@ -25,7 +25,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     # app.config['JWT_COOKIE_DOMAIN'] =  os.environ.get('COOKIE_DOMAIN') # TODO: enable in production
 
     app.config["flask_profiler"] = {
-        "enabled": app.config["DEBUG"],
+        "enabled": True,
         "storage": {
             "engine": "sqlalchemy",
             "db_url": db_path
