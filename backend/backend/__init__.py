@@ -31,16 +31,15 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
             "db_url": db_path
         },
         "ignore": [
-            "/analytics/.*"
+            "/analytics/.*",
         ]
     }
 
-    import backend.flask_profiler as flask_profiler
-    
     db.init_app(app)
     from .models import Users
     create_database(app)
 
+    import backend.flask_profiler as flask_profiler
     flask_profiler.init_app(app)
     api = Api(app)
     jwt = JWTManager(app)
