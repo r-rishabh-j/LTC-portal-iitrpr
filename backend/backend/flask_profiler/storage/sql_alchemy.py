@@ -71,8 +71,8 @@ class Sqlalchemy(BaseStorage):
         method = kwds.get('method', None)
         name = kwds.get('name', None)
 
-        session = sessionmaker(self.db)()
-        session.add(Measurements(
+        # session = sessionmaker(self.db)()
+        self.db.session.add(Measurements(
             endedAt=endedAt,
             startedAt=startedAt,
             elapsed=elapsed,
@@ -82,7 +82,7 @@ class Sqlalchemy(BaseStorage):
             method=method,
             name=name,
         ))
-        session.commit()
+        self.db.session.commit()
 
     @staticmethod
     def getFilters(kwargs):
