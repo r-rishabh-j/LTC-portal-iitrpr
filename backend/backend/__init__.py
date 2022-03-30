@@ -31,7 +31,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
             "db_url": db_path
         },
         "ignore": [
-            "/analytics/.*",
+            "^/analytics/.*",
         ]
     }
 

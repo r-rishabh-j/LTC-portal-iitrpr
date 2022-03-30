@@ -10,13 +10,12 @@ from flask_jwt_extended import create_access_token, jwt_required, \
     set_access_cookies, unset_jwt_cookies, current_user
 from markupsafe import escape
 from .role_manager import role_required
-from .analytics import analyse
 
 
 class RegisterUser(Resource):
     @role_required(role='admin')
     def post(self):
-        analyse()
+
         return {'error': 'Not implemented'}, 500
 
 
@@ -30,7 +29,7 @@ class Logout(Resource):
 class IsLoggedIn(Resource):
     @jwt_required()
     def get(self):
-        analyse()
+
         user: Users = current_user
         if not user:
             return abort(401, msg='Login again')
@@ -75,7 +74,7 @@ class Login(Resource):
         return response.json()
 
     def get(self):
-        analyse()
+
         code = request.args.to_dict().get('code', None)
         if not code:
             return make_response(redirect(os.environ.get('FRONTEND_URL')))
@@ -98,7 +97,8 @@ class Login(Resource):
         args = json.loads(request.form.get('auth'))
         if not args['email'] or len(args['email']) < 4:
             abort(409, 'invalid email')
-        user = Users.query.filter_by(email=str(args['email']).strip().lower()).one_or_none()
+        user = Users.query.filter_by(
+            email=str(args['email']).strip().lower()).one_or_none()
 
         if not user:
             abort(409, message="user does not exist")

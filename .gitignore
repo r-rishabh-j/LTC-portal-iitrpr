@@ -12,6 +12,8 @@
 **/build
 **/__pycache__
 **/venv
+env
+venv
 
 # misc
 .DS_Store
