@@ -1,5 +1,5 @@
-import backend.flask_profiler as flask_profiler
+# from backend.flask_profiler.flask_profiler import profile
 
-@flask_profiler.profile()
+# @profile()
 def analyse():
     pass

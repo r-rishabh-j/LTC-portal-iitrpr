@@ -8,6 +8,8 @@ from sqlalchemy import Column, Integer, Numeric
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
+from .. import db
+from .. import Measurements
 
 base = declarative_base()
 
@@ -16,48 +18,51 @@ def formatDate(timestamp, dateFormat):
     return datetime.fromtimestamp(timestamp).strftime(dateFormat)
 
 
-class Measurements(base):
-    __tablename__ = 'flask_profiler_measurements'
+# class Measurements(db.Model):
+#     __tablename__ = 'flask_profiler_measurements'
 
-    id = Column(Integer, primary_key=True)
-    startedAt = Column(Numeric)
-    endedAt = Column(Numeric)
-    elapsed = Column(Numeric(6, 4))
-    method = Column(Text)
-    args = Column(Text)
-    kwargs = Column(Text)
-    name = Column(Text)
-    context = Column(Text)
+#     id = db.Column(Integer, primary_key=True)
+#     startedAt = db.Column(Numeric)
+#     endedAt = db.Column(Numeric)
+#     elapsed = db.Column(Numeric(6, 4))
+#     method = db.Column(Text)
+#     args = db.Column(Text)
+#     kwargs = db.Column(Text)
+#     name = db.Column(Text)
+#     context = db.Column(Text)
 
-    def __repr__(self):
-        return "<Measurements {}, {}, {}, {}, {}, {}, {}, {}, {}>".format(
-            self.id,
-            self.startedAt,
-            self.endedAt,
-            self.elapsed,
-            self.method,
-            self.args,
-            self.kwargs,
-            self.name,
-            self.context
-        )
+#     def __repr__(self):
+#         return "<Measurements {}, {}, {}, {}, {}, {}, {}, {}, {}>".format(
+#             self.id,
+#             self.startedAt,
+#             self.endedAt,
+#             self.elapsed,
+#             self.method,
+#             self.args,
+#             self.kwargs,
+#             self.name,
+#             self.context
+#         )
 
 
 class Sqlalchemy(BaseStorage):
 
-    def __init__(self, config=None):
+    def __init__(self, config, app):
         super(Sqlalchemy, self).__init__()
         self.config = config
-        self.db = create_engine(
-            self.config.get("db_url", "sqlite:///flask_profiler.sql")
-        )
-        self.create_database()
+        # self.db = create_engine(
+        #     self.config.get("db_url", "sqlite:///flask_profiler.sql")
+        # )
+        # self.db = db
+        self.app = app
+        # self.create_database()
 
     def __enter__(self):
         return self
 
     def create_database(self):
-        base.metadata.create_all(self.db)
+        # base.metadata.create_all(self.db)
+        db.create_all(app=self.app)
 
     def insert(self, kwds):
         endedAt = int(kwds.get('endedAt', None))
@@ -72,7 +77,7 @@ class Sqlalchemy(BaseStorage):
         name = kwds.get('name', None)
 
         # session = sessionmaker(self.db)()
-        self.db.session.add(Measurements(
+        db.session.add(Measurements(
             endedAt=endedAt,
             startedAt=startedAt,
             elapsed=elapsed,
@@ -82,7 +87,7 @@ class Sqlalchemy(BaseStorage):
             method=method,
             name=name,
         ))
-        self.db.session.commit()
+        db.session.commit()
 
     @staticmethod
     def getFilters(kwargs):
@@ -111,7 +116,8 @@ class Sqlalchemy(BaseStorage):
     def filter(self, kwds={}):
         # Find Operation
         f = Sqlalchemy.getFilters(kwds)
-        session = sessionmaker(self.db)()
+        # session = sessionmaker(self.db)()
+        session = db.session
         query = session.query(Measurements)
 
         if f["endedAt"]:
@@ -148,7 +154,8 @@ class Sqlalchemy(BaseStorage):
         return data
 
     def truncate(self):
-        session = sessionmaker(self.db)()
+        # session = sessionmaker(self.db)()
+        session = db.session
         try:
             session.query(Measurements).delete()
             session.commit()
@@ -158,7 +165,8 @@ class Sqlalchemy(BaseStorage):
             return False
 
     def delete(self, measurementId):
-        session = sessionmaker(self.db)()
+        # session = sessionmaker(self.db)()
+        session = db.session
         try:
             session.query(Measurements).filter_by(id=measurementId).delete()
             session.commit()
@@ -169,7 +177,8 @@ class Sqlalchemy(BaseStorage):
 
     def getSummary(self, kwds={}):
         filters = Sqlalchemy.getFilters(kwds)
-        session = sessionmaker(self.db)()
+        # session = sessionmaker(self.db)()
+        session = db.session
         count = func.count(Measurements.id).label('count')
         min_elapsed = func.min(Measurements.elapsed).label('minElapsed')
         max_elapsed = func.max(Measurements.elapsed).label('maxElapsed')
@@ -232,7 +241,8 @@ class Sqlalchemy(BaseStorage):
 
     def getTimeseries(self, kwds={}):
         filters = Sqlalchemy.getFilters(kwds)
-        session = sessionmaker(self.db)()
+        # session = sessionmaker(self.db)()
+        session = db.session
         if kwds.get('interval', None) == "daily":
             interval = 3600 * 24   # daily
             dateFormat = "%Y-%m-%d"
@@ -274,7 +284,8 @@ class Sqlalchemy(BaseStorage):
         if not kwds:
             kwds = {}
         f = Sqlalchemy.getFilters(kwds)
-        session = sessionmaker(self.db)()
+        # session = sessionmaker(self.db)()
+        session = db.session
         endedAt, startedAt = f["endedAt"], f["startedAt"]
 
         rows = session.query(
@@ -293,4 +304,4 @@ class Sqlalchemy(BaseStorage):
         return results
 
     def __exit__(self, exc_type, exc_value, traceback):
-        return self.db
+        return db

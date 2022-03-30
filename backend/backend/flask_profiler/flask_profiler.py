@@ -11,14 +11,12 @@ import logging
 from flask import Blueprint
 from flask import jsonify
 from flask import request
-from flask_httpauth import HTTPBasicAuth
 from ..role_manager import role_required
 
 from . import storage
 
 CONF = {}
 collection = None
-# auth = HTTPBasicAuth()
 
 logger = logging.getLogger("flask-profiler")
 
@@ -260,23 +258,20 @@ def init_app(app):
         try:
             CONF = app.config["FLASK_PROFILER"]
         except:
-            raise Exception(
-                "to init flask-profiler, provide "
-                "required config through flask app's config. please refer: "
-                "https://github.com/muatik/flask-profiler")
+            raise Exception("Supply profiler config")
 
     if not CONF.get("enabled", False):
         return
 
-    collection = storage.getCollection(CONF.get("storage", {}))
+    collection = storage.getCollection(CONF.get("storage", {}), app)
 
     wrapAppEndpoints(app)
     registerInternalRouters(app)
 
-    basicAuth = CONF.get("basicAuth", None)
-    if not basicAuth or not basicAuth["enabled"]:
-        logging.warn(
-            " * CAUTION: flask-profiler is working without basic auth!")
+    # basicAuth = CONF.get("basicAuth", None)
+    # if not basicAuth or not basicAuth["enabled"]:
+    #     logging.warn(
+    #         " * CAUTION: flask-profiler is working without basic auth!")
 
 
 class Profiler(object):

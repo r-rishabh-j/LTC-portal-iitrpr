@@ -1,5 +1,3 @@
-# -*- coding: utf8 -*-
-
 import os
 import sys
 import importlib
@@ -21,7 +19,7 @@ def cwd_in_path():
             sys.path.remove(cwd)
 
 
-def getCollection(conf):
+def getCollection(conf, app=None):
     engine = conf.get("engine", "")
     if engine.lower() == "mongodb":
         from .mongo import Mongo
@@ -31,7 +29,7 @@ def getCollection(conf):
         return Sqlite(conf)
     elif engine.lower() == "sqlalchemy":
         from .sql_alchemy import Sqlalchemy
-        return Sqlalchemy(conf)
+        return Sqlalchemy(conf, app)
     else:
         try:
             parts = engine.split('.')

@@ -4,3 +4,5 @@ from .flask_profiler import (
     profile,
     init_app,
     Profiler)
+from .. import db
+from ..models import Measurements

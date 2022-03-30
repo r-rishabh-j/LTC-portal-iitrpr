@@ -3,7 +3,8 @@ from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm.attributes import flag_modified
-
+from sqlalchemy import Text
+from sqlalchemy import Integer, Numeric
 
 class Stage:
     def __init__(self, id, name, department):
@@ -170,6 +171,31 @@ class Users(db.Model):
         flag_modified(self, "notifications")
         db.session.merge(self)
 
+class Measurements(db.Model):
+    __tablename__ = 'flask_profiler_measurements'
+
+    id = db.Column(Integer, primary_key=True)
+    startedAt = db.Column(Numeric)
+    endedAt = db.Column(Numeric)
+    elapsed = db.Column(Numeric(6, 4))
+    method = db.Column(Text)
+    args = db.Column(Text)
+    kwargs = db.Column(Text)
+    name = db.Column(Text)
+    context = db.Column(Text)
+
+    def __repr__(self):
+        return "<Measurements {}, {}, {}, {}, {}, {}, {}, {}, {}>".format(
+            self.id,
+            self.startedAt,
+            self.endedAt,
+            self.elapsed,
+            self.method,
+            self.args,
+            self.kwargs,
+            self.name,
+            self.context
+        )
 
 class EstablishmentLogs(db.Model):
     """

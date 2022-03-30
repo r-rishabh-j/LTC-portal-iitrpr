@@ -22,7 +22,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=60)
     app.config['UPLOAD_FOLDER'] = './static'
-    # app.config['JWT_COOKIE_DOMAIN'] =  os.environ.get('COOKIE_DOMAIN')
+    # app.config['JWT_COOKIE_DOMAIN'] =  os.environ.get('COOKIE_DOMAIN') # TODO: enable in production
 
     app.config["flask_profiler"] = {
         "enabled": app.config["DEBUG"],
@@ -30,17 +30,18 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
             "engine": "sqlalchemy",
             "db_url": db_path
         },
-        "basicAuth": {
-            "enabled": True,
-            "username": "admin",
-            "password": "admin" # TODO: Change!!
-        },
+        "ignore": [
+            "/analytics/.*"
+        ]
     }
 
     import backend.flask_profiler as flask_profiler
-    flask_profiler.init_app(app)
-
+    
     db.init_app(app)
+    from .models import Users
+    create_database(app)
+
+    flask_profiler.init_app(app)
     api = Api(app)
     jwt = JWTManager(app)
 
@@ -48,9 +49,6 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser,\
         GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC, GetPastApprovalRequests, FillStageForm, GetEstablishmentReview
     from .notifications import ClearUserNotifications, GetUserNotifications
-    from .models import Users
-
-    create_database(app)
     migrate = Migrate(app, db)
 
     api.add_resource(Login, '/api/login')
@@ -78,6 +76,12 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     def user_lookup_callback(_jwt_header, jwt_data):
         email = jwt_data.get('sub', None)
         return Users.query.filter_by(email=email).one_or_none()
+
+    @app.before_request
+    @flask_profiler.profile()
+    def analyse():
+        """Empty function, just runs before a route to analyse"""
+        pass
 
     @app.after_request
     def refresh_expiring_jwts(response):
