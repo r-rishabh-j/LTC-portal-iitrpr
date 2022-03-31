@@ -22,7 +22,8 @@ function GoogleLogin() {
             url: "/api/login",
             data: formData
         }).then((response) => {
-            window.location = 'http://localhost:3000'
+            window.location  = response.request.responseURL;
+            console.log(response);
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response);

@@ -1,7 +1,7 @@
 import os
 from flask_cors import CORS
 from flask_restful import Api
-from flask import Flask, make_response, redirect
+from flask import Flask, make_response, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
@@ -13,7 +13,7 @@ filemanager = FileManager(os.path.abspath('./static'))
 
 
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder=os.path.abspath('../dashboard/build'), static_folder=os.path.abspath('../dashboard/build/static'))
     CORS(app)
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')
     app.config['SQLALCHEMY_DATABASE_URI'] = db_path
@@ -32,7 +32,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
         },
         "ignore": [
             "^/analytics/.*",
-        ]
+            "^/static/.*"
+        ],
     }
 
     db.init_app(app)
@@ -98,7 +99,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
 
     @app.route('/', methods=['GET'])
     def home():
-        return redirect(os.environ.get('FRONTEND_URL'))
+        return render_template('index.html')
 
     return app
 

@@ -73,7 +73,6 @@ class Login(Resource):
         return response.json()
 
     def get(self):
-
         code = request.args.to_dict().get('code', None)
         if not code:
             return make_response(redirect(os.environ.get('FRONTEND_URL')))
