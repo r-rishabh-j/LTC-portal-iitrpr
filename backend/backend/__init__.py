@@ -1,7 +1,7 @@
 import os
 from flask_cors import CORS
 from flask_restful import Api
-from flask import Flask, make_response, redirect, render_template
+from flask import Flask, make_response, redirect, render_template, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
@@ -13,7 +13,7 @@ filemanager = FileManager(os.path.abspath('./static'))
 
 
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
-    app = Flask(__name__, template_folder=os.path.abspath('../dashboard/build'), static_folder=os.path.abspath('../dashboard/build/static'))
+    app = Flask(__name__, static_url_path='', template_folder=os.path.abspath('./build'), static_folder=os.path.abspath('./build'))
     CORS(app)
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')
     app.config['SQLALCHEMY_DATABASE_URI'] = db_path
@@ -77,11 +77,11 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
         email = jwt_data.get('sub', None)
         return Users.query.filter_by(email=email).one_or_none()
 
-    @app.before_request
-    @flask_profiler.profile()
-    def analyse():
-        """Empty function, just runs before a route to analyse"""
-        pass
+    # @app.before_request
+    # @flask_profiler.profile()
+    # def analyse():
+    #     """Empty function, just runs before a route to analyse"""
+    #     pass
 
     @app.after_request
     def refresh_expiring_jwts(response):
