@@ -13,7 +13,8 @@ filemanager = FileManager(os.path.abspath('./static'))
 
 
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
-    app = Flask(__name__, static_url_path='', template_folder=os.path.abspath('./build'), static_folder=os.path.abspath('./build'))
+    app = Flask(__name__, static_url_path='', template_folder=os.path.abspath(
+        './build'), static_folder=os.path.abspath('./build'))
     CORS(app)
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')
     app.config['SQLALCHEMY_DATABASE_URI'] = db_path
@@ -48,7 +49,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
 
     from .auth import RegisterUser, Logout, Login, IsLoggedIn
     from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser,\
-        GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC, GetPastApprovalRequests, FillStageForm, GetEstablishmentReview
+        GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC, GetPastApprovalRequests, FillStageForm,\
+        GetEstablishmentReview, UploadOfficeOrder
     from .notifications import ClearUserNotifications, GetUserNotifications
     migrate = Migrate(app, db)
 
@@ -68,6 +70,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(GetUserNotifications, '/api/getnotifications')
     api.add_resource(ClearUserNotifications, '/api/clearnotifications')
     api.add_resource(GetEstablishmentReview, '/api/establishment-review')
+    api.add_resource(UploadOfficeOrder, '/api/upload-office-order')
 
     @jwt.user_identity_loader
     def user_identity_loader(user: Users):
