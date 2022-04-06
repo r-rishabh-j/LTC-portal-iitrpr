@@ -199,8 +199,9 @@ class GetLtcFormAttachments(Resource):
             return abort(404, status={'error': 'No attachment'})
         _, ext = os.path.splitext(attachment_path)
         filename = f'ltc_{request_id}_proofs'+ext
-        abs_path = os.path.abspath(attachment_path)
-        return send_file(abs_path, as_attachment=True, attachment_filename=filename)
+        return filemanager.sendFile(attachment_path, filename)
+        # abs_path = os.path.abspath(attachment_path)
+        # return send_file(abs_path, as_attachment=True, attachment_filename=filename)
 
 
 class GetLtcFormMetaDataForUser(Resource):

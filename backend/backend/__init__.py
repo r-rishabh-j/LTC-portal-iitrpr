@@ -7,9 +7,15 @@ from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
 from flask_migrate import Migrate
 from .file_manager import FileManager
+from .gcp_file_manager import GcpFileManager
 
 db = SQLAlchemy()
-filemanager = FileManager(os.path.abspath('./static'))
+
+filemanager = None
+if os.environ.get("GCLOUD", False) == 'true':
+    filemanager = GcpFileManager(os.environ.get("GCP_BUCKET"), 'uploads')
+else:
+    filemanager = FileManager(os.path.abspath('./static'))
 
 
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):

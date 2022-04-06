@@ -1,7 +1,7 @@
 import shutil
 import os
 from werkzeug.utils import secure_filename
-
+from flask import send_file
 
 class FileManager():
     def __init__(self, data_dir):
@@ -28,6 +28,6 @@ class FileManager():
         file.save(filepath)
         return filepath
 
-    def getFile(self, db_path):
-        os.path.relpath()
-        pass
+    def sendFile(self, attachment_path, filename):
+        abs_path = os.path.abspath(attachment_path)
+        return send_file(abs_path, as_attachment=True, attachment_filename=filename)

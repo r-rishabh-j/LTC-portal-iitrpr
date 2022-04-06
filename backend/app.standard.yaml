@@ -2,9 +2,10 @@ runtime: python39
 entrypoint: gunicorn -w 4 -b :$PORT main:app
 
 service_account: _
-
+project_id: _
 # add only while deploying!
 env_variables:
+  GCP_BUCKET:
   COOKIE_DOMAIN: _
   FRONTEND_URL: _
   BACKEND_URL: _
