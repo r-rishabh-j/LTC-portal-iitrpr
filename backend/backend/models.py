@@ -6,6 +6,7 @@ from sqlalchemy.orm.attributes import flag_modified
 from sqlalchemy import Text
 from sqlalchemy import Integer, Numeric
 
+
 class Stage:
     def __init__(self, id, name, department):
         self.id = id
@@ -14,89 +15,35 @@ class Stage:
 
 
 class Stages:
+    establishment = 'establishment'
+    audit = 'audit'
+    accounts = 'accounts'
+    registrar = 'registrar'
+    deanfa = 'deanfa'
+    office_order_pending = 'office_order_pending'
+    advance_pending = 'advance_pending'
+    approved = 'approved'
+    ta_applied = 'ta_applied'
+    availed = 'availed'
+    review = 'review'
     # ordered list of heirarchy
-    STAGES = [
-        # {
-        #     'id': 'department',
-        #     'name': 'Department',
-        #     'department': 'department'
-        # },
-        {
-            'id': 'establishment',
-            'name': 'Establishment Section Approval Pending',
-            'department': 'establishment',
-            'role': 'establishment'
-        },
-        {
-            'id': 'audit',
-            'name': 'Audit Section Approval Pending',
-            'department': 'audit',
-            'role': 'audit'
-        },
-        {
-            'id': 'accounts',
-            'name': 'Accounts Section Approval Pending',
-            'department': 'accounts',
-            'role': 'accounts'
-        },
-        {
-            'id': 'registar',
-            'name': 'Registrar Approval Pending',
-            'department': 'registrar',
-            'role': 'registrar'
-        },
-        {
-            'id': 'deanfa',
-            'name': 'Dean FA Approval Pending',
-            'department': 'deanfa',
-            'role': 'deanfa'
-        },
-        {
-            'id': 'office_order_pending',
-            'name': 'Approved, office order pending',
-            'approval_status': True,
-            'department': 'establishment',
-            'role': 'establishment',
-        },
-        {
-            'id': 'office_order_generated',
-            'name': 'Approved, office order generated',
-            'approval_status': True,
-            'department': 'establishment',
-            'role': 'establishment',
-        }, ]
 
-    ADVANCE_PAYMENT_STAGES = [
-        {
-            'id': 'advance_pending',
-            'name': 'Advance sum pending',
-            'approval_status': True,
-            'department': 'accounts'
-        },
-        {
-            'id': 'advance_paid',
-            'name': 'Advance sum issued',
-            'approval_status': True,
-            'department': 'accounts'
-        },
-    ]
+    # def getStageIndex(current_stage):
+    #     for stage in Stages.STAGES:
+    #         if stage['id'] == current_stage:
+    #             return stage
+    #     return None
 
-    def getStageIndex(current_stage):
-        for stage in Stages.STAGES:
-            if stage['id'] == current_stage:
-                return stage
-        return None
+    # def getNextStage(current_stage: str):
+    #     stage_id = Stages.getStageIndex(current_stage)
+    #     if not stage_id:
+    #         return None
+    #     next_stage = None if (
+    #         stage_id+1) >= len(Stages.STAGES) else Stages.STAGES[stage_id+1]
+    #     return next_stage
 
-    def getNextStage(current_stage: str):
-        stage_id = Stages.getStageIndex(current_stage)
-        if not stage_id:
-            return None
-        next_stage = None if (
-            stage_id+1) >= len(Stages.STAGES) else Stages.STAGES[stage_id+1]
-        return next_stage
-
-    def firstStage():
-        return Stages.STAGES[0]
+    # def firstStage():
+    #     return Stages.STAGES[0]
 
 
 class ApplicationStatus:
@@ -171,6 +118,7 @@ class Users(db.Model):
         flag_modified(self, "notifications")
         db.session.merge(self)
 
+
 class Measurements(db.Model):
     __tablename__ = 'analytics'
 
@@ -196,6 +144,7 @@ class Measurements(db.Model):
             self.name,
             self.context
         )
+
 
 class EstablishmentLogs(db.Model):
     """
@@ -427,11 +376,11 @@ class LTCRequests(db.Model):
 
     def stage_name_mapper(stage):
         mapper = {
-            'establishment':'Establishment',
-            'audit':'Audit',
-            'accounts':'Accounts',
-            'registrar':'Registrar',
-            'deanfa':'Dean FA',
+            'establishment': 'Establishment',
+            'audit': 'Audit',
+            'accounts': 'Accounts',
+            'registrar': 'Registrar',
+            'deanfa': 'Dean FA',
         }
         return mapper.get(stage, stage)
 
@@ -441,72 +390,6 @@ class LTCRequests(db.Model):
             "comments": {str(role.email): None for role in roles},
         }
         return comments
-
-    STAGES = [
-        {
-            'id': 'establishment',
-            'name': 'Establishment Section Approval Pending',
-            'department': 'establishment',
-            'role': 'establishment',
-            'table': EstablishmentLogs
-        },
-        {
-            'id': 'audit',
-            'name': 'Audit Section Approval Pending',
-            'department': 'audit',
-            'role': 'audit',
-            'table': AuditLogs
-        },
-        {
-            'id': 'accounts',
-            'name': 'Accounts Section Approval Pending',
-            'department': 'accounts',
-            'role': 'accounts',
-            'table': AccountsLogs
-        },
-        {
-            'id': 'registar',
-            'name': 'Registrar Approval Pending',
-            'department': 'registrar',
-            'role': 'registrar',
-            'table': RegistrarLogs
-        },
-        {
-            'id': 'deanfa',
-            'name': 'Dean FA Approval Pending',
-            'department': 'deanfa',
-            'role': 'deanfa',
-            'table': DeanLogs
-        },
-        {
-            'id': 'office_order_pending',
-            'name': 'Approved, office order pending',
-            'approval_status': True,
-            'department': 'establishment',
-            'role': 'establishment',
-        },
-        {
-            'id': 'office_order_generated',
-            'name': 'Approved, office order generated',
-            'approval_status': True,
-            'department': 'establishment',
-            'role': 'establishment',
-        },
-        {
-            'id': 'advance_pending',
-            'name': 'Advance sum pending',
-            'approval_status': True,
-            'advance_payment_stage': False,
-            'department': 'accounts'
-        },
-        {
-            'id': 'advance_paid',
-            'name': 'Advance sum issued',
-            'approval_status': True,
-            'advance_payment_stage': False,
-            'department': 'accounts',
-        },
-    ]
 
     def addComment(self, user: Users, comment, approval, is_review=False):
         self.comments[user.department][-1]['approved'][user.email] = approval
@@ -524,10 +407,10 @@ class LTCRequests(db.Model):
         message = None
 
         if current_stage == '':
-            new_stage = 'establishment'
+            new_stage = Stages.establishment
             self.stage = new_stage
             assert self.comments.get(new_stage, None) == None
-            self.comments['establishment'] = []
+            self.comments[new_stage] = []
             stage_roles = get_stage_roles(new_stage)
             self.comments[new_stage].append(
                 self.generate_comments_template(new_stage, stage_roles)
@@ -546,10 +429,11 @@ class LTCRequests(db.Model):
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been forwarded to Establishment Section')
             for role in stage_roles:
-                role.addNotification(f'LTC request, ID {self.request_id} has been sent for your approval.')
+                role.addNotification(
+                    f'LTC request, ID {self.request_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Establishment Section'}
-        elif current_stage == 'establishment':
-            new_stage = 'audit'
+        elif current_stage == Stages.establishment:
+            new_stage = Stages.audit
             est_log = EstablishmentLogs.query.get(self.request_id)
             est_log.status = 'forwarded'
             est_log.updated_on = datetime.now()
@@ -565,10 +449,11 @@ class LTCRequests(db.Model):
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been forwarded to Audit Section')
             for role in stage_roles:
-                role.addNotification(f'LTC request, ID {self.request_id} has been sent for your approval.')
+                role.addNotification(
+                    f'LTC request, ID {self.request_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Audit Section'}
-        elif current_stage == 'audit':
-            new_stage = 'accounts'
+        elif current_stage == Stages.audit:
+            new_stage = Stages.accounts
             au_log: AuditLogs = AuditLogs.query.get(self.request_id)
             au_log.status = 'forwarded'
             au_log.updated_on = datetime.now()
@@ -584,10 +469,11 @@ class LTCRequests(db.Model):
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been forwarded to Accounts Section')
             for role in stage_roles:
-                role.addNotification(f'LTC request, ID {self.request_id} has been sent for your approval.')
+                role.addNotification(
+                    f'LTC request, ID {self.request_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Accounts Section'}
-        elif current_stage == 'accounts':
-            new_stage = 'registrar'
+        elif current_stage == Stages.accounts:
+            new_stage = Stages.registrar
             ac_log: AccountsLogs = AccountsLogs.query.get(self.request_id)
             ac_log.status = 'forwarded'
             ac_log.updated_on = datetime.now()
@@ -603,10 +489,11 @@ class LTCRequests(db.Model):
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been forwarded to Registrar')
             for role in stage_roles:
-                role.addNotification(f'LTC request, ID {self.request_id} has been sent for your approval.')
+                role.addNotification(
+                    f'LTC request, ID {self.request_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Registrar Section'}
-        elif current_stage == 'registrar':
-            new_stage = 'deanfa'
+        elif current_stage == Stages.registrar:
+            new_stage = Stages.deanfa
             reg_log: RegistrarLogs = RegistrarLogs.query.get(self.request_id)
             reg_log.status = 'forwarded'
             reg_log.updated_on = datetime.now()
@@ -622,20 +509,21 @@ class LTCRequests(db.Model):
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been forwarded to Dean FA')
             for role in stage_roles:
-                role.addNotification(f'LTC request, ID {self.request_id} has been sent for your approval.')
+                role.addNotification(
+                    f'LTC request, ID {self.request_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Dean FA Section'}
-        elif current_stage == 'deanfa':
+        elif current_stage == Stages.deanfa:
             dean_log: DeanLogs = DeanLogs.query.get(self.request_id)
             dean_log.status = 'forwarded'
             dean_log.updated_on = datetime.now()
-            self.stage = 'approved'
+            self.stage = Stages.office_order_pending
             log: LTCApproved = LTCApproved(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} is now approved, pending office order generation.')
-            
+
             # TODO: send notification to establishment section for office order generation!
-            
+
             message = True, {'msg': 'LTC Approved'}
         elif current_stage == 'approved':
             message = False, {'msg': 'Already Approved'}
@@ -677,12 +565,12 @@ class LTCRequests(db.Model):
             self.request_id, received_from, message)
         table_ref = Departments.getDeptRequestTableByName(received_from)
         stage_ref = table_ref.query.get(self.request_id)
-        stage_ref.status = 'review'
+        stage_ref.status = ApplicationStatus.review
         # self.stage = 'establishment review'
         db.session.add(review_est)
 
     def review_to_user(self, received_from, message):
-        self.stage = ApplicationStatus.review
+        self.stage = Stages.review
 
     def send_for_review(self, reviewer: Users, applicant: Users, message):
         if reviewer.department == 'establishment':
@@ -700,7 +588,8 @@ class LTCRequests(db.Model):
             self.review_to_establishment(reviewer.department, message)
             est_roles = get_stage_roles('establishment')
             for role in est_roles:
-                role.addNotification(f'REVIEW: LTC request, ID {self.request_id} has been sent for review from {str(reviewer.department).capitalize()} Section')
+                role.addNotification(
+                    f'REVIEW: LTC request, ID {self.request_id} has been sent for review from {str(reviewer.department).capitalize()} Section')
 
     def resolve_review_establishment(self, message):
         pass
@@ -726,3 +615,134 @@ class LTCApproved(db.Model):
         self.request_id = request_id
         self.approved_on = datetime.now()
         self.office_order = None
+
+# STAGES = [
+#         {
+#             'id': 'establishment',
+#             'name': 'Establishment Section Approval Pending',
+#             'department': 'establishment',
+#             'role': 'establishment',
+#             'table': EstablishmentLogs
+#         },
+#         {
+#             'id': 'audit',
+#             'name': 'Audit Section Approval Pending',
+#             'department': 'audit',
+#             'role': 'audit',
+#             'table': AuditLogs
+#         },
+#         {
+#             'id': 'accounts',
+#             'name': 'Accounts Section Approval Pending',
+#             'department': 'accounts',
+#             'role': 'accounts',
+#             'table': AccountsLogs
+#         },
+#         {
+#             'id': 'registar',
+#             'name': 'Registrar Approval Pending',
+#             'department': 'registrar',
+#             'role': 'registrar',
+#             'table': RegistrarLogs
+#         },
+#         {
+#             'id': 'deanfa',
+#             'name': 'Dean FA Approval Pending',
+#             'department': 'deanfa',
+#             'role': 'deanfa',
+#             'table': DeanLogs
+#         },
+#         {
+#             'id': 'office_order_pending',
+#             'name': 'Approved, office order pending',
+#             'approval_status': True,
+#             'department': 'establishment',
+#             'role': 'establishment',
+#         },
+#         {
+#             'id': 'office_order_generated',
+#             'name': 'Approved, office order generated',
+#             'approval_status': True,
+#             'department': 'establishment',
+#             'role': 'establishment',
+#         },
+#         {
+#             'id': 'advance_pending',
+#             'name': 'Advance sum pending',
+#             'approval_status': True,
+#             'advance_payment_stage': False,
+#             'department': 'accounts'
+#         },
+#         {
+#             'id': 'advance_paid',
+#             'name': 'Advance sum issued',
+#             'approval_status': True,
+#             'advance_payment_stage': False,
+#             'department': 'accounts',
+#         },
+#     ]
+# STAGES = [
+    #     # {
+    #     #     'id': 'department',
+    #     #     'name': 'Department',
+    #     #     'department': 'department'
+    #     # },
+    #     {
+    #         'id': 'establishment',
+    #         'name': 'Establishment Section Approval Pending',
+    #         'department': 'establishment',
+    #         'role': 'establishment'
+    #     },
+    #     {
+    #         'id': 'audit',
+    #         'name': 'Audit Section Approval Pending',
+    #         'department': 'audit',
+    #         'role': 'audit'
+    #     },
+    #     {
+    #         'id': 'accounts',
+    #         'name': 'Accounts Section Approval Pending',
+    #         'department': 'accounts',
+    #         'role': 'accounts'
+    #     },
+    #     {
+    #         'id': 'registar',
+    #         'name': 'Registrar Approval Pending',
+    #         'department': 'registrar',
+    #         'role': 'registrar'
+    #     },
+    #     {
+    #         'id': 'deanfa',
+    #         'name': 'Dean FA Approval Pending',
+    #         'department': 'deanfa',
+    #         'role': 'deanfa'
+    #     },
+    #     {
+    #         'id': 'office_order_pending',
+    #         'name': 'Approved, office order pending',
+    #         'approval_status': True,
+    #         'department': 'establishment',
+    #         'role': 'establishment',
+    #     },
+    #     {
+    #         'id': 'office_order_generated',
+    #         'name': 'Approved, office order generated',
+    #         'approval_status': True,
+    #         'department': 'establishment',
+    #         'role': 'establishment',
+    #     }, ]
+
+    # ADVANCE_PAYMENT_STAGES = [
+    #     {
+    #         'id': 'advance_pending',
+    #         'name': 'Advance sum pending',
+    #         'approval_status': True,
+    #         'department': 'accounts'
+    #     },
+    #     {
+    #         'id': 'advance_paid',
+    #         'name': 'Advance sum issued',
+    #         'approval_status': True,
+    #         'department': 'accounts'
+    #     },
+    # ]

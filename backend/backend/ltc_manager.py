@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import json
 from . import db
@@ -7,9 +8,11 @@ from flask_restful import Resource, reqparse, abort, fields
 from sqlalchemy.orm.attributes import flag_modified
 from flask_jwt_extended import current_user
 from .role_manager import role_required, roles_required, check_role
-from .models import EstablishmentReview, Users, LTCRequests, Departments
+from .models import EstablishmentReview, LTCApproved, Users, LTCRequests, Departments
+from .models import Stages
 from markupsafe import escape
 from .analyse import analyse
+
 
 class ApplyForLTC(Resource):
     """
@@ -364,7 +367,6 @@ class GetPendingApprovalRequests(Resource):
     @roles_required(roles=allowed_roles)
     def get(self, **kwargs):
         analyse()
-
         user: Users = current_user
         department = user.department
         if kwargs['permission'] == 'dept_head':
@@ -398,3 +400,27 @@ class GetPendingApprovalRequests(Resource):
                     })
 
         return jsonify({'pending': pending})
+
+
+class UploadOfficeOrder(Resource):
+    @role_required(role='establishment')
+    def post(self, **kwargs):
+        file = request.files.get('office_order')
+        request_id = int(request.json.get('request_id'))
+        form: LTCRequests = LTCRequests.query.get(request_id)
+        approved_entry: LTCApproved = LTCApproved.query.get(request_id)
+        user: Users = Users.query.get(form.user_id)
+        if not approved_entry:
+            abort(400, error='Form not yet approved')
+        path = filemanager.saveFile(file, user.id)
+        advance_required = False
+        # check if advance required!
+        if advance_required:
+            form.stage = Stages.advance_pending
+            # send to accounts for advance payment
+        else:
+            form.stage = Stages.approved
+            approved_entry.approved_on = datetime.now()
+        approved_entry.office_order = path
+
+        return jsonify({'success': 'Office Order Uploaded!'})
