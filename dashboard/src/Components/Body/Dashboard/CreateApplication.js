@@ -7,7 +7,7 @@ import {
   Box,
   Fab
 } from "@material-ui/core";
-import { useForm, Controller} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useStyles } from "./FormStyles";
@@ -23,13 +23,13 @@ import useAuthCookie from "../../Login/useAuthCookie"
 
 export default function CreateApplication(props) {
   const classes = useStyles();
-  const { handleSubmit, control } = useForm({});
+  const { handleSubmit, control, formState: { isSubmitting } } = useForm({});
   const [File, setFile] = useState(null)
   // const [isLoggedIn, profileInfo] = useAuthCookie();
   const profileInfo = JSON.parse(sessionStorage.getItem('profile'));
   const name = profileInfo.name;
-  const department  = profileInfo.department;
- 
+  const department = profileInfo.department;
+
   //options for radio input
   const options = [
     {
@@ -43,9 +43,10 @@ export default function CreateApplication(props) {
       value: "No",
     },
   ];
-  
+
   const onSubmit = (data) => {
-    
+    console.log("Submitting", isSubmitting);
+    // console.log("Submitting", formState);
     const formData = new FormData();
 
     const profile = JSON.parse(sessionStorage.getItem('profile'));
@@ -53,7 +54,7 @@ export default function CreateApplication(props) {
     //data.designation = profile.permission;
     data.department = profile.department;
     data.emp_code = profile.employee_code;
-    
+
 
     console.log('data: ', JSON.stringify(data));
     formData.append('attachments', data.attachments[0]);
@@ -68,11 +69,11 @@ export default function CreateApplication(props) {
     })
       .then((response) => {
         console.log('s', response.status)
-        if(response.status === 200){
+        if (response.status === 200) {
           alert("Application submitted!")
           window.location.reload()
         }
-        else{
+        else {
           alert("Error submitting, try again")
         }
       })
@@ -619,7 +620,10 @@ shortest route (proofs need to be attached)."
                 />
               </div>
               <Box display="flex" justifyContent="center">
-                <Button type="submit" variant="contained">
+                <Button type="submit" variant="contained" disabled={isSubmitting}>
+                  {/* {isSubmitting && (
+                    <span className="spinner-grow spinner-grow-sm"></span>
+                  )} */}
                   Submit
                 </Button>
               </Box>
