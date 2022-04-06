@@ -8,7 +8,7 @@ import axios from "axios";
 import GoogleButton from 'react-google-button';
 
 
-const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL } = process.env;
+const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL, REACT_APP_DEVELOPMENT} = process.env;
 
 function GoogleLogin() {
     const classes = useStyles();
@@ -23,7 +23,6 @@ function GoogleLogin() {
             data: formData
         }).then((response) => {
             window.location  = response.request.responseURL;
-            console.log(response);
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response);
@@ -31,7 +30,6 @@ function GoogleLogin() {
                 console.log(error.response.headers);
             }
         });
-        console.log(data);
     }
     const openGoogleLoginPage = useCallback(() => {
         const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
@@ -65,7 +63,9 @@ function GoogleLogin() {
                         <LockIcon />
                     </Avatar>
                     <h3>Sign In</h3>
-                    <form onSubmit={handleSubmit(onSubmit)}>
+
+                    {REACT_APP_DEVELOPMENT === "true" ?
+                    (<form onSubmit={handleSubmit(onSubmit)}>
                         <Controller
                             name="email"
                             control={control}
@@ -112,7 +112,7 @@ function GoogleLogin() {
                                 Sign In (testing)
                             </Button>
                         </div>
-                    </form>
+                    </form>):(<></>)}
                     {/* <Typography>
                         {" "}
                         New User?

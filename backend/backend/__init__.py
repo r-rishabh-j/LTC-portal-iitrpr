@@ -52,7 +52,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
         GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC, GetPastApprovalRequests, FillStageForm,\
         GetEstablishmentReview, UploadOfficeOrder
     from .notifications import ClearUserNotifications, GetUserNotifications
-    migrate = Migrate(app, db)
+    # migrate = Migrate(app, db)
 
     api.add_resource(Login, '/api/login')
     api.add_resource(Logout, '/api/logout')
@@ -94,7 +94,6 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
             now = datetime.now()
             target_timestamp = datetime.timestamp(now + timedelta(minutes=10))
             if target_timestamp > exp_timestamp:
-                print('refresh', current_user)
                 access_token = create_access_token(identity=current_user)
                 set_access_cookies(make_response(response), access_token)
             return response

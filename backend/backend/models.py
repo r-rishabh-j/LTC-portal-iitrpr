@@ -28,23 +28,6 @@ class Stages:
     review = 'review'
     # ordered list of heirarchy
 
-    # def getStageIndex(current_stage):
-    #     for stage in Stages.STAGES:
-    #         if stage['id'] == current_stage:
-    #             return stage
-    #     return None
-
-    # def getNextStage(current_stage: str):
-    #     stage_id = Stages.getStageIndex(current_stage)
-    #     if not stage_id:
-    #         return None
-    #     next_stage = None if (
-    #         stage_id+1) >= len(Stages.STAGES) else Stages.STAGES[stage_id+1]
-    #     return next_stage
-
-    # def firstStage():
-    #     return Stages.STAGES[0]
-
 
 class ApplicationStatus:
     """
