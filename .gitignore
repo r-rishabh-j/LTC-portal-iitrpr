@@ -31,4 +31,5 @@ package-lock.json
 client_secret.json
 
 backend/static/
+uploads
 .vscode

@@ -6,17 +6,11 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
 from flask_migrate import Migrate
-from .file_manager import FileManager
-from .gcp_file_manager import GcpFileManager
+from .file_manager import create_file_manager
 
 db = SQLAlchemy()
-
-filemanager = None
-if os.environ.get("GCLOUD", False) == 'true':
-    filemanager = GcpFileManager(os.environ.get("GCP_BUCKET"), 'uploads')
-else:
-    filemanager = FileManager(os.path.abspath('./static'))
-
+UPLOAD_FOLDER = 'uploads'
+filemanager = create_file_manager(upload_folder=UPLOAD_FOLDER)
 
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app = Flask(__name__, static_url_path='', template_folder=os.path.abspath(
@@ -29,7 +23,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=60)
-    app.config['UPLOAD_FOLDER'] = './static'
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     # app.config['JWT_COOKIE_DOMAIN'] =  os.environ.get('COOKIE_DOMAIN') # TODO: enable in production
 
     app.config["flask_profiler"] = {

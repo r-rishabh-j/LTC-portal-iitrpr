@@ -3,9 +3,12 @@ import os
 from werkzeug.utils import secure_filename
 from flask import send_file
 
-class FileManager():
+class LocalFileManager():
     def __init__(self, data_dir):
         self.data_dir = data_dir
+        if not os.path.exists(self.data_dir):
+            print("Not exists")
+            os.mkdir(self.data_dir)
 
     def __getNextDirPath(self, user_dir):
         i = 1
