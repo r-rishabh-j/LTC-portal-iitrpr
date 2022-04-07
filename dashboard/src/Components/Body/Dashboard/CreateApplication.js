@@ -17,14 +17,15 @@ import { FormInputDate } from "../../Utilities/FormInputDate"
 import { FormInputNumber } from "../../Utilities/FormInputNumber"
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import Add from "@material-ui/icons/Add";
-import useAuthCookie from "../../Login/useAuthCookie"
+import useAuthCookie from "../../Login/useAuthCookie";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
 
 export default function CreateApplication(props) {
   const classes = useStyles();
   const { handleSubmit, control, formState: { isSubmitting } } = useForm({});
-  const [File, setFile] = useState(null)
+  const [File, setFile] = useState(null);
   // const [isLoggedIn, profileInfo] = useAuthCookie();
   const profileInfo = JSON.parse(sessionStorage.getItem('profile'));
   const name = profileInfo.name;
@@ -62,7 +63,7 @@ export default function CreateApplication(props) {
 
     console.log("onSubmit")
     console.log(data);
-    axios({
+    return axios({
       method: "POST",
       url: "/api/apply",
       data: formData
@@ -71,7 +72,7 @@ export default function CreateApplication(props) {
         console.log('s', response.status)
         if (response.status === 200) {
           alert("Application submitted!")
-          window.location.reload()
+          // window.location.reload()
         }
         else {
           alert("Error submitting, try again")
@@ -86,6 +87,48 @@ export default function CreateApplication(props) {
         }
       });
   };
+  // const onSubmit = (data) => {
+  //   console.log("Submitting", isSubmitting);
+  //   // console.log("Submitting", formState);
+  //   const formData = new FormData();
+
+  //   const profile = JSON.parse(sessionStorage.getItem('profile'));
+  //   data.name = profile.name;
+  //   //data.designation = profile.permission;
+  //   data.department = profile.department;
+  //   data.emp_code = profile.employee_code;
+
+
+  //   console.log('data: ', JSON.stringify(data));
+  //   formData.append('attachments', data.attachments[0]);
+  //   formData.append('form', JSON.stringify(data));
+
+  //   console.log("onSubmit")
+  //   console.log(data);
+  //   axios({
+  //     method: "POST",
+  //     url: "/api/apply",
+  //     data: formData
+  //   })
+  //     .then((response) => {
+  //       console.log('s', response.status)
+  //       if (response.status === 200) {
+  //         alert("Application submitted!")
+  //         window.location.reload()
+  //       }
+  //       else {
+  //         alert("Error submitting, try again")
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       if (error.response) {
+  //         console.log(error.response);
+  //         console.log(error.response.status);
+  //         console.log(error.response.headers);
+  //         alert('Error. Please try logging in again');
+  //       }
+  //     });
+  // };
   return profileInfo === {} ? null : (
     <>
       <Grid container>
@@ -620,10 +663,10 @@ shortest route (proofs need to be attached)."
                 />
               </div>
               <Box display="flex" justifyContent="center">
-                <Button type="submit" variant="contained" disabled={isSubmitting}>
-                  {/* {isSubmitting && (
+                <Button type="submit" variant="contained" disabled={isSubmitting} className="btn btn-primary">
+                  {isSubmitting && (
                     <span className="spinner-grow spinner-grow-sm"></span>
-                  )} */}
+                  )}
                   Submit
                 </Button>
               </Box>

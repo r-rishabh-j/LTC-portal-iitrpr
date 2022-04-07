@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import "bootstrap/dist/css/bootstrap.min.css";
  
- 
+// ONLY A REFERENCE. NOT USED IN APP.
 export default function App() {
   const { handleSubmit, formState } = useForm();
   const { isSubmitting } = formState;
