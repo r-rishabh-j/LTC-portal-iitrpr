@@ -3,13 +3,14 @@ import { Controller } from "react-hook-form"
 import { useState, useEffect } from 'react'
 
 
-export const FormInputText = ({ name, control, label, required, disabled, defaultValue, autofill, multiline, rows}) => {
+export const FormInputText = ({profileInfo, name, control, label, required, disabled, defaultValue, autofill, multiline, rows}) => {
 
   const [inputName, setInputName] = useState({});
   const [value, setValue] = useState(label);
 
   useEffect(() => {
-    const inputName = JSON.parse(sessionStorage.getItem('profile'))
+    // const inputName = JSON.parse(sessionStorage.getItem('profile'))
+    const inputName = profileInfo;
     if (inputName) {
       setInputName(inputName)
       if (name === "name") {

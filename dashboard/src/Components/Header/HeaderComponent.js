@@ -43,7 +43,7 @@ export default function HeaderComponent(props) {
           <Route path="/home" element={<Home profileInfo={props.profileInfo} />}></Route>
           <Route
             path="/create"
-            element={<CreateApplication />}
+            element={<CreateApplication profileInfo={props.profileInfo}/>}
           ></Route>
           <Route path="/past" element={<PastApplications permission = {props.profileInfo.permission}/>}></Route>
           <Route

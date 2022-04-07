@@ -22,14 +22,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 
 
-export default function CreateApplication(props) {
+export default function CreateApplication({profileInfo}) {
+  console.log(profileInfo);
   const classes = useStyles();
   const { handleSubmit, control, formState: { isSubmitting } } = useForm({});
   const [File, setFile] = useState(null);
-  // const [isLoggedIn, profileInfo] = useAuthCookie();
-  const profileInfo = JSON.parse(sessionStorage.getItem('profile'));
-  const name = profileInfo.name;
-  const department = profileInfo.department;
 
   //options for radio input
   const options = [
@@ -47,14 +44,12 @@ export default function CreateApplication(props) {
 
   const onSubmit = (data) => {
     console.log("Submitting", isSubmitting);
-    // console.log("Submitting", formState);
     const formData = new FormData();
 
-    const profile = JSON.parse(sessionStorage.getItem('profile'));
-    data.name = profile.name;
+    data.name = profileInfo.name;
     //data.designation = profile.permission;
-    data.department = profile.department;
-    data.emp_code = profile.employee_code;
+    data.department = profileInfo.department;
+    data.emp_code = profileInfo.employee_code;
 
 
     console.log('data: ', JSON.stringify(data));
@@ -69,14 +64,8 @@ export default function CreateApplication(props) {
       data: formData
     })
       .then((response) => {
-        console.log('s', response.status)
-        if (response.status === 200) {
-          alert("Application submitted!")
-          // window.location.reload()
-        }
-        else {
-          alert("Error submitting, try again")
-        }
+        alert("Application submitted!")
+        window.location.reload()
       })
       .catch((error) => {
         if (error.response) {
@@ -145,6 +134,7 @@ export default function CreateApplication(props) {
                 {/* <h4>Leave Required</h4> */}
                 <Grid item xs={12}>
                   <FormInputText
+                    profileInfo={profileInfo}
                     name={"name"}
                     control={control}
                     label={"Name"}
@@ -158,6 +148,7 @@ export default function CreateApplication(props) {
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name={"designation"}
                       control={control}
                       label={"Designation"}
@@ -167,6 +158,7 @@ export default function CreateApplication(props) {
                   </Grid>
                   <Grid item xs={6}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="department"
                       control={control}
                       label="Department"
@@ -179,6 +171,7 @@ export default function CreateApplication(props) {
                 <Grid container spacing={2}>
                   <Grid item xs={4}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="emp_code"
                       control={control}
                       label="Employee Code"
@@ -198,6 +191,7 @@ Service/Date of Joining with IIT Ropar"
                   </Grid>
                 </Grid>
                 <FormInputText
+                  profileInfo={profileInfo}
                   name="band_pay"
                   control={control}
                   label="Band Pay + AGP/GP"
@@ -209,6 +203,7 @@ Service/Date of Joining with IIT Ropar"
                 </Typography>
 
                 <FormInputText
+                  profileInfo={profileInfo}
                   name="nature"
                   control={control}
                   label="Nature"
@@ -336,6 +331,7 @@ entitled to LTC"
                   </Grid>
                 </Grid>
                 <FormInputText
+                  profileInfo={profileInfo}
                   name="home_town"
                   control={control}
                   label="Home Town as recorded in the Service Book"
@@ -343,6 +339,7 @@ entitled to LTC"
                   defaultValue={""}
                 />
                 <FormInputText
+                  profileInfo={profileInfo}
                   name="ltc_nature"
                   control={control}
                   label="Nature of LTC to be availed, Home Town /
@@ -351,6 +348,7 @@ Anywhere in India with Block Year"
                   defaultValue={""}
                 />
                 <FormInputText
+                  profileInfo={profileInfo}
                   name="place"
                   control={control}
                   label="If, anywhere in India, the place to be visited"
@@ -360,6 +358,7 @@ Anywhere in India with Block Year"
                 <Grid container spacing={2}>
                   <Grid item xs={9}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="est_fare"
                       control={control}
                       label="Estimated fare of entitled class from the
@@ -411,6 +410,7 @@ shortest route (proofs need to be attached)."
                 <Grid container spacing={1}>
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="sno_1"
                       control={control}
                       label="S.No."
@@ -422,6 +422,7 @@ shortest route (proofs need to be attached)."
 
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="name_1"
                       control={control}
                       label="Name"
@@ -431,6 +432,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="age_1"
                       control={control}
                       label="Age"
@@ -440,6 +442,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="relationship_1"
                       control={control}
                       label="Relationship"
@@ -449,6 +452,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="travelling_from_1"
                       control={control}
                       label="Travelling(Place) From"
@@ -458,6 +462,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="travelling_to_1"
                       control={control}
                       label="Travelling(Place) To"
@@ -467,6 +472,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="back_1"
                       control={control}
                       label="Back(Yes/No)"
@@ -476,6 +482,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="travel_mode_1"
                       control={control}
                       label="Mode of Travel"
@@ -486,6 +493,7 @@ shortest route (proofs need to be attached)."
 
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="sno_2"
                       control={control}
                       label="S.No."
@@ -497,6 +505,7 @@ shortest route (proofs need to be attached)."
 
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="name_2"
                       control={control}
                       label="Name"
@@ -506,6 +515,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="age_2"
                       control={control}
                       label="Age"
@@ -515,6 +525,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="relationship_2"
                       control={control}
                       label="Relationship"
@@ -524,6 +535,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="travelling_from_2"
                       control={control}
                       label="Travelling(Place) From"
@@ -533,6 +545,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="travelling_to_2"
                       control={control}
                       label="Travelling(Place) To"
@@ -542,6 +555,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="back_2"
                       control={control}
                       label="Back(Yes/No)"
@@ -551,6 +565,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="travel_mode_2"
                       control={control}
                       label="Mode of Travel"
@@ -561,6 +576,7 @@ shortest route (proofs need to be attached)."
 
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="sno_3"
                       control={control}
                       label="S.No."
@@ -572,6 +588,7 @@ shortest route (proofs need to be attached)."
 
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="name_3"
                       control={control}
                       label="Name"
@@ -581,6 +598,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="age_3"
                       control={control}
                       label="Age"
@@ -590,6 +608,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="relationship_3"
                       control={control}
                       label="Relationship"
@@ -599,6 +618,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="travelling_from_3"
                       control={control}
                       label="Travelling(Place) From"
@@ -608,6 +628,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={2}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="travelling_to_3"
                       control={control}
                       label="Travelling(Place) To"
@@ -617,6 +638,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="back_3"
                       control={control}
                       label="Back(Yes/No)"
@@ -626,6 +648,7 @@ shortest route (proofs need to be attached)."
                   </Grid>
                   <Grid item xs={1}>
                     <FormInputText
+                      profileInfo={profileInfo}
                       name="travel_mode_3"
                       control={control}
                       label="Mode of Travel"
@@ -663,7 +686,7 @@ shortest route (proofs need to be attached)."
                 />
               </div>
               <Box display="flex" justifyContent="center">
-                <Button type="submit" variant="contained" disabled={isSubmitting} className="btn btn-primary">
+                <Button type="submit" variant="contained" disabled={isSubmitting}>
                   {isSubmitting && (
                     <span className="spinner-grow spinner-grow-sm"></span>
                   )}
