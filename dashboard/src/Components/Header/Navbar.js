@@ -22,7 +22,7 @@ export default function Navbar({ handleDrawerToggle, profileInfo }) {
           &nbsp; LTC Portal: {profileInfo.designation}
         </Typography>
         <Hidden smDown>
-          <Notification />
+          {/* <Notification /> */}
           <Profile picture={profileInfo.picture} />
         </Hidden>
         <Hidden mdUp>

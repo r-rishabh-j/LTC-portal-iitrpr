@@ -1,3 +1,4 @@
+from urllib import request
 from . import db
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSON
@@ -162,11 +163,24 @@ class EstablishmentReview(db.Model):
     received_from = db.Column(db.String, db.ForeignKey('departments.name'))
     message = db.Column(db.String)
     status = db.Column(db.String(50))
+    """
+    new -> new review request
+    sent_to_user -> sent to user
+    reviewed -> reviewed and sent back by user
+    resolved -> review resolved
+    """
     updated_on = db.Column(db.DateTime)
+
+    class Status:
+        new = 'new'
+        sent_to_user = 'sent_to_user'
+        reviewed_by_user = 'reviewed_by_user'
+        resolved = 'resolved'
 
     def __init__(self, request_id, received_from, message):
         self.request_id = request_id
         self.received_from = received_from
+        self.status = self.Status.new
         self.message = message
         self.updated_on = datetime.now()
 
@@ -235,6 +249,12 @@ class RegistrarLogs(db.Model):
         self.request_id = request_id
         self.status = ApplicationStatus.new
         self.updated_on = datetime.now()
+
+class AdvanceRequests(db.Model):
+    __tablename__ = 'advance_requests'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
+    status = db.Column(db.String(50))
 
 
 class DeanLogs(db.Model):
@@ -544,8 +564,17 @@ class LTCRequests(db.Model):
         """
         send application for review to establishment
         """
-        review_est = EstablishmentReview(
-            self.request_id, received_from, message)
+        existing_entry: EstablishmentReview = EstablishmentReview.query.get(self.request_id)
+        if not existing_entry:
+            review_est = EstablishmentReview(
+                self.request_id, received_from, message)
+        else:
+            existing_entry.status = EstablishmentReview.Status.new
+            existing_entry.message = message
+            existing_entry.received_from = received_from
+            existing_entry.updated_on = datetime.now()
+            pass
+
         table_ref = Departments.getDeptRequestTableByName(received_from)
         stage_ref = table_ref.query.get(self.request_id)
         stage_ref.status = ApplicationStatus.review

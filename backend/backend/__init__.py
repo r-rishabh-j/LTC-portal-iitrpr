@@ -49,29 +49,27 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     jwt = JWTManager(app)
 
     from .auth import RegisterUser, Logout, Login, IsLoggedIn
-    from .ltc_manager import ApplyForLTC, GetLtcFormData, GetLtcFormMetaData, GetLtcFormMetaDataForUser,\
-        GetLtcFormAttachments, GetPendingApprovalRequests, CommentOnLTC, GetPastApprovalRequests, FillStageForm,\
-        GetEstablishmentReview, UploadOfficeOrder
+    from .ltc_manager import LtcManager
     from .notifications import ClearUserNotifications, GetUserNotifications
     # migrate = Migrate(app, db)
 
     api.add_resource(Login, '/api/login')
     api.add_resource(Logout, '/api/logout')
     api.add_resource(IsLoggedIn, '/api/is-logged-in')
-    api.add_resource(ApplyForLTC, '/api/apply')
+    api.add_resource(LtcManager.ApplyForLTC, '/api/apply')
     api.add_resource(RegisterUser, '/api/register')
-    api.add_resource(GetLtcFormData, '/api/getformdata')
-    api.add_resource(GetLtcFormMetaData, '/api/get-form-meta')
-    api.add_resource(GetLtcFormMetaDataForUser, '/api/getmyforms')
-    api.add_resource(GetLtcFormAttachments, '/api/getattachments')
-    api.add_resource(GetPendingApprovalRequests, '/api/getpendingltc')
-    api.add_resource(GetPastApprovalRequests, '/api/getpastltc')
-    api.add_resource(CommentOnLTC, '/api/comment')
-    api.add_resource(FillStageForm, '/api/fill-stage-form')
+    api.add_resource(LtcManager.GetLtcFormData, '/api/getformdata')
+    api.add_resource(LtcManager.GetLtcFormMetaData, '/api/get-form-meta')
+    api.add_resource(LtcManager.GetLtcFormMetaDataForUser, '/api/getmyforms')
+    api.add_resource(LtcManager.GetLtcFormAttachments, '/api/getattachments')
+    api.add_resource(LtcManager.GetPendingApprovalRequests, '/api/getpendingltc')
+    api.add_resource(LtcManager.GetPastApprovalRequests, '/api/getpastltc')
+    api.add_resource(LtcManager.CommentOnLTC, '/api/comment')
+    api.add_resource(LtcManager.FillStageForm, '/api/fill-stage-form')
     api.add_resource(GetUserNotifications, '/api/getnotifications')
     api.add_resource(ClearUserNotifications, '/api/clearnotifications')
-    api.add_resource(GetEstablishmentReview, '/api/establishment-review')
-    api.add_resource(UploadOfficeOrder, '/api/upload-office-order')
+    api.add_resource(LtcManager.GetEstablishmentReview, '/api/establishment-review')
+    api.add_resource(LtcManager.UploadOfficeOrder, '/api/upload-office-order')
 
     @jwt.user_identity_loader
     def user_identity_loader(user: Users):

@@ -154,7 +154,8 @@ export default function Home() {
             <img
               src={profileInfo.picture}
               alt="Profile image"
-              style={{ width: "10vw" }}
+              style={{ width: "10vw", borderRadius: "50%" }}
+              referrerPolicy={"no-referrer"}
             ></img>
             <Typography
               variant="h5"

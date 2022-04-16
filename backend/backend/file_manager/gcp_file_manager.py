@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import send_file
 import io
 
-class GcpFileManager():
+class GcpFileManager:
     def __init__(self, bucket, data_dir):
         print(bucket)
         self.bucket_name = bucket
