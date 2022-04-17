@@ -18,6 +18,7 @@ import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputNumber } from "../../Utilities/FormInputNumber";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import { FormInputDate } from "../../Utilities/FormInputDate";
+import { EditableInputText } from "../../Utilities/EditableInputText";
 
 const DialogBox = ({ request_id, permission, process }) => {
   const [formInfo, setFormInfo] = useState({
@@ -29,7 +30,11 @@ const DialogBox = ({ request_id, permission, process }) => {
   const [comments, setComments] = useState([]);
 
   const { handleSubmit, control } = useForm({});
-  const { handleSubmit: handleSubmitData, control: controlData, reset } = useForm();
+  const {
+    handleSubmit: handleSubmitData,
+    control: controlData,
+    reset,
+  } = useForm();
   let array = [];
   const [edit, setEdit] = useState(false);
 
@@ -39,7 +44,7 @@ const DialogBox = ({ request_id, permission, process }) => {
   //         return "";
   //       }
   //       else{
-  //         return parent[child];
+  //         return parent[child];reset
   //       }
 
   //   }
@@ -77,15 +82,15 @@ const DialogBox = ({ request_id, permission, process }) => {
 
         let commentObject = response.data.data.comments ?? [];
         console.log(commentObject);
-       
-        for(var dept in commentObject){
-          if(commentObject.hasOwnProperty(dept)){
-            var dept_comments = commentObject[dept]
-            console.log(dept_comments[0].comments)
+
+        for (var dept in commentObject) {
+          if (commentObject.hasOwnProperty(dept)) {
+            var dept_comments = commentObject[dept];
+            console.log(dept_comments[0].comments);
             array.push(dept_comments[0].comments ?? {});
           }
         }
-       
+
         //   commentArray.forEach(function (arrayItem) {
         //     console.log(arrayItem);
         //     console.log("hello");
@@ -844,14 +849,18 @@ shortest route "
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormInputText
+                <EditableInputText
                   name="est_data_block_year"
                   label="Block Year"
                   control={controlData}
                   defaultValue=""
-                  
-                  
+                  info= {formInfo.form_data["establishment"] === undefined
+                      ? ""
+                      : formInfo.form_data["establishment"][
+                          "est_data_block_year"
+                        ] ?? ""}
                   disabled={!edit}
+                  reset={reset}
                 />
               </Grid>
             </Grid>

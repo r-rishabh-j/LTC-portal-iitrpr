@@ -8,7 +8,7 @@ import NewReleasesIcon from "@material-ui/icons/NewReleases";
 import RateReviewIcon from "@material-ui/icons/RateReview";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useStyles } from './HeaderStyles';
 import Logout from '../Body/Dashboard/Logout';
 
@@ -161,9 +161,9 @@ export default function SideNavData({handleDrawerClose, userType}) {
           </Button>
         ))}
       </List>
-      <NavLink to='/'>
+      <Link to='/' style ={{textDecoration: "none"}}>
         <Logout />
-      </NavLink>
+      </Link>
     </>
   );
 }
