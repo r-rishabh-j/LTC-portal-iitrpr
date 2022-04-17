@@ -13,19 +13,24 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { DropzoneArea } from 'material-ui-dropzone';
+import { useForm, Controller, useFieldArray, register } from "react-hook-form";
+
 
 
 const UploadDialogBox = ({ request_id }) => {
   const [file, setFile] = useState(null);
 
+  const { handleSubmit, control, register, formState: { isSubmitting } } = useForm();
+
   function onUpload(file) {
     console.log('o', file);
-    setFile(file);
+    setFile(file[0]);
   }
 
-  function onClick() {
+  function onClick(e) {
+    e.preventDefault();
     console.log('f', file);
-    if (file.length == 0) {
+    if (file.length === 0) {
       alert('No file uploaded!');
       return;
     }
@@ -51,14 +56,14 @@ const UploadDialogBox = ({ request_id }) => {
   }
   return (
     <>
-      <form>
+      <form onSubmit={onClick}>
         <DialogTitle>Upload Office Order</DialogTitle>
         <DialogContent><DropzoneArea
           filesLimit={1}
           onChange={onUpload}
         />
           <Box display='flex' justifyContent='center' marginTop={'3vh'}>
-            <Button onClick={onClick} variant='contained' color="primary">UPLOAD</Button>
+            <Button type="submit" variant='contained' color="primary">UPLOAD</Button>
           </Box>
         </DialogContent>
       </form>

@@ -460,8 +460,11 @@ class LtcManager:
         @role_required(role='establishment')
         def post(self, **kwargs):
             print(request.headers)
-            file = request.form.get('office_order')
-            print(type(file))
+            file=request.files.get('office_order', None)
+
+            if file == None:
+                abort(400, error='File not uploaded!')
+
             request_id = int(request.form.get('request_id'))
             form: LTCRequests = LTCRequests.query.get(request_id)
             approved_entry: LTCApproved = LTCApproved.query.get(request_id)
