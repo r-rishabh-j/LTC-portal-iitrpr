@@ -19,7 +19,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
         './build'), static_folder=os.path.abspath('./build'))
     CORS(app)
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_path
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_path 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_POOL_TIMEOUT'] = 5
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']

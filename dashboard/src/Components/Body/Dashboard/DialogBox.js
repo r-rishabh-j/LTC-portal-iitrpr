@@ -45,6 +45,14 @@ const DialogBox = ({ request_id, permission, process }) => {
   //   }
 
   //options for radio input
+  function getVal(val, default_val) {
+    if (val === undefined) {
+      return default_val;
+    } else {
+      return val;
+    }
+  }
+
   const options = [
     {
       index: 1,
@@ -75,17 +83,24 @@ const DialogBox = ({ request_id, permission, process }) => {
         console.log(response.data.data);
         setFormInfo(response.data.data);
 
-        let commentObject = response.data.data.comments ?? [];
+        var commentObject;
+        // var commentObject = response.data.data.comments ?? [];
+        if (response.data.data.comments === undefined) {
+          commentObject = [];
+        } else {
+          commentObject = response.data.data.comments;
+        }
         console.log(commentObject);
-       
-        for(var dept in commentObject){
-          if(commentObject.hasOwnProperty(dept)){
-            var dept_comments = commentObject[dept]
-            console.log(dept_comments[0].comments)
-            array.push(dept_comments[0].comments ?? {});
+
+        for (var dept in commentObject) {
+          if (commentObject.hasOwnProperty(dept)) {
+            var dept_comments = commentObject[dept];
+            console.log(dept_comments[0].comments);
+            // array.push((dept_comments[0].comments) ?? {});
+            array.push(getVal(dept_comments[0].comments, {}));
           }
         }
-       
+
         //   commentArray.forEach(function (arrayItem) {
         //     console.log(arrayItem);
         //     console.log("hello");
@@ -849,8 +864,8 @@ shortest route "
                   label="Block Year"
                   control={controlData}
                   defaultValue=""
-                  
-                  
+
+
                   disabled={!edit}
                 />
               </Grid>
@@ -1062,8 +1077,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_joining_date"
-                        ] ?? ""
+                      "est_data_joining_date"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1080,8 +1095,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_block_year"
-                        ] ?? ""
+                      "est_data_block_year"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1104,8 +1119,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_nature_last"
-                        ] ?? ""
+                      "est_data_nature_last"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1122,8 +1137,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_nature_current"
-                        ] ?? ""
+                      "est_data_nature_current"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1143,8 +1158,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_period_last_from"
-                        ] ?? ""
+                      "est_data_period_last_from"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1161,8 +1176,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_period_last_to"
-                        ] ?? ""
+                      "est_data_period_last_to"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1179,8 +1194,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_period_current_from"
-                        ] ?? ""
+                      "est_data_period_current_from"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1198,8 +1213,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_period_current_to"
-                        ] ?? ""
+                      "est_data_period_current_to"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1219,8 +1234,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_for"
-                        ] ?? ""
+                      "est_data_last_ltc_for"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1237,8 +1252,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_for"
-                        ] ?? ""
+                      "est_data_current_ltc_for"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1258,8 +1273,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_days"
-                        ] ?? ""
+                      "est_data_last_ltc_days"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1276,8 +1291,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_days"
-                        ] ?? ""
+                      "est_data_current_ltc_days"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1297,8 +1312,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_earned_leave_on"
-                        ] ?? ""
+                      "est_data_last_earned_leave_on"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1315,8 +1330,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_earned_leave_on"
-                        ] ?? ""
+                      "est_data_current_earned_leave_on"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1336,8 +1351,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_balance"
-                        ] ?? ""
+                      "est_data_last_balance"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1354,8 +1369,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_balance"
-                        ] ?? ""
+                      "est_data_current_balance"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1375,8 +1390,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_encashment_adm"
-                        ] ?? ""
+                      "est_data_last_encashment_adm"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1393,8 +1408,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_encashment_adm"
-                        ] ?? ""
+                      "est_data_current_encashment_adm"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1416,8 +1431,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_nature"
-                        ] ?? ""
+                      "est_data_last_nature"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
@@ -1434,8 +1449,8 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_nature"
-                        ] ?? ""
+                      "est_data_current_nature"
+                      ] ?? ""
                   }
                   fullWidth
                   InputProps={{
