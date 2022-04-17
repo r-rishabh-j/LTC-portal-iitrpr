@@ -19,94 +19,94 @@ export default function SideNavData({handleDrawerClose, userType}) {
     const classes = useStyles();
 
     const applicantList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
-      { label: "New Application", link: "/create", icon: <AddIcon /> },
-      { label: "Past Applications", link: "/past", icon: <HistoryIcon /> },
+      { label: "Home", link: "/#/home", icon: <HomeIcon /> },
+      { label: "New Application", link: "/#/create", icon: <AddIcon /> },
+      { label: "Past Applications", link: "/#/past", icon: <HistoryIcon /> },
       
       //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
     ];
 
     const adminList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
-      { label: "Users", link: "/users", icon: <AddIcon /> },
+      { label: "Home", link: "/#/home", icon: <HomeIcon /> },
+      { label: "Users", link: "/#/users", icon: <AddIcon /> },
       {
         label: "Current Applications",
-        link: "/current",
+        link: "/#/current",
         icon: <NotificationsIcon />,
       },
       {
         label: "Past Applications",
-        link: "/previous",
+        link: "/#/previous",
         icon: <HistoryIcon />,
       },
     ];
 
     const establishmentList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
-      { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+      { label: "Home", link: "/#/home", icon: <HomeIcon /> },
+      { label: "New Applications", link: "/#/new", icon: <NewReleasesIcon /> },
       {
         label: "Past Applications",
-        link: "/past",
+        link: "/#/past",
         icon: <HistoryIcon />,
       },
       {
         label: "For Review",
-        link: "/review",
+        link: "/#/review",
         icon: <RateReviewIcon />,
       },
       {
         label: "Office Orders",
-        link: "/office_orders",
+        link: "/#/office_orders",
         icon: <AttachFileIcon />,
       },
     ];
 
     const accountsList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
+      { label: "Home", link: "/#/home", icon: <HomeIcon /> },
 
-      { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+      { label: "New Applications", link: "/#/new", icon: <NewReleasesIcon /> },
       {
         label: "Past Applications",
-        link: "/past",
+        link: "/#/past",
         icon: <HistoryIcon />,
       },
       {
         label: "Payment History",
-        link: "/payment",
+        link: "/#/payment",
         icon: <AccountBalanceIcon />,
       },
     ];
 
     const deanfaList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
+      { label: "Home", link: "/#/home", icon: <HomeIcon /> },
 
-      { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+      { label: "New Applications", link: "/#/new", icon: <NewReleasesIcon /> },
       {
         label: "Past Applications",
-        link: "/past",
+        link: "/#/past",
         icon: <HistoryIcon />,
       },
      
     ];
 
     const auditList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
+      { label: "Home", link: "/#/home", icon: <HomeIcon /> },
 
-      { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+      { label: "New Applications", link: "/#/new", icon: <NewReleasesIcon /> },
       {
         label: "Past Applications",
-        link: "/past",
+        link: "/#/past",
         icon: <HistoryIcon />,
       },
     ];
 
     const registrarList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
+      { label: "Home", link: "/#/home", icon: <HomeIcon /> },
 
-      { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+      { label: "New Applications", link: "/#/new", icon: <NewReleasesIcon /> },
       {
         label: "Past Applications",
-        link: "/past",
+        link: "/#/past",
         icon: <HistoryIcon />,
       },
     ];
