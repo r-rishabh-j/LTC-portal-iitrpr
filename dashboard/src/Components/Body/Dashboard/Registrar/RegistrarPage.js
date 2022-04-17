@@ -37,7 +37,7 @@ function RegistrarPage(props) {
           {/* <Route path="/past" element={<Past />}></Route> */}
           
           <Route path="/logout" element={<Navigate to="/" />}></Route>
-          {/* <Route path="*" element={<Home />}></Route> */}
+          <Route path="*" element={<Home />}></Route>
         </Routes>
       </Box>
     </div>
