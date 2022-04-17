@@ -38,12 +38,12 @@ export default function EstablishmentPage(props){
       />
       <Box className={classes.wrapper}>
         <Routes>
-          <Route path="/#/new" element={<Pending permission = {props.profileInfo.permission}/>}></Route>
-          <Route path="/#/past" element={<Past />}></Route>
-          <Route path="/#/review" element={<Review />}></Route>
-          <Route path="/#/office_orders" element={<UploadOfficeOrder />}></Route>
-          <Route path="/#/logout" element={<Navigate to="/#/" />}></Route>
-          {/* <Route path="*" element={<Home />}></Route> */}
+          <Route path="/new" element={<Pending permission = {props.profileInfo.permission}/>}></Route>
+          <Route path="/past" element={<Past />}></Route>
+          <Route path="/review" element={<Review />}></Route>
+          <Route path="/office_orders" element={<UploadOfficeOrder />}></Route>
+          <Route path="/logout" element={<Navigate to="/" />}></Route>
+          <Route path="*" element={<Home />}></Route>
         </Routes>
       </Box>
     </div>

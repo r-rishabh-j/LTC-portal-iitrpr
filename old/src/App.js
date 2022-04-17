@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {TodoPage} from './Pages/TodoPage'
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Routes,
   Route, 
   Link

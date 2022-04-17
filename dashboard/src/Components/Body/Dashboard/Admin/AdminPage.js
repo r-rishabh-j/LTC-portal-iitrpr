@@ -37,17 +37,17 @@ export default function AdminPage(props) {
         {/* <button onClick={getData}>Profile</button> */}
 
         <Routes>
-          <Route path="/#/users" element={<Charts />}></Route>
+          <Route path="/users" element={<Charts />}></Route>
           {/* <Route
             path="/create"
             element={<CreateApplication token={token} setToken={setToken} />}
           ></Route> */}
-          <Route path="/#/previous" element={<PreviousApplications />}></Route>
+          <Route path="/previous" element={<PreviousApplications />}></Route>
           {/* <Route
             path="/notifica"
             element={<Notifications token={token} setToken={setToken} />}
           ></Route> */}
-          <Route path="/#/logout" element={<Navigate to="/#/" />}></Route>
+          <Route path="/logout" element={<Navigate to="/#/" />}></Route>
           {/* <Route path="*" element={<Home />}></Route> */}
         </Routes>
         
