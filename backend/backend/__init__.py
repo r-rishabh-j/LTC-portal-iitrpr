@@ -71,6 +71,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(ClearUserNotifications, '/api/clearnotifications')
     api.add_resource(LtcManager.GetEstablishmentReview, '/api/establishment-review')
     api.add_resource(LtcManager.UploadOfficeOrder, '/api/upload-office-order')
+    api.add_resource(LtcManager.GetPendingOfficeOrderRequests, '/api/get-pending-office-order-req')
 
     @jwt.user_identity_loader
     def user_identity_loader(user: Users):
