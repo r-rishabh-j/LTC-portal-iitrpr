@@ -1,4 +1,3 @@
-from importlib import resources
 import os
 import json
 from . import db
@@ -7,10 +6,10 @@ from .models import Stages
 from .analyse import analyse
 from markupsafe import escape
 from datetime import datetime
-from flask import jsonify, request, make_response
-from flask_restful import Resource, reqparse, abort, fields
-from sqlalchemy.orm.attributes import flag_modified
 from flask_jwt_extended import current_user
+from flask import jsonify, request, make_response
+from sqlalchemy.orm.attributes import flag_modified
+from flask_restful import Resource, reqparse, abort, fields
 from .role_manager import Permissions, role_required, roles_required, check_role
 from .models import ApplicationStatus, EstablishmentLogs, EstablishmentReview, LTCApproved, Users, LTCRequests, Departments
 
@@ -460,13 +459,18 @@ class LtcManager:
     class UploadOfficeOrder(Resource):
         @role_required(role='establishment')
         def post(self, **kwargs):
-            file = request.files.get('office_order')
-            request_id = int(request.json.get('request_id'))
+            print(request.headers)
+            file=request.files.get('office_order', None)
+
+            if file == None:
+                abort(400, error='File not uploaded!')
+
+            request_id = int(request.form.get('request_id'))
             form: LTCRequests = LTCRequests.query.get(request_id)
             approved_entry: LTCApproved = LTCApproved.query.get(request_id)
             user: Users = Users.query.get(form.user_id)
-            if not approved_entry:
-                abort(400, error='Form not yet approved')
+            # if not approved_entry:
+            #     abort(400, error='Form not yet approved')
             path = filemanager.saveFile(file, user.id)
             advance_required = False
             # check if advance required!
@@ -493,3 +497,5 @@ class LtcManager:
                         'name': applicant.name,
                         'approved_on': pending_appl.created_on,
                     })
+            
+            return result

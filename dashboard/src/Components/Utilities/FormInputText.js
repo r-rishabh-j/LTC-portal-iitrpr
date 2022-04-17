@@ -3,7 +3,12 @@ import { Controller } from "react-hook-form"
 import {React, useState, useEffect } from 'react'
 
 
-export const FormInputText = ({profileInfo, name, control, label, required, disabled, defaultValue, autofill, multiline, rows}) => {
+export const FormInputText = ({profileInfo, name, control, label, required, disabled, defaultValue, multiline, rows, autofill=false}) => {
+
+  // if (autofill===undefined){
+  //   autofill=false;
+  // }
+  console.log(autofill);
 
   const [inputName, setInputName] = useState({});
   const [value, setValue] = useState(label);

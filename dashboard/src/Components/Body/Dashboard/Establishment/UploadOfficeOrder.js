@@ -27,54 +27,11 @@ const UploadOfficeOrder = ({ permission }) => {
       });
   }, []);
 
-  // const handleAttachmentClick = (event, cellValues) => {
-  //   console.log(cellValues.row.request_id);
-  //   const data = { request_id: cellValues.row.request_id };
-  //   axios({
-  //     method: "post",
-  //     url: "api/getattachments",
-  //     data: JSON.stringify(data),
-  //     headers: { "Content-type": "application/json" },
-  //     responseType: "blob",
-  //   })
-  //     .then((response) => {
-  //       var blob = new Blob([response.data], { type: response.data.type });
-  //       var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
-  //       var anchor = document.createElement("a");
-  //       anchor.href = url;
-  //       anchor.target = "_blank";
-  //       anchor.click();
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.log(error.response);
-  //         console.log(error.response.status);
-  //         alert("No attachments");
-  //       }
-  //     });
-  // };
-
   const handleUpload = (event, cellValues) => {
     console.log(cellValues.row.request_id);
     const data = { request_id: cellValues.row.request_id };
-
-    // axios({
-    //   method: "post",
-    //   url: "api/upload-office-order",
-    //   data: JSON.stringify(data),
-    //   headers: { "Content-type": "application/json" },
-    // })
-    //   .then((response) => {
-    //     console.log(response.data.data.form_data);
-    //     // GeneratePDF(response.data.data.form_data);
-    //   })
-    //   .catch((error) => {
-    //     if (error.response) {
-    //       console.log(error.response);
-    //       console.log(error.response.status);
-    //       alert("Form not found");
-    //     }
-    //   });
+    setOpen(true);
+    
   };
 
   const handleCellClick = (param, event) => {
@@ -224,7 +181,7 @@ const UploadOfficeOrder = ({ permission }) => {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <UploadDialogBox request_id={id} permission={permission} />
+          <UploadDialogBox request_id={id} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close
