@@ -8,6 +8,7 @@ from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_acc
 from flask_migrate import Migrate
 from .file_manager import create_file_manager
 from dotenv import load_dotenv
+
 load_dotenv()
 db = SQLAlchemy()
 UPLOAD_FOLDER = 'uploads'
