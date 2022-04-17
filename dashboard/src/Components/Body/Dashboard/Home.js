@@ -42,6 +42,7 @@ export default function Home() {
     .then((response) => {
       console.log(response.data.notifications)
       setNotifications(response.data.notifications)
+      
     })
     .catch((error) => {
         if (error.response) {
@@ -84,9 +85,10 @@ export default function Home() {
           // elevation={10}
           style={{
             margin: "0 0 0 3vw",
-            height: "100vh",
+            height: "91vh",
             width: "70vw",
             backgroundColor: "#efefef",
+            overflowY: "scroll"
           }}
         >
           <Box display="flex" justifyContent="space-between">
@@ -149,7 +151,7 @@ export default function Home() {
             </Box>
           )}
         </Paper>
-        <Box>
+        <Box style={{backgroundColor: "white"}}>
           <center>
             <img
               src={profileInfo.picture}

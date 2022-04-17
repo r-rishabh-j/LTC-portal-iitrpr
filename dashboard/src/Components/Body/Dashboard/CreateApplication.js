@@ -27,7 +27,7 @@ export default function CreateApplication({profileInfo}) {
   console.log(profileInfo);
   const classes = useStyles();
   const { handleSubmit, control, register, reset, formState: { isSubmitting } } = useForm({defaultValues:{
-    dependents: [{dep_name: "", dep_age: "", relationship: "", dep_travelling_from: ""}]
+    dependents: [{dep_name: "", dep_age: "", dep_relationship: "", dep_travelling_from: ""}]
   }});
   const {fields, append, remove} = useFieldArray({
     control, name: "dependents"
