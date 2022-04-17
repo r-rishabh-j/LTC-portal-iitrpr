@@ -1,17 +1,17 @@
-from datetime import datetime
 import os
 import json
 from . import db
 from . import filemanager
-from flask import jsonify, request, make_response, send_file
-from flask_restful import Resource, reqparse, abort, fields
-from sqlalchemy.orm.attributes import flag_modified
+from .models import Stages
+from .analyse import analyse
+from markupsafe import escape
+from datetime import datetime
 from flask_jwt_extended import current_user
+from flask import jsonify, request, make_response
+from sqlalchemy.orm.attributes import flag_modified
+from flask_restful import Resource, reqparse, abort, fields
 from .role_manager import Permissions, role_required, roles_required, check_role
 from .models import ApplicationStatus, EstablishmentLogs, EstablishmentReview, LTCApproved, Users, LTCRequests, Departments
-from .models import Stages
-from markupsafe import escape
-from .analyse import analyse
 
 
 class LtcManager:
