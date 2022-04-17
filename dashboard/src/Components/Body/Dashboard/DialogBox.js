@@ -50,6 +50,14 @@ const DialogBox = ({ request_id, permission, process }) => {
   //   }
 
   //options for radio input
+  function getVal(val, default_val) {
+    if (val === undefined) {
+      return default_val;
+    } else {
+      return val;
+    }
+  }
+
   const options = [
     {
       index: 1,
@@ -80,14 +88,21 @@ const DialogBox = ({ request_id, permission, process }) => {
         console.log(response.data.data);
         setFormInfo(response.data.data);
 
-        let commentObject = response.data.data.comments ?? [];
+        var commentObject;
+        // var commentObject = response.data.data.comments ?? [];
+        if (response.data.data.comments === undefined) {
+          commentObject = [];
+        } else {
+          commentObject = response.data.data.comments;
+        }
         console.log(commentObject);
 
         for (var dept in commentObject) {
           if (commentObject.hasOwnProperty(dept)) {
             var dept_comments = commentObject[dept];
             console.log(dept_comments[0].comments);
-            array.push(dept_comments[0].comments ?? {});
+            // array.push((dept_comments[0].comments) ?? {});
+            array.push(getVal(dept_comments[0].comments, {}));
           }
         }
 
@@ -854,11 +869,13 @@ shortest route "
                   label="Block Year"
                   control={controlData}
                   defaultValue=""
-                  info= {formInfo.form_data["establishment"] === undefined
+                  info={
+                    formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
                           "est_data_block_year"
-                        ] ?? ""}
+                        ] ?? ""
+                  }
                   disabled={!edit}
                   reset={reset}
                 />
@@ -870,7 +887,7 @@ shortest route "
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <FormInputText
+                <EditableInputText
                   name="est_data_nature_last"
                   label="Last Availed"
                   control={controlData}
@@ -881,7 +898,7 @@ shortest route "
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormInputText
+                <EditableInputText
                   name="est_data_nature_current"
                   label="Current LTC"
                   control={controlData}

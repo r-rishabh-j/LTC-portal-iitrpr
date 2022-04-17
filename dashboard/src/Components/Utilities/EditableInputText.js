@@ -7,8 +7,9 @@ import { useState, useEffect } from "react";
 export const EditableInputText = ({name, control, label, required, disabled, defaultValue, info, multiline, rows, reset}) =>{
   
   useEffect(() => {
+    console.log(`${info}`)
     reset({ [name]: `${info}` });
-  }, [])
+  }, [info])
   return (
     <Controller
       name={name}
