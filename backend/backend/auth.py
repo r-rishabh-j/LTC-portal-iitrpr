@@ -8,11 +8,11 @@ from .models import Departments, Users
 from flask_jwt_extended import create_access_token, jwt_required, \
     set_access_cookies, unset_jwt_cookies, current_user
 from markupsafe import escape
-from .role_manager import role_required
+from .role_manager import role_required, Permissions
 
 
 class RegisterUser(Resource):
-    @role_required(role='admin')
+    @role_required(role=Permissions.admin)
     def post(self):
 
         return {'error': 'Not implemented'}, 500

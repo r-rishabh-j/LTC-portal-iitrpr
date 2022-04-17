@@ -52,7 +52,7 @@ export default function Profile(props) {
         aria-controls="simple-menu"
         aria-haspopup="true"
         onClick={handleClick}
-        startIcon={<Avatar src={image} alt={altImage}></Avatar>}
+        startIcon={<Avatar src={image} alt={altImage} referrerPolicy={"no-referrer"}></Avatar>}
       ></Button>
       <Menu
         id="simple-menu"

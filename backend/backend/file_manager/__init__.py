@@ -1,5 +1,5 @@
 import os
-from .file_manager import LocalFileManager
+from .local_file_manager import LocalFileManager
 from .gcp_file_manager import GcpFileManager
 
 def create_file_manager(upload_folder):
