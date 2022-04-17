@@ -7,7 +7,7 @@ import {
   Box,
   Fab
 } from "@material-ui/core";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useStyles } from "./FormStyles";
@@ -19,13 +19,19 @@ import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import Add from "@material-ui/icons/Add";
 import useAuthCookie from "../../Login/useAuthCookie";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { FieldArrayInput } from "../../Utilities/FieldArrayInput";
 
 
 
 export default function CreateApplication({profileInfo}) {
   console.log(profileInfo);
   const classes = useStyles();
-  const { handleSubmit, control, formState: { isSubmitting } } = useForm({});
+  const { handleSubmit, control, register, reset, formState: { isSubmitting } } = useForm({defaultValues:{
+    dependents: [{dep_name: "", dep_age: "", relationship: "", dep_travelling_from: ""}]
+  }});
+  const {fields, append, remove} = useFieldArray({
+    control, name: "dependents"
+  })
   const [File, setFile] = useState(null);
 
   //options for radio input
@@ -407,7 +413,14 @@ shortest route (proofs need to be attached)."
                 <Typography style={{ fontWeight: "bold" }}>
                   Person(s) in respect of whom LTC is proposed to be availed:
                 </Typography>
-                <Grid container spacing={1}>
+                <FieldArrayInput
+                  name={"dependents"}
+                  control={control}
+                  fields={fields}
+                  remove={remove}
+                  append={append}
+                />
+                {/* <Grid container spacing={1}>
                   <Grid item xs={1}>
                     <FormInputText
                       profileInfo={profileInfo}
@@ -656,7 +669,7 @@ shortest route (proofs need to be attached)."
                       defaultValue={""}
                     />
                   </Grid>
-                </Grid>
+                </Grid> */}
 
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
@@ -686,7 +699,11 @@ shortest route (proofs need to be attached)."
                 />
               </div>
               <Box display="flex" justifyContent="center">
-                <Button type="submit" variant="contained" disabled={isSubmitting}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={isSubmitting}
+                >
                   {isSubmitting && (
                     <span className="spinner-grow spinner-grow-sm"></span>
                   )}
