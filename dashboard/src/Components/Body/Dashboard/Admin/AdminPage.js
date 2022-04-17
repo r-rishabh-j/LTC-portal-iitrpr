@@ -47,7 +47,7 @@ export default function AdminPage(props) {
             path="/notifica"
             element={<Notifications token={token} setToken={setToken} />}
           ></Route> */}
-          <Route path="/logout" element={<Navigate to="/" />}></Route>
+          <Route path="/logout" element={<Navigate to="/#/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
         

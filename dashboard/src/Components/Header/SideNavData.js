@@ -140,30 +140,30 @@ export default function SideNavData({handleDrawerClose, userType}) {
     
   return (
     <>
-    <List>
-      {listItemData.map((item, i) => (
-        <Button
-          key={i}
-          size="small"
-          className={classes.navButton}
-          onClick={handleDrawerClose}
-          
-        >
-          <ListItem
-            component={NavLink}
-            to={item.link}
-            className={classes.navlinks}
-            // activeClassName={classes.activeNavlinks}
-            sx = {{width: "100%", textTransform: "capitalize"}}
+      <List>
+        {listItemData.map((item, i) => (
+          <Button
+            key={i}
+            size="small"
+            className={classes.navButton}
+            onClick={handleDrawerClose}
           >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText>{item.label}</ListItemText>
-          </ListItem>
-        </Button>
-        
-      ))}
-    </List>
-    <Logout/>
+            <ListItem
+              component={NavLink}
+              to={item.link}
+              className={classes.navlinks}
+              // activeClassName={classes.activeNavlinks}
+              sx={{ width: "100%", textTransform: "capitalize" }}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText>{item.label}</ListItemText>
+            </ListItem>
+          </Button>
+        ))}
+      </List>
+      <NavLink to='/'>
+        <Logout />
+      </NavLink>
     </>
   );
 }

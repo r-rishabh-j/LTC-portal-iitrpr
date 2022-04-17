@@ -1,4 +1,5 @@
-import { BrowserRouter as Router } from 'react-router-dom';
+import React from 'react';
+import { HashRouter as Router } from 'react-router-dom';
 import './App.css';
 import GoogleLogin from './Components/Login/GoogleLogin';
 import HeaderComponent from './Components/Header/HeaderComponent';

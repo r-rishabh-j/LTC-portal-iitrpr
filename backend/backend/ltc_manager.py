@@ -198,8 +198,6 @@ class LtcManager:
             _, ext = os.path.splitext(attachment_path)
             filename = f'ltc_{request_id}_proofs'+ext
             return filemanager.sendFile(attachment_path, filename)
-            # abs_path = os.path.abspath(attachment_path)
-            # return send_file(abs_path, as_attachment=True, attachment_filename=filename)
 
     class GetLtcFormMetaDataForUser(Resource):
         """
@@ -385,13 +383,15 @@ class LtcManager:
             db.session.merge(db_form)
 
             # TODO: update establishment review table
-            est_review_entry: EstablishmentReview = EstablishmentReview.query.get(request_id)
+            est_review_entry: EstablishmentReview = EstablishmentReview.query.get(
+                request_id)
             if est_review_entry == None:  # review was sent by establishment
-                est_entry: EstablishmentLogs = EstablishmentLogs.query.get(request_id)
+                est_entry: EstablishmentLogs = EstablishmentLogs.query.get(
+                    request_id)
                 est_entry.status = ApplicationStatus.new
             else:  # review was sent through establishment, i.e was sent by some other stage originally
                 est_review_entry.status = EstablishmentReview.Status.reviewed_by_user
-                
+
             db.session.commit()
             return jsonify({'msg': 'Updated'})
 
@@ -478,3 +478,17 @@ class LtcManager:
             approved_entry.office_order = path
 
             return jsonify({'success': 'Office Order Uploaded!'})
+
+    class GetPendingOfficeOrderRequests(Resource):
+        @role_required(role=Permissions.establishment)
+        def get(self):
+            pending = db.session.query(LTCApproved, Users).join(
+                Users).filter(LTCApproved.office_order == None)
+            result = []
+            for pending_appl, applicant in pending:
+                result.append({
+                        'request_id': pending_appl.request_id,
+                        'user': applicant.email,
+                        'name': applicant.name,
+                        'approved_on': pending_appl.created_on,
+                    })
