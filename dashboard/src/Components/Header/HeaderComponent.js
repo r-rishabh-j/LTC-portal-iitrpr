@@ -40,18 +40,14 @@ export default function HeaderComponent(props) {
 
 
         <Routes>
-          <Route path="/#/home" element={<Home profileInfo={props.profileInfo} />}></Route>
+          <Route path="/home" element={<Home profileInfo={props.profileInfo} />}></Route>
           <Route
-            path="/#/create"
+            path="/create"
             element={<CreateApplication profileInfo={props.profileInfo}/>}
           ></Route>
-          <Route path="/#/past" element={<PastApplications permission = {props.profileInfo.permission}/>}></Route>
-          {/* <Route
-            path="/#/notifications"
-            element={<Notifications />}
-          ></Route> */}
-          <Route path="/#/logout" element={<Navigate to="/#/" />}></Route>
-          {/* <Route path="*" element={<Home />}></Route> */}
+          <Route path="/past" element={<PastApplications permission = {props.profileInfo.permission}/>}></Route>
+          <Route path="/logout" element={<Navigate to="/" />}></Route>
+          <Route path="*" element={<Home />}></Route>
         </Routes>
       </Box>
     </div>
