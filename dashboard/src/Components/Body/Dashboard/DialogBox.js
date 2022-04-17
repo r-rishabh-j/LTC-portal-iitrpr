@@ -275,7 +275,7 @@ const DialogBox = ({ request_id, permission, process }) => {
               label="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
               value={
-                String(formInfo.form_data["joining_date"] === undefined ? " " : formInfo.form_data["joining_date"])
+                String(formInfo.form_data["joining_date"] === undefined ? " " : formInfo.form_data["joining_date"]).slice(0,10)
               }
               fullWidth
               InputProps={{
@@ -310,7 +310,7 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="From"
               value={
-                String(formInfo.form_data["nature_from"] === undefined ? " " : formInfo.form_data["nature_from"])
+                String(formInfo.form_data["nature_from"] === undefined ? " " : formInfo.form_data["nature_from"]).slice(0,10)
               }
               fullWidth
               InputProps={{
@@ -323,7 +323,7 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="To"
               value={
-                String(formInfo.form_data["nature_to"] === undefined ? " " : formInfo.form_data["nature_to"])
+                String(formInfo.form_data["nature_to"] === undefined ? " " : formInfo.form_data["nature_to"]).slice(0,10)
               }
               fullWidth
               InputProps={{
@@ -352,7 +352,7 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="From"
               value={
-                String(formInfo.form_data["prefix_from"] === undefined ? " " : formInfo.form_data["prefix_from"])
+                String(formInfo.form_data["prefix_from"] === undefined ? " " : formInfo.form_data["prefix_from"]).slice(0,10)
               }
               fullWidth
               InputProps={{
@@ -365,7 +365,7 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="To"
               value={
-                String(formInfo.form_data["prefix_to"] === undefined ? " " : formInfo.form_data["prefix_to"])
+                String(formInfo.form_data["prefix_to"] === undefined ? " " : formInfo.form_data["prefix_to"]).slice(0,10)
               }
               fullWidth
               InputProps={{
@@ -381,7 +381,7 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="From"
               value={
-                String(formInfo.form_data["suffix_from"] === undefined ? " " : formInfo.form_data["suffix_from"])
+                String(formInfo.form_data["suffix_from"] === undefined ? " " : formInfo.form_data["suffix_from"]).slice(0,10)
               }
               fullWidth
               InputProps={{
@@ -394,7 +394,7 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="To"
               value={
-                String(formInfo.form_data["suffix_to"] === undefined ? " " : formInfo.form_data["suffix_to"])
+                String(formInfo.form_data["suffix_to"] === undefined ? " " : formInfo.form_data["suffix_to"]).slice(0,10)
               }
               fullWidth
               InputProps={{
