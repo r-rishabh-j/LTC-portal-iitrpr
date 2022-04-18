@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react'
+import React from 'react'
+import { TextField } from "@mui/material";
+import { Controller } from "react-hook-form";
+import { useState, useEffect } from "react";
 
 
-function EditableInputText({name, control, label, required, disabled, defaultValue, autofill, multiline, rows, reset}) {
+export const EditableInputText = ({name, control, label, required, disabled, defaultValue, info, multiline, rows, reset}) =>{
   
   useEffect(() => {
-    reset({name: "name"})
-  })
+    console.log(`${name}, ${info}`)
+    reset({ [name]: `${info}` });
+  }, [info])
   return (
     <Controller
       name={name}
       control={control}
-      
+      defaultValue={defaultValue}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <>
           <TextField
@@ -32,5 +36,3 @@ function EditableInputText({name, control, label, required, disabled, defaultVal
     />
   );
 }
-
-export default EditableInputText

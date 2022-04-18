@@ -18,6 +18,8 @@ import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputNumber } from "../../Utilities/FormInputNumber";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import { FormInputDate } from "../../Utilities/FormInputDate";
+import { EditableInputText } from "../../Utilities/EditableInputText";
+import EstablishmentSectionForm from "./Establishment/EstablishmentSectionForm";
 
 const DialogBox = ({ request_id, permission, process }) => {
   const [formInfo, setFormInfo] = useState({
@@ -29,7 +31,11 @@ const DialogBox = ({ request_id, permission, process }) => {
   const [comments, setComments] = useState([]);
 
   const { handleSubmit, control } = useForm({});
-  const { handleSubmit: handleSubmitData, control: controlData, reset } = useForm();
+  const {
+    handleSubmit: handleSubmitData,
+    control: controlData,
+    reset,
+  } = useForm();
   let array = [];
   const [edit, setEdit] = useState(false);
 
@@ -39,7 +45,7 @@ const DialogBox = ({ request_id, permission, process }) => {
   //         return "";
   //       }
   //       else{
-  //         return parent[child];
+  //         return parent[child];reset
   //       }
 
   //   }
@@ -222,7 +228,11 @@ const DialogBox = ({ request_id, permission, process }) => {
         <Grid item xs={12}>
           <TextField
             label="Name"
-            value={formInfo.form_data["name"] === undefined ? " " : formInfo.form_data["name"]}
+            value={
+              formInfo.form_data["name"] === undefined
+                ? " "
+                : formInfo.form_data["name"]
+            }
             // value={getVal(formInfo.form_data["name"], " ")}
             fullWidth
             InputProps={{
@@ -236,7 +246,11 @@ const DialogBox = ({ request_id, permission, process }) => {
           <Grid item xs={6}>
             <TextField
               label="Designation"
-              value={formInfo.form_data["designation"] === undefined ? " " : formInfo.form_data["designtation"]}
+              value={
+                formInfo.form_data["designation"] === undefined
+                  ? " "
+                  : formInfo.form_data["designtation"]
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -248,7 +262,11 @@ const DialogBox = ({ request_id, permission, process }) => {
             <TextField
               label="Department"
               // value={getVal(formInfo.form_data["department"], " ")}
-              value={formInfo.form_data["department"] === undefined ? " " : formInfo.form_data["department"]}
+              value={
+                formInfo.form_data["department"] === undefined
+                  ? " "
+                  : formInfo.form_data["department"]
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -261,7 +279,11 @@ const DialogBox = ({ request_id, permission, process }) => {
           <Grid item xs={4}>
             <TextField
               label="Employee Code"
-              value={formInfo.form_data["emp_code"] === undefined ? " " : formInfo.form_data["name"]}
+              value={
+                formInfo.form_data["emp_code"] === undefined
+                  ? " "
+                  : formInfo.form_data["name"]
+              }
               // value={getVal(formInfo.form_data["emp_code"], " ")}
               fullWidth
               InputProps={{
@@ -287,7 +309,11 @@ Service/Date of Joining with IIT Ropar"
         </Grid>
         <TextField
           label="Band Pay + AGP/GP"
-          value={formInfo.form_data["band_pay"] === undefined ? " " : formInfo.form_data["band_pay"]}
+          value={
+            formInfo.form_data["band_pay"] === undefined
+              ? " "
+              : formInfo.form_data["band_pay"]
+          }
           fullWidth
           InputProps={{
             readOnly: true,
@@ -298,7 +324,11 @@ Service/Date of Joining with IIT Ropar"
 
         <TextField
           label="Nature"
-          value={formInfo.form_data["nature"] === undefined ? " " : formInfo.form_data["nature"]}
+          value={
+            formInfo.form_data["nature"] === undefined
+              ? " "
+              : formInfo.form_data["nature"]
+          }
           fullWidth
           InputProps={{
             readOnly: true,
@@ -335,7 +365,11 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="No. of Days"
-              value={formInfo.form_data["num_days"] === undefined ? " " : formInfo.form_data["num_days"]}
+              value={
+                formInfo.form_data["num_days"] === undefined
+                  ? " "
+                  : formInfo.form_data["num_days"]
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -408,7 +442,11 @@ Service/Date of Joining with IIT Ropar"
         <TextField
           label="Whether spouse is employed, if yes whether
 entitled to LTC"
-          value={formInfo.form_data["spouse_is_employed"] === undefined ? " " : formInfo.form_data["spouse_is_employed"]}
+          value={
+            formInfo.form_data["spouse_is_employed"] === undefined
+              ? " "
+              : formInfo.form_data["spouse_is_employed"]
+          }
           fullWidth
           InputProps={{
             readOnly: true,
@@ -422,12 +460,11 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Outward journey"
-              value={
-                String(formInfo.form_data["self_date_outward"] === undefined ? " " : formInfo.form_data["self_date_outward"].slice(
-                  0,
-                  10
-                ))
-              }
+              value={String(
+                formInfo.form_data["self_date_outward"] === undefined
+                  ? " "
+                  : formInfo.form_data["self_date_outward"].slice(0, 10)
+              )}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -438,12 +475,11 @@ entitled to LTC"
           <Grid item xs={6}>
             <TextField
               label="Date of Inward journey"
-              value={
-                String(formInfo.form_data["self_date_inward"] === undefined ? " " : formInfo.form_data["self_date_inward"].slice(
-                  0,
-                  10
-                ))
-              }
+              value={String(
+                formInfo.form_data["self_date_inward"] === undefined
+                  ? " "
+                  : formInfo.form_data["self_date_inward"].slice(0, 10)
+              )}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -460,7 +496,9 @@ entitled to LTC"
             <TextField
               label="Date of Outward journey"
               value={
-                formInfo.form_data["family_date_outward"] === undefined ? " " : formInfo.form_data["family_date_outward"].slice(0, 10)
+                formInfo.form_data["family_date_outward"] === undefined
+                  ? " "
+                  : formInfo.form_data["family_date_outward"].slice(0, 10)
               }
               fullWidth
               InputProps={{
@@ -473,7 +511,9 @@ entitled to LTC"
             <TextField
               label="Date of Inward journey"
               value={
-                formInfo.form_data["family_date_inward"] === undefined ? " " : formInfo.form_data["family_date_inward"].slice(0, 10)
+                formInfo.form_data["family_date_inward"] === undefined
+                  ? " "
+                  : formInfo.form_data["family_date_inward"].slice(0, 10)
               }
               fullWidth
               InputProps={{
@@ -485,7 +525,11 @@ entitled to LTC"
         </Grid>
         <TextField
           label="Home Town as recorded in the Service Book"
-          value={formInfo.form_data["home_town"] === undefined ? " " : formInfo.form_data["home_town"]}
+          value={
+            formInfo.form_data["home_town"] === undefined
+              ? " "
+              : formInfo.form_data["home_town"]
+          }
           fullWidth
           InputProps={{
             readOnly: true,
@@ -494,7 +538,11 @@ entitled to LTC"
         <TextField
           label="Nature of LTC to be availed, Home Town /
 Anywhere in India with Block Year"
-          value={formInfo.form_data["ltc_nature"] === undefined ? " " : formInfo.form_data["ltc_nature"]}
+          value={
+            formInfo.form_data["ltc_nature"] === undefined
+              ? " "
+              : formInfo.form_data["ltc_nature"]
+          }
           fullWidth
           InputProps={{
             readOnly: true,
@@ -503,7 +551,11 @@ Anywhere in India with Block Year"
 
         <TextField
           label="If, anywhere in India, the place to be visited"
-          value={formInfo.form_data["place"] === undefined ? " " : formInfo.form_data["place"]}
+          value={
+            formInfo.form_data["place"] === undefined
+              ? " "
+              : formInfo.form_data["place"]
+          }
           fullWidth
           InputProps={{
             readOnly: true,
@@ -515,7 +567,11 @@ Anywhere in India with Block Year"
               label="Estimated fare of entitled class from the
 headquarter to Home Town/Place of visit by
 shortest route "
-              value={formInfo.form_data["est_fare"] === undefined ? " " : formInfo.form_data["est_fare"]}
+              value={
+                formInfo.form_data["est_fare"] === undefined
+                  ? " "
+                  : formInfo.form_data["est_fare"]
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -783,7 +839,11 @@ shortest route "
           <Grid item xs={6}>
             <TextField
               label="Advance Required"
-              value={formInfo.form_data["adv_is_required"] === undefined ? " " : formInfo.form_data["adv_is_required"]}
+              value={
+                formInfo.form_data["adv_is_required"] === undefined
+                  ? " "
+                  : formInfo.form_data["adv_is_required"]
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -794,7 +854,11 @@ shortest route "
           <Grid item xs={6}>
             <TextField
               label="Encashment Required"
-              value={formInfo.form_data["encashment_is_required"] === undefined ? " " : formInfo.form_data["encashment_is_required"]}
+              value={
+                formInfo.form_data["encashment_is_required"] === undefined
+                  ? " "
+                  : formInfo.form_data["encashment_is_required"]
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -805,7 +869,11 @@ shortest route "
         </Grid>
         <TextField
           label="No. of encashment of leave days "
-          value={formInfo.form_data["encashment_days"] === undefined ? " " : formInfo.form_data["encashment_days"]}
+          value={
+            formInfo.form_data["encashment_days"] === undefined
+              ? " "
+              : formInfo.form_data["encashment_days"]
+          }
           fullWidth
           InputProps={{
             readOnly: true,
@@ -832,248 +900,278 @@ shortest route "
         </Box>
 
         {permission === "establishment" && process !== "new" ? (
-          <form
-            onSubmit={handleSubmitData(onSubmitEstData)}
-            style={{
-              width: "100%",
-              "& .MultiFormControlRoot": {
-                width: "100%",
-              },
-            }}
-          >
-            <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                type="button"
-                variant="contained"
-                color="primary"
-                onClick={() => setEdit(true)}
-              >
-                Edit
-              </Button>
-              &nbsp;
-              <Button type="submit" variant="contained" color="primary">
-                Save
-              </Button>
-            </Box>
-            {/* <Typography style={{fontWeight: "bold"}}>Establishment Data</Typography> */}
-            <Typography>
-              Fresh Recruit i.e. joining Govt. Service after 01.09.2008
-              /otherwise,
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <FormInputDate
-                  name="est_data_joining_date"
-                  label="Date of joining"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <FormInputText
-                  name="est_data_block_year"
-                  label="Block Year"
-                  control={controlData}
-                  defaultValue=""
+          // <form
+          //   onSubmit={handleSubmitData(onSubmitEstData)}
+          //   style={{
+          //     width: "100%",
+          //     "& .MultiFormControlRoot": {
+          //       width: "100%",
+          //     },
+          //   }}
+          // >
+          //   <Box style={{ display: "flex", justifyContent: "flex-end" }}>
+          //     <Button
+          //       type="button"
+          //       variant="contained"
+          //       color="primary"
+          //       onClick={() => setEdit(true)}
+          //     >
+          //       Edit
+          //     </Button>
+          //     &nbsp;
+          //     <Button type="submit" variant="contained" color="primary">
+          //       Save
+          //     </Button>
+          //   </Box>
+          //   {/* <Typography style={{fontWeight: "bold"}}>Establishment Data</Typography> */}
+          //   <Typography>
+          //     Fresh Recruit i.e. joining Govt. Service after 01.09.2008
+          //     /otherwise,
+          //   </Typography>
+          //   <Grid container spacing={2}>
+          //     <Grid item xs={4}>
+          //       <FormInputDate
+          //         name="est_data_joining_date"
+          //         label="Date of joining"
+          //         control={controlData}
+          //         defaultValue=""
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //     <Grid item xs={4}>
+          //       <EditableInputText
+          //         name="est_data_block_year"
+          //         label="Block Year"
+          //         control={controlData}
+          //         defaultValue=""
+          //         info={
+          //           formInfo.form_data["establishment"] === undefined
+          //             ? ""
+          //             : formInfo.form_data["establishment"][
+          //                 "est_data_block_year"
+          //               ] ?? ""
+          //         }
+          //         disabled={!edit}
+          //         reset={reset}
+          //       />
+          //     </Grid>
+          //   </Grid>
+          //   <Typography>
+          //     Nature of LTC (Home Town/Anywhere in India-place visited/to be
+          //     visited)
+          //   </Typography>
+          //   <Grid container spacing={2}>
+          //     <Grid item xs={4}>
+          //       <EditableInputText
+          //         name="est_data_nature_last"
+          //         label="Last Availed"
+          //         control={controlData}
+          //         defaultValue=""
+          //         info={
+          //           // formInfo.form_data["est_data_nature_last"] ?? ""
+          //           formInfo.form_data["est_data_nature_last"] === undefined
+          //             ? " "
+          //             : formInfo.form_data["est_data_nature_last"]
+          //         }
+          //         reset={reset}
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //     <Grid item xs={4}>
+          //       <EditableInputText
+          //         name="est_data_nature_current"
+          //         label="Current LTC"
+          //         control={controlData}
+          //         defaultValue=""
+          //         info={
+          //           formInfo.form_data["est_data_nature_current"] === undefined
+          //             ? " "
+          //             : formInfo.form_data["est_data_nature_current"]
+          //         }
+          //         reset={reset}
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //   </Grid>
+          //   <Typography>Period </Typography>
+          //   <Grid container spacing={2}>
+          //     <Grid item xs={3}>
+          //       <FormInputDate
+          //         name="est_data_period_last_from"
+          //         label="Last Availed From"
+          //         control={controlData}
+          //         disabled={!edit}
 
+          //       />
+          //     </Grid>
+          //     <Grid item xs={3}>
+          //       <FormInputDate
+          //         name="est_data_period_last_to"
+          //         label="Last Availed To"
+          //         control={controlData}
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //     <Grid item xs={3}>
+          //       <FormInputDate
+          //         name="est_data_period_current_from"
+          //         label="Current LTC From"
+          //         control={controlData}
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
 
-                  disabled={!edit}
-                />
-              </Grid>
-            </Grid>
-            <Typography>
-              Nature of LTC (Home Town/Anywhere in India-place visited/to be
-              visited)
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <FormInputText
-                  name="est_data_nature_last"
-                  label="Last Availed"
-                  control={controlData}
-                  defaultValue={
-                    // formInfo.form_data["est_data_nature_last"] ?? ""
-                    formInfo.form_data["est_data_nature_last"] === undefined ? " " : formInfo.form_data["est_data_nature_last"]
-                  }
-                  disabled={!edit}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <FormInputText
-                  name="est_data_nature_current"
-                  label="Current LTC"
-                  control={controlData}
-                  defaultValue={
-                    formInfo.form_data["est_data_nature_current"] === undefined ? " " : formInfo.form_data["est_data_nature_current"]
-                  }
-                  disabled={!edit}
-                />
-              </Grid>
-            </Grid>
-            <Typography>Period </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={3}>
-                <FormInputDate
-                  name="est_data_period_last_from"
-                  label="Last Availed From"
-                  control={controlData}
-                  disabled={!edit}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <FormInputDate
-                  name="est_data_period_last_to"
-                  label="Last Availed To"
-                  control={controlData}
-                  disabled={!edit}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <FormInputDate
-                  name="est_data_period_current_from"
-                  label="Current LTC From"
-                  control={controlData}
-                  disabled={!edit}
-                />
-              </Grid>
-
-              <Grid item xs={3}>
-                <FormInputDate
-                  name="est_data_period_current_to"
-                  label="Current LTC To"
-                  control={controlData}
-                  disabled={!edit}
-                />
-              </Grid>
-            </Grid>
-            <Typography>LTC for Self/Family</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <FormInputText
-                  name="est_data_last_ltc_for"
-                  label="Last Availed"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <FormInputText
-                  name="est_data_current_ltc_for"
-                  label="Current LTC"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
-                />
-              </Grid>
-            </Grid>
-            <Typography>Earned leave encashment (No. of Days)</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <FormInputNumber
-                  name="est_data_last_ltc_days"
-                  label="Last Availed"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <FormInputNumber
-                  name="est_data_current_ltc_days"
-                  label="Current LTC"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
-                />
-              </Grid>
-            </Grid>
-            <Typography>Earned Leave standing to his credit on</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <FormInputDate
-                  name="est_data_last_earned_leave_on"
-                  label="Last Availed"
-                  control={controlData}
-                  disabled={!edit}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <FormInputDate
-                  name="est_data_current_earned_leave_on"
-                  label="Current LTC"
-                  control={controlData}
-                  disabled={!edit}
-                />
-              </Grid>
-            </Grid>
-            <Typography>Balance Earned leave after this encashment</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <FormInputText
-                  name="est_data_last_balance"
-                  label="Last Availed"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <FormInputText
-                  name="est_data_current_balance"
-                  label="Current LTC"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
-                />
-              </Grid>
-            </Grid>
-            <Typography>Earned Leave encashment admissible</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <FormInputText
-                  name="est_data_last_encashment_adm"
-                  label="Last Availed"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <FormInputText
-                  name="est_data_current_encashment_adm"
-                  label="Current LTC"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
-                />
-              </Grid>
-            </Grid>
-            <Typography>
-              Period and nature of leave applied for and need to be sanctioned
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <FormInputText
-                  name="est_data_last_nature"
-                  label="Last Availed"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <FormInputText
-                  name="est_data_current_nature"
-                  label="Current LTC"
-                  control={controlData}
-                  defaultValue=""
-                  disabled={!edit}
-                />
-              </Grid>
-            </Grid>
-          </form>
+          //     <Grid item xs={3}>
+          //       <FormInputDate
+          //         name="est_data_period_current_to"
+          //         label="Current LTC To"
+          //         control={controlData}
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //   </Grid>
+          //   <Typography>LTC for Self/Family</Typography>
+          //   <Grid container spacing={2}>
+          //     <Grid item xs={4}>
+          //       <EditableInputText
+          //         name="est_data_last_ltc_for"
+          //         label="Last Availed"
+          //         control={controlData}
+          //         defaultValue=""
+          //         info={
+          //           formInfo.form_data["establishment"] === undefined
+          //             ? ""
+          //             : formInfo.form_data["establishment"][
+          //                 "est_data_last_ltc_for"
+          //               ] === undefined
+          //             ? " "
+          //             : formInfo.form_data["establishment"][
+          //                 "est_data_last_ltc_for"
+          //               ]
+          //         }
+                  
+          //         reset={reset}
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //     <Grid item xs={4}>
+          //       <FormInputText
+          //         name="est_data_current_ltc_for"
+          //         label="Current LTC"
+          //         control={controlData}
+          //         defaultValue=""
+          //         reset={reset}
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //   </Grid>
+          //   <Typography>Earned leave encashment (No. of Days)</Typography>
+          //   <Grid container spacing={2}>
+          //     <Grid item xs={4}>
+          //       <FormInputNumber
+          //         name="est_data_last_ltc_days"
+          //         label="Last Availed"
+          //         control={controlData}
+          //         defaultValue=""
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //     <Grid item xs={4}>
+          //       <FormInputNumber
+          //         name="est_data_current_ltc_days"
+          //         label="Current LTC"
+          //         control={controlData}
+          //         defaultValue=""
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //   </Grid>
+          //   <Typography>Earned Leave standing to his credit on</Typography>
+          //   <Grid container spacing={2}>
+          //     <Grid item xs={4}>
+          //       <FormInputDate
+          //         name="est_data_last_earned_leave_on"
+          //         label="Last Availed"
+          //         control={controlData}
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //     <Grid item xs={4}>
+          //       <FormInputDate
+          //         name="est_data_current_earned_leave_on"
+          //         label="Current LTC"
+          //         control={controlData}
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //   </Grid>
+          //   <Typography>Balance Earned leave after this encashment</Typography>
+          //   <Grid container spacing={2}>
+          //     <Grid item xs={4}>
+          //       <FormInputText
+          //         name="est_data_last_balance"
+          //         label="Last Availed"
+          //         control={controlData}
+          //         defaultValue=""
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //     <Grid item xs={4}>
+          //       <FormInputText
+          //         name="est_data_current_balance"
+          //         label="Current LTC"
+          //         control={controlData}
+          //         defaultValue=""
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //   </Grid>
+          //   <Typography>Earned Leave encashment admissible</Typography>
+          //   <Grid container spacing={2}>
+          //     <Grid item xs={4}>
+          //       <FormInputText
+          //         name="est_data_last_encashment_adm"
+          //         label="Last Availed"
+          //         control={controlData}
+          //         defaultValue=""
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //     <Grid item xs={4}>
+          //       <FormInputText
+          //         name="est_data_current_encashment_adm"
+          //         label="Current LTC"
+          //         control={controlData}
+          //         defaultValue=""
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //   </Grid>
+          //   <Typography>
+          //     Period and nature of leave applied for and need to be sanctioned
+          //   </Typography>
+          //   <Grid container spacing={2}>
+          //     <Grid item xs={4}>
+          //       <FormInputText
+          //         name="est_data_last_nature"
+          //         label="Last Availed"
+          //         control={controlData}
+          //         defaultValue=""
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //     <Grid item xs={4}>
+          //       <FormInputText
+          //         name="est_data_current_nature"
+          //         label="Current LTC"
+          //         control={controlData}
+          //         defaultValue=""
+          //         disabled={!edit}
+          //       />
+          //     </Grid>
+          //   </Grid>
+          // </form>
+          <EstablishmentSectionForm/>
         ) : (
           //est data for non establishment stages
           <div>
@@ -1089,8 +1187,13 @@ shortest route "
                   value={
                     formInfo.form_data["establishment"] === undefined
                       ? ""
-                      :
-                      formInfo.form_data["establishment"]["est_data_joining_date"] === undefined ? " " : formInfo.form_data["establishment"]["est_data_joining_date"]
+                      : formInfo.form_data["establishment"][
+                          "est_data_joining_date"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_joining_date"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1106,8 +1209,13 @@ shortest route "
                   value={
                     formInfo.form_data["establishment"] === undefined
                       ? ""
-                      :
-                      formInfo.form_data["establishment"]["est_data_block_year"] === undefined ? " " : formInfo.form_data["establishment"]["est_data_block_year"]
+                      : formInfo.form_data["establishment"][
+                          "est_data_block_year"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_block_year"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1129,8 +1237,13 @@ shortest route "
                   value={
                     formInfo.form_data["establishment"] === undefined
                       ? ""
-                      :
-                      formInfo.form_data["establishment"]["est_data_nature_last"] === undefined ? " " : formInfo.form_data["establishment"]["est_data_nature_last"]
+                      : formInfo.form_data["establishment"][
+                          "est_data_nature_last"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_nature_last"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1146,7 +1259,13 @@ shortest route "
                   value={
                     formInfo.form_data["establishment"] === undefined
                       ? ""
-                      : formInfo.form_data["establishment"]["est_data_nature_current"] === undefined ? " " : formInfo.form_data["establishment"]["est_data_nature_current"]
+                      : formInfo.form_data["establishment"][
+                          "est_data_nature_current"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_nature_current"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1166,11 +1285,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_period_last_from"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_period_last_from"
-                      ]
-
+                          "est_data_period_last_from"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_last_from"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1187,10 +1307,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_period_last_to"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_period_last_to"
-                      ]
+                          "est_data_period_last_to"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_last_to"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1207,10 +1329,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_period_current_from"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_period_current_from"
-                      ]
+                          "est_data_period_current_from"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_current_from"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1228,10 +1352,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_period_current_to"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_period_current_to"
-                      ]
+                          "est_data_period_current_to"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_current_to"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1251,11 +1377,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_ltc_for"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_last_ltc_for"
-                      ]
-
+                          "est_data_last_ltc_for"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_ltc_for"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1272,11 +1399,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_ltc_for"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_current_ltc_for"
-                      ]
-
+                          "est_data_current_ltc_for"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_ltc_for"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1296,11 +1424,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_ltc_days"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_last_ltc_days"
-                      ]
-
+                          "est_data_last_ltc_days"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_ltc_days"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1317,11 +1446,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_ltc_days"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_current_ltc_days"
-                      ]
-
+                          "est_data_current_ltc_days"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_ltc_days"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1341,10 +1471,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_earned_leave_on"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_last_earned_leave_on"
-                      ]
+                          "est_data_last_earned_leave_on"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_earned_leave_on"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1361,10 +1493,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_earned_leave_on"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_current_earned_leave_on"
-                      ]
+                          "est_data_current_earned_leave_on"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_earned_leave_on"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1384,10 +1518,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_balance"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_last_balance"
-                      ]
+                          "est_data_last_balance"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_balance"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1404,10 +1540,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_balance"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_current_balance"
-                      ]
+                          "est_data_current_balance"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_balance"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1427,10 +1565,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_encashment_adm"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_last_encashment_adm"
-                      ]
+                          "est_data_last_encashment_adm"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_encashment_adm"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1447,10 +1587,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_encashment_adm"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_current_encashment_adm"
-                      ]
+                          "est_data_current_encashment_adm"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_encashment_adm"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1472,10 +1614,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_nature"
-                      ] === undefined ? " " : formInfo.form_data["establishment"][
-                      "est_data_last_nature"
-                      ]
+                          "est_data_last_nature"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_nature"
+                        ]
                   }
                   fullWidth
                   InputProps={{
@@ -1492,10 +1636,12 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_nature"
-                        ]  === undefined ? " ": formInfo.form_data["establishment"][
-                        "est_data_current_nature"
-                        ] 
+                          "est_data_current_nature"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_nature"
+                        ]
                   }
                   fullWidth
                   InputProps={{
