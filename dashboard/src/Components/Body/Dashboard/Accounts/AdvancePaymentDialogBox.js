@@ -15,62 +15,93 @@ import {
 import { DropzoneArea } from 'material-ui-dropzone';
 import { useForm, Controller, useFieldArray, register } from "react-hook-form";
 import { FormInputText } from "../../../Utilities/FormInputText";
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import { FormInputNumber } from "../../../Utilities/FormInputNumber";
 
 
 const AdvancePaymentDialogBox = ({ request_id }) => {
     const [file, setFile] = useState(null);
 
-    //   const { handleSubmit, control, register, formState: { isSubmitting } } = useForm();
+    const { handleSubmit, control, register, formState: { isSubmitting } } = useForm();
 
     function onUpload(file) {
-        // console.log('o', file);
+        console.log('o', file);
         setFile(file[0]);
     }
 
-    function onClick(e) {
-        e.preventDefault();
-        // console.log('f', file);
-        if (file.length === 0) {
+    const [editing, setEditing] = useState(false);
+
+    function onClick(data) {
+        // e.preventDefault();
+        console.log('f', file);
+        if (file === undefined || file.length === 0) {
             alert('No file uploaded!');
             return;
         }
         const formData = new FormData();
         formData.append('request_id', request_id);
-        formData.append('office_order', file);
+        formData.append('amount', data.amount_paid);
+        formData.append('comments', data.comments);
+        formData.append('payment_proof', file);
         console.log(formData);
-        axios({
+        return axios({
             method: 'POST',
-            url: '/api/upload-office-order',
+            url: '/api/update-advance-payment',
             data: formData,
         }).then((response) => {
-            alert('Office Order Uploaded!');
-            window.location.reload();
+            alert('Updated!');
+            // window.location.reload();
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response);
                 console.log(error.response.status);
                 console.log(error.response.headers);
-                alert('Error. Please try logging in again');
+                alert(error.response);
             }
         })
     }
     return (
         <>
             <DialogTitle>Advance Payment Details</DialogTitle>
-            <form onSubmit={onClick}>
+            <form onSubmit={handleSubmit(onClick)}>
                 <DialogContent>
-                    {/* <FormInputText
-                        name={"Amount paid"}
-
-                    ></FormInputText> */}
-
+                    <FormInputNumber
+                        name={"amount_paid"}
+                        label={"Amount paid (₹)"}
+                        control={control}
+                        required={true}
+                        disabled={false}
+                        adornment={true}
+                        // autofill={false}
+                        // defaultValue={''}
+                    ></FormInputNumber>
+                    <FormInputText
+                        name={"comments"}
+                        label={"Comments"}
+                        control={control}
+                        required={true}
+                        disabled={false}
+                        autofill={false}
+                        multiline={true}
+                        defaultValue={''}
+                    ></FormInputText>
+                    <div>Payment Proof *</div>
+                    <br></br>
                     <DropzoneArea
                         filesLimit={1}
                         onChange={onUpload}
                     />
                     <Box display='flex' justifyContent='center' marginTop={'3vh'}>
-                        <Button type="submit" variant='contained' color="primary">UPLOAD</Button>
+                        <Button
+                            type="submit" variant='contained' color="primary"
+                            disabled={isSubmitting}
+
+                        >
+                            {isSubmitting && (
+                                <span className="spinner-grow spinner-grow-sm"></span>
+                            )}
+                            UPLOAD
+                        </Button>
                     </Box>
                 </DialogContent>
             </form>

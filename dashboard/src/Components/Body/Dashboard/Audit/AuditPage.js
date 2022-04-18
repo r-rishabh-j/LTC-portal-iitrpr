@@ -30,6 +30,8 @@ function AuditPage(props) {
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
         handleDrawerClose={handleDrawerClose}
+        profileInfo={props.profileInfo}
+
         userType="audit"
       />
       <Box className={classes.wrapper}>

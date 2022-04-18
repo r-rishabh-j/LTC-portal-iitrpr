@@ -6,15 +6,16 @@ import { useStyles } from "../../Header/HeaderStyles.js";
 import NotificationsPausedIcon from "@material-ui/icons/NotificationsPaused";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import { margin, typography } from '@mui/system';
+import ClearIcon from '@material-ui/icons/Clear';
 
 export default function Home() {
   const classes = useStyles();
   const sizeRef = useRef();
-  
+
   const [profileInfo, setProfileInfo] = useState({});
   const [notifications, setNotifications] = useState([])
 
- 
+
 
   useEffect(() => {
     axios({
@@ -39,35 +40,35 @@ export default function Home() {
     axios({
       method: "GET",
       url: "/api/getnotifications",
-      data:{}
+      data: {}
     })
-    .then((response) => {
-      console.log(response.data.notifications)
-      setNotifications(response.data.notifications)
-      // const notif = [
-      //   {time: "100", content: "this is an extremely big big big big big bignotification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      //   {time: "100", content: "this is an extremely big notification message"},
-      // ]
-      // setNotifications(notif)
-      
-    })
-    .catch((error) => {
+      .then((response) => {
+        console.log(response.data.notifications)
+        setNotifications(response.data.notifications)
+        // const notif = [
+        //   { time: "100", content: "this is an extremely big big big big big bignotification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        // ]
+        // setNotifications(notif)
+
+      })
+      .catch((error) => {
         if (error.response) {
           console.log(error.response);
           console.log(error.response.status);
@@ -100,10 +101,10 @@ export default function Home() {
   return (
     <>
       <Box ref={sizeRef}
-      style={{display: "flex", flexFlow: "column", height: "100%" }}
+        style={{ display: "flex", flexFlow: "column", height: "100%" }}
       // justifyContent="space-between"
       >
-        <Box style={{flex: "0 1 auto"}}>
+        {/* <Box style={{ flex: "0 1 auto", height:"35vh" }}>
           <center>
             <img
               src={profileInfo.picture}
@@ -127,65 +128,80 @@ export default function Home() {
               {profileInfo.email}
             </Typography>
           </center>
-        </Box>
-        <Paper
+          
+        </Box> */}
+        
+
+
+        {/* <Paper
           // elevation={10}
           style={{
             margin: "0 0 0 3vw",
-            // height: calc(`100vh - ${sizeRef.current.offsetHeight}`),
-            height: "100vh",
+            // height: "calc(`100vh - sizeRef.current.offsetHeight`)",
+            minHeight: "91.5vh",
             width: "80vw",
             backgroundColor: "#efefef",
-            overflowY: "scroll",
-            flex: "1 1 auto"
-            
+            // overflowY: "scroll",
+            flex: "1 1 auto",
           }}
-        >
+        > */}
+        
+        <Box
+        style={{
+          margin: "0 0 0 3vw",
+          // height: "calc(`100vh - sizeRef.current.offsetHeight`)",
+          minHeight: "91.5vh",
+          width: "80vw",
+          backgroundColor: "#efefef",
+          // overflowY: "scroll",
+          flex: "1 1 auto",}}
+          >
           
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="h5" style={{ visibility: "hidden" }}>
-              Notifications
-            </Typography>
-            {/* <Typography variant="h5">Notifications</Typography> */}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={clearNotifications}
-            >
-              Clear
-            </Button>
-          </Box>
-          
+          <Typography variant="h5" style={{ visibility: "hidden" }}>
+            Notifications
+          </Typography>
+          {/* <Typography variant="h5">Notifications</Typography> */}
 
+          <Button
+            title='Clear Notifications'
+            variant="contained"
+            // color="primary"
+            onClick={clearNotifications}
+          >
+            <ClearIcon/>
+          </Button>
+        </Box>
           {notifications.length !== 0 ? (
             <center>
-            <div style={{ listStyle: "none" }}>
-              {notifications.map((item, i) => (
-                <li key={i}>
-                  <Box display="flex" justifyContent="center" text-overflow="ellipsis">
-                    <Paper
-                      elevation={0}
-                      style={{
-                        height: "10vh",
-                        width: "100%",
-                        margin: "1vw",
-                        textAlign: "center",
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
-                        textOverflow: "ellipsis"
+              <div style={{ listStyle: "none" }}>
+                {notifications.map((item, i) => (
+                  <li key={i}>
+                    <Box display="flex" justifyContent="center" text-overflow="ellipsis" title={item.content}>
+                      <Paper
+                        elevation={0}
+                        style={{
+                          height: "auto",
+                          width: "100%",
+                          margin: "1vw",
+                          textAlign: "center",
+                          overflowX:"wrap"
+                          // overflow: "hidden",
+                          // whiteSpace: "nowrap",
+                          // textOverflow: "ellipsis"
                         }}
-                    >
-                      <NotificationsActiveIcon />
-                      <div style = {{textOverflow: "ellipsis"}}>
-                      <Typography variant="body1" style={{ padding: "0.5vh" }}>
-                        {item.content}
-                      </Typography>
-                      </div>
-                    </Paper>
-                  </Box>
-                </li>
-              ))}
-            </div>
+                      >
+                        <NotificationsActiveIcon />
+                        <div style={{ textOverflow: "ellipsis" }}>
+                          <Typography variant="body1" style={{ padding: "0.5vh" }}>
+                            {item.content}
+                          </Typography>
+                        </div>
+                      </Paper>
+                    </Box>
+                  </li>
+                ))}
+              </div>
             </center>
           ) : (
             <Box display="flex" justifyContent="center">
@@ -208,7 +224,8 @@ export default function Home() {
               </Paper>
             </Box>
           )}
-        </Paper>
+        {/* </Paper> */}
+        </Box>
       </Box>
     </>
   );

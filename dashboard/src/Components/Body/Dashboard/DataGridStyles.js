@@ -19,4 +19,10 @@ export const useStyles = makeStyles((theme) => ({
     minWidth: '50vw',
     maxWidth: '55vw'
   },
+  advPaymentDialogPaper:{
+    minHeight: "50vh",
+    maxHeight: "auto",
+    minWidth: '50vw',
+    maxWidth: '55vw'
+  }
 }));

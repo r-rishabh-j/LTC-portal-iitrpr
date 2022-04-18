@@ -33,6 +33,8 @@ export default function AccountsPage(props){
         handleDrawerToggle={handleDrawerToggle}
         handleDrawerClose={handleDrawerClose}
         userType="accounts"
+        profileInfo={props.profileInfo}
+
       />
       <Box className={classes.wrapper}>
         <Routes>

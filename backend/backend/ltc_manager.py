@@ -529,3 +529,16 @@ class LtcManager:
                     'created_on': adv_req.created_on,
                 })
             return jsonify({'pending': result})
+    
+    class UpdateAdvancePaymentDetails(Resource):
+        @role_required(role=Permissions.accounts)
+        def post(self):
+            request_id = request.form.get('request_id', None)
+            amount = request.form.get('amount', None)
+            comments = request.form.get('comments', None)
+            payment_proof = request.files.get('payment_proof', None)
+            print(amount)
+            if None in [request_id, amount, comments, payment_proof]:
+                abort(400)
+
+            

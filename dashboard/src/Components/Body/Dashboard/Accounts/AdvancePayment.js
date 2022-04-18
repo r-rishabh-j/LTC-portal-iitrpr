@@ -203,7 +203,7 @@ function AdvancePayments() {
         <Dialog
           open={open}
           onClose={handleClose}
-          classes={{ paper: classes.dialogPaper }}
+          classes={{ paper: classes.advPaymentDialogPaper }}
         >
           <AdvancePaymentDialogBox request_id={id} />
           <DialogActions>

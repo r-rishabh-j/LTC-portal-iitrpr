@@ -11,10 +11,14 @@ import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import { NavLink, Link } from 'react-router-dom';
 import { useStyles } from './HeaderStyles';
 import Logout from '../Body/Dashboard/Logout';
+import { Box, Typography } from '@material-ui/core';
+import DomainIcon from '@material-ui/icons/Domain';
+import { blueGrey, blue } from "@material-ui/core/colors";
+import EmailIcon from '@material-ui/icons/Email';
 
 
 
-export default function SideNavData({handleDrawerClose, userType}) {
+export default function SideNavData({handleDrawerClose, userType, profileInfo}) {
     
     const classes = useStyles();
 
@@ -140,7 +144,47 @@ export default function SideNavData({handleDrawerClose, userType}) {
     
   return (
     <>
-      <List>
+      <Box style={{height:"auto", margin:"5vh 0 0 0" }}>
+          <center>
+            <img
+              src={profileInfo.picture}
+              alt="Profile image"
+              style={{ width: "10vw", borderRadius: "50%" }}
+              referrerPolicy={"no-referrer"}
+            ></img>
+            <div style={{margin:"2vh 0 0 0"}}>
+            <Typography
+              variant="body"
+              style={{ fontWeight: "bold", margin: "auto", color:blueGrey["A700"] }}
+            >
+              {" "}
+              {profileInfo.name}
+            </Typography>
+            </div>
+
+            <Box>
+            <div style={{margin:"2vh 0 0 0vw"}}>
+            <Typography variant="body" style={{ margin: "auto" , color:blueGrey["A700"]}}>
+              {" "}
+            <DomainIcon/>
+              &nbsp;
+              {profileInfo.department}
+            </Typography>
+            </div>
+            
+            <div>
+            <Typography variant="body" style={{ margin: "auto", color:blueGrey["A700"] }}>
+              <EmailIcon/>
+              {" "}
+              &nbsp;
+              {profileInfo.email}
+            </Typography>
+            </div>
+            </Box>
+          </center>
+      </Box>
+      
+      <List style={{margin: "3vh 0 0 0"}}>
         {listItemData.map((item, i) => (
           <Button
             key={i}
