@@ -1,8 +1,9 @@
+from email.mime import application
 import os
 import json
 from . import db
 from . import filemanager
-from .models import Stages
+from .models import AdvanceRequests, Stages
 from .analyse import analyse
 from markupsafe import escape
 from datetime import datetime
@@ -407,6 +408,8 @@ class LtcManager:
             # add comment
 
             # mark the application as new in the sender's table
+
+            db.session.commit()
             return jsonify({'msg': 'Updated'})
 
     class GetPendingApprovalRequests(Resource):
@@ -472,30 +475,35 @@ class LtcManager:
             # if not approved_entry:
             #     abort(400, error='Form not yet approved')
             path = filemanager.saveFile(file, user.id)
+            print(path)
             advance_required = False
             # check if advance required!
             if advance_required:
                 form.stage = Stages.advance_pending
                 # send to accounts for advance payment
+                advance_req: AdvanceRequests = AdvanceRequests(request_id=request_id)
+                db.session.add(advance_req)
             else:
                 form.stage = Stages.approved
                 approved_entry.approved_on = datetime.now()
             approved_entry.office_order = path
 
+            db.session.commit()
             return jsonify({'success': 'Office Order Uploaded!'})
 
     class GetPendingOfficeOrderRequests(Resource):
         @role_required(role=Permissions.establishment)
         def get(self):
-            pending = db.session.query(LTCApproved, Users).join(
-                Users).filter(LTCApproved.office_order == None)
+            pending = db.session.query(LTCApproved, LTCRequests, Users).join(Users).join(
+                LTCApproved).filter(LTCApproved.office_order == None)
             result = []
-            for pending_appl, applicant in pending:
+            for pending_appl, form, applicant in pending:
                 result.append({
                         'request_id': pending_appl.request_id,
                         'user': applicant.email,
                         'name': applicant.name,
-                        'approved_on': pending_appl.created_on,
+                        # 'approved_on': pending_appl.approved_on,
+                        'approved_on': '3:00 GMT',
                     })
-            
-            return result
+            print(result)
+            return jsonify({'pending': result})

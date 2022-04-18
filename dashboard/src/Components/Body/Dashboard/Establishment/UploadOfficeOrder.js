@@ -19,11 +19,11 @@ const UploadOfficeOrder = ({ permission }) => {
 
 
   useEffect(() => {
-    fetch("/api/getpastltc")
+    fetch("/api/get-pending-office-order-req")
       .then((data) => data.json())
       .then((data) => {
         console.log(data);
-        setTableData(data.previous);
+        setTableData(data.pending);
       });
   }, []);
 
@@ -107,7 +107,7 @@ const UploadOfficeOrder = ({ permission }) => {
       renderCell: cellElement,
     },
     {
-      field: "created_on",
+      field: "approved_on",
       headerName: "Created on",
       minWidth: 150,
       flex: 1,

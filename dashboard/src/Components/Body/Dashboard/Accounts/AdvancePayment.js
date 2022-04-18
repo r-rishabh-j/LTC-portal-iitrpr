@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Payment() {
+function AdvancePayments() {
   return (
     <div>Payment</div>
   )
 }
 
-export default Payment
+export default AdvancePayments

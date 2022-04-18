@@ -7,7 +7,7 @@ from .models import Users
 class Permissions:
     admin = 'admin'
     deanfa = 'deanfa'
-    registrar = 'deanfa'
+    registrar = 'registrar'
     establishment = 'establishment'
     accounts = 'accounts'
     audit = 'audit'
