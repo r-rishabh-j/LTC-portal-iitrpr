@@ -258,7 +258,9 @@ class AdvanceRequests(db.Model):
     status = db.Column(db.String(50))
     created_on = db.Column(db.DateTime)
     paid_on = db.Column(db.DateTime)
-    comments = db.Column(db.String)
+    amount_paid = db.Column(db.String) # amount paid
+    payment_proof = db.Column(db.String) # path to file, optional
+    comments = db.Column(db.String) # may contain ref ID, etc
 
     class Status:
         new='new'
@@ -268,6 +270,9 @@ class AdvanceRequests(db.Model):
         self.request_id=request_id
         self.status=self.Status.new
         self.created_on=datetime.now()
+        self.amount_paid = None
+        self.comments = None
+
 
 
 class DeanLogs(db.Model):

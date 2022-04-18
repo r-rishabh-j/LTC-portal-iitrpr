@@ -9,8 +9,10 @@ import {
 } from "@material-ui/core";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
-import { useStyles } from "./UploadDialogBoxStyles";
+// import { useStyles } from "./UploadDialogBoxStyles";
+import { useStyles } from "../DataGridStyles";
 import UploadDialogBox from "./UploadDialogBox";
+import DialogBox from "../DialogBox";
 
 const UploadOfficeOrder = ({ permission }) => {
   const classes = useStyles();
@@ -43,13 +45,21 @@ const UploadOfficeOrder = ({ permission }) => {
   };
 
   const [open, setOpen] = useState(false);
+  const [formOpen, setformOpen] = useState(false);
   const [id, setId] = useState(-1);
 
   const handleClickOpen = (event, cellValues) => {
     setOpen(true);
     setId(cellValues.row.request_id);
   };
+  const handleFormOpen = (event, cellValues) => {
+    setformOpen(true);
+    setId(cellValues.row.request_id);
+  };
 
+  const handleformClose = () => {
+    setformOpen(false);
+  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -124,7 +134,7 @@ const UploadOfficeOrder = ({ permission }) => {
               variant="contained"
               color="primary"
               onClick={(event) => {
-                handleClickOpen(event, cellValues);
+                handleFormOpen(event, cellValues);
               }}
             >
               View
@@ -177,9 +187,21 @@ const UploadOfficeOrder = ({ permission }) => {
           />
         </Grid>
         <Dialog
+          open={formOpen}
+          onClose={handleformClose}
+          classes={{ paper: classes.dialogPaper }}
+        >
+          <DialogBox request_id={id} />
+          <DialogActions>
+            <Button onClick={handleformClose} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
           open={open}
           onClose={handleClose}
-          classes={{ paper: classes.dialogPaper }}
+          classes={{ paper: classes.uploadDialogPaper }}
         >
           <UploadDialogBox request_id={id} />
           <DialogActions>

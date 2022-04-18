@@ -72,7 +72,7 @@ export default function SideNavData({handleDrawerClose, userType}) {
       },
       {
         label: "Payment History",
-        link: "/payment",
+        link: "/advance-payment",
         icon: <AccountBalanceIcon />,
       },
     ];
