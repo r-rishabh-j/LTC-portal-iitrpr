@@ -45,27 +45,27 @@ export default function Home() {
       .then((response) => {
         console.log(response.data.notifications)
         setNotifications(response.data.notifications)
-        const notif = [
-          { time: "100", content: "this is an extremely big big big big big bignotification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-          { time: "100", content: "this is an extremely big notification message" },
-        ]
-        setNotifications(notif)
+        // const notif = [
+        //   { time: "100", content: "this is an extremely big big big big big bignotification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notification message" },
+        // ]
+        // setNotifications(notif)
 
       })
       .catch((error) => {
@@ -170,6 +170,7 @@ export default function Home() {
               title='Clear Notifications'
               variant="contained"
               // color="primary"
+              style={{borderRadius:"35%"}}
               onClick={clearNotifications}
             >
               <ClearIcon />
@@ -211,7 +212,7 @@ export default function Home() {
               <Paper
                 elevation={0}
                 style={{
-                  height: "30vh",
+                  height: "auto",
                   width: "100%",
                   margin: "1vw",
                   textAlign: "center",

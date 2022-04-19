@@ -23,9 +23,9 @@ class Stages:
     deanfa = 'deanfa'
     office_order_pending = 'office_order_pending'
     advance_pending = 'advance_pending'
-    approved = 'approved'
+    approved = 'approved' # after advance or office order as per condition
     ta_applied = 'ta_applied'
-    availed = 'availed'
+    availed = 'availed' # after TA
     review = 'review'
     # ordered list of heirarchy
 

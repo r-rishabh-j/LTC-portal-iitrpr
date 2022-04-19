@@ -185,7 +185,6 @@ class LtcManager:
         @check_role()
         def post(self, permission):
             analyse()
-
             request_id = request.json['request_id']
             print(request_id)
             if not request_id:
@@ -358,6 +357,7 @@ class LtcManager:
 
         @roles_required(roles=allowed_roles)
         def post(self, permission):
+            analyse()
             request_id = json.loads(request.form.get('request_id'))
             if permission == Permissions.establishment:
                 return self.resolveEstablishmentReview(request_id,)
@@ -393,9 +393,10 @@ class LtcManager:
                 est_entry: EstablishmentLogs = EstablishmentLogs.query.get(
                     request_id)
                 est_entry.status = ApplicationStatus.new
+                db_form.stage = Stages.establishment
             else:  # review was sent through establishment, i.e was sent by some other stage originally
                 est_review_entry.status = EstablishmentReview.Status.reviewed_by_user
-
+                db_form.stage = EstablishmentReview.received_from
             db.session.commit()
             return jsonify({'msg': 'Updated'})
 
@@ -465,6 +466,7 @@ class LtcManager:
     class UploadOfficeOrder(Resource):
         @role_required(role='establishment')
         def post(self, **kwargs):
+            analyse()
             print(request.headers)
             file = request.files.get('office_order', None)
 
@@ -502,6 +504,7 @@ class LtcManager:
     class GetPendingOfficeOrderRequests(Resource):
         @role_required(role=Permissions.establishment)
         def get(self):
+            analyse()
             pending = db.session.query(LTCApproved, LTCRequests, Users).join(Users).join(
                 LTCApproved).filter(LTCApproved.office_order == None)
             result = []
@@ -514,12 +517,35 @@ class LtcManager:
                     'approved_on': '3:00 GMT',
                 })
             return jsonify({'pending': result})
+    
+    class GetOfficeOrder(Resource):
+        @check_role()
+        def post(self, permission):
+            analyse()
+            request_id = request.json['request_id']
+            print(request_id)
+            if not request_id:
+                abort(404, msg='Request ID not sent')
+            approved_form: LTCApproved = LTCApproved.query.get(request_id)
+            if not approved_form:
+                abort(404, msg='Form not yet approved!')
+            form: LTCRequests = LTCRequests.query.get(request_id)
+            if permission == Permissions.client:
+                if form.user_id != current_user.id:
+                    return abort(403, status={'error': 'Forbidden resource'})
+            attachment_path = approved_form.office_order
+            if attachment_path == None or attachment_path == "":
+                return abort(404, status={'error': 'Office order not yet generated'})
+            _, ext = os.path.splitext(attachment_path)
+            filename = f'ltc_{request_id}_office_order'+ext
+            return filemanager.sendFile(attachment_path, filename)
 
     class GetPendingAdvancePaymentRequests(Resource):
         @role_required(role=Permissions.accounts)
         def get(self):
+            analyse()
             pending = db.session.query(AdvanceRequests, LTCRequests, Users).join(Users).join(
-                AdvanceRequests).filter(AdvanceRequests.status==AdvanceRequests.Status.new)
+                AdvanceRequests).filter(AdvanceRequests.status == AdvanceRequests.Status.new)
             result = []
             for adv_req, ltc_req, applicant in pending:
                 result.append({
@@ -529,10 +555,11 @@ class LtcManager:
                     'created_on': adv_req.created_on,
                 })
             return jsonify({'pending': result})
-    
+
     class UpdateAdvancePaymentDetails(Resource):
         @role_required(role=Permissions.accounts)
         def post(self):
+            analyse()
             request_id = request.form.get('request_id', None)
             amount = request.form.get('amount', None)
             comments = request.form.get('comments', None)
@@ -540,5 +567,3 @@ class LtcManager:
             print(amount)
             if None in [request_id, amount, comments, payment_proof]:
                 abort(400)
-
-            

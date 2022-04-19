@@ -15,7 +15,7 @@ import { Box, Typography } from '@material-ui/core';
 import DomainIcon from '@material-ui/icons/Domain';
 import { blueGrey, blue } from "@material-ui/core/colors";
 import EmailIcon from '@material-ui/icons/Email';
-
+import Divider from '@mui/material/Divider';
 
 
 export default function SideNavData({ handleDrawerClose, userType, profileInfo }) {
@@ -154,7 +154,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
           ></img>
           <div style={{ margin: "2vh 0 0 0" }}>
             <Typography
-              variant="body"
+              variant="body1"
               style={{ fontWeight: "bold", margin: "auto", color: blueGrey["A700"] }}
             >
               {" "}
@@ -164,7 +164,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
 
           <Box>
             <div style={{ margin: "2vh 0 0 0vw" }}>
-              <Typography variant="body" style={{ margin: "auto", color: blueGrey["A700"] }}>
+              <Typography variant="body1" style={{ margin: "auto", color: blueGrey["A700"] }}>
                 {" "}
                 <DomainIcon />
                 &nbsp;
@@ -173,7 +173,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
             </div>
 
             <div>
-              <Typography variant="body" style={{ margin: "auto", color: blueGrey["A700"] }}>
+              <Typography variant="body1" style={{ margin: "auto", color: blueGrey["A700"] }}>
                 <EmailIcon />
                 {" "}
                 &nbsp;
@@ -183,8 +183,8 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
           </Box>
         </center>
       </Box>
-
-      <List style={{ margin: "3vh 0 0 0" }}>
+      <Divider style={{marginTop: "3vh"}} variant="middle" />
+      <List style={{ margin: "2vh 0 0 0" }}>
         {listItemData.map((item, i) => (
           <Button
             key={i}
