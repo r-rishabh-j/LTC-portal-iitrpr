@@ -15,7 +15,7 @@ export default function Navbar({ handleDrawerToggle, profileInfo }) {
   const classes = useStyles();
 
   return (
-    <AppBar position="sticky" style={{ background: '#0c979c'}}>
+    <AppBar position="sticky" style={{ background: '#0c979c' }}>
       <Toolbar>
         <Avatar src={image} />
         <Typography variant="h6" className={classes.title}>

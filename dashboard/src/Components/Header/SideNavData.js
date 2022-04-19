@@ -18,173 +18,173 @@ import EmailIcon from '@material-ui/icons/Email';
 
 
 
-export default function SideNavData({handleDrawerClose, userType, profileInfo}) {
-    
-    const classes = useStyles();
+export default function SideNavData({ handleDrawerClose, userType, profileInfo }) {
 
-    const applicantList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
-      { label: "New Application", link: "/create", icon: <AddIcon /> },
-      { label: "Past Applications", link: "/past", icon: <HistoryIcon /> },
-      
-      //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
-    ];
+  const classes = useStyles();
 
-    const adminList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
-      { label: "Users", link: "/users", icon: <AddIcon /> },
-      {
-        label: "Current Applications",
-        link: "/current",
-        icon: <NotificationsIcon />,
-      },
-      {
-        label: "Past Applications",
-        link: "/previous",
-        icon: <HistoryIcon />,
-      },
-    ];
+  const applicantList = [
+    { label: "Home", link: "/home", icon: <HomeIcon /> },
+    { label: "New Application", link: "/create", icon: <AddIcon /> },
+    { label: "Past Applications", link: "/past", icon: <HistoryIcon /> },
 
-    const establishmentList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
-      { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
-      {
-        label: "Past Applications",
-        link: "/past",
-        icon: <HistoryIcon />,
-      },
-      {
-        label: "For Review",
-        link: "/review",
-        icon: <RateReviewIcon />,
-      },
-      {
-        label: "Office Orders",
-        link: "/office_orders",
-        icon: <AttachFileIcon />,
-      },
-    ];
+    //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
+  ];
 
-    const accountsList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
+  const adminList = [
+    { label: "Home", link: "/home", icon: <HomeIcon /> },
+    { label: "Users", link: "/users", icon: <AddIcon /> },
+    {
+      label: "Current Applications",
+      link: "/current",
+      icon: <NotificationsIcon />,
+    },
+    {
+      label: "Past Applications",
+      link: "/previous",
+      icon: <HistoryIcon />,
+    },
+  ];
 
-      { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
-      {
-        label: "Past Applications",
-        link: "/past",
-        icon: <HistoryIcon />,
-      },
-      {
-        label: "Payment History",
-        link: "/advance-payment",
-        icon: <AccountBalanceIcon />,
-      },
-    ];
+  const establishmentList = [
+    { label: "Home", link: "/home", icon: <HomeIcon /> },
+    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    {
+      label: "Past Applications",
+      link: "/past",
+      icon: <HistoryIcon />,
+    },
+    {
+      label: "For Review",
+      link: "/review",
+      icon: <RateReviewIcon />,
+    },
+    {
+      label: "Office Orders",
+      link: "/office_orders",
+      icon: <AttachFileIcon />,
+    },
+  ];
 
-    const deanfaList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
+  const accountsList = [
+    { label: "Home", link: "/home", icon: <HomeIcon /> },
 
-      { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
-      {
-        label: "Past Applications",
-        link: "/past",
-        icon: <HistoryIcon />,
-      },
-     
-    ];
+    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    {
+      label: "Past Applications",
+      link: "/past",
+      icon: <HistoryIcon />,
+    },
+    {
+      label: "Payment History",
+      link: "/advance-payment",
+      icon: <AccountBalanceIcon />,
+    },
+  ];
 
-    const auditList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
+  const deanfaList = [
+    { label: "Home", link: "/home", icon: <HomeIcon /> },
 
-      { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
-      {
-        label: "Past Applications",
-        link: "/past",
-        icon: <HistoryIcon />,
-      },
-    ];
+    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    {
+      label: "Past Applications",
+      link: "/past",
+      icon: <HistoryIcon />,
+    },
 
-    const registrarList = [
-      { label: "Home", link: "/home", icon: <HomeIcon /> },
+  ];
 
-      { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
-      {
-        label: "Past Applications",
-        link: "/past",
-        icon: <HistoryIcon />,
-      },
-    ];
+  const auditList = [
+    { label: "Home", link: "/home", icon: <HomeIcon /> },
 
-    let listItemData;
-    switch (userType) {
-      case "admin":
-        listItemData = adminList;
-        break;
-      case "establishment":
-        listItemData = establishmentList;
-        break;
-      case "accounts":
-        listItemData = accountsList;
-        break;
-      case "audit":
-        listItemData = auditList;
-        break;
-      case "registrar":
-        listItemData = registrarList;
-        break;
-      case "deanfa":
-        listItemData = deanfaList;
-        break;
-      default:
-        listItemData = applicantList;
-        break;
-    }
-    
-    
-    
+    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    {
+      label: "Past Applications",
+      link: "/past",
+      icon: <HistoryIcon />,
+    },
+  ];
+
+  const registrarList = [
+    { label: "Home", link: "/home", icon: <HomeIcon /> },
+
+    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    {
+      label: "Past Applications",
+      link: "/past",
+      icon: <HistoryIcon />,
+    },
+  ];
+
+  let listItemData;
+  switch (userType) {
+    case "admin":
+      listItemData = adminList;
+      break;
+    case "establishment":
+      listItemData = establishmentList;
+      break;
+    case "accounts":
+      listItemData = accountsList;
+      break;
+    case "audit":
+      listItemData = auditList;
+      break;
+    case "registrar":
+      listItemData = registrarList;
+      break;
+    case "deanfa":
+      listItemData = deanfaList;
+      break;
+    default:
+      listItemData = applicantList;
+      break;
+  }
+
+
+
   return (
     <>
-      <Box style={{height:"auto", margin:"5vh 0 0 0" }}>
-          <center>
-            <img
-              src={profileInfo.picture}
-              alt="Profile image"
-              style={{ width: "8vw", borderRadius: "50%" }}
-              referrerPolicy={"no-referrer"}
-            ></img>
-            <div style={{margin:"2vh 0 0 0"}}>
+      <Box style={{ height: "auto", margin: "5vh 0 0 0" }}>
+        <center>
+          <img
+            src={profileInfo.picture}
+            alt="Profile image"
+            style={{ width: "8vw", borderRadius: "50%" }}
+            referrerPolicy={"no-referrer"}
+          ></img>
+          <div style={{ margin: "2vh 0 0 0" }}>
             <Typography
               variant="body"
-              style={{ fontWeight: "bold", margin: "auto", color:blueGrey["A700"] }}
+              style={{ fontWeight: "bold", margin: "auto", color: blueGrey["A700"] }}
             >
               {" "}
               {profileInfo.name}
             </Typography>
+          </div>
+
+          <Box>
+            <div style={{ margin: "2vh 0 0 0vw" }}>
+              <Typography variant="body" style={{ margin: "auto", color: blueGrey["A700"] }}>
+                {" "}
+                <DomainIcon />
+                &nbsp;
+                {profileInfo.department}
+              </Typography>
             </div>
 
-            <Box>
-            <div style={{margin:"2vh 0 0 0vw"}}>
-            <Typography variant="body" style={{ margin: "auto" , color:blueGrey["A700"]}}>
-              {" "}
-            <DomainIcon/>
-              &nbsp;
-              {profileInfo.department}
-            </Typography>
-            </div>
-            
             <div>
-            <Typography variant="body" style={{ margin: "auto", color:blueGrey["A700"] }}>
-              <EmailIcon/>
-              {" "}
-              &nbsp;
-              {profileInfo.email}
-            </Typography>
+              <Typography variant="body" style={{ margin: "auto", color: blueGrey["A700"] }}>
+                <EmailIcon />
+                {" "}
+                &nbsp;
+                {profileInfo.email}
+              </Typography>
             </div>
-            </Box>
-          </center>
+          </Box>
+        </center>
       </Box>
-      
-      <List style={{margin: "3vh 0 0 0"}}>
+
+      <List style={{ margin: "3vh 0 0 0" }}>
         {listItemData.map((item, i) => (
           <Button
             key={i}
@@ -205,7 +205,7 @@ export default function SideNavData({handleDrawerClose, userType, profileInfo}) 
           </Button>
         ))}
       </List>
-      <Link to='/' style ={{textDecoration: "none"}}>
+      <Link to='/' style={{ textDecoration: "none" }}>
         <Logout />
       </Link>
     </>

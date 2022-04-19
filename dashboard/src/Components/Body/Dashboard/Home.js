@@ -51,19 +51,19 @@ export default function Home() {
           { time: "100", content: "this is an extremely big notification message" },
           { time: "100", content: "this is an extremely big notification message" },
           { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
-          // { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
         ]
         setNotifications(notif)
 
@@ -101,7 +101,7 @@ export default function Home() {
   return (
     <>
       <Box ref={sizeRef}
-          style={{ display: "flex", flexFlow: "column" }}
+        style={{ display: "flex", flexFlow: "column" }}
       // justifyContent="space-between"
       >
         {/* <Box style={{ flex: "0 1 auto", height:"35vh" }}>
@@ -130,7 +130,7 @@ export default function Home() {
           </center>
           
         </Box> */}
-        
+
 
 
         {/* <Paper
@@ -145,36 +145,36 @@ export default function Home() {
             flex: "1 1 auto",
           }}
         > */}
-        
-        <Box
-        style={{
-          margin: "0 0 0 3vw",
-          minHeight: "calc(100vh - 65px)",
-          // minHeight: "89vh",
-          // width: "80vw",
-          // backgroundColor: "#efefef",
-          // overflowY: "scroll",
-          // overflow:"auto",
-          flex: "1 1 auto",
-          width:"auto"
-        }}
-          >
-          
-          <Box display="flex" justifyContent="space-between">
-          <Typography variant="h5" style={{ visibility: "hidden" }}>
-            Notifications
-          </Typography>
-          {/* <Typography variant="h5">Notifications</Typography> */}
 
-          <Button
-            title='Clear Notifications'
-            variant="contained"
-            // color="primary"
-            onClick={clearNotifications}
-          >
-            <ClearIcon/>
-          </Button>
-        </Box>
+        <Box
+          style={{
+            margin: "0 0 0 3vw",
+            minHeight: "calc(100vh - 81px)",
+            // minHeight: "89vh",
+            // width: "80vw",
+            // backgroundColor: "#efefef",
+            // overflowY: "scroll",
+            // overflow:"auto",
+            flex: "1 1 auto",
+            width: "auto"
+          }}
+        >
+
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="h5" style={{ visibility: "hidden" }}>
+              Notifications
+            </Typography>
+            {/* <Typography variant="h5">Notifications</Typography> */}
+
+            <Button
+              title='Clear Notifications'
+              variant="contained"
+              // color="primary"
+              onClick={clearNotifications}
+            >
+              <ClearIcon />
+            </Button>
+          </Box>
           {notifications.length !== 0 ? (
             <center>
               <div style={{ listStyle: "none" }}>
@@ -188,7 +188,7 @@ export default function Home() {
                           width: "100%",
                           margin: "1vw",
                           textAlign: "center",
-                          overflowX:"wrap"
+                          overflowX: "wrap"
                           // overflow: "hidden",
                           // whiteSpace: "nowrap",
                           // textOverflow: "ellipsis"
@@ -227,7 +227,7 @@ export default function Home() {
               </Paper>
             </Box>
           )}
-        {/* </Paper> */}
+          {/* </Paper> */}
         </Box>
       </Box>
     </>
