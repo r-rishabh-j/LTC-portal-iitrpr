@@ -45,27 +45,27 @@ export default function Home() {
       .then((response) => {
         console.log(response.data.notifications)
         setNotifications(response.data.notifications)
-        // const notif = [
-        //   { time: "100", content: "this is an extremely big big big big big bignotification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        // ]
-        // setNotifications(notif)
+        const notif = [
+          { time: "100", content: "this is an extremely big big big big big bignotification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+          // { time: "100", content: "this is an extremely big notification message" },
+        ]
+        setNotifications(notif)
 
       })
       .catch((error) => {
@@ -101,7 +101,7 @@ export default function Home() {
   return (
     <>
       <Box ref={sizeRef}
-        style={{ display: "flex", flexFlow: "column", height: "100%" }}
+          style={{ display: "flex", flexFlow: "column", minHeight: "89vh" }}
       // justifyContent="space-between"
       >
         {/* <Box style={{ flex: "0 1 auto", height:"35vh" }}>
@@ -150,11 +150,13 @@ export default function Home() {
         style={{
           margin: "0 0 0 3vw",
           // height: "calc(`100vh - sizeRef.current.offsetHeight`)",
-          minHeight: "91.5vh",
-          width: "80vw",
-          backgroundColor: "#efefef",
+          // minHeight: "89vh",
+          // width: "80vw",
+          // backgroundColor: "#efefef",
           // overflowY: "scroll",
-          flex: "1 1 auto",}}
+          flex: "1 1 auto",
+          width:"auto"
+        }}
           >
           
           <Box display="flex" justifyContent="space-between">

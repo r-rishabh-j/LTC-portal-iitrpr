@@ -26,7 +26,8 @@ export const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
-    marginTop: "65px",
+    // marginTop: "65px",
+    marginTop: "8.5vh",
     [theme.breakpoints.down("sm")]: {
       marginTop: "0px",
     },
