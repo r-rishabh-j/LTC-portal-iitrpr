@@ -149,7 +149,7 @@ export default function SideNavData({handleDrawerClose, userType, profileInfo}) 
             <img
               src={profileInfo.picture}
               alt="Profile image"
-              style={{ width: "10vw", borderRadius: "50%" }}
+              style={{ width: "8vw", borderRadius: "50%" }}
               referrerPolicy={"no-referrer"}
             ></img>
             <div style={{margin:"2vh 0 0 0"}}>

@@ -15,7 +15,7 @@ export default function Home() {
   const [profileInfo, setProfileInfo] = useState({});
   const [notifications, setNotifications] = useState([])
 
-
+  // var h = sizeRef.current.offsetHeight;
 
   useEffect(() => {
     axios({
@@ -101,7 +101,7 @@ export default function Home() {
   return (
     <>
       <Box ref={sizeRef}
-          style={{ display: "flex", flexFlow: "column", minHeight: "89vh" }}
+          style={{ display: "flex", flexFlow: "column" }}
       // justifyContent="space-between"
       >
         {/* <Box style={{ flex: "0 1 auto", height:"35vh" }}>
@@ -149,11 +149,12 @@ export default function Home() {
         <Box
         style={{
           margin: "0 0 0 3vw",
-          // height: "calc(`100vh - sizeRef.current.offsetHeight`)",
+          minHeight: "calc(100vh - 65px)",
           // minHeight: "89vh",
           // width: "80vw",
           // backgroundColor: "#efefef",
           // overflowY: "scroll",
+          // overflow:"auto",
           flex: "1 1 auto",
           width:"auto"
         }}
