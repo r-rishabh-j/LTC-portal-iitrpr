@@ -256,7 +256,7 @@ function Review({ permission }) {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} />
+          <DialogBox request_id={id} permission={permission} process="review"/>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close

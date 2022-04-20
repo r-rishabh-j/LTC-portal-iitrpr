@@ -1239,7 +1239,14 @@ shortest route "
           //     </Grid>
           //   </Grid>
           // </form>
-          <EstablishmentSectionForm />
+          <EstablishmentSectionForm
+            est_data={
+              formInfo.form_data["establishment"] === undefined
+                ? {}
+                : formInfo.form_data["establishment"]
+            }
+            request_id={request_id}
+          />
         ) : (
           //est data for non establishment stages
           <div>
@@ -1751,7 +1758,7 @@ shortest route "
           )
         )}
 
-        {permission !== "client" ? (
+        {permission !== "client" && process === "new" ? (
           <div>
             <br />
             <Typography style={{ fontWeight: "bold" }}>Comments</Typography>

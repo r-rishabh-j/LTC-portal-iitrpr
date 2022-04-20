@@ -11,6 +11,7 @@ export const EditableInputText = ({name, control, label, required, disabled, def
     reset({ [name]: `${info}` });
   }, [info])
   return (
+    
     <Controller
       name={name}
       control={control}
