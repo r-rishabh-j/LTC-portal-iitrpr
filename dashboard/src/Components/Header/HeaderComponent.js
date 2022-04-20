@@ -34,6 +34,7 @@ export default function HeaderComponent(props) {
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
         handleDrawerClose={handleDrawerClose}
+        profileInfo={props.profileInfo}
       />
       <Box className={classes.wrapper}>
         {/* <button onClick={getData}>Profile</button> */}

@@ -1,8 +1,9 @@
+from email.mime import application
 import os
 import json
 from . import db
 from . import filemanager
-from .models import Stages
+from .models import AdvanceRequests, Stages
 from .analyse import analyse
 from markupsafe import escape
 from datetime import datetime
@@ -11,7 +12,8 @@ from flask import jsonify, request, make_response
 from sqlalchemy.orm.attributes import flag_modified
 from flask_restful import Resource, reqparse, abort, fields
 from .role_manager import Permissions, role_required, roles_required, check_role
-from .models import ApplicationStatus, EstablishmentLogs, EstablishmentReview, LTCApproved, Users, LTCRequests, Departments
+from .models import ApplicationStatus, EstablishmentLogs, EstablishmentReview, LTCApproved,\
+    Users, LTCRequests, Departments, AdvanceRequests
 
 
 class LtcManager:
@@ -102,7 +104,9 @@ class LtcManager:
             # post request ID, comment, and approval of the user
             request_id = request.json['request_id']
             comment = request.json['comment']
+            print(comment)
             action = request.json.get('approval')
+            print(action)
 
             if not request_id or not comment or not action:
                 abort(404, msg='Incomplete args')
@@ -155,7 +159,7 @@ class LtcManager:
             if not form:
                 abort(404, msg='Form not found')
             user_email = None
-            if kwargs['permission'] == 'client':
+            if kwargs['permission'] == Permissions.client:
                 if form.user_id != current_user.id:
                     return abort(403, status={'error': 'Forbidden resource'})
                 user_email = current_user.email
@@ -181,7 +185,6 @@ class LtcManager:
         @check_role()
         def post(self, permission):
             analyse()
-
             request_id = request.json['request_id']
             print(request_id)
             if not request_id:
@@ -189,7 +192,7 @@ class LtcManager:
             form: LTCRequests = LTCRequests.query.get(request_id)
             if not form:
                 abort(404, msg='Form not found')
-            if permission == 'client':
+            if permission == Permissions.client:
                 if form.user_id != current_user.id:
                     return abort(403, status={'error': 'Forbidden resource'})
             attachment_path = form.attachments
@@ -274,7 +277,7 @@ class LtcManager:
 
             user: Users = current_user
             department = user.department
-            if kwargs['permission'] == 'dept_head':
+            if kwargs['permission'] == Permissions.dept_head:
                 department = 'department'
             table_ref = Departments.getDeptRequestTableByName(department)
 
@@ -289,7 +292,7 @@ class LtcManager:
             Fetch requests, both with status!=new, and also those on which
             the user has commented already
             """
-            if kwargs['permission'] == 'dept_head':
+            if kwargs['permission'] == Permissions.dept_head:
                 past = db.session.query(table_ref, LTCRequests, Users).join(Users).join(
                     table_ref).filter(table_ref.status != 'new', table_ref.department == user.department)
                 new = db.session.query(table_ref, LTCRequests, Users).join(Users).join(
@@ -354,6 +357,7 @@ class LtcManager:
 
         @roles_required(roles=allowed_roles)
         def post(self, permission):
+            analyse()
             request_id = json.loads(request.form.get('request_id'))
             if permission == Permissions.establishment:
                 return self.resolveEstablishmentReview(request_id,)
@@ -389,9 +393,10 @@ class LtcManager:
                 est_entry: EstablishmentLogs = EstablishmentLogs.query.get(
                     request_id)
                 est_entry.status = ApplicationStatus.new
+                db_form.stage = Stages.establishment
             else:  # review was sent through establishment, i.e was sent by some other stage originally
                 est_review_entry.status = EstablishmentReview.Status.reviewed_by_user
-
+                db_form.stage = EstablishmentReview.received_from
             db.session.commit()
             return jsonify({'msg': 'Updated'})
 
@@ -407,6 +412,8 @@ class LtcManager:
             # add comment
 
             # mark the application as new in the sender's table
+
+            db.session.commit()
             return jsonify({'msg': 'Updated'})
 
     class GetPendingApprovalRequests(Resource):
@@ -459,8 +466,9 @@ class LtcManager:
     class UploadOfficeOrder(Resource):
         @role_required(role='establishment')
         def post(self, **kwargs):
+            analyse()
             print(request.headers)
-            file=request.files.get('office_order', None)
+            file = request.files.get('office_order', None)
 
             if file == None:
                 abort(400, error='File not uploaded!')
@@ -472,30 +480,90 @@ class LtcManager:
             # if not approved_entry:
             #     abort(400, error='Form not yet approved')
             path = filemanager.saveFile(file, user.id)
+            print(path)
+
             advance_required = False
             # check if advance required!
+            if form.form['adv_is_required'] == 'Yes':
+                advance_required = True
+
             if advance_required:
                 form.stage = Stages.advance_pending
                 # send to accounts for advance payment
+                advance_req: AdvanceRequests = AdvanceRequests(
+                    request_id=request_id)
+                db.session.add(advance_req)
             else:
                 form.stage = Stages.approved
                 approved_entry.approved_on = datetime.now()
             approved_entry.office_order = path
 
+            db.session.commit()
             return jsonify({'success': 'Office Order Uploaded!'})
 
     class GetPendingOfficeOrderRequests(Resource):
         @role_required(role=Permissions.establishment)
         def get(self):
-            pending = db.session.query(LTCApproved, Users).join(
-                Users).filter(LTCApproved.office_order == None)
+            analyse()
+            pending = db.session.query(LTCApproved, LTCRequests, Users).join(Users).join(
+                LTCApproved).filter(LTCApproved.office_order == None)
             result = []
-            for pending_appl, applicant in pending:
+            for pending_appl, form, applicant in pending:
                 result.append({
-                        'request_id': pending_appl.request_id,
-                        'user': applicant.email,
-                        'name': applicant.name,
-                        'approved_on': pending_appl.created_on,
-                    })
-            
-            return result
+                    'request_id': pending_appl.request_id,
+                    'user': applicant.email,
+                    'name': applicant.name,
+                    # 'approved_on': pending_appl.approved_on,
+                    'approved_on': '3:00 GMT',
+                })
+            return jsonify({'pending': result})
+    
+    class GetOfficeOrder(Resource):
+        @check_role()
+        def post(self, permission):
+            analyse()
+            request_id = request.json['request_id']
+            print(request_id)
+            if not request_id:
+                abort(404, msg='Request ID not sent')
+            approved_form: LTCApproved = LTCApproved.query.get(request_id)
+            if not approved_form:
+                abort(404, msg='Form not yet approved!')
+            form: LTCRequests = LTCRequests.query.get(request_id)
+            if permission == Permissions.client:
+                if form.user_id != current_user.id:
+                    return abort(403, status={'error': 'Forbidden resource'})
+            attachment_path = approved_form.office_order
+            if attachment_path == None or attachment_path == "":
+                return abort(404, status={'error': 'Office order not yet generated'})
+            _, ext = os.path.splitext(attachment_path)
+            filename = f'ltc_{request_id}_office_order'+ext
+            return filemanager.sendFile(attachment_path, filename)
+
+    class GetPendingAdvancePaymentRequests(Resource):
+        @role_required(role=Permissions.accounts)
+        def get(self):
+            analyse()
+            pending = db.session.query(AdvanceRequests, LTCRequests, Users).join(Users).join(
+                AdvanceRequests).filter(AdvanceRequests.status == AdvanceRequests.Status.new)
+            result = []
+            for adv_req, ltc_req, applicant in pending:
+                result.append({
+                    'request_id': ltc_req.request_id,
+                    'user': applicant.email,
+                    'name': applicant.name,
+                    'created_on': adv_req.created_on,
+                })
+            return jsonify({'pending': result})
+
+    class UpdateAdvancePaymentDetails(Resource):
+        @role_required(role=Permissions.accounts)
+        def post(self):
+            analyse()
+            request_id = request.form.get('request_id', None)
+            amount = request.form.get('amount', None)
+            comments = request.form.get('comments', None)
+            payment_proof = request.files.get('payment_proof', None)
+            print(amount)
+            if None in [request_id, amount, comments, payment_proof]:
+                abort(400)

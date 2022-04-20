@@ -62,11 +62,9 @@ function Charts() {
     ];
   return (
     <>
-      <Box style={{ overflowX: "hidden", overflowY: 'hidden' }}>
-        <Grid container>
-          {/* <center>
-          <Typography style={{ fontWeight: "bold" }}>User Analytics</Typography>
-        </center> */}
+      <Box style={{ overflowX: "hidden", overflowY: 'hidden', minHeight:"91vh" }}>
+        {/* <Grid container>
+          
 
           <Paper
             elevation={10}
@@ -102,7 +100,7 @@ function Charts() {
               </LineChart>
             </ResponsiveContainer>
           </Paper>
-        </Grid>
+        </Grid> */}
 
         <Grid
           container

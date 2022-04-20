@@ -14,12 +14,13 @@ db = SQLAlchemy()
 UPLOAD_FOLDER = 'uploads'
 filemanager = create_file_manager(upload_folder=UPLOAD_FOLDER)
 
+
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app = Flask(__name__, static_url_path='', template_folder=os.path.abspath(
         './build'), static_folder=os.path.abspath('./build'))
     CORS(app)
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_path 
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_POOL_TIMEOUT'] = 5
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
@@ -63,15 +64,23 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(LtcManager.GetLtcFormMetaData, '/api/get-form-meta')
     api.add_resource(LtcManager.GetLtcFormMetaDataForUser, '/api/getmyforms')
     api.add_resource(LtcManager.GetLtcFormAttachments, '/api/getattachments')
-    api.add_resource(LtcManager.GetPendingApprovalRequests, '/api/getpendingltc')
+    api.add_resource(LtcManager.GetPendingApprovalRequests,
+                     '/api/getpendingltc')
     api.add_resource(LtcManager.GetPastApprovalRequests, '/api/getpastltc')
     api.add_resource(LtcManager.CommentOnLTC, '/api/comment')
     api.add_resource(LtcManager.FillStageForm, '/api/fill-stage-form')
     api.add_resource(GetUserNotifications, '/api/getnotifications')
     api.add_resource(ClearUserNotifications, '/api/clearnotifications')
-    api.add_resource(LtcManager.GetEstablishmentReview, '/api/establishment-review')
+    api.add_resource(LtcManager.GetEstablishmentReview,
+                     '/api/establishment-review')
     api.add_resource(LtcManager.UploadOfficeOrder, '/api/upload-office-order')
-    api.add_resource(LtcManager.GetPendingOfficeOrderRequests, '/api/get-pending-office-order-req')
+    api.add_resource(LtcManager.GetOfficeOrder, '/api/get-office-order')
+    api.add_resource(LtcManager.GetPendingOfficeOrderRequests,
+                     '/api/get-pending-office-order-req')
+    api.add_resource(LtcManager.GetPendingAdvancePaymentRequests,
+                     '/api/get-pending-advance-payments')
+    api.add_resource(LtcManager.UpdateAdvancePaymentDetails,
+                     '/api/update-advance-payment')
 
     @jwt.user_identity_loader
     def user_identity_loader(user: Users):

@@ -1,6 +1,6 @@
 from urllib import request
 from . import db
-from datetime import datetime
+from datetime import date, datetime
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm.attributes import flag_modified
@@ -23,9 +23,9 @@ class Stages:
     deanfa = 'deanfa'
     office_order_pending = 'office_order_pending'
     advance_pending = 'advance_pending'
-    approved = 'approved'
+    approved = 'approved' # after advance or office order as per condition
     ta_applied = 'ta_applied'
-    availed = 'availed'
+    availed = 'availed' # after TA
     review = 'review'
     # ordered list of heirarchy
 
@@ -65,6 +65,7 @@ class Users(db.Model):
     'notifications': {
         [
             {
+                'time': <timestamp as str>,
                 'time': <timestamp as str>,
                 'content': <text>
             }
@@ -255,6 +256,23 @@ class AdvanceRequests(db.Model):
     request_id = db.Column(db.Integer, db.ForeignKey(
         'ltc_requests.request_id'), primary_key=True)
     status = db.Column(db.String(50))
+    created_on = db.Column(db.DateTime)
+    paid_on = db.Column(db.DateTime)
+    amount_paid = db.Column(db.String) # amount paid
+    payment_proof = db.Column(db.String) # path to file, optional
+    comments = db.Column(db.String) # may contain ref ID, etc
+
+    class Status:
+        new='new'
+        paid='paid'
+
+    def __init__(self, request_id):
+        self.request_id=request_id
+        self.status=self.Status.new
+        self.created_on=datetime.now()
+        self.amount_paid = None
+        self.comments = None
+
 
 
 class DeanLogs(db.Model):

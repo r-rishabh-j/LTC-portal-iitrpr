@@ -27,6 +27,7 @@ export const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     width: drawerWidth,
     marginTop: "65px",
+    // marginTop: "8vh",
     [theme.breakpoints.down("sm")]: {
       marginTop: "0px",
     },
@@ -40,11 +41,10 @@ export const useStyles = makeStyles((theme) => ({
   //wrapper
   wrapper: {
     height: "100%",
+    // display: "grid",
+    // alignItems: "stretch",
     //width: "100%",
     overflowWrap: "anywhere",
-    
-    
-    
     background: "#efefef",
     padding: theme.spacing(2, 2, 0, 32),
     [theme.breakpoints.down("sm")]: {

@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme) => ({
     width: "100%",
     display: "flex",
   },
-  dialogPaper: {
+  uploadDialogPaper: {
     minHeight: "50vh",
     maxHeight: "60vh",
     minWidth: '50vw',

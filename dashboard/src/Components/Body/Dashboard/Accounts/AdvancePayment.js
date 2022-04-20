@@ -8,20 +8,19 @@ import {
   Typography,
 } from "@material-ui/core";
 import { DataGrid } from "@mui/x-data-grid";
-import axios from "axios";
-// import { useStyles } from "./UploadDialogBoxStyles";
 import { useStyles } from "../DataGridStyles";
-import UploadDialogBox from "./UploadDialogBox";
-import DialogBox from "../DialogBox";
+import axios from "axios";
+import DialogBox from '../DialogBox'
+import AdvancePaymentDialogBox from "./AdvancePaymentDialogBox";
 
-const UploadOfficeOrder = ({ permission }) => {
+
+function AdvancePayments() {
   const classes = useStyles();
 
   const [tableData, setTableData] = useState([]);
 
-
   useEffect(() => {
-    fetch("/api/get-pending-office-order-req")
+    fetch("/api/get-pending-advance-payments")
       .then((data) => data.json())
       .then((data) => {
         console.log(data);
@@ -48,20 +47,21 @@ const UploadOfficeOrder = ({ permission }) => {
   const [formOpen, setformOpen] = useState(false);
   const [id, setId] = useState(-1);
 
-  const handleClickOpen = (event, cellValues) => {
+  const handlePaymentUpdateOpen = (event, cellValues) => {
     setOpen(true);
     setId(cellValues.row.request_id);
   };
-  const handleFormOpen = (event, cellValues) => {
+
+  const viewForm = (event, cellValues) => {
     setformOpen(true);
     setId(cellValues.row.request_id);
   };
 
-  const handleformClose = () => {
-    setformOpen(false);
-  };
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleformClose = () => {
+    setformOpen(false);
   };
 
   const cellElement = (cellValues) => {
@@ -117,7 +117,7 @@ const UploadOfficeOrder = ({ permission }) => {
       renderCell: cellElement,
     },
     {
-      field: "approved_on",
+      field: "created_on",
       headerName: "Created on",
       minWidth: 150,
       flex: 1,
@@ -134,7 +134,7 @@ const UploadOfficeOrder = ({ permission }) => {
               variant="contained"
               color="primary"
               onClick={(event) => {
-                handleFormOpen(event, cellValues);
+                viewForm(event, cellValues);
               }}
             >
               View
@@ -144,8 +144,8 @@ const UploadOfficeOrder = ({ permission }) => {
       },
     },
     {
-      field: "upload",
-      headerName: "Upload Order",
+      field: "payment_details",
+      headerName: "Payment Details",
       minWidth: 150,
       renderCell: (cellValues) => {
         return (
@@ -153,10 +153,10 @@ const UploadOfficeOrder = ({ permission }) => {
             variant="contained"
             color="primary"
             onClick={(event) => {
-              handleClickOpen(event, cellValues);
+              handlePaymentUpdateOpen(event, cellValues);
             }}
           >
-            Upload
+            Fill
           </Button>
         );
       },
@@ -186,6 +186,7 @@ const UploadOfficeOrder = ({ permission }) => {
             onRowClick={handleRowClick}
           />
         </Grid>
+        {/* form dialog */}
         <Dialog
           open={formOpen}
           onClose={handleformClose}
@@ -198,12 +199,13 @@ const UploadOfficeOrder = ({ permission }) => {
             </Button>
           </DialogActions>
         </Dialog>
+        {/* advance payment upload */}
         <Dialog
           open={open}
           onClose={handleClose}
-          classes={{ paper: classes.uploadDialogPaper }}
+          classes={{ paper: classes.advPaymentDialogPaper }}
         >
-          <UploadDialogBox request_id={id} />
+          <AdvancePaymentDialogBox request_id={id} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close
@@ -215,4 +217,4 @@ const UploadOfficeOrder = ({ permission }) => {
   );
 }
 
-export default UploadOfficeOrder
+export default AdvancePayments

@@ -21,7 +21,7 @@ import { FormInputDate } from "../../Utilities/FormInputDate";
 import { EditableInputText } from "../../Utilities/EditableInputText";
 import EstablishmentSectionForm from "./Establishment/EstablishmentSectionForm";
 
-const DialogBox = ({ request_id, permission, process }) => {
+const DialogBox = ({ request_id, permission, process, status }) => {
   const [formInfo, setFormInfo] = useState({
     created_on: "",
     request_id: "",
@@ -49,6 +49,59 @@ const DialogBox = ({ request_id, permission, process }) => {
   //       }
 
   //   }
+  const handleAttachmentClick = () => {
+    // console.log(cellValues.row.request_id);
+    const data = { request_id: request_id };
+    axios({
+      method: "post",
+      url: "api/getattachments",
+      data: JSON.stringify(data),
+      headers: { "Content-type": "application/json" },
+      responseType: "blob",
+    })
+      .then((response) => {
+        var blob = new Blob([response.data], { type: response.data.type });
+        var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
+        var anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.target = '_blank';
+        anchor.click();
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          alert("No attachments");
+        }
+      });
+  };
+  const handleOfficeOrderClick = () => {
+    // console.log(cellValues.row.request_id);
+
+    const data = { request_id: request_id };
+    axios({
+      method: "post",
+      url: "api/get-office-order",
+      data: JSON.stringify(data),
+      headers: { "Content-type": "application/json" },
+      responseType: "blob",
+    })
+      .then((response) => {
+        var blob = new Blob([response.data], { type: response.data.type });
+        var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
+        var anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.target = '_blank';
+        anchor.click();
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          alert("Office Order not yet generated");
+        }
+      });
+  };
 
   //options for radio input
   function getVal(val, default_val) {
@@ -221,7 +274,22 @@ const DialogBox = ({ request_id, permission, process }) => {
 
   return (
     <>
-      <DialogTitle>LTC Application ID {formInfo.request_id}</DialogTitle>
+      <Box display="flex" justifyContent="space-between">
+        <Box>
+          <DialogTitle>
+            LTC Application ID {formInfo.request_id}
+          </DialogTitle>
+        </Box>
+        <Box margin="2vh 2vh 0 0">
+          <Button variant="contained" color="primary">PDF</Button>
+          &nbsp;
+          <Button variant="contained" color="primary" onClick={handleAttachmentClick}>Attachment</Button>
+          &nbsp;
+          {(status === 'advance_pending' || status === 'approved') ?
+            <Button variant="contained" color="primary" onClick={handleOfficeOrderClick}>Office Order</Button> : <></>}
+          {/* <Button>Office Order</Button> */}
+        </Box>
+      </Box>
       <DialogContent>
         {/* <DialogContentText>hello</DialogContentText> */}
         {/* <TextField label="Field" name = "Field" value = {formInfo.created_on}/> */}
@@ -249,7 +317,7 @@ const DialogBox = ({ request_id, permission, process }) => {
               value={
                 formInfo.form_data["designation"] === undefined
                   ? " "
-                  : formInfo.form_data["designtation"]
+                  : formInfo.form_data["designation"]
               }
               fullWidth
               InputProps={{
@@ -282,7 +350,7 @@ const DialogBox = ({ request_id, permission, process }) => {
               value={
                 formInfo.form_data["emp_code"] === undefined
                   ? " "
-                  : formInfo.form_data["name"]
+                  : formInfo.form_data["emp_code"]
               }
               // value={getVal(formInfo.form_data["emp_code"], " ")}
               fullWidth
@@ -296,11 +364,9 @@ const DialogBox = ({ request_id, permission, process }) => {
             <TextField
               label="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
-              value={String(
-                formInfo.form_data["joining_date"] === undefined
-                  ? " "
-                  : formInfo.form_data["joining_date"]
-              ).slice(0, 10)}
+              value={
+                String(formInfo.form_data["joining_date"] === undefined ? " " : formInfo.form_data["joining_date"]).slice(0, 10)
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -341,11 +407,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="From"
-              value={String(
-                formInfo.form_data["nature_from"] === undefined
-                  ? " "
-                  : formInfo.form_data["nature_from"]
-              ).slice(0, 10)}
+              value={
+                String(formInfo.form_data["nature_from"] === undefined ? " " : formInfo.form_data["nature_from"]).slice(0, 10)
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -356,11 +420,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="To"
-              value={String(
-                formInfo.form_data["nature_to"] === undefined
-                  ? " "
-                  : formInfo.form_data["nature_to"]
-              ).slice(0, 10)}
+              value={
+                String(formInfo.form_data["nature_to"] === undefined ? " " : formInfo.form_data["nature_to"]).slice(0, 10)
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -391,11 +453,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="From"
-              value={String(
-                formInfo.form_data["prefix_from"] === undefined
-                  ? " "
-                  : formInfo.form_data["prefix_from"]
-              ).slice(0, 10)}
+              value={
+                String(formInfo.form_data["prefix_from"] === undefined ? " " : formInfo.form_data["prefix_from"]).slice(0, 10)
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -406,11 +466,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="To"
-              value={String(
-                formInfo.form_data["prefix_to"] === undefined
-                  ? " "
-                  : formInfo.form_data["prefix_to"]
-              ).slice(0, 10)}
+              value={
+                String(formInfo.form_data["prefix_to"] === undefined ? " " : formInfo.form_data["prefix_to"]).slice(0, 10)
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -424,11 +482,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="From"
-              value={String(
-                formInfo.form_data["suffix_from"] === undefined
-                  ? " "
-                  : formInfo.form_data["suffix_from"]
-              ).slice(0, 10)}
+              value={
+                String(formInfo.form_data["suffix_from"] === undefined ? " " : formInfo.form_data["suffix_from"]).slice(0, 10)
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -439,11 +495,9 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="To"
-              value={String(
-                formInfo.form_data["suffix_to"] === undefined
-                  ? " "
-                  : formInfo.form_data["suffix_to"]
-              ).slice(0, 10)}
+              value={
+                String(formInfo.form_data["suffix_to"] === undefined ? " " : formInfo.form_data["suffix_to"]).slice(0, 10)
+              }
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -1209,11 +1263,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_joining_date"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_joining_date"
+                        "est_data_joining_date"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_joining_date"
                         ]
                   }
                   fullWidth
@@ -1231,11 +1285,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_block_year"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_block_year"
+                        "est_data_block_year"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_block_year"
                         ]
                   }
                   fullWidth
@@ -1259,11 +1313,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_nature_last"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_nature_last"
+                        "est_data_nature_last"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_nature_last"
                         ]
                   }
                   fullWidth
@@ -1281,11 +1335,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_nature_current"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_nature_current"
+                        "est_data_nature_current"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_nature_current"
                         ]
                   }
                   fullWidth
@@ -1306,11 +1360,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_period_last_from"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_last_from"
+                        "est_data_period_last_from"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_period_last_from"
                         ]
                   }
                   fullWidth
@@ -1328,11 +1382,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_period_last_to"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_last_to"
+                        "est_data_period_last_to"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_period_last_to"
                         ]
                   }
                   fullWidth
@@ -1350,11 +1404,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_period_current_from"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_current_from"
+                        "est_data_period_current_from"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_period_current_from"
                         ]
                   }
                   fullWidth
@@ -1373,11 +1427,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_period_current_to"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_current_to"
+                        "est_data_period_current_to"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_period_current_to"
                         ]
                   }
                   fullWidth
@@ -1398,11 +1452,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_for"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_for"
+                        "est_data_last_ltc_for"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_last_ltc_for"
                         ]
                   }
                   fullWidth
@@ -1420,11 +1474,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_for"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_for"
+                        "est_data_current_ltc_for"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_current_ltc_for"
                         ]
                   }
                   fullWidth
@@ -1445,11 +1499,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_days"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_days"
+                        "est_data_last_ltc_days"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_last_ltc_days"
                         ]
                   }
                   fullWidth
@@ -1467,11 +1521,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_days"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_days"
+                        "est_data_current_ltc_days"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_current_ltc_days"
                         ]
                   }
                   fullWidth
@@ -1492,11 +1546,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_earned_leave_on"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_earned_leave_on"
+                        "est_data_last_earned_leave_on"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_last_earned_leave_on"
                         ]
                   }
                   fullWidth
@@ -1514,11 +1568,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_earned_leave_on"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_earned_leave_on"
+                        "est_data_current_earned_leave_on"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_current_earned_leave_on"
                         ]
                   }
                   fullWidth
@@ -1539,11 +1593,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_balance"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_balance"
+                        "est_data_last_balance"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_last_balance"
                         ]
                   }
                   fullWidth
@@ -1561,11 +1615,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_balance"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_balance"
+                        "est_data_current_balance"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_current_balance"
                         ]
                   }
                   fullWidth
@@ -1586,11 +1640,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_encashment_adm"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_encashment_adm"
+                        "est_data_last_encashment_adm"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_last_encashment_adm"
                         ]
                   }
                   fullWidth
@@ -1608,11 +1662,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_encashment_adm"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_encashment_adm"
+                        "est_data_current_encashment_adm"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_current_encashment_adm"
                         ]
                   }
                   fullWidth
@@ -1635,11 +1689,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_last_nature"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_nature"
+                        "est_data_last_nature"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_last_nature"
                         ]
                   }
                   fullWidth
@@ -1657,11 +1711,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                          "est_data_current_nature"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_nature"
+                        "est_data_current_nature"
+                      ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                        "est_data_current_nature"
                         ]
                   }
                   fullWidth

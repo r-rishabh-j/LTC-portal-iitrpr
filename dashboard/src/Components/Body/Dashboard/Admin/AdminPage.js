@@ -31,6 +31,7 @@ export default function AdminPage(props) {
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
         handleDrawerClose={handleDrawerClose}
+        profileInfo={props.profileInfo}
         userType="admin"
       />
       <Box className={classes.wrapper}>

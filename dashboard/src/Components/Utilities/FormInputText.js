@@ -1,85 +1,86 @@
 import { TextField } from "@mui/material"
 import { Controller } from "react-hook-form"
-import React from 'react'
-import  {useState, useEffect} from "react";
+import React from "react";
+import {useState, useEffect } from 'react';
 
 
-export const FormInputText = ({profileInfo, name, control, label, required, disabled, defaultValue, multiline, rows, autofill=false}) => {
-
+export const FormInputText = (props) => {
+  // {profileInfo, name, control, label, required, disabled, defaultValue, multiline, rows, autofill}
   // if (autofill===undefined){
   //   autofill=false;
   // }
-  console.log(autofill);
+  console.log(props.label, props.autofill);
+  console.log('profinfo', props.profileInfo);
 
   const [inputName, setInputName] = useState({});
-  const [value, setValue] = useState(label);
+  const [value, setValue] = useState(props.label);
 
   useEffect(() => {
     // const inputName = JSON.parse(sessionStorage.getItem('profile'))
-    const inputName = profileInfo;
+    const inputName = props.profileInfo;
     if (inputName) {
       setInputName(inputName)
-      if (name === "name") {
+      if (props.name === "name") {
         setValue(inputName.name)
       }
-      else if (name === "department") {
+      else if (props.name === "department") {
         setValue(inputName.department)
       }
-      else if (name === "designation") {
+      else if (props.name === "designation") {
         setValue(inputName.permission)
       }
-      else if (name === "emp_code") {
+      else if (props.name === "emp_code") {
         setValue(inputName.employee_code)
       }
 
     }
     
 
-  }, [name]);
-  return autofill === true ? (
+  }, [props.name]);
+  return props.autofill === true ? (
     <Controller
-      name={name}
-      control={control}
-      defaultValue={defaultValue}
+      name={props.name}
+      control={props.control}
+      defaultValue={props.defaultValue}
       render={({ field: { onChange }, fieldState: { error } }) => (
         <>
           <TextField
-            disabled={disabled}
-            label={label}
+            disabled={props.disabled}
+            label={props.label}
             onChange={(text) => onChange(text)}
             value={value}
             error={!!error}
             type="text"
-            required={required}
+            required={props.required}
             color="primary"
             fullWidth
             margin="normal"
-            multiline={multiline}
-            rows={rows}
+            multiline={props.multiline}
+            rows={props.rows}
           />
         </>
       )}
     />
   ) : (
     <Controller
-      name={name}
-      control={control}
-      defaultValue={defaultValue}
+      name={props.name}
+      control={props.control}
+      defaultValue={props.defaultValue}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <>
           <TextField
-            disabled={disabled}
-            label={label}
+            disabled={props.disabled}
+            label={props.label}
             onChange={onChange}
             value={value}
             error={!!error}
             type="text"
-            required={required}
+            required={props.required}
             color="primary"
             fullWidth
             margin="normal"
-            multiline={multiline}
-            rows={rows}
+            multiline={props.multiline}
+            rows={props.rows}
           />
         </>
       )}

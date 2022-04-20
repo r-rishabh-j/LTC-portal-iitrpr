@@ -28,6 +28,8 @@ function DeanPage(props) {
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
         handleDrawerClose={handleDrawerClose}
+        profileInfo={props.profileInfo}
+
         userType="deanfa"
       />
       <Box className={classes.wrapper}>

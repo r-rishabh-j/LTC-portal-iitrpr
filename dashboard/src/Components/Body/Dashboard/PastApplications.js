@@ -104,9 +104,12 @@ const PastApplications = ({permission}) => {
 
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(-1);
+  const [status, setStatus] = useState('');
 
   const handleClickOpen = (event, cellValues) => {
     setOpen(true);
+    console.log('status', cellValues.row.stage);
+    setStatus(cellValues.row.stage);
     setId(cellValues.row.request_id);
     // console.log(cellValues.row.request_id);
     // const data = { request_id: cellValues.row.request_id };
@@ -134,6 +137,21 @@ const PastApplications = ({permission}) => {
     setOpen(false);
   };
 
+  const stageElement = (cellValues) => {
+    return (
+      (cellValues.row.stage!=='review') ?
+      <div
+        title={cellValues.formattedValue}
+        style={{
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+        }}
+      >
+        {cellValues.formattedValue}
+      </div>:<Button color="primary" variant="contained">Review</Button>
+    );
+  };
   const cellElement = (cellValues) => {
     return (
       <div
@@ -179,7 +197,7 @@ const PastApplications = ({permission}) => {
       headerName: "Stage",
       minWidth: 200,
       flex: 1,
-      renderCell: cellElement,
+      renderCell: stageElement,
     },
     {
       field: "is_active",
@@ -220,42 +238,42 @@ const PastApplications = ({permission}) => {
         );
       },
     },
-    {
-      field: "pdf",
-      headerName: "PDF",
-      minWidth: 150,
-      renderCell: (cellValues) => {
-        return (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={(event) => {
-              handleFormClick(event, cellValues);
-            }}
-          >
-            Download
-          </Button>
-        );
-      },
-    },
-    {
-      field: "attachment",
-      headerName: "Attachment",
-      minWidth: 150,
-      renderCell: (cellValues) => {
-        return (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={(event) => {
-              handleAttachmentClick(event, cellValues);
-            }}
-          >
-            View
-          </Button>
-        );
-      },
-    },
+    // {
+    //   field: "pdf",
+    //   headerName: "PDF",
+    //   minWidth: 150,
+    //   renderCell: (cellValues) => {
+    //     return (
+    //       <Button
+    //         variant="contained"
+    //         color="primary"
+    //         onClick={(event) => {
+    //           handleFormClick(event, cellValues);
+    //         }}
+    //       >
+    //         Download
+    //       </Button>
+    //     );
+    //   },
+    // },
+    // {
+    //   field: "attachment",
+    //   headerName: "Attachment",
+    //   minWidth: 150,
+    //   renderCell: (cellValues) => {
+    //     return (
+    //       <Button
+    //         variant="contained"
+    //         color="primary"
+    //         onClick={(event) => {
+    //           handleAttachmentClick(event, cellValues);
+    //         }}
+    //       >
+    //         View
+    //       </Button>
+    //     );
+    //   },
+    // },
   ];
 
   // const rows = [
@@ -292,7 +310,7 @@ const PastApplications = ({permission}) => {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} />
+          <DialogBox request_id={id} permission={permission} status={status} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close

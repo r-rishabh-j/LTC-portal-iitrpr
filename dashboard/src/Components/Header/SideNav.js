@@ -4,7 +4,7 @@ import SideNavData from './SideNavData';
 import { useStyles } from './HeaderStyles';
 
 
-export default function SideNav({ mobileOpen, handleDrawerToggle, handleDrawerClose, userType }) {
+export default function SideNav({ mobileOpen, handleDrawerToggle, handleDrawerClose, userType, profileInfo }) {
   const classes = useStyles();
 
 
@@ -27,6 +27,7 @@ export default function SideNav({ mobileOpen, handleDrawerToggle, handleDrawerCl
           <SideNavData
             handleDrawerClose={handleDrawerClose}
             userType={userType}
+            profileInfo={profileInfo}
           />
         </Drawer>
       </Hidden>
@@ -41,6 +42,7 @@ export default function SideNav({ mobileOpen, handleDrawerToggle, handleDrawerCl
           <SideNavData
             handleDrawerClose={handleDrawerClose}
             userType={userType}
+            profileInfo={profileInfo}
           />
         </Drawer>
       </Hidden>

@@ -16,7 +16,7 @@ export const useStyles = makeStyles((theme) => ({
     margin: "1vw",
     "& .MultiFormControl-root": {
       width: "100%",
-      
+
     },
   },
   div: {
@@ -35,5 +35,5 @@ export const useStyles = makeStyles((theme) => ({
   textFieldPass: {
     margin: "8px 0 8px",
   },
-  
+
 }));

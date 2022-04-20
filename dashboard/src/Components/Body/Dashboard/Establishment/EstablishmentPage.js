@@ -34,6 +34,8 @@ export default function EstablishmentPage(props){
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
         handleDrawerClose={handleDrawerClose}
+        profileInfo={props.profileInfo}
+
         userType="establishment"
       />
       <Box className={classes.wrapper}>

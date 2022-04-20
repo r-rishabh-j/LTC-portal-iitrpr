@@ -29,6 +29,8 @@ function RegistrarPage(props) {
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
         handleDrawerClose={handleDrawerClose}
+        profileInfo={props.profileInfo}
+
         userType="registrar"
       />
       <Box className={classes.wrapper}>
