@@ -235,7 +235,7 @@ function Past({ permission }) {
   return (
     <>
       <div style={{ textAlign: "center" }}>
-        <Typography variant="h5" style={{ margin: "auto" }}>
+        <Typography variant="body" style={{ margin: "auto", fontSize:"3vh" }}>
           Past Applications
         </Typography>
       </div>
