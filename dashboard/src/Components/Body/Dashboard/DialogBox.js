@@ -296,9 +296,11 @@ const DialogBox = ({ request_id, permission, process }) => {
             <TextField
               label="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
-              value={
-                String(formInfo.form_data["joining_date"] === undefined ? " " : formInfo.form_data["joining_date"]).slice(0,10)
-              }
+              value={String(
+                formInfo.form_data["joining_date"] === undefined
+                  ? " "
+                  : formInfo.form_data["joining_date"]
+              ).slice(0, 10)}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -339,9 +341,11 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="From"
-              value={
-                String(formInfo.form_data["nature_from"] === undefined ? " " : formInfo.form_data["nature_from"]).slice(0,10)
-              }
+              value={String(
+                formInfo.form_data["nature_from"] === undefined
+                  ? " "
+                  : formInfo.form_data["nature_from"]
+              ).slice(0, 10)}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -352,9 +356,11 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={4}>
             <TextField
               label="To"
-              value={
-                String(formInfo.form_data["nature_to"] === undefined ? " " : formInfo.form_data["nature_to"]).slice(0,10)
-              }
+              value={String(
+                formInfo.form_data["nature_to"] === undefined
+                  ? " "
+                  : formInfo.form_data["nature_to"]
+              ).slice(0, 10)}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -385,9 +391,11 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="From"
-              value={
-                String(formInfo.form_data["prefix_from"] === undefined ? " " : formInfo.form_data["prefix_from"]).slice(0,10)
-              }
+              value={String(
+                formInfo.form_data["prefix_from"] === undefined
+                  ? " "
+                  : formInfo.form_data["prefix_from"]
+              ).slice(0, 10)}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -398,9 +406,11 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="To"
-              value={
-                String(formInfo.form_data["prefix_to"] === undefined ? " " : formInfo.form_data["prefix_to"]).slice(0,10)
-              }
+              value={String(
+                formInfo.form_data["prefix_to"] === undefined
+                  ? " "
+                  : formInfo.form_data["prefix_to"]
+              ).slice(0, 10)}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -414,9 +424,11 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="From"
-              value={
-                String(formInfo.form_data["suffix_from"] === undefined ? " " : formInfo.form_data["suffix_from"]).slice(0,10)
-              }
+              value={String(
+                formInfo.form_data["suffix_from"] === undefined
+                  ? " "
+                  : formInfo.form_data["suffix_from"]
+              ).slice(0, 10)}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -427,9 +439,11 @@ Service/Date of Joining with IIT Ropar"
           <Grid item xs={6}>
             <TextField
               label="To"
-              value={
-                String(formInfo.form_data["suffix_to"] === undefined ? " " : formInfo.form_data["suffix_to"]).slice(0,10)
-              }
+              value={String(
+                formInfo.form_data["suffix_to"] === undefined
+                  ? " "
+                  : formInfo.form_data["suffix_to"]
+              ).slice(0, 10)}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -1049,7 +1063,7 @@ shortest route "
           //                 "est_data_last_ltc_for"
           //               ]
           //         }
-                  
+
           //         reset={reset}
           //         disabled={!edit}
           //       />
@@ -1171,7 +1185,14 @@ shortest route "
           //     </Grid>
           //   </Grid>
           // </form>
-          <EstablishmentSectionForm/>
+          <EstablishmentSectionForm
+            est_data={
+              formInfo.form_data["establishment"] === undefined
+                ? {}
+                : formInfo.form_data["establishment"]
+            }
+            request_id={request_id}
+          />
         ) : (
           //est data for non establishment stages
           <div>
@@ -1683,7 +1704,7 @@ shortest route "
           )
         )}
 
-        {permission !== "client" ? (
+        {permission !== "client" && process === "new" ? (
           <div>
             <br />
             <Typography style={{ fontWeight: "bold" }}>Comments</Typography>
