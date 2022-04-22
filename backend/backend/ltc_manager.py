@@ -1,9 +1,9 @@
-from email.mime import application
+# from email.mime import application
 import os
 import json
 from . import db
 from . import filemanager
-from .models import AdvanceRequests, Stages
+from .models import Stages
 from .analyse import analyse
 from markupsafe import escape
 from datetime import datetime
@@ -567,3 +567,9 @@ class LtcManager:
             print(amount)
             if None in [request_id, amount, comments, payment_proof]:
                 abort(400)
+            adv_req:AdvanceRequests = AdvanceRequests.query.filter_by(request_id=request_id).first()
+            adv_req.payment(amount, comments)
+            adv_req.payment_docs(current_user, payment_proof)
+
+            return jsonify({"success": "uploaded proofs"})
+            
