@@ -387,11 +387,9 @@ class LtcManager:
             db.session.merge(db_form)
 
             # TODO: update establishment review table
-            est_review_entry: EstablishmentReview = EstablishmentReview.query.get(
-                request_id)
+            est_review_entry: EstablishmentReview = EstablishmentReview.query.get(request_id)
             if est_review_entry == None:  # review was sent by establishment
-                est_entry: EstablishmentLogs = EstablishmentLogs.query.get(
-                    request_id)
+                est_entry: EstablishmentLogs = EstablishmentLogs.query.get(request_id)
                 est_entry.status = ApplicationStatus.new
                 db_form.stage = Stages.establishment
             else:  # review was sent through establishment, i.e was sent by some other stage originally
@@ -403,6 +401,7 @@ class LtcManager:
         def resolveEstablishmentReview(self, request_id, updated_form):
             # fetch updated establishment section form fields
             updated_form = json.loads(request.form.get('form'))
+            comment = json.loads(request.form.get('comments'))
             db_form: LTCRequests = LTCRequests.query.get(request_id)
 
             db_form.form[Stages.establishment] = updated_form
@@ -410,8 +409,12 @@ class LtcManager:
             db.session.merge(db_form)
 
             # add comment
-
+            db_form.addComment(current_user, comment, True, True)
             # mark the application as new in the sender's table
+            est_review: EstablishmentReview = EstablishmentReview.query.get(request_id)
+            sender_table_ref = Departments.getDeptRequestTableByName(est_review.received_from)
+            sender_table_ref.status = 'new'
+            db.session.delete(est_review)
 
             db.session.commit()
             return jsonify({'msg': 'Updated'})

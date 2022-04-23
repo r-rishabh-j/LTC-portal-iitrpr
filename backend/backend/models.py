@@ -418,11 +418,13 @@ class LTCRequests(db.Model):
         }
         return mapper.get(stage, stage)
 
-    def generate_comments_template(self, stage, roles):
+    def generate_comments_template(self, stage, roles, review=False):
         comments = {
             "approved": {str(role.email): None for role in roles},
             "comments": {str(role.email): None for role in roles},
         }
+        if review:
+            comments['review'] = True
         return comments
 
     def addComment(self, user: Users, comment, approval, is_review=False):
@@ -615,24 +617,29 @@ class LTCRequests(db.Model):
 
     def review_to_user(self, received_from, message):
         self.stage = Stages.review
-        stage_form: EstablishmentLogs = EstablishmentLogs.query.get(self.request_id)
+        stage_form: EstablishmentLogs = EstablishmentLogs.query.get(
+            self.request_id)
         stage_form.status = 'review'
 
     def send_for_review(self, reviewer: Users, applicant: Users, message):
-        if reviewer.department == 'establishment':
+        if reviewer.department == Stages.establishment:
             """
             If reviewer is establishment, then send back the application to the user.
             """
             self.review_to_user(reviewer.department,  message)
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been sent back for your review.'
-                'Read comments in form info for more information.')
+                ' Read comments with the form for more information.')
         else:
             """
             else, send back the application to the establishment section.
             """
             self.review_to_establishment(reviewer.department, message)
-            est_roles = get_stage_roles('establishment')
+            est_roles = get_stage_roles(Stages.establishment)
+            self.comments[est_roles].append(
+                self.generate_comments_template(
+                    Stages.establishment, est_roles, review=True)
+            )
             for role in est_roles:
                 role.addNotification(
                     f'REVIEW: LTC request, ID {self.request_id} has been sent for review from {str(reviewer.department).capitalize()} Section')
