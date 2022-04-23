@@ -63,7 +63,7 @@ const ReviewUserForm = ({user_data, request_id}) => {
           </Grid>
         </Grid>
         <Button type="submit" variant="contained" color="primary">
-          Save
+          Submit
         </Button>
       </form>
     </div>

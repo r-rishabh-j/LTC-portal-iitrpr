@@ -11,13 +11,17 @@ import {
   Button,
   Box,
   Tooltip,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import { useForm } from "react-hook-form";
 import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import EstablishmentSectionForm from "./Establishment/EstablishmentSectionForm";
-
+import PersonIcon from "@material-ui/icons/Person";
 
 const DialogBox = ({ request_id, permission, process, status }) => {
   console.log('permission', permission);
@@ -28,6 +32,13 @@ const DialogBox = ({ request_id, permission, process, status }) => {
     comments: {},
   });
   const [comments, setComments] = useState([]);
+  const [commentObj, setCommentObj] = useState({})
+  // const [estComments, setEstComments] = useState({});
+  // const [auditComments, setAuditComments] = useState({});
+  // const [accComments, setAccComments] = useState({});
+  // const [estComments, setEstComments] = useState({});
+  // const [estComments, setEstComments] = useState({});
+  
 
   const { handleSubmit, control } = useForm({});
   const {
@@ -160,13 +171,14 @@ const DialogBox = ({ request_id, permission, process, status }) => {
           commentObject = [];
         } else {
           commentObject = response.data.data.comments;
+          setCommentObj(commentObject)
         }
         console.log(commentObject);
 
         for (var dept in commentObject) {
           if (commentObject.hasOwnProperty(dept)) {
             var dept_comments = commentObject[dept];
-            console.log(dept_comments[0].comments);
+            console.log(dept_comments[0]);
             // array.push((dept_comments[0].comments) ?? {});
             array.push(getVal(dept_comments[0].comments, {}));
           }
@@ -694,95 +706,96 @@ shortest route "
           <Typography>
             Person(s) in respect of whom LTC is proposed to be availed:
           </Typography>
-          
-          {formInfo.form_data["dependents"] !== undefined ? (formInfo.form_data["dependents"].map((item, index) => {
-            return (
-              <div key={index}>
-                <Grid container spacing={1}>
-                  <Grid item xs={2}>
-                    <TextField
-                      label="Name"
-                      value={item.dep_name}
-                      fullWidth
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={1}>
-                    <TextField
-                      label="Age"
-                      value={item.dep_age}
-                      fullWidth
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <TextField
-                      label="Relationship"
-                      value={item.dep_relationship}
-                      fullWidth
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <TextField
-                      label="Travelling(Place) From"
-                      value={item.dep_travelling_from}
-                      fullWidth
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <TextField
-                      label="Travelling(Place) To"
-                      value={item.dep_travelling_to}
-                      fullWidth
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={1}>
-                    <TextField
-                      label="Back"
-                      value={item.dep_back}
-                      fullWidth
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <TextField
-                      label="Mode of Travel"
-                      value={item.dep_mode_of_travel}
-                      fullWidth
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
-                </Grid>
-              </div>
-            );
-          })
-          ): (<div></div>)
-          }
 
+          {formInfo.form_data["dependents"] !== undefined ? (
+            formInfo.form_data["dependents"].map((item, index) => {
+              return (
+                <div key={index}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={2}>
+                      <TextField
+                        label="Name"
+                        value={item.dep_name}
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={1}>
+                      <TextField
+                        label="Age"
+                        value={item.dep_age}
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        label="Relationship"
+                        value={item.dep_relationship}
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        label="Travelling(Place) From"
+                        value={item.dep_travelling_from}
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        label="Travelling(Place) To"
+                        value={item.dep_travelling_to}
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={1}>
+                      <TextField
+                        label="Back"
+                        value={item.dep_back}
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        label="Mode of Travel"
+                        value={item.dep_mode_of_travel}
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                  </Grid>
+                </div>
+              );
+            })
+          ) : (
+            <div></div>
+          )}
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
@@ -831,277 +844,6 @@ shortest route "
         </Box>
 
         {permission === "establishment" && process === "new" ? (
-          // <form
-          //   onSubmit={handleSubmitData(onSubmitEstData)}
-          //   style={{
-          //     width: "100%",
-          //     "& .MultiFormControlRoot": {
-          //       width: "100%",
-          //     },
-          //   }}
-          // >
-          //   <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-          //     <Button
-          //       type="button"
-          //       variant="contained"
-          //       color="primary"
-          //       onClick={() => setEdit(true)}
-          //     >
-          //       Edit
-          //     </Button>
-          //     &nbsp;
-          //     <Button type="submit" variant="contained" color="primary">
-          //       Save
-          //     </Button>
-          //   </Box>
-          //   {/* <Typography style={{fontWeight: "bold"}}>Establishment Data</Typography> */}
-          //   <Typography>
-          //     Fresh Recruit i.e. joining Govt. Service after 01.09.2008
-          //     /otherwise,
-          //   </Typography>
-          //   <Grid container spacing={2}>
-          //     <Grid item xs={4}>
-          //       <FormInputDate
-          //         name="est_data_joining_date"
-          //         label="Date of joining"
-          //         control={controlData}
-          //         defaultValue=""
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //     <Grid item xs={4}>
-          //       <EditableInputText
-          //         name="est_data_block_year"
-          //         label="Block Year"
-          //         control={controlData}
-          //         defaultValue=""
-          //         info={
-          //           formInfo.form_data["establishment"] === undefined
-          //             ? ""
-          //             : formInfo.form_data["establishment"][
-          //                 "est_data_block_year"
-          //               ] ?? ""
-          //         }
-          //         disabled={!edit}
-          //         reset={reset}
-          //       />
-          //     </Grid>
-          //   </Grid>
-          //   <Typography>
-          //     Nature of LTC (Home Town/Anywhere in India-place visited/to be
-          //     visited)
-          //   </Typography>
-          //   <Grid container spacing={2}>
-          //     <Grid item xs={4}>
-          //       <EditableInputText
-          //         name="est_data_nature_last"
-          //         label="Last Availed"
-          //         control={controlData}
-          //         defaultValue=""
-          //         info={
-          //           // formInfo.form_data["est_data_nature_last"] ?? ""
-          //           formInfo.form_data["est_data_nature_last"] === undefined
-          //             ? " "
-          //             : formInfo.form_data["est_data_nature_last"]
-          //         }
-          //         reset={reset}
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //     <Grid item xs={4}>
-          //       <EditableInputText
-          //         name="est_data_nature_current"
-          //         label="Current LTC"
-          //         control={controlData}
-          //         defaultValue=""
-          //         info={
-          //           formInfo.form_data["est_data_nature_current"] === undefined
-          //             ? " "
-          //             : formInfo.form_data["est_data_nature_current"]
-          //         }
-          //         reset={reset}
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //   </Grid>
-          //   <Typography>Period </Typography>
-          //   <Grid container spacing={2}>
-          //     <Grid item xs={3}>
-          //       <FormInputDate
-          //         name="est_data_period_last_from"
-          //         label="Last Availed From"
-          //         control={controlData}
-          //         disabled={!edit}
-
-          //       />
-          //     </Grid>
-          //     <Grid item xs={3}>
-          //       <FormInputDate
-          //         name="est_data_period_last_to"
-          //         label="Last Availed To"
-          //         control={controlData}
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //     <Grid item xs={3}>
-          //       <FormInputDate
-          //         name="est_data_period_current_from"
-          //         label="Current LTC From"
-          //         control={controlData}
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-
-          //     <Grid item xs={3}>
-          //       <FormInputDate
-          //         name="est_data_period_current_to"
-          //         label="Current LTC To"
-          //         control={controlData}
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //   </Grid>
-          //   <Typography>LTC for Self/Family</Typography>
-          //   <Grid container spacing={2}>
-          //     <Grid item xs={4}>
-          //       <EditableInputText
-          //         name="est_data_last_ltc_for"
-          //         label="Last Availed"
-          //         control={controlData}
-          //         defaultValue=""
-          //         info={
-          //           formInfo.form_data["establishment"] === undefined
-          //             ? ""
-          //             : formInfo.form_data["establishment"][
-          //                 "est_data_last_ltc_for"
-          //               ] === undefined
-          //             ? " "
-          //             : formInfo.form_data["establishment"][
-          //                 "est_data_last_ltc_for"
-          //               ]
-          //         }
-
-          //         reset={reset}
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //     <Grid item xs={4}>
-          //       <FormInputText
-          //         name="est_data_current_ltc_for"
-          //         label="Current LTC"
-          //         control={controlData}
-          //         defaultValue=""
-          //         reset={reset}
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //   </Grid>
-          //   <Typography>Earned leave encashment (No. of Days)</Typography>
-          //   <Grid container spacing={2}>
-          //     <Grid item xs={4}>
-          //       <FormInputNumber
-          //         name="est_data_last_ltc_days"
-          //         label="Last Availed"
-          //         control={controlData}
-          //         defaultValue=""
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //     <Grid item xs={4}>
-          //       <FormInputNumber
-          //         name="est_data_current_ltc_days"
-          //         label="Current LTC"
-          //         control={controlData}
-          //         defaultValue=""
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //   </Grid>
-          //   <Typography>Earned Leave standing to his credit on</Typography>
-          //   <Grid container spacing={2}>
-          //     <Grid item xs={4}>
-          //       <FormInputDate
-          //         name="est_data_last_earned_leave_on"
-          //         label="Last Availed"
-          //         control={controlData}
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //     <Grid item xs={4}>
-          //       <FormInputDate
-          //         name="est_data_current_earned_leave_on"
-          //         label="Current LTC"
-          //         control={controlData}
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //   </Grid>
-          //   <Typography>Balance Earned leave after this encashment</Typography>
-          //   <Grid container spacing={2}>
-          //     <Grid item xs={4}>
-          //       <FormInputText
-          //         name="est_data_last_balance"
-          //         label="Last Availed"
-          //         control={controlData}
-          //         defaultValue=""
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //     <Grid item xs={4}>
-          //       <FormInputText
-          //         name="est_data_current_balance"
-          //         label="Current LTC"
-          //         control={controlData}
-          //         defaultValue=""
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //   </Grid>
-          //   <Typography>Earned Leave encashment admissible</Typography>
-          //   <Grid container spacing={2}>
-          //     <Grid item xs={4}>
-          //       <FormInputText
-          //         name="est_data_last_encashment_adm"
-          //         label="Last Availed"
-          //         control={controlData}
-          //         defaultValue=""
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //     <Grid item xs={4}>
-          //       <FormInputText
-          //         name="est_data_current_encashment_adm"
-          //         label="Current LTC"
-          //         control={controlData}
-          //         defaultValue=""
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //   </Grid>
-          //   <Typography>
-          //     Period and nature of leave applied for and need to be sanctioned
-          //   </Typography>
-          //   <Grid container spacing={2}>
-          //     <Grid item xs={4}>
-          //       <FormInputText
-          //         name="est_data_last_nature"
-          //         label="Last Availed"
-          //         control={controlData}
-          //         defaultValue=""
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //     <Grid item xs={4}>
-          //       <FormInputText
-          //         name="est_data_current_nature"
-          //         label="Current LTC"
-          //         control={controlData}
-          //         defaultValue=""
-          //         disabled={!edit}
-          //       />
-          //     </Grid>
-          //   </Grid>
-          // </form>
           <>
             <Box
               display="flex"
@@ -1144,484 +886,524 @@ shortest route "
                 Establishment Section Data
               </Typography>
             </Box>
-            <Box style={{backgroundColor: "#F6F5FC"}}>
-            <Typography>
-              Fresh Recruit i.e. joining Govt. Service after 01.09.2008
-              /otherwise,
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_joining_date"
-                  label="Date of joining"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_joining_date"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_joining_date"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
+            <Box style={{ backgroundColor: "#F6F5FC" }}>
+              <Typography>
+                Fresh Recruit i.e. joining Govt. Service after 01.09.2008
+                /otherwise,
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_joining_date"
+                    label="Date of joining"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_joining_date"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_joining_date"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_block_year"
+                    label="Block Year"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_block_year"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_block_year"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_block_year"
-                  label="Block Year"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_block_year"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_block_year"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
+              <Typography>
+                Nature of LTC (Home Town/Anywhere in India-place visited/to be
+                visited)
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_nature_last"
+                    label="Last Availed"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_nature_last"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_nature_last"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_nature_current"
+                    label="Current LTC"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_nature_current"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_nature_current"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-            <Typography>
-              Nature of LTC (Home Town/Anywhere in India-place visited/to be
-              visited)
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_nature_last"
-                  label="Last Availed"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_nature_last"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_nature_last"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_nature_current"
-                  label="Current LTC"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_nature_current"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_nature_current"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-            </Grid>
-            <Typography>Period </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={3}>
-                <TextField
-                  name="est_data_period_last_from"
-                  label="Last Availed From"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_last_from"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_last_from"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  name="est_data_period_last_to"
-                  label="Last Availed To"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_last_to"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_last_to"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  name="est_data_period_current_from"
-                  label="Current LTC From"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_current_from"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_current_from"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
+              <Typography>Period </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={3}>
+                  <TextField
+                    name="est_data_period_last_from"
+                    label="Last Availed From"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_last_from"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_last_from"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    name="est_data_period_last_to"
+                    label="Last Availed To"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_last_to"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_last_to"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    name="est_data_period_current_from"
+                    label="Current LTC From"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_current_from"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_current_from"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
 
-              <Grid item xs={3}>
-                <TextField
-                  name="est_data_period_current_to"
-                  label="Current LTC To"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_current_to"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_period_current_to"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
+                <Grid item xs={3}>
+                  <TextField
+                    name="est_data_period_current_to"
+                    label="Current LTC To"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_current_to"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_current_to"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-            <Typography>LTC for Self/Family</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_last_ltc_for"
-                  label="Last Availed"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_for"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_for"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
+              <Typography>LTC for Self/Family</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_last_ltc_for"
+                    label="Last Availed"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_ltc_for"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_ltc_for"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_current_ltc_for"
+                    label="Current LTC"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_ltc_for"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_ltc_for"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_current_ltc_for"
-                  label="Current LTC"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_for"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_for"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
+              <Typography>Earned leave encashment (No. of Days)</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_last_ltc_days"
+                    label="Last Availed"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_ltc_days"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_ltc_days"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_current_ltc_days"
+                    label="Current LTC"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_ltc_days"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_ltc_days"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-            <Typography>Earned leave encashment (No. of Days)</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_last_ltc_days"
-                  label="Last Availed"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_days"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_days"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
+              <Typography>Earned Leave standing to his credit on</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_last_earned_leave_on"
+                    label="Last Availed"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_earned_leave_on"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_earned_leave_on"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_current_earned_leave_on"
+                    label="Current LTC"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_earned_leave_on"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_earned_leave_on"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_current_ltc_days"
-                  label="Current LTC"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_days"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_days"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
+              <Typography>
+                Balance Earned leave after this encashment
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_last_balance"
+                    label="Last Availed"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_balance"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_balance"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_current_balance"
+                    label="Current LTC"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_balance"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_balance"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-            <Typography>Earned Leave standing to his credit on</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_last_earned_leave_on"
-                  label="Last Availed"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_earned_leave_on"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_earned_leave_on"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
+              <Typography>Earned Leave encashment admissible</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_last_encashment_adm"
+                    label="Last Availed"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_encashment_adm"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_encashment_adm"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_current_encashment_adm"
+                    label="Current LTC"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_encashment_adm"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_encashment_adm"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_current_earned_leave_on"
-                  label="Current LTC"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_earned_leave_on"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_earned_leave_on"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
+              <Typography>
+                Period and nature of leave applied for and need to be sanctioned
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_last_nature"
+                    label="Last Availed"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_nature"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_nature"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="est_data_current_nature"
+                    label="Current LTC"
+                    value={
+                      formInfo.form_data["establishment"] === undefined
+                        ? ""
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_nature"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_nature"
+                          ]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-            <Typography>Balance Earned leave after this encashment</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_last_balance"
-                  label="Last Availed"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_balance"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_balance"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_current_balance"
-                  label="Current LTC"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_balance"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_balance"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-            </Grid>
-            <Typography>Earned Leave encashment admissible</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_last_encashment_adm"
-                  label="Last Availed"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_encashment_adm"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_encashment_adm"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_current_encashment_adm"
-                  label="Current LTC"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_encashment_adm"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_encashment_adm"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-            </Grid>
-            <Typography>
-              Period and nature of leave applied for and need to be sanctioned
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_last_nature"
-                  label="Last Availed"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_nature"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_last_nature"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="est_data_current_nature"
-                  label="Current LTC"
-                  value={
-                    formInfo.form_data["establishment"] === undefined
-                      ? ""
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_nature"
-                        ] === undefined
-                      ? " "
-                      : formInfo.form_data["establishment"][
-                          "est_data_current_nature"
-                        ]
-                  }
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-            </Grid>
             </Box>
+            {commentObj["establishment"] !== undefined ? (
+              // commentObj["establishment"][0]["review"] === true ? (
+              <div>
+                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+                  Establishment Section Comments
+                </Typography>
+                <List>
+                  {Object.keys(commentObj.establishment[0]["comments"]).map(
+                    (prop, i) => {
+                      return (
+                        <ListItem>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              commentObj.establishment[0]["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    }
+                  )}
+                </List>
+              </div>
+            ) : (
+              // ) : (
+              //   <div>
+              //     <Typography
+              //       style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}
+              //     >
+              //       Establishment Section Comments
+              //     </Typography>
+              //   </div>
+              // )
+              <div></div>
+            )}
           </div>
         )}
 
@@ -1654,7 +1436,7 @@ shortest route "
           )
         )}
 
-        {permission !== "client" && process === "new" ? (
+        {permission !== "client" && process !== "past" ? (
           <div>
             <br />
             <Typography style={{ fontWeight: "bold" }}>Comments</Typography>
