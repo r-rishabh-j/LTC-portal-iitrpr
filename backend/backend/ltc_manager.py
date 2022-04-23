@@ -445,11 +445,11 @@ class LtcManager:
             if kwargs['permission'] == Permissions.dept_head:
                 new = db.session.query(table_ref, LTCRequests, Users).join(Users).join(
                     table_ref).filter(table_ref.status=='new', Users.department==user.department)
-                print(new)
+                # print(new)
             else:
                 new = db.session.query(table_ref, LTCRequests, Users).join(
                     Users).join(table_ref).filter(table_ref.status=='new')
-                print(new)
+                # print(new)
             pending = []
 
             for dept_log, form, applicant in new:

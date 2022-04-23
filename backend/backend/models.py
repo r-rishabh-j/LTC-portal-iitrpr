@@ -636,7 +636,7 @@ class LTCRequests(db.Model):
             """
             self.review_to_establishment(reviewer.department, message)
             est_roles = get_stage_roles(Stages.establishment)
-            self.comments[est_roles].append(
+            self.comments[Stages.establishment].append(
                 self.generate_comments_template(
                     Stages.establishment, est_roles, review=True)
             )
