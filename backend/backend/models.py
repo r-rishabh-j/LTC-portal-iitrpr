@@ -615,6 +615,8 @@ class LTCRequests(db.Model):
 
     def review_to_user(self, received_from, message):
         self.stage = Stages.review
+        stage_form: EstablishmentLogs = EstablishmentLogs.query.get(self.request_id)
+        stage_form.status = 'review'
 
     def send_for_review(self, reviewer: Users, applicant: Users, message):
         if reviewer.department == 'establishment':

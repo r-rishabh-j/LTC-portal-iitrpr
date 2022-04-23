@@ -441,10 +441,12 @@ class LtcManager:
             new = None
             if kwargs['permission'] == Permissions.dept_head:
                 new = db.session.query(table_ref, LTCRequests, Users).join(Users).join(
-                    table_ref).filter_by(status='new', department=user.department)
+                    table_ref).filter(table_ref.status=='new', Users.department==user.department)
+                print(new)
             else:
                 new = db.session.query(table_ref, LTCRequests, Users).join(
-                    Users).join(table_ref).filter_by(status='new')
+                    Users).join(table_ref).filter(table_ref.status=='new')
+                print(new)
             pending = []
 
             for dept_log, form, applicant in new:
@@ -452,6 +454,7 @@ class LtcManager:
                     if len(form.comments[department]) == 0:
                         abort(400, 'Not allowed to add comment at this stage')
                     if form.comments[department][-1]['approved'].get(user.email, True) == None:
+                        print(dept_log.status)
                         pending.append({
                             'request_id': form.request_id,
                             'user': applicant.email,
