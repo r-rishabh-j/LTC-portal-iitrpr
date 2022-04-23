@@ -6,6 +6,7 @@ from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm.attributes import flag_modified
 from sqlalchemy import Text
 from sqlalchemy import Integer, Numeric
+from . import filemanager
 
 
 class Stage:
@@ -23,9 +24,9 @@ class Stages:
     deanfa = 'deanfa'
     office_order_pending = 'office_order_pending'
     advance_pending = 'advance_pending'
-    approved = 'approved' # after advance or office order as per condition
+    approved = 'approved'  # after advance or office order as per condition
     ta_applied = 'ta_applied'
-    availed = 'availed' # after TA
+    availed = 'availed'  # after TA
     review = 'review'
     # ordered list of heirarchy
 
@@ -251,28 +252,40 @@ class RegistrarLogs(db.Model):
         self.status = ApplicationStatus.new
         self.updated_on = datetime.now()
 
+
 class AdvanceRequests(db.Model):
     __tablename__ = 'advance_requests'
+    advance_id = db.Column(db.Integer, primary_key=True)
     request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
+        'ltc_requests.request_id'), unique=True)
     status = db.Column(db.String(50))
     created_on = db.Column(db.DateTime)
     paid_on = db.Column(db.DateTime)
-    amount_paid = db.Column(db.String) # amount paid
-    payment_proof = db.Column(db.String) # path to file, optional
-    comments = db.Column(db.String) # may contain ref ID, etc
+    amount_paid = db.Column(db.String)  # amount paid
+    payment_proof = db.Column(db.String)  # path to file, optional
+    comments = db.Column(db.String)  # may contain ref ID, etc
 
     class Status:
-        new='new'
-        paid='paid'
+        new = 'new'
+        paid = 'paid'
 
     def __init__(self, request_id):
-        self.request_id=request_id
-        self.status=self.Status.new
-        self.created_on=datetime.now()
+        self.request_id = request_id
+        self.status = self.Status.new
+        self.created_on = datetime.now()
+        self.paid_on = None
         self.amount_paid = None
         self.comments = None
 
+    def payment(self, amount, comments):
+        self.status = self.Status.paid
+        self.amount_paid = amount
+        self.comments = comments
+        self.paid_on = datetime.now()
+
+    def payment_docs(self, user: Users, file):
+        path = filemanager.saveFile(file, user.id)
+        self.payment_proof = path
 
 
 class DeanLogs(db.Model):
@@ -582,7 +595,8 @@ class LTCRequests(db.Model):
         """
         send application for review to establishment
         """
-        existing_entry: EstablishmentReview = EstablishmentReview.query.get(self.request_id)
+        existing_entry: EstablishmentReview = EstablishmentReview.query.get(
+            self.request_id)
         if not existing_entry:
             review_est = EstablishmentReview(
                 self.request_id, received_from, message)

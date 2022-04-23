@@ -145,11 +145,11 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
 
   return (
     <>
-      <Box style={{ height: "auto", margin: "5vh 0 0 0" }}>
+      <Box style={{ height: "auto", margin: "2vh 0 0 0" }}>
         <center>
           <img
-            src={profileInfo.picture}
-            alt="Profile image"
+            src={(profileInfo.picture===null)?require("./Navtabs/avatar.png"):profileInfo.picture}
+            alt={"Profile Image"}
             style={{ width: "8vw", borderRadius: "50%" }}
             referrerPolicy={"no-referrer"}
           ></img>
@@ -184,8 +184,8 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
           </Box>
         </center>
       </Box>
-      <Divider style={{marginTop: "3vh"}} variant="middle" />
-      <List style={{ margin: "2vh 0 0 0" }}>
+      <Divider style={{marginTop: "2vh"}} variant="middle" />
+      <List style={{ margin: "0vh 0 0 0" }}>
         {listItemData.map((item, i) => (
           <Button
             key={i}

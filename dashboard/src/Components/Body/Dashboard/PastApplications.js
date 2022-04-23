@@ -297,14 +297,14 @@ const PastApplications = ({permission}) => {
   return (
     <>
       <div style={{ textAlign: "center" }}>
-        <Typography variant="h5" style={{ margin: "auto" }}>
+        <Typography variant="body" style={{ margin: "auto", fontSize:"2.5vh" }}>
           Past Applications
         </Typography>
       </div>
 
       <Paper
         elevation={10}
-        style={{ display: "flex", height: "100vh", margin: "0 0.5vw 0 3vw" }}
+        style={{ display: "flex", minHeight: "88vh", margin: "0 0.5vw 0 3vw" }}
       >
         <Grid container style={{ flexGrow: 1 }}>
           <DataGrid
