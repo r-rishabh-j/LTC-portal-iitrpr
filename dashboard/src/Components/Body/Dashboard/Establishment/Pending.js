@@ -183,42 +183,42 @@ function Pending({permission}) {
         );
       },
     },
-    {
-      field: "pdf",
-      headerName: "PDF",
-      minWidth: 150,
-      renderCell: (cellValues) => {
-        return (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={(event) => {
-              handleFormClick(event, cellValues);
-            }}
-          >
-            Download
-          </Button>
-        );
-      },
-    },
-    {
-      field: "attachment",
-      headerName: "Attachment",
-      minWidth: 150,
-      renderCell: (cellValues) => {
-        return (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={(event) => {
-              handleAttachmentClick(event, cellValues);
-            }}
-          >
-            View
-          </Button>
-        );
-      },
-    },
+    // {
+    //   field: "pdf",
+    //   headerName: "PDF",
+    //   minWidth: 150,
+    //   renderCell: (cellValues) => {
+    //     return (
+    //       <Button
+    //         variant="contained"
+    //         color="primary"
+    //         onClick={(event) => {
+    //           handleFormClick(event, cellValues);
+    //         }}
+    //       >
+    //         Download
+    //       </Button>
+    //     );
+    //   },
+    // },
+    // {
+    //   field: "attachment",
+    //   headerName: "Attachment",
+    //   minWidth: 150,
+    //   renderCell: (cellValues) => {
+    //     return (
+    //       <Button
+    //         variant="contained"
+    //         color="primary"
+    //         onClick={(event) => {
+    //           handleAttachmentClick(event, cellValues);
+    //         }}
+    //       >
+    //         View
+    //       </Button>
+    //     );
+    //   },
+    // },
   ];
 
  

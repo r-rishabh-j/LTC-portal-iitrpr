@@ -20,6 +20,7 @@ import EstablishmentSectionForm from "./Establishment/EstablishmentSectionForm";
 
 
 const DialogBox = ({ request_id, permission, process, status }) => {
+  console.log('permission', permission);
   const [formInfo, setFormInfo] = useState({
     created_on: "",
     request_id: "",
@@ -1683,7 +1684,7 @@ shortest route "
                 name="approval"
                 control={control}
                 label="Approve"
-                options={options}
+                options={(permission==='deanfa' || permission==='registrar')?options_no_review:options}
               />
               <Box display="flex" justifyContent="center">
                 <Button type="submit" variant="contained" color="primary">

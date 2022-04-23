@@ -88,7 +88,7 @@ const columns = [
   id, email, created on, is active, stage, view form, download(button)*/
   { field: "request_id", headerName: "Application ID", minWidth: 100, flex: 1, renderCell: cellElement },
   { field: "user", headerName: "User Email", minWidth: 150, flex: 1, renderCell: cellElement },
-  { field: "user_id", headerName: "User ID", minWidth: 150, flex: 1, renderCell: cellElement },
+  { field: "name", headerName: "Name", minWidth: 150, flex: 1, renderCell: cellElement },
   { field: "created_on", headerName: "Created on", minWidth: 150, flex: 1, renderCell: timeElement },
   { field: "stage", headerName: "Stage", flex: 1, minWidth: 150, renderCell: cellElement },
   { field: "is_active", headerName: "Status", minWidth: 150, flex: 1, renderCell: cellElement },

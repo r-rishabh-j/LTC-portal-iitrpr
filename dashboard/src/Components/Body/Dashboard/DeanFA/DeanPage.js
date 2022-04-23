@@ -7,6 +7,8 @@ import SideNav from "../../../Header/SideNav";
 import { useStyles } from "../../../Header/HeaderStyles";
 import Home from "../Home";
 import Pending from '../Establishment/Pending';
+import Past from '../Establishment/Past';
+
 function DeanPage(props) {
     const classes = useStyles();
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -34,9 +36,8 @@ function DeanPage(props) {
       />
       <Box className={classes.wrapper}>
         <Routes>
-          <Route path="/new" element={<Pending />}></Route>
-          {/* <Route path="/past" element={<Past />}></Route>
-          <Route path="/payment" element={<Payment />}></Route> */}
+          <Route path="/new" element={<Pending permission={"deanfa"}  />}></Route>
+          <Route path="/past" element={<Past permission={"deanfa"} />}></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>

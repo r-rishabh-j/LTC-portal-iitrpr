@@ -107,7 +107,7 @@ function Charts() {
           spacing={8}
           style={{ margin: "2vh 0 0 10vw", height: "50vh" }}
         >
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <MediaCard
               image={require("./view_users.png")}
               alt="View API analytics"
@@ -115,27 +115,27 @@ function Charts() {
               url = {REACT_APP_BASE_BACKEND_URL+"/analytics"}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <MediaCard
               image={require("./edit_user.png")}
               alt="Edit User"
               action="Edit User"
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <MediaCard
               image={require("./add_user.png")}
               alt="Add User"
               action="Add New User"
             />
           </Grid>
-          <Grid item xs={2}>
+          {/* <Grid item xs={2}>
             <MediaCard
               image={require("./edit_user.png")}
               alt="Edit User"
               action="Edit User"
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
     </>

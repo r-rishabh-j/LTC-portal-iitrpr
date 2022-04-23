@@ -167,7 +167,7 @@ function AdvancePayments() {
     <>
       <div style={{ textAlign: "center" }}>
         <Typography variant="h5" style={{ margin: "auto" }}>
-          Past Applications
+          Advance Payments
         </Typography>
       </div>
       <Paper

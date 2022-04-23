@@ -213,6 +213,7 @@ class LtcManager:
             user: Users = current_user
             forms = LTCRequests.query.filter_by(user_id=user.id)
             results = []
+            
             for form in forms:
                 form: LTCRequests
                 results.append({
@@ -252,6 +253,7 @@ class LtcManager:
                 results.append({
                     'request_id': form.request_id,
                     'user': user.email,
+                    'name': user.name,
                     'user_id': form.user_id,
                     'created_on': form.created_on,
                     'stage': form.stage,

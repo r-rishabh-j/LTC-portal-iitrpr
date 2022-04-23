@@ -14,7 +14,8 @@ import GeneratePDF from "../../../Utilities/GeneratePDF";
 import { useStyles } from "../DataGridStyles";
 import DialogBox from "../DialogBox";
 
-function Past({ permission }) {
+function Past({ permission }){
+  console.log("PAST", permission);
   const classes = useStyles();
 
   const [tableData, setTableData] = useState([]);

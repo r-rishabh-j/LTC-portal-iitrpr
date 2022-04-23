@@ -50,7 +50,7 @@ const AdvancePaymentDialogBox = ({ request_id }) => {
             data: formData,
         }).then((response) => {
             alert('Updated!');
-            // window.location.reload();
+            window.location.reload();
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response);

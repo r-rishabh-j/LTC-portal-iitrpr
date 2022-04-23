@@ -7,6 +7,7 @@ import SideNav from "../../../Header/SideNav";
 import { useStyles } from "../../../Header/HeaderStyles";
 import Home from "../Home";
 import Pending from '../Establishment/Pending';
+import Past from '../Establishment/Past';
 
 function RegistrarPage(props) {
     const classes = useStyles();
@@ -35,9 +36,8 @@ function RegistrarPage(props) {
       />
       <Box className={classes.wrapper}>
         <Routes>
-          <Route path="/new" element={<Pending />}></Route>
-          {/* <Route path="/past" element={<Past />}></Route> */}
-          
+          <Route path="/new" element={<Pending permission={"registrar"}  />}></Route>
+          <Route path="/past" element={<Past permission={"registrar"} />}></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
