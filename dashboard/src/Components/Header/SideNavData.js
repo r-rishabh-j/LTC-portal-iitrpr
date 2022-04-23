@@ -20,6 +20,7 @@ import Divider from '@mui/material/Divider';
 
 export default function SideNavData({ handleDrawerClose, userType, profileInfo }) {
 
+
   const classes = useStyles();
 
   const applicantList = [

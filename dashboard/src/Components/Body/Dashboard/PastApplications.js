@@ -13,6 +13,7 @@ import { Button } from '@mui/material';
 import axios from 'axios';
 import GeneratePDF from '../../Utilities/GeneratePDF'
 import DialogBox from './DialogBox';
+import ReviewBox from './ReviewBox'
 
 const PastApplications = ({permission}) => {
   //console.log(permission)
@@ -103,6 +104,7 @@ const PastApplications = ({permission}) => {
   };
 
   const [open, setOpen] = useState(false);
+  const [openReview, setOpenReview] = useState(false);
   const [id, setId] = useState(-1);
   const [status, setStatus] = useState('');
 
@@ -137,6 +139,16 @@ const PastApplications = ({permission}) => {
     setOpen(false);
   };
 
+  const handleCloseReview = () => {
+    setOpenReview(false);
+  }
+
+  const editForm = (event, cellValues) => {
+    setOpenReview(true);
+    setId(cellValues.row.request_id);
+    console.log("Open a new dialog box");
+  }
+
   const stageElement = (cellValues) => {
     return (
       (cellValues.row.stage!=='review') ?
@@ -149,7 +161,8 @@ const PastApplications = ({permission}) => {
         }}
       >
         {cellValues.formattedValue}
-      </div>:<Button color="primary" variant="contained">Review</Button>
+      </div>:<Button color="primary" variant="contained" onClick={(event) => {editForm(event, cellValues)}}>
+        Review</Button>
     );
   };
   const cellElement = (cellValues) => {
@@ -313,6 +326,22 @@ const PastApplications = ({permission}) => {
           <DialogBox request_id={id} permission={permission} status={status} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
+              Close
+            </Button>
+            {/* <Button onClick={handleClose} color="primary" autoFocus>
+              Approve
+            </Button> */}
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={openReview}
+          onClose={handleCloseReview}
+          classes={{ paper: classes.dialogPaper }}
+        >
+          <ReviewBox request_id={id}/>
+          <DialogActions>
+            <Button onClick={handleCloseReview} color="primary">
               Close
             </Button>
             {/* <Button onClick={handleClose} color="primary" autoFocus>
