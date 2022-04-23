@@ -7,7 +7,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { ListItem, ListItemIcon, ListItemText, Avatar } from "@mui/material";
-
+import { Link } from "react-router-dom";
 
 import altImage from "./avatar.png";
 
@@ -43,7 +43,7 @@ export default function Profile(props) {
   }
 
   const dropDownData = [
-    { label: "Logout", icon: <ExitToAppIcon /> }
+    { label: "Logout", icon: <ExitToAppIcon />, link: "/" }
   ]
 
   return (
@@ -62,7 +62,7 @@ export default function Profile(props) {
         onClose={handleClose}
       >
         {dropDownData.map((item, i) => (
-          <MenuItem key={i} component={ListItem} onClick={handleClose}>
+          <MenuItem key={i} component={Link} to={item.link} onClick={handleClose}>
             <Box
               display="flex"
               justifyContent="space-between"

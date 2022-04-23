@@ -200,7 +200,7 @@ Service/Date of Joining with IIT Ropar"
                   profileInfo={profileInfo}
                   name="band_pay"
                   control={control}
-                  label="Band Pay + AGP/GP"
+                  label="Pay Level"
                   required={true}
                   defaultValue={""}
                 />

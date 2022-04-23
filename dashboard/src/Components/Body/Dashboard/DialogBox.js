@@ -13,13 +13,11 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FormInputText } from "../../Utilities/FormInputText";
-import { FormInputNumber } from "../../Utilities/FormInputNumber";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
-import { FormInputDate } from "../../Utilities/FormInputDate";
-import { EditableInputText } from "../../Utilities/EditableInputText";
 import EstablishmentSectionForm from "./Establishment/EstablishmentSectionForm";
+
 
 const DialogBox = ({ request_id, permission, process, status }) => {
   const [formInfo, setFormInfo] = useState({
@@ -112,10 +110,23 @@ const DialogBox = ({ request_id, permission, process, status }) => {
     }
   }
 
-  const options = [
+  const options_no_review= [
     {
       index: 1,
       label: "Approve",
+      value: "approve",
+    },
+    {
+      index: 2,
+      label: "Decline",
+      value: "decline",
+    },
+  ];
+
+  const options= [
+    {
+      index: 1,
+      label: "Recommend",
       value: "approve",
     },
     {
@@ -276,698 +287,549 @@ const DialogBox = ({ request_id, permission, process, status }) => {
     <>
       <Box display="flex" justifyContent="space-between">
         <Box>
-          <DialogTitle>
-            LTC Application ID {formInfo.request_id}
-          </DialogTitle>
+          <DialogTitle>LTC Application ID {formInfo.request_id}</DialogTitle>
         </Box>
         <Box margin="2vh 2vh 0 0">
-          <Button variant="contained" color="primary">PDF</Button>
+          <Button variant="contained" color="primary">
+            PDF
+          </Button>
           &nbsp;
-          <Button variant="contained" color="primary" onClick={handleAttachmentClick}>Attachment</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAttachmentClick}
+          >
+            Attachment
+          </Button>
           &nbsp;
-          {(status === 'advance_pending' || status === 'approved') ?
-            <Button variant="contained" color="primary" onClick={handleOfficeOrderClick}>Office Order</Button> : <></>}
+          {status === "advance_pending" || status === "approved" ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOfficeOrderClick}
+            >
+              Office Order
+            </Button>
+          ) : (
+            <></>
+          )}
           {/* <Button>Office Order</Button> */}
         </Box>
       </Box>
       <DialogContent>
         {/* <DialogContentText>hello</DialogContentText> */}
         {/* <TextField label="Field" name = "Field" value = {formInfo.created_on}/> */}
-        <Grid item xs={12}>
+        <Box style={{ backgroundColor: "#F6F5FC" }}>
+          <Grid item xs={12}>
+            <TextField
+              label="Name"
+              value={
+                formInfo.form_data["name"] === undefined
+                  ? " "
+                  : formInfo.form_data["name"]
+              }
+              // value={getVal(formInfo.form_data["name"], " ")}
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                label="Designation"
+                value={
+                  formInfo.form_data["designation"] === undefined
+                    ? " "
+                    : formInfo.form_data["designation"]
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Department"
+                // value={getVal(formInfo.form_data["department"], " ")}
+                value={
+                  formInfo.form_data["department"] === undefined
+                    ? " "
+                    : formInfo.form_data["department"]
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                label="Employee Code"
+                value={
+                  formInfo.form_data["emp_code"] === undefined
+                    ? " "
+                    : formInfo.form_data["emp_code"]
+                }
+                // value={getVal(formInfo.form_data["emp_code"], " ")}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={8}>
+              <TextField
+                label="Date of entering the Central Government
+Service/Date of Joining with IIT Ropar"
+                value={String(
+                  formInfo.form_data["joining_date"] === undefined
+                    ? " "
+                    : formInfo.form_data["joining_date"]
+                ).slice(0, 10)}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+          </Grid>
           <TextField
-            label="Name"
+            label="Band Pay + AGP/GP"
             value={
-              formInfo.form_data["name"] === undefined
+              formInfo.form_data["band_pay"] === undefined
                 ? " "
-                : formInfo.form_data["name"]
+                : formInfo.form_data["band_pay"]
             }
-            // value={getVal(formInfo.form_data["name"], " ")}
             fullWidth
             InputProps={{
               readOnly: true,
             }}
-            InputLabelProps={{ shrink: true }}
           />
-        </Grid>
 
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              label="Designation"
-              value={
-                formInfo.form_data["designation"] === undefined
-                  ? " "
-                  : formInfo.form_data["designation"]
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Department"
-              // value={getVal(formInfo.form_data["department"], " ")}
-              value={
-                formInfo.form_data["department"] === undefined
-                  ? " "
-                  : formInfo.form_data["department"]
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <TextField
-              label="Employee Code"
-              value={
-                formInfo.form_data["emp_code"] === undefined
-                  ? " "
-                  : formInfo.form_data["emp_code"]
-              }
-              // value={getVal(formInfo.form_data["emp_code"], " ")}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={8}>
-            <TextField
-              label="Date of entering the Central Government
-Service/Date of Joining with IIT Ropar"
-              value={
-                String(formInfo.form_data["joining_date"] === undefined ? " " : formInfo.form_data["joining_date"]).slice(0, 10)
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
-        <TextField
-          label="Band Pay + AGP/GP"
-          value={
-            formInfo.form_data["band_pay"] === undefined
-              ? " "
-              : formInfo.form_data["band_pay"]
-          }
-          fullWidth
-          InputProps={{
-            readOnly: true,
-          }}
-        />
+          <Typography>Leave Required</Typography>
 
-        <Typography>Leave Required</Typography>
-
-        <TextField
-          label="Nature"
-          value={
-            formInfo.form_data["nature"] === undefined
-              ? " "
-              : formInfo.form_data["nature"]
-          }
-          fullWidth
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <TextField
-              label="From"
-              value={
-                String(formInfo.form_data["nature_from"] === undefined ? " " : formInfo.form_data["nature_from"]).slice(0, 10)
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField
-              label="To"
-              value={
-                String(formInfo.form_data["nature_to"] === undefined ? " " : formInfo.form_data["nature_to"]).slice(0, 10)
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField
-              label="No. of Days"
-              value={
-                formInfo.form_data["num_days"] === undefined
-                  ? " "
-                  : formInfo.form_data["num_days"]
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
-
-        <Typography>Prefix:</Typography>
-
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              label="From"
-              value={
-                String(formInfo.form_data["prefix_from"] === undefined ? " " : formInfo.form_data["prefix_from"]).slice(0, 10)
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="To"
-              value={
-                String(formInfo.form_data["prefix_to"] === undefined ? " " : formInfo.form_data["prefix_to"]).slice(0, 10)
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
-        <Typography>Suffix:</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              label="From"
-              value={
-                String(formInfo.form_data["suffix_from"] === undefined ? " " : formInfo.form_data["suffix_from"]).slice(0, 10)
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="To"
-              value={
-                String(formInfo.form_data["suffix_to"] === undefined ? " " : formInfo.form_data["suffix_to"]).slice(0, 10)
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
-
-        <TextField
-          label="Whether spouse is employed, if yes whether
-entitled to LTC"
-          value={
-            formInfo.form_data["spouse_is_employed"] === undefined
-              ? " "
-              : formInfo.form_data["spouse_is_employed"]
-          }
-          fullWidth
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-
-        <Typography>Proposed dates of Journey</Typography>
-        <Typography>Self:</Typography>
-
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              label="Date of Outward journey"
-              value={String(
-                formInfo.form_data["self_date_outward"] === undefined
-                  ? " "
-                  : formInfo.form_data["self_date_outward"].slice(0, 10)
-              )}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Date of Inward journey"
-              value={String(
-                formInfo.form_data["self_date_inward"] === undefined
-                  ? " "
-                  : formInfo.form_data["self_date_inward"].slice(0, 10)
-              )}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
-
-        <Typography>Family:</Typography>
-
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              label="Date of Outward journey"
-              value={
-                formInfo.form_data["family_date_outward"] === undefined
-                  ? " "
-                  : formInfo.form_data["family_date_outward"].slice(0, 10)
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Date of Inward journey"
-              value={
-                formInfo.form_data["family_date_inward"] === undefined
-                  ? " "
-                  : formInfo.form_data["family_date_inward"].slice(0, 10)
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
-        <TextField
-          label="Home Town as recorded in the Service Book"
-          value={
-            formInfo.form_data["home_town"] === undefined
-              ? " "
-              : formInfo.form_data["home_town"]
-          }
-          fullWidth
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-        <TextField
-          label="Nature of LTC to be availed, Home Town /
-Anywhere in India with Block Year"
-          value={
-            formInfo.form_data["ltc_nature"] === undefined
-              ? " "
-              : formInfo.form_data["ltc_nature"]
-          }
-          fullWidth
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-
-        <TextField
-          label="If, anywhere in India, the place to be visited"
-          value={
-            formInfo.form_data["place"] === undefined
-              ? " "
-              : formInfo.form_data["place"]
-          }
-          fullWidth
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-        <Grid container spacing={2}>
-          <Grid item xs={9}>
-            <TextField
-              label="Estimated fare of entitled class from the
-headquarter to Home Town/Place of visit by
-shortest route "
-              value={
-                formInfo.form_data["est_fare"] === undefined
-                  ? " "
-                  : formInfo.form_data["est_fare"]
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
-
-        <Typography>
-          Person(s) in respect of whom LTC is proposed to be availed:
-        </Typography>
-
-        {/* <Grid item xs={1}>
-            <TextField
-            
-            label="S.No."
-            
-            
-            value={formInfo.form_data["sno_1"]}
-            fullWidth InputProps={{
+          <TextField
+            label="Nature"
+            value={
+              formInfo.form_data["nature"] === undefined
+                ? " "
+                : formInfo.form_data["nature"]
+            }
+            fullWidth
+            InputProps={{
               readOnly: true,
             }}
-            
-            />
-          </Grid> */}
-        {/* <Grid container spacing={1}>
+          />
 
-          <Grid item xs={2}>
-            <TextField
-              label="Name"
-              value={formInfo.form_data["name_1"] === undefined ? " ": formInfo.form_data["name_1"]}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={1}>
-            <TextField
-              label="Age"
-              value={formInfo.form_data["age_1"] === undefined ? " ": formInfo.form_data["age_1"]}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Relationship"
-              value={formInfo.form_data["relationship_1"] === undefined ? " ": formInfo.form_data["relationship_1"]}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Travelling(Place) From"
-              value={formInfo.form_data["travelling_from_1"] === undefined ? " ": formInfo.form_data["travelling_from_1"]}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Travelling(Place) To"
-              value={formInfo.form_data["travelling_to_1"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={1}>
-            <TextField
-              label="Back(Yes/No)"
-              value={formInfo.form_data["back_1"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Mode of Travel"
-              value={formInfo.form_data["travel_mode_1"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                label="From"
+                value={String(
+                  formInfo.form_data["nature_from"] === undefined
+                    ? " "
+                    : formInfo.form_data["nature_from"]
+                ).slice(0, 10)}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label="To"
+                value={String(
+                  formInfo.form_data["nature_to"] === undefined
+                    ? " "
+                    : formInfo.form_data["nature_to"]
+                ).slice(0, 10)}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label="No. of Days"
+                value={
+                  formInfo.form_data["num_days"] === undefined
+                    ? " "
+                    : formInfo.form_data["num_days"]
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
           </Grid>
 
-          <Grid item xs={2}>
-            <TextField
-              label="Name"
-              value={formInfo.form_data["name_2"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
+          <Typography>Prefix:</Typography>
+
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                label="From"
+                value={String(
+                  formInfo.form_data["prefix_from"] === undefined
+                    ? " "
+                    : formInfo.form_data["prefix_from"]
+                ).slice(0, 10)}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="To"
+                value={String(
+                  formInfo.form_data["prefix_to"] === undefined
+                    ? " "
+                    : formInfo.form_data["prefix_to"]
+                ).slice(0, 10)}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={1}>
-            <TextField
-              label="Age"
-              value={formInfo.form_data["age_2"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Relationship"
-              value={formInfo.form_data["relationship_2"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Travelling(Place) From"
-              value={formInfo.form_data["travelling_from_2"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Travelling(Place) To"
-              value={formInfo.form_data["travelling_to_2"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={1}>
-            <TextField
-              label="Back(Yes/No)"
-              value={formInfo.form_data["back_2"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Mode of Travel"
-              value={formInfo.form_data["travel_mode_2"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
+          <Typography>Suffix:</Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                label="From"
+                value={String(
+                  formInfo.form_data["suffix_from"] === undefined
+                    ? " "
+                    : formInfo.form_data["suffix_from"]
+                ).slice(0, 10)}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="To"
+                value={String(
+                  formInfo.form_data["suffix_to"] === undefined
+                    ? " "
+                    : formInfo.form_data["suffix_to"]
+                ).slice(0, 10)}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
           </Grid>
 
-          <Grid item xs={2}>
-            <TextField
-              label="Name"
-              value={formInfo.form_data["name_3"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={1}>
-            <TextField
-              label="Age"
-              value={formInfo.form_data["age_3"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Relationship"
-              value={formInfo.form_data["relationship_3"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Travelling(Place) From"
-              value={formInfo.form_data["travelling_from_3"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Travelling(Place) To"
-              value={formInfo.form_data["travelling_to_3"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={1}>
-            <TextField
-              label="Back(Yes/No)"
-              value={formInfo.form_data["back_3"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <TextField
-              label="Mode of Travel"
-              value={formInfo.form_data["travel_mode_3"] ?? " "}
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid> */}
-
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              label="Advance Required"
-              value={
-                formInfo.form_data["adv_is_required"] === undefined
-                  ? " "
-                  : formInfo.form_data["adv_is_required"]
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Encashment Required"
-              value={
-                formInfo.form_data["encashment_is_required"] === undefined
-                  ? " "
-                  : formInfo.form_data["encashment_is_required"]
-              }
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
-        <TextField
-          label="No. of encashment of leave days "
-          value={
-            formInfo.form_data["encashment_days"] === undefined
-              ? " "
-              : formInfo.form_data["encashment_days"]
-          }
-          fullWidth
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-
-        <Box
-          display="flex"
-          justifyContent="start"
-          style={{ margin: "5vh 0 0 0" }}
-        >
-          <Typography style={{ fontWeight: "bold" }}>
-            Establishment Section Data
-          </Typography>
-          <Tooltip
-            title={
-              <div style={{ fontSize: "1.5em" }}>
-                Remember to click save after editing the data
-              </div>
+          <TextField
+            label="Whether spouse is employed, if yes whether
+entitled to LTC"
+            value={
+              formInfo.form_data["spouse_is_employed"] === undefined
+                ? " "
+                : formInfo.form_data["spouse_is_employed"]
             }
-          >
-            <InfoIcon />
-          </Tooltip>
+            fullWidth
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+
+          <Typography>Proposed dates of Journey</Typography>
+          <Typography>Self:</Typography>
+
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                label="Date of Outward journey"
+                value={String(
+                  formInfo.form_data["self_date_outward"] === undefined
+                    ? " "
+                    : formInfo.form_data["self_date_outward"].slice(0, 10)
+                )}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Date of Inward journey"
+                value={String(
+                  formInfo.form_data["self_date_inward"] === undefined
+                    ? " "
+                    : formInfo.form_data["self_date_inward"].slice(0, 10)
+                )}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+          </Grid>
+
+          <Typography>Family:</Typography>
+
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                label="Date of Outward journey"
+                value={
+                  formInfo.form_data["family_date_outward"] === undefined
+                    ? " "
+                    : formInfo.form_data["family_date_outward"].slice(0, 10)
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Date of Inward journey"
+                value={
+                  formInfo.form_data["family_date_inward"] === undefined
+                    ? " "
+                    : formInfo.form_data["family_date_inward"].slice(0, 10)
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+          </Grid>
+          <TextField
+            label="Home Town as recorded in the Service Book"
+            value={
+              formInfo.form_data["home_town"] === undefined
+                ? " "
+                : formInfo.form_data["home_town"]
+            }
+            fullWidth
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            label="Nature of LTC to be availed, Home Town /
+Anywhere in India with Block Year"
+            value={
+              formInfo.form_data["ltc_nature"] === undefined
+                ? " "
+                : formInfo.form_data["ltc_nature"]
+            }
+            fullWidth
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+
+          <TextField
+            label="If, anywhere in India, the place to be visited"
+            value={
+              formInfo.form_data["place"] === undefined
+                ? " "
+                : formInfo.form_data["place"]
+            }
+            fullWidth
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <Grid container spacing={2}>
+            <Grid item xs={9}>
+              <TextField
+                label="Estimated fare of entitled class from the
+headquarter to Home Town/Place of visit by
+shortest route "
+                value={
+                  formInfo.form_data["est_fare"] === undefined
+                    ? " "
+                    : formInfo.form_data["est_fare"]
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+          </Grid>
+
+          <Typography>
+            Person(s) in respect of whom LTC is proposed to be availed:
+          </Typography>
+          
+          {formInfo.form_data["dependents"] !== undefined ? (formInfo.form_data["dependents"].map((item, index) => {
+            return (
+              <div key={index}>
+                <Grid container spacing={1}>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="Name"
+                      value={item.dep_name}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <TextField
+                      label="Age"
+                      value={item.dep_age}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="Relationship"
+                      value={item.dep_relationship}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="Travelling(Place) From"
+                      value={item.dep_travelling_from}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="Travelling(Place) To"
+                      value={item.dep_travelling_to}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <TextField
+                      label="Back"
+                      value={item.dep_back}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="Mode of Travel"
+                      value={item.dep_mode_of_travel}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                </Grid>
+              </div>
+            );
+          })
+          ): (<div></div>)
+          }
+
+
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                label="Advance Required"
+                value={
+                  formInfo.form_data["adv_is_required"] === undefined
+                    ? " "
+                    : formInfo.form_data["adv_is_required"]
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Encashment Required"
+                value={
+                  formInfo.form_data["encashment_is_required"] === undefined
+                    ? " "
+                    : formInfo.form_data["encashment_is_required"]
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+          </Grid>
+          <TextField
+            label="No. of encashment of leave days "
+            value={
+              formInfo.form_data["encashment_days"] === undefined
+                ? " "
+                : formInfo.form_data["encashment_days"]
+            }
+            fullWidth
+            InputProps={{
+              readOnly: true,
+            }}
+          />
         </Box>
 
-        {permission === "establishment" && process !== "new" ? (
+        {permission === "establishment" && process === "new" ? (
           // <form
           //   onSubmit={handleSubmitData(onSubmitEstData)}
           //   style={{
@@ -1239,17 +1101,49 @@ shortest route "
           //     </Grid>
           //   </Grid>
           // </form>
-          <EstablishmentSectionForm
-            est_data={
-              formInfo.form_data["establishment"] === undefined
-                ? {}
-                : formInfo.form_data["establishment"]
-            }
-            request_id={request_id}
-          />
+          <>
+            <Box
+              display="flex"
+              justifyContent="start"
+              style={{ margin: "5vh 0 0 0" }}
+            >
+              <Typography style={{ fontWeight: "bold" }}>
+                Establishment Section Data
+              </Typography>
+              <Tooltip
+                title={
+                  <div style={{ fontSize: "1.5em" }}>
+                    Remember to click save after editing the data
+                  </div>
+                }
+              >
+                <InfoIcon />
+              </Tooltip>
+            </Box>
+            <Box style={{ backgroundColor: "#F6F5FC" }}>
+              <EstablishmentSectionForm
+                est_data={
+                  formInfo.form_data["establishment"] === undefined
+                    ? {}
+                    : formInfo.form_data["establishment"]
+                }
+                request_id={request_id}
+              />
+            </Box>
+          </>
         ) : (
           //est data for non establishment stages
           <div>
+            <Box
+              display="flex"
+              justifyContent="start"
+              style={{ margin: "5vh 0 1vh 0" }}
+            >
+              <Typography style={{ fontWeight: "bold" }}>
+                Establishment Section Data
+              </Typography>
+            </Box>
+            <Box style={{backgroundColor: "#F6F5FC"}}>
             <Typography>
               Fresh Recruit i.e. joining Govt. Service after 01.09.2008
               /otherwise,
@@ -1263,11 +1157,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_joining_date"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_joining_date"
+                          "est_data_joining_date"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_joining_date"
                         ]
                   }
                   fullWidth
@@ -1285,11 +1179,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_block_year"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_block_year"
+                          "est_data_block_year"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_block_year"
                         ]
                   }
                   fullWidth
@@ -1313,11 +1207,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_nature_last"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_nature_last"
+                          "est_data_nature_last"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_nature_last"
                         ]
                   }
                   fullWidth
@@ -1335,11 +1229,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_nature_current"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_nature_current"
+                          "est_data_nature_current"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_nature_current"
                         ]
                   }
                   fullWidth
@@ -1360,11 +1254,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_period_last_from"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_period_last_from"
+                          "est_data_period_last_from"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_last_from"
                         ]
                   }
                   fullWidth
@@ -1382,11 +1276,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_period_last_to"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_period_last_to"
+                          "est_data_period_last_to"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_last_to"
                         ]
                   }
                   fullWidth
@@ -1404,11 +1298,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_period_current_from"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_period_current_from"
+                          "est_data_period_current_from"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_current_from"
                         ]
                   }
                   fullWidth
@@ -1427,11 +1321,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_period_current_to"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_period_current_to"
+                          "est_data_period_current_to"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_period_current_to"
                         ]
                   }
                   fullWidth
@@ -1452,11 +1346,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_ltc_for"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_last_ltc_for"
+                          "est_data_last_ltc_for"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_ltc_for"
                         ]
                   }
                   fullWidth
@@ -1474,11 +1368,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_ltc_for"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_current_ltc_for"
+                          "est_data_current_ltc_for"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_ltc_for"
                         ]
                   }
                   fullWidth
@@ -1499,11 +1393,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_ltc_days"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_last_ltc_days"
+                          "est_data_last_ltc_days"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_ltc_days"
                         ]
                   }
                   fullWidth
@@ -1521,11 +1415,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_ltc_days"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_current_ltc_days"
+                          "est_data_current_ltc_days"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_ltc_days"
                         ]
                   }
                   fullWidth
@@ -1546,11 +1440,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_earned_leave_on"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_last_earned_leave_on"
+                          "est_data_last_earned_leave_on"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_earned_leave_on"
                         ]
                   }
                   fullWidth
@@ -1568,11 +1462,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_earned_leave_on"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_current_earned_leave_on"
+                          "est_data_current_earned_leave_on"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_earned_leave_on"
                         ]
                   }
                   fullWidth
@@ -1593,11 +1487,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_balance"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_last_balance"
+                          "est_data_last_balance"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_balance"
                         ]
                   }
                   fullWidth
@@ -1615,11 +1509,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_balance"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_current_balance"
+                          "est_data_current_balance"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_balance"
                         ]
                   }
                   fullWidth
@@ -1640,11 +1534,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_encashment_adm"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_last_encashment_adm"
+                          "est_data_last_encashment_adm"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_encashment_adm"
                         ]
                   }
                   fullWidth
@@ -1662,11 +1556,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_encashment_adm"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_current_encashment_adm"
+                          "est_data_current_encashment_adm"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_encashment_adm"
                         ]
                   }
                   fullWidth
@@ -1689,11 +1583,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_last_nature"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_last_nature"
+                          "est_data_last_nature"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_last_nature"
                         ]
                   }
                   fullWidth
@@ -1711,11 +1605,11 @@ shortest route "
                     formInfo.form_data["establishment"] === undefined
                       ? ""
                       : formInfo.form_data["establishment"][
-                        "est_data_current_nature"
-                      ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                        "est_data_current_nature"
+                          "est_data_current_nature"
+                        ] === undefined
+                      ? " "
+                      : formInfo.form_data["establishment"][
+                          "est_data_current_nature"
                         ]
                   }
                   fullWidth
@@ -1726,6 +1620,7 @@ shortest route "
                 />
               </Grid>
             </Grid>
+            </Box>
           </div>
         )}
 
@@ -1767,7 +1662,7 @@ shortest route "
                 name="comment"
                 control={control}
                 label="Add new comment"
-                defaultValue=""
+                defaultValue=" "
                 multiline={true}
                 rows={4}
               />
