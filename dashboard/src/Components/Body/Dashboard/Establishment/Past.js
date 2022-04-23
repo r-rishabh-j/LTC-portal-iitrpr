@@ -260,7 +260,7 @@ function Past({ permission }) {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} status={status}/>
+          <DialogBox request_id={id} permission={permission} status={status} process={"past"}/>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close

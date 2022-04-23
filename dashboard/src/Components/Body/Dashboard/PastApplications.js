@@ -161,7 +161,7 @@ const PastApplications = ({permission}) => {
         }}
       >
         {cellValues.formattedValue}
-      </div>:<Button color="primary" variant="contained" onClick={(event) => {editForm(event, cellValues)}}>
+      </div>:<Button variant="contained" onClick={(event) => {editForm(event, cellValues)}} style={{backgroundColor: "orange"}}>
         Review</Button>
     );
   };
