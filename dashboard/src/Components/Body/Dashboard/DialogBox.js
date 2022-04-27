@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {
   DialogTitle,
@@ -33,6 +33,7 @@ const DialogBox = ({ request_id, permission, process, status }) => {
   });
   const [comments, setComments] = useState([]);
   const [commentObj, setCommentObj] = useState({})
+  const childRef = useRef()
   // const [estComments, setEstComments] = useState({});
   // const [auditComments, setAuditComments] = useState({});
   // const [accComments, setAccComments] = useState({});
@@ -112,6 +113,7 @@ const DialogBox = ({ request_id, permission, process, status }) => {
         }
       });
   };
+  
 
   //options for radio input
   function getVal(val, default_val) {
@@ -234,6 +236,9 @@ const DialogBox = ({ request_id, permission, process, status }) => {
 
   const onSubmit = (data) => {
     console.log(data);
+    // if(edit){
+    //   childRef.current.onSubmitEstData()
+    // }
 
     const req_data = {
       request_id: request_id,
@@ -418,7 +423,7 @@ Service/Date of Joining with IIT Ropar"
             </Grid>
           </Grid>
           <TextField
-            label="Band Pay + AGP/GP"
+            label="Pay Level"
             value={
               formInfo.form_data["band_pay"] === undefined
                 ? " "
@@ -865,12 +870,14 @@ shortest route "
             </Box>
             <Box style={{ backgroundColor: "#F6F5FC" }}>
               <EstablishmentSectionForm
+                ref={childRef}
                 est_data={
                   formInfo.form_data["establishment"] === undefined
                     ? {}
                     : formInfo.form_data["establishment"]
                 }
                 request_id={request_id}
+                onSubmitEstData={onSubmitEstData}
               />
             </Box>
           </>
@@ -1376,7 +1383,7 @@ shortest route "
                   {Object.keys(commentObj.establishment[0]["comments"]).map(
                     (prop, i) => {
                       return (
-                        <ListItem>
+                        <ListItem key={i}>
                           <ListItemIcon>
                             <PersonIcon />
                           </ListItemIcon>
@@ -1404,12 +1411,84 @@ shortest route "
               // )
               <div></div>
             )}
+            {commentObj["audit"] !== undefined ? (
+              // commentObj["establishment"][0]["review"] === true ? (
+              <div>
+                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+                  Audit Section Comments
+                </Typography>
+                <List>
+                  {Object.keys(commentObj.audit[0]["comments"]).map(
+                    (prop, i) => {
+                      return (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={commentObj.audit[0]["comments"][prop]}
+                          />
+                        </ListItem>
+                      );
+                    }
+                  )}
+                </List>
+              </div>
+            ) : (
+              // ) : (
+              //   <div>
+              //     <Typography
+              //       style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}
+              //     >
+              //       Establishment Section Comments
+              //     </Typography>
+              //   </div>
+              // )
+              <div></div>
+            )}
+            {commentObj["accounts"] !== undefined ? (
+              // commentObj["establishment"][0]["review"] === true ? (
+              <div>
+                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+                  Accounts Section Comments
+                </Typography>
+                <List>
+                  {Object.keys(commentObj.accounts[0]["comments"]).map(
+                    (prop, i) => {
+                      return (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={commentObj.accounts[0]["comments"][prop]}
+                          />
+                        </ListItem>
+                      );
+                    }
+                  )}
+                </List>
+              </div>
+            ) : (
+              // ) : (
+              //   <div>
+              //     <Typography
+              //       style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}
+              //     >
+              //       Establishment Section Comments
+              //     </Typography>
+              //   </div>
+              // )
+              <div></div>
+            )}
           </div>
         )}
 
-        <Typography style={{ margin: "5vh 0 0 0", fontWeight: "bold" }}>
+        {/* <Typography style={{ margin: "5vh 0 0 0", fontWeight: "bold" }}>
           Comment History
-        </Typography>
+        </Typography> */}
         {/*make component for react flow chart*/}
         {/* <div>{comments.map(function(d, idx){
           return (<li key={idx}>{d}</li>)
@@ -1424,7 +1503,7 @@ shortest route "
               </div>
           )
         })))} */}
-        {comments.map((d) =>
+        {/* {comments.map((d) =>
           Object.keys(d).map((prop, i) =>
             d[prop] !== null ? (
               <li key={i}>
@@ -1434,7 +1513,7 @@ shortest route "
               <div key={i} />
             )
           )
-        )}
+        )} */}
 
         {permission !== "client" && process !== "past" ? (
           <div>
@@ -1466,7 +1545,11 @@ shortest route "
                 name="approval"
                 control={control}
                 label="Approve"
-                options={(permission==='deanfa' || permission==='registrar')?options_no_review:options}
+                options={
+                  permission === "deanfa" || permission === "registrar"
+                    ? options_no_review
+                    : options
+                }
               />
               <Box display="flex" justifyContent="center">
                 <Button type="submit" variant="contained" color="primary">
