@@ -332,7 +332,7 @@ const DialogBox = ({ request_id, permission, process, status }) => {
       <DialogContent>
         {/* <DialogContentText>hello</DialogContentText> */}
         {/* <TextField label="Field" name = "Field" value = {formInfo.created_on}/> */}
-        <Box style={{ backgroundColor: "#F6F5FC" }}>
+        <Box style={{ backgroundColor: "#fffcf5", padding:"1vh 1vh 1vh 1vh" }}>
           <Grid item xs={12}>
             <TextField
               label="Name"
@@ -863,7 +863,7 @@ shortest route "
                 <InfoIcon />
               </Tooltip>
             </Box>
-            <Box style={{ backgroundColor: "#F6F5FC" }}>
+            <Box style={{backgroundColor: "#fffcf5", padding:"1vh 1vh 1vh 1vh"}}>
               <EstablishmentSectionForm
                 est_data={
                   formInfo.form_data["establishment"] === undefined
@@ -886,7 +886,7 @@ shortest route "
                 Establishment Section Data
               </Typography>
             </Box>
-            <Box style={{ backgroundColor: "#F6F5FC" }}>
+            <Box style={{ backgroundColor: "#fffcf5", padding:"1vh 1vh 1vh 1vh" }}>
               <Typography>
                 Fresh Recruit i.e. joining Govt. Service after 01.09.2008
                 /otherwise,
