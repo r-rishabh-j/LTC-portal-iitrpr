@@ -198,7 +198,7 @@ export default function Home() {
                         <NotificationsActiveIcon />
                         <div style={{ textOverflow: "ellipsis" }}>
                           <Typography variant="body1" style={{ padding: "0.5vh" }}>
-                            {item.content}
+                            {item.time+': '+item.content}
                           </Typography>
                         </div>
                       </Paper>

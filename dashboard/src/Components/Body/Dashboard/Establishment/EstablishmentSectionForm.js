@@ -1,5 +1,5 @@
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { TextField, Box, Button,Typography, Grid } from "@mui/material";
 import DateFnsUtils from "@date-io/date-fns";
@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 
 
-const EstablishmentSectionForm = ({est_data, request_id}) => {
+const EstablishmentSectionForm = forwardRef(({est_data, request_id}, ref) => {
   const {control, handleSubmit, reset} = useForm()
   const [edit, setEdit] = useState(false)
 
@@ -18,29 +18,56 @@ const EstablishmentSectionForm = ({est_data, request_id}) => {
     reset(est_data)
   }, [est_data])
 
-  const onSubmitEstData = (data) => {
-    console.log(data)
-    setEdit(false);
-    const req_data = { request_id: request_id, stage_form: data };
-    axios({
-      method: "POST",
-      url: "/api/fill-stage-form",
-      data: req_data,
+function onSubmitEstData(data){
+  console.log(data);
+  setEdit(false);
+  const req_data = { request_id: request_id, stage_form: data };
+  axios({
+    method: "POST",
+    url: "/api/fill-stage-form",
+    data: req_data,
+  })
+    .then((response) => {
+      console.log("s", response.status);
+      alert("Data added!");
     })
-      .then((response) => {
-        console.log("s", response.status);
-        alert("Data added!");
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log("e", error.response);
-          console.log(error.response);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-          alert(error.response.data.error);
-        }
-      });
-  }
+    .catch((error) => {
+      if (error.response) {
+        console.log("e", error.response);
+        console.log(error.response);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        alert(error.response.data.error);
+      }
+    });
+};
+
+useImperativeHandle(ref, () => ({
+  
+  onSubmitEstData(data){
+  console.log(data);
+  setEdit(false);
+  const req_data = { request_id: request_id, stage_form: data };
+  axios({
+    method: "POST",
+    url: "/api/fill-stage-form",
+    data: req_data,
+  })
+    .then((response) => {
+      console.log("s", response.status);
+      alert("Data added!");
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log("e", error.response);
+        console.log(error.response);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        alert(error.response.data.error);
+      }
+    });
+}
+}))
 
   return (
     <div>
@@ -622,6 +649,6 @@ const EstablishmentSectionForm = ({est_data, request_id}) => {
       </form>
     </div>
   );
-}
+})
 
 export default EstablishmentSectionForm

@@ -67,7 +67,6 @@ class Users(db.Model):
         [
             {
                 'time': <timestamp as str>,
-                'time': <timestamp as str>,
                 'content': <text>
             }
         ],

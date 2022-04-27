@@ -578,6 +578,11 @@ class LtcManager:
             adv_req:AdvanceRequests = AdvanceRequests.query.filter_by(request_id=request_id).first()
             adv_req.payment(amount, comments)
             adv_req.payment_docs(current_user, payment_proof)
-
-            return jsonify({"success": "uploaded proofs"})
             
+
+            app_form:LTCApproved = LTCApproved.query.get(request_id)
+            form:LTCRequests = LTCRequests.query.get(request_id)
+            form.stage = Stages.approved
+            db.session.commit()
+            return jsonify({"success": "uploaded proofs"})
+
