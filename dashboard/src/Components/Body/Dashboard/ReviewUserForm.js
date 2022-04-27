@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { TextField, Box, Button, Typography, Grid, FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { TextField, Box, Button, Typography, Grid, FormControlLabel, Radio, RadioGroup, Fab } from "@mui/material";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   KeyboardDatePicker,
@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
-
+import Add from "@material-ui/icons/Add";
 
 const ReviewUserForm = ({user_data, request_id}) => {
   const { control, handleSubmit, reset} = useForm();
@@ -23,8 +23,41 @@ const ReviewUserForm = ({user_data, request_id}) => {
     reset(user_data);
   }, [user_data]);
 
+  const [File, setFile] = useState(null);
+
   const onSubmitForm = (data) => {
-    console.log("saving", data);
+    // console.log("Submitting", isSubmitting);
+    const formData = new FormData();
+
+    // data.name = profileInfo.name;
+    //data.designation = profile.permission;
+    // data.department = profileInfo.department;
+    // data.emp_code = profileInfo.employee_code;
+
+    console.log('data: ', JSON.stringify(data));
+    // formData.append('attachments', data.attachments[0]);
+    formData.append('request_id', request_id);
+    formData.append('form', JSON.stringify(data));
+
+    console.log("onSubmit")
+    console.log(data);
+    return axios({
+      method: "POST",
+      url: "/api/resolve-review",
+      data: formData
+    })
+      .then((response) => {
+        alert("Application submitted!")
+        window.location.reload()
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          alert('Error. Please try logging in again');
+        }
+      });
   };
 
   const options = [
@@ -82,6 +115,7 @@ const ReviewUserForm = ({user_data, request_id}) => {
                     color="primary"
                     fullWidth
                     margin="normal"
+                    disabled="true"
                     //multiline={multiline}
                     //rows={rows}
                   />
@@ -136,6 +170,7 @@ const ReviewUserForm = ({user_data, request_id}) => {
                     color="primary"
                     fullWidth
                     margin="normal"
+                    disabled="true"
                     //multiline={multiline}
                     //rows={rows}
                   />
@@ -164,6 +199,7 @@ const ReviewUserForm = ({user_data, request_id}) => {
                     color="primary"
                     fullWidth
                     margin="normal"
+                    disabled="true"
                     //multiline={multiline}
                     //rows={rows}
                   />
@@ -609,8 +645,44 @@ shortest route"
               )}
             />
           </Grid>
-        </Grid>
+        
+          <Grid item xs={3} style={{ margin: "auto" }}>
+                    <Controller
+                      name="attachments"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <>
+                          <Fab
+                            variant="extended"
+                            component="label"
+                            size="small"
+                            color="primary"
+                          >
+                            <input
+                              type="file"
+                              onChange={(e) => {
+                                field.onChange(e.target.files);
+                                if (!e.target.files[0]) {
+                                  setFile("No file chosen");
+                                } else {
+                                  setFile(e.target.files[0].name);
+                                }
+                              }}
+                              style={{ display: "none" }}
+                            />
+                            <Add />
+                            Upload Proofs
+                          </Fab>
+                        </>
+                      )}
+                    />
 
+                    <Typography>{File}</Typography>
+                  </Grid>
+
+        </Grid>
+          
         <Typography>
           Person(s) in respect of whom LTC is proposed to be availed:
         </Typography>

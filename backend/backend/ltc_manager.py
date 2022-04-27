@@ -360,7 +360,8 @@ class LtcManager:
         @roles_required(roles=allowed_roles)
         def post(self, permission):
             analyse()
-            request_id = json.loads(request.form.get('request_id'))
+            request_id = request.form.get('request_id')
+            print(request_id)
             if permission == Permissions.establishment:
                 return self.resolveEstablishmentReview(request_id,)
             else:
@@ -369,15 +370,18 @@ class LtcManager:
         def resolveClientReview(self, request_id):
             # get updated form
             updated_form: dict = json.loads(request.form.get('form'))
+            print(updated_form)
             updated_file = request.files.get('attachment', None)
-            updated_form.pop('attachments')
+            if updated_form.get('attachments', False) != False:
+                updated_form.pop('attachments')
             db_form: LTCRequests = LTCRequests.query.get(request_id)
+            print(db_form.form)
             # Take care not to patch department form fields
-            restricted_fields = {stage: True for stage in Stages}
+            # restricted_fields = {stage: True for stage in Stages}
             for field in updated_form:
-                if restricted_fields.get(field, False):
-                    continue
-                if db.form.get(str(field), None) != None:
+                # if restricted_fields.get(field, False):
+                #     continue
+                if db_form.form.get(str(field), None) != None:
                     db_form.form[str(field)] = updated_form[field]
 
             # update attachments if any

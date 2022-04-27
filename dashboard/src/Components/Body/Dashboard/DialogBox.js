@@ -22,8 +22,10 @@ import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import EstablishmentSectionForm from "./Establishment/EstablishmentSectionForm";
 import PersonIcon from "@material-ui/icons/Person";
+import ReactToPrint from 'react-to-print';
+const moment = require('moment');
 
-const DialogBox = ({ request_id, permission, process, status }) => {
+const DialogBox = ({ request_id, permission, process, status, email }) => {
   console.log('permission', permission);
   const [formInfo, setFormInfo] = useState({
     created_on: "",
@@ -114,6 +116,11 @@ const DialogBox = ({ request_id, permission, process, status }) => {
       });
   };
   
+
+  function formatDate(date){
+    const d = moment(date).format("DD-MM-YYYY");
+    return d;
+  }
 
   //options for radio input
   function getVal(val, default_val) {
@@ -300,17 +307,34 @@ const DialogBox = ({ request_id, permission, process, status }) => {
     }
   }
 
+  const printComponentRef = useRef();
 
   return (
     <>
       <Box display="flex" justifyContent="space-between">
-        <Box>
-          <DialogTitle>LTC Application ID {formInfo.request_id}</DialogTitle>
+        <Box text-overflow="wrap">
+          <DialogTitle >LTC ID {formInfo.request_id}: {
+                formInfo.form_data["name"] === undefined
+                  ? " "
+                  : formInfo.form_data["name"]
+              }, {
+                formInfo["email"] === undefined
+                  ? " "
+                  : formInfo["email"]
+              } </DialogTitle>
         </Box>
-        <Box margin="2vh 2vh 0 0">
-          <Button variant="contained" color="primary">
+        <Box margin="2vh 2vh 0 0" display="flex" justifyContent="right">
+        <ReactToPrint
+        trigger={() => <Button variant="contained" color="primary">
+            
+        PDF
+      </Button>}
+        content={() => printComponentRef.current}
+      />
+          {/* <Button variant="contained" color="primary">
+            
             PDF
-          </Button>
+          </Button> */}
           &nbsp;
           <Button
             variant="contained"
@@ -334,7 +358,8 @@ const DialogBox = ({ request_id, permission, process, status }) => {
           {/* <Button>Office Order</Button> */}
         </Box>
       </Box>
-      <DialogContent>
+      
+      <DialogContent ref={printComponentRef}>
         {/* <DialogContentText>hello</DialogContentText> */}
         {/* <TextField label="Field" name = "Field" value = {formInfo.created_on}/> */}
         <Box style={{ backgroundColor: "#fffcf5", padding:"1vh 1vh 1vh 1vh" }}>
@@ -890,7 +915,7 @@ shortest route "
               style={{ margin: "5vh 0 1vh 0" }}
             >
               <Typography style={{ fontWeight: "bold" }}>
-                Establishment Section Data
+                Establishment Section 
               </Typography>
             </Box>
             <Box style={{ backgroundColor: "#fffcf5", padding:"1vh 1vh 1vh 1vh" }}>
@@ -910,9 +935,9 @@ shortest route "
                             "est_data_joining_date"
                           ] === undefined
                         ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_joining_date"
-                          ]
+                        : formatDate(formInfo.form_data["establishment"][
+                          "est_data_joining_date"
+                        ])
                     }
                     fullWidth
                     InputProps={{

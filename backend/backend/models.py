@@ -65,7 +65,8 @@ class Users(db.Model):
     """
     'notifications': {
         [
-            {
+            {   
+                'level': <info, error, warning, success>
                 'time': <timestamp as str>,
                 'content': <text>
             }
@@ -90,10 +91,11 @@ class Users(db.Model):
         user = Users.query.filter_by(email=email).one_or_none()
         return user
 
-    def addNotification(self, text):
+    def addNotification(self, text, level='info'):
         self.notifications['notifications'].insert(0, {
-            'time': f'{datetime.today().date()}',
-            'content': text
+            'time': f'{datetime.now()}',
+            'content': text,
+            'level': level
         })
         flag_modified(self, "notifications")
         db.session.merge(self)
@@ -590,7 +592,7 @@ class LTCRequests(db.Model):
                 break
             form.status = 'declined'
         applicant.addNotification(
-            f'Your LTC request, ID {self.request_id} has been declined.')
+            f'Your LTC request, ID {self.request_id} has been declined.', level='error')
 
     def review_to_establishment(self, received_from, message):
         """
@@ -628,7 +630,7 @@ class LTCRequests(db.Model):
             self.review_to_user(reviewer.department,  message)
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been sent back for your review.'
-                ' Read comments with the form for more information.')
+                ' Read comments with the form for more information.', level='warning')
         else:
             """
             else, send back the application to the establishment section.
@@ -641,7 +643,7 @@ class LTCRequests(db.Model):
             )
             for role in est_roles:
                 role.addNotification(
-                    f'REVIEW: LTC request, ID {self.request_id} has been sent for review from {str(reviewer.department).capitalize()} Section')
+                    f'REVIEW: LTC request, ID {self.request_id} has been sent for review from {str(reviewer.department).capitalize()} Section', level='warning')
 
     def resolve_review_establishment(self, message):
         pass

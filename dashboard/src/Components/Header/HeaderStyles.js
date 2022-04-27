@@ -31,6 +31,7 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       marginTop: "0px",
     },
+    // backgroundColor:'#cfd8dc'
   },
 
   navButton: {
@@ -45,7 +46,7 @@ export const useStyles = makeStyles((theme) => ({
     // alignItems: "stretch",
     //width: "100%",
     overflowWrap: "anywhere",
-    background: "#efefef",
+    background: "#cfd8dc",
     padding: theme.spacing(2, 2, 0, 32),
     [theme.breakpoints.down("sm")]: {
       padding: theme.spacing(2, 2),

@@ -55,7 +55,7 @@ function GoogleLogin() {
     }, []);
 
     return (
-        <Grid>
+        <Grid style={{backgroundColor:"#cfd8dc", height: "100vh", display:"flex"}}>
             <Paper elevation={10} className={classes.loginPage}>
                 <Grid align="center">
                     <h2>LTC PORTAL IIT ROPAR</h2>

@@ -7,6 +7,7 @@ import NotificationsPausedIcon from "@material-ui/icons/NotificationsPaused";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import { margin, typography } from '@mui/system';
 import ClearIcon from '@material-ui/icons/Clear';
+import { Alert, AlertTitle } from '@mui/material';
 
 export default function Home() {
   const classes = useStyles();
@@ -47,7 +48,7 @@ export default function Home() {
         setNotifications(response.data.notifications)
         // const notif = [
         //   { time: "100", content: "this is an extremely big big big big big bignotification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
+        //   { time: "100", content: "this is an extremely big notificationmessagehhhhhhhhhhdhdhdhdhhdhdhdhdhdhhdbakcbkhebehfbhfbhebfhbrfkrbfhkrbfhkrbf khbrkfbrkhfbrkhfbrhkbfhkrbfhkrbfhkrbfhkbrhkfbrhkfbrhkfbrkhbfhkrb" },
         //   { time: "100", content: "this is an extremely big notification message" },
         //   { time: "100", content: "this is an extremely big notification message" },
         //   { time: "100", content: "this is an extremely big notification message" },
@@ -170,19 +171,41 @@ export default function Home() {
               title='Clear Notifications'
               variant="contained"
               // color="primary"
-              style={{borderRadius:"35%"}}
+              style={{ borderRadius: "35%" }}
               onClick={clearNotifications}
             >
               <ClearIcon />
             </Button>
           </Box>
           {notifications.length !== 0 ? (
-            <center>
+            // <center>
               <div style={{ listStyle: "none" }}>
+                {/* <Alert severity="info">
+                <AlertTitle>Info</AlertTitle>
+                This is an info alert — <strong>check it out!</strong>
+              </Alert> */}
                 {notifications.map((item, i) => (
                   <li key={i}>
-                    <Box display="flex" justifyContent="center" text-overflow="ellipsis" title={item.content}>
-                      <Paper
+                    <Box display="flex" text-overflow="ellipsis" title={item.content}>
+                      <Alert severity={item.level===undefined ? "info": item.level} style={{
+                          height: "auto",
+                          width: "100%",
+                          margin: "1vw",
+                          // textAlign: "center",
+                          overflowX: "wrap"
+                          // overflow: "hidden",
+                          // whiteSpace: "nowrap",
+                          // textOverflow: "ellipsis"
+                        }}>
+                        <AlertTitle justifyContent="center">Info</AlertTitle>
+                        <div style={{ textOverflow: "ellipsis" }}>
+                          <Typography variant="body1" style={{ padding: "0.5vh" }}>
+                            {item.time+': '+item.content}
+                          </Typography>
+                        </div>
+                        {/* This is an info alert — <strong>check it out!</strong> */}
+                      </Alert>
+                      {/* <Paper
                         elevation={0}
                         style={{
                           height: "auto",
@@ -201,12 +224,12 @@ export default function Home() {
                             {item.time+': '+item.content}
                           </Typography>
                         </div>
-                      </Paper>
+                      </Paper> */}
                     </Box>
                   </li>
                 ))}
               </div>
-            </center>
+            // </center>
           ) : (
             <Box display="flex" justifyContent="center">
               <Paper
