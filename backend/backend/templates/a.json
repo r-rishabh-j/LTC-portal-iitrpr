@@ -1,0 +1,15 @@
+{
+    "establishment": [
+        {
+            "approved": {
+                "establishment_head@email": null,
+                "establishment@email": false
+            },
+            "comments": {
+                "establishment_head@email": null,
+                "establishment@email": "nope"
+            },
+            "review": true
+        }
+    ]
+}

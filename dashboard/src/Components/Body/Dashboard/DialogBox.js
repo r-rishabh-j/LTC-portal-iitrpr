@@ -362,7 +362,7 @@ const DialogBox = ({ request_id, permission, process, status, email }) => {
       <DialogContent ref={printComponentRef}>
         {/* <DialogContentText>hello</DialogContentText> */}
         {/* <TextField label="Field" name = "Field" value = {formInfo.created_on}/> */}
-        <Box style={{ backgroundColor: "#fffcf5", padding:"1vh 1vh 1vh 1vh" }}>
+        <Box sx={{ backgroundColor: "#eeeeee", padding:"1vh 1vh 1vh 1vh", border:1, borderColor:"text.primary"}}>
           <Grid item xs={12}>
             <TextField
               label="Name"
@@ -893,7 +893,7 @@ shortest route "
                 <InfoIcon />
               </Tooltip>
             </Box>
-            <Box style={{backgroundColor: "#fffcf5", padding:"1vh 1vh 1vh 1vh"}}>
+            <Box style={{backgroundColor: "#eeeeee", padding:"1vh 1vh 1vh 1vh", borderColor:"primary.main"}}>
               <EstablishmentSectionForm
                 ref={childRef}
                 est_data={
@@ -918,7 +918,7 @@ shortest route "
                 Establishment Section 
               </Typography>
             </Box>
-            <Box style={{ backgroundColor: "#fffcf5", padding:"1vh 1vh 1vh 1vh" }}>
+            <Box style={{ backgroundColor: "#eeeeee", padding:"1vh 1vh 1vh 1vh", border:1,  borderColor: 'grey.500' }}>
               <Typography>
                 Fresh Recruit i.e. joining Govt. Service after 01.09.2008
                 /otherwise,

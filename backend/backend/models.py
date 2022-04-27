@@ -628,6 +628,12 @@ class LTCRequests(db.Model):
             If reviewer is establishment, then send back the application to the user.
             """
             self.review_to_user(reviewer.department,  message)
+            for key in self.comments[Stages.establishment][-1]['approved']:
+                self.comments[Stages.establishment][-1]['approved'][key] = None
+            
+            flag_modified(self, "comments")
+            db.session.merge(self)
+
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been sent back for your review.'
                 ' Read comments with the form for more information.', level='warning')
@@ -641,6 +647,13 @@ class LTCRequests(db.Model):
                 self.generate_comments_template(
                     Stages.establishment, est_roles, review=True)
             )
+
+            for key in self.comments[reviewer.department][-1]['approved']:
+                self.comments[Stages.establishment][-1]['approved'][key] = None
+                
+            flag_modified(self, "comments")
+            db.session.merge(self)
+
             for role in est_roles:
                 role.addNotification(
                     f'REVIEW: LTC request, ID {self.request_id} has been sent for review from {str(reviewer.department).capitalize()} Section', level='warning')
