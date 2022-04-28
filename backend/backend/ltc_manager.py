@@ -14,7 +14,7 @@ from flask_restful import Resource, reqparse, abort, fields
 from .role_manager import Permissions, role_required, roles_required, check_role
 from .models import ApplicationStatus, EstablishmentLogs, EstablishmentReview, LTCApproved,\
     Users, LTCRequests, Departments, AdvanceRequests
-
+from . import emailmanager
 
 class LtcManager:
     class ApplyForLTC(Resource):

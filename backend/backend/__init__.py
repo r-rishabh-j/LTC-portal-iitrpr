@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
 from flask_migrate import Migrate
 from .file_manager import create_file_manager
+from .email_manager import EmailManager
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,6 +15,10 @@ db = SQLAlchemy()
 UPLOAD_FOLDER = 'uploads'
 filemanager = create_file_manager(upload_folder=UPLOAD_FOLDER)
 
+enable_email = False
+if os.environ.get("ENABLE_EMAIL") == 'true':
+    enable_email = True
+emailmanager = EmailManager(enabled=enable_email)
 
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app = Flask(__name__, static_url_path='', template_folder=os.path.abspath(

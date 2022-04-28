@@ -6,7 +6,7 @@ from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm.attributes import flag_modified
 from sqlalchemy import Text
 from sqlalchemy import Integer, Numeric
-from . import filemanager
+from . import filemanager, emailmanager
 
 
 class Stage:
@@ -62,6 +62,7 @@ class Users(db.Model):
     picture = db.Column(db.String, nullable=True)  # picture from google auth
     # stores user notifications
     notifications = db.Column(MutableDict.as_mutable(JSON))
+    email_pref = db.Column(db.Boolean)
     """
     'notifications': {
         [
@@ -74,7 +75,7 @@ class Users(db.Model):
     }
     """
 
-    def __init__(self, email, name, dept, permission, designation='Faculty', employee_code=None):
+    def __init__(self, email, name, dept, permission, designation='Faculty', email_pref=False, employee_code=None):
         self.email = email
         self.name = name
         self.department = dept
@@ -83,6 +84,7 @@ class Users(db.Model):
         self.designation = designation
         self.employee_code = employee_code
         self.notifications = {'notifications': []}
+        self.email_pref = email_pref
 
     def __repr__(self) -> str:
         return f'ID:{self.id}, {self.email}, {self.name}'
@@ -593,6 +595,10 @@ class LTCRequests(db.Model):
             form.status = 'declined'
         applicant.addNotification(
             f'Your LTC request, ID {self.request_id} has been declined.', level='error')
+        text = f"""Your LTC request, ID {self.request_id} has been declined.
+        Visit LTC Portal for more information.
+        """
+        emailmanager.sendEmail(applicant, 'LTC Request Declined', text)
 
     def review_to_establishment(self, received_from, message):
         """
@@ -630,7 +636,7 @@ class LTCRequests(db.Model):
             self.review_to_user(reviewer.department,  message)
             for key in self.comments[Stages.establishment][-1]['approved']:
                 self.comments[Stages.establishment][-1]['approved'][key] = None
-            
+
             flag_modified(self, "comments")
             db.session.merge(self)
 
@@ -650,7 +656,7 @@ class LTCRequests(db.Model):
 
             for key in self.comments[reviewer.department][-1]['approved']:
                 self.comments[Stages.establishment][-1]['approved'][key] = None
-                
+
             flag_modified(self, "comments")
             db.session.merge(self)
 

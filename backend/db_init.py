@@ -9,9 +9,9 @@ load_dotenv()
 
 user_list = [
     Users(email='2019csb1286@iitrpr.ac.in',
-          name='Rishabh Jain', dept='cse', permission='client', designation='Faculty', employee_code=1),
+          name='Rishabh Jain', dept='cse', permission='client', designation='Faculty', employee_code=1, email_pref=True),
     Users(email='2019csb1152@iitrpr.ac.in',
-          name='Bhumika', dept='cse', permission='client', designation='Faculty', employee_code=2),
+          name='Bhumika', dept='cse', permission='client', designation='Faculty', employee_code=2, email_pref=True),
     Users(email='admin@email', name='Admin', dept='admin',
           permission='admin', designation='Admin'),
     Users(email='establishment@email', name='Establishment Section',

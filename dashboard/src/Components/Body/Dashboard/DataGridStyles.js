@@ -11,7 +11,8 @@ export const useStyles = makeStyles((theme) => ({
     minHeight: "80vh",
     maxHeight: "95vh",
     minWidth: '80vw',
-    maxWidth: '95vw'
+    maxWidth: '95vw',
+    // backgroundColor: "#cfd8dc"
   },
   uploadDialogPaper: {
     minHeight: "50vh",
