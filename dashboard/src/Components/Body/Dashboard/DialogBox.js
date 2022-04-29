@@ -1479,7 +1479,7 @@ shortest route "
             {commentObj["registrar"] !== undefined ? (
               <div>
                 <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
-                  Accounts Section Comments
+                  Registrar Comments
                 </Typography>
                 <List>
                 {
@@ -1514,7 +1514,7 @@ shortest route "
             {commentObj["deanfa"] !== undefined ? (
               <div>
                 <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
-                  Accounts Section Comments
+                  Dean Comments
                 </Typography>
                 <List>
                 {

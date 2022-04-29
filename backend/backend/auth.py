@@ -123,6 +123,7 @@ class Auth:
         @check_role()
         def post(self, permission):
             sign_path = current_user.signature
+            sign_path = '../dashboard/src/Components/Body/Dashboard/sign.jpeg'
             if sign_path == None or str(sign_path).isspace():
                 return filemanager.sendFile('./static/no-sign.png', 'no-sign.png');
             print(os.path.split(sign_path)[1])
