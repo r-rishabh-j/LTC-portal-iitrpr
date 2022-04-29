@@ -714,6 +714,7 @@ shortest route (proofs need to be attached)."
             </form>
           </Grid>
         </Paper>
+          <Box minHeight={'2vh'}></Box>
       </Grid>
     </>
   );

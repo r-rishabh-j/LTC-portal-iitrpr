@@ -3,13 +3,34 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import os
 
+
+
 class EmailManager():
+    ltc_req_created_msg="""Hello %s,
+Your LTC Request, ID %s has been created.
+Keep visiting LTC Portal for updates.
+"""
+    decline_msg="""Hello %s,
+Your LTC Request, ID %s has been declined.
+Visit LTC Portal for more information.
+"""
+    approval_msg="""Hello %s,
+Your LTC Request, ID %s has been approved and is pending office order generation.
+Visit LTC Portal for more information.
+"""
+    ltc_office_order_msg="""Hello %s,
+Office order for LTC Request ID %s has been generated.
+Visit LTC Portal for more information.
+"""
     def __init__(self, enabled=True) -> None:
         self.sender_address = os.environ.get('EMAIL_ID')
         self.sender_pass = os.environ.get('EMAIL_APP_PASSWORD')
         self.enabled=enabled
+        self.__connect()
+
+    def __connect(self):
         try:
-            if enabled:
+            if self.enabled:
                 self.session = smtplib.SMTP(
                     'smtp.gmail.com', 587)  # use gmail with port
                 self.session.starttls()  # enable security
@@ -18,14 +39,11 @@ class EmailManager():
             else:
                 print('Email Disabled.')
         except:
-            if enabled:
+            if self.enabled:
                 print('Not able to create email session')
 
-    def sendEmail(self, receiver, subject, message_text):
-        if not self.enabled:
-            return
-        try:
-            if receiver.email_pref == True:
+    def __sendEmail(self, receiver, subject, message_text):
+        if receiver.email_pref == True:
                 message = MIMEMultipart()
                 message['From'] = self.sender_address
                 message['To'] = receiver.email
@@ -36,8 +54,22 @@ class EmailManager():
                 # Create SMTP session for sending the mail
                 text = message.as_string()
                 self.session.sendmail(self.sender_address, receiver.email, text)
+
+    def sendEmail(self, receiver, subject, message_text):
+        if not self.enabled:
+            return
+        try:
+            try:
+                self.__sendEmail(receiver, subject, message_text)
+            except (smtplib.SMTPServerDisconnected, smtplib.SMTPConnectError, smtplib.SMTPSenderRefused) as e :
+                print(e)
+                try:
+                    self.__connect()
+                    self.__sendEmail(receiver, subject, message_text)
+                except:
+                    print('Email Not Sent')
         except:
-                print('Email Not Sent')
+            print('Error in sending mail')
 
     def __del__(self):
         if not self.enabled:

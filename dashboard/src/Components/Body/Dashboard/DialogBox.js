@@ -74,6 +74,7 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
       responseType: "blob",
     })
       .then((response) => {
+        console.log('ee', response)
         var blob = new Blob([response.data], { type: response.data.type });
         var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
         var anchor = document.createElement('a');
@@ -193,26 +194,6 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
             array.push(getVal(dept_comments[0].comments, {}));
           }
         }
-
-        //   commentArray.forEach(function (arrayItem) {
-        //     console.log(arrayItem);
-        //     console.log("hello");
-        //     array.push(arrayItem);
-        //   //   for (var dept in arrayItem) {
-        //   //   // if (arrayItem.hasOwnProperty(dept)){
-        //   //   //      var stageObject = arrayItem[dept];
-        //   //   //      console.log(stageObject);
-        //   //   // }
-
-        //   //   //   if (stageObject.hasOwnProperty("comments")) {
-        //   //   //     var stageComments = stageObject["comments"];
-        //   //   //     array.push(stageComments);
-        //   //   //   }
-        //   //   // }
-        //   //     //console.log(arrayItem);
-
-        //   // }
-        // });
         setComments(array);
       })
       .catch((error) => {
@@ -224,29 +205,8 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
       });
   }, []);
 
-  // if(formInfo.comments !== {})
-  //   console.log("Hi", formInfo.comments["establishment"]["comments"]["establishment@email"]);
-  // console.log(comments);
-  // const comment_data = formInfo.comments.comments ?? [];
-
-  // var obj = formInfo.comments;
-  // for (var key in obj) {
-  //   if (obj.hasOwnProperty(key)) {
-  //     var val = obj[key];
-  //     console.log(val);
-
-  //     if(val.hasOwnProperty("comments")){
-  //       var comments = val["comments"];
-  //       console.log(comments)
-  //     }
-  //   }
-  // }
-
   const onSubmit = (data) => {
     console.log(data);
-    // if(edit){
-    //   childRef.current.onSubmitEstData()
-    // }
 
     const req_data = {
       request_id: request_id,
@@ -297,8 +257,6 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
         }
       });
   };
-
-  // console.log("This is est data", formInfo.form_data["establishment"]["est_data_block_year"])
 
   function getVal(val, default_val) {
     if (val === undefined) {
@@ -363,7 +321,7 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
       <DialogContent ref={printComponentRef}>
         {/* <DialogContentText>hello</DialogContentText> */}
         {/* <TextField label="Field" name = "Field" value = {formInfo.created_on}/> */}
-        <Box sx={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", border: 1, borderColor: "text.primary" }}>
+        <Box sx={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", borderRadius:"10px" }} >
           <Grid item xs={12}>
             <TextField
               label="Name"
@@ -894,7 +852,7 @@ shortest route "
                 <InfoIcon />
               </Tooltip>
             </Box>
-            <Box style={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", borderColor: "primary.main" }}>
+            <Box style={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", borderRadius:"10px" }}>
               <EstablishmentSectionForm
                 ref={childRef}
                 est_data={
@@ -919,7 +877,7 @@ shortest route "
                 Establishment Section
               </Typography>
             </Box>
-            <Box style={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", border: 1, borderColor: 'grey.500' }}>
+            <Box style={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", borderRadius:"10px" }}>
               <Typography>
                 Fresh Recruit i.e. joining Govt. Service after 01.09.2008
                 /otherwise,
@@ -1411,7 +1369,7 @@ shortest route "
                   {
                     commentObj.establishment.map(
                       (comment) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0"}}>
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}}>
                         {Object.keys(comment["comments"]).map(
                           (prop, i) => {
                             return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || (String(comment["comments"][prop]).trim().length === 0))?<div key={i}></div>:(
@@ -1447,7 +1405,7 @@ shortest route "
                 {
                     commentObj.audit.map(
                       (comment) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0"}}>
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}}>
                         {Object.keys(comment["comments"]).map(
                           (prop, i) => {
                             return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
@@ -1471,19 +1429,9 @@ shortest route "
                 </List>
               </div>
             ) : (
-              // ) : (
-              //   <div>
-              //     <Typography
-              //       style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}
-              //     >
-              //       Establishment Section Comments
-              //     </Typography>
-              //   </div>
-              // )
               <div></div>
             )}
             {commentObj["accounts"] !== undefined ? (
-              // commentObj["establishment"][0]["review"] === true ? (
               <div>
                 <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
                   Accounts Section Comments
@@ -1492,7 +1440,7 @@ shortest route "
                 {
                     commentObj.accounts.map(
                       (comment) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0"}}>
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}}>
                         {Object.keys(comment["comments"]).map(
                           (prop, i) => {
                             return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
@@ -1516,15 +1464,76 @@ shortest route "
                 </List>
               </div>
             ) : (
-              // ) : (
-              //   <div>
-              //     <Typography
-              //       style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}
-              //     >
-              //       Establishment Section Comments
-              //     </Typography>
-              //   </div>
-              // )
+              <div></div>
+            )}
+            {commentObj["registrar"] !== undefined ? (
+              <div>
+                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+                  Accounts Section Comments
+                </Typography>
+                <List>
+                {
+                    commentObj.registrar.map(
+                      (comment) =>{
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}}>
+                        {Object.keys(comment["comments"]).map(
+                          (prop, i) => {
+                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
+                              <ListItem key={i}>
+                                <ListItemIcon>
+                                  <PersonIcon />
+                                </ListItemIcon>
+                                <ListItemText
+                                  primary={prop}
+                                  secondary={
+                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
+                                  }
+                                />
+                              </ListItem>
+                            );
+                          }
+                        )}</Box>
+                      }
+                    )
+                  }
+                </List>
+              </div>
+            ) : (
+              <div></div>
+            )}
+            {commentObj["deanfa"] !== undefined ? (
+              <div>
+                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+                  Accounts Section Comments
+                </Typography>
+                <List>
+                {
+                    commentObj.deanfa.map(
+                      (comment) =>{
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}}>
+                        {Object.keys(comment["comments"]).map(
+                          (prop, i) => {
+                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
+                              <ListItem key={i}>
+                                <ListItemIcon>
+                                  <PersonIcon />
+                                </ListItemIcon>
+                                <ListItemText
+                                  primary={prop}
+                                  secondary={
+                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
+                                  }
+                                />
+                              </ListItem>
+                            );
+                          }
+                        )}</Box>
+                      }
+                    )
+                  }
+                </List>
+              </div>
+            ) : (
               <div></div>
             )}
           

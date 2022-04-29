@@ -9,6 +9,7 @@ import Home from "../Home";
 import Pending from '../Establishment/Pending';
 import Past from '../Establishment/Past';
 import AdvancePayments from './AdvancePayment';
+import { ProfilePage } from '../ProfilePage';
 
 export default function AccountsPage(props){
     const classes = useStyles();
@@ -42,6 +43,7 @@ export default function AccountsPage(props){
           <Route path="/past" element={<Past />}></Route>
           <Route path="/advance-payment" element={<AdvancePayments />}></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
+          <Route path="/profile" element={<ProfilePage profile = {props.profileInfo}/>}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
       </Box>

@@ -253,7 +253,7 @@ function Pending({permission}) {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} process="new"/>
+          <DialogBox request_id={id} permission={permission} process="new" showCommentSection={true}/>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close
