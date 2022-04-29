@@ -24,6 +24,7 @@ import EstablishmentSectionForm from "./Establishment/EstablishmentSectionForm";
 import PersonIcon from "@material-ui/icons/Person";
 import ReactToPrint from 'react-to-print';
 import "bootstrap/dist/css/bootstrap.min.css";
+import PrintForm from "./PrintForm";
 const moment = require('moment');
 
 const DialogBox = ({ request_id, permission, process, status, email, showCommentSection }) => {
@@ -42,6 +43,10 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
   // const [accComments, setAccComments] = useState({});
   // const [estComments, setEstComments] = useState({});
   // const [estComments, setEstComments] = useState({});
+
+  // const getPageMargins = () => {
+  //   return `@page { margin: 10mm 10mm 20mm 20mm !important; }`;
+  // };
 
 
   const { handleSubmit, control, formState: { isSubmitting } } = useForm({});
@@ -314,23 +319,23 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
     <>
       <Box display="flex" justifyContent="space-between">
         <Box text-overflow="wrap">
-          <DialogTitle >LTC ID {formInfo.request_id}: {
-            formInfo.form_data["name"] === undefined
+          <DialogTitle>
+            LTC ID {formInfo.request_id}:{" "}
+            {formInfo.form_data["name"] === undefined
               ? " "
-              : formInfo.form_data["name"]
-          }, {
-              formInfo["email"] === undefined
-                ? " "
-                : formInfo["email"]
-            } </DialogTitle>
+              : formInfo.form_data["name"]}
+            , {formInfo["email"] === undefined ? " " : formInfo["email"]}{" "}
+          </DialogTitle>
         </Box>
         <Box margin="2vh 2vh 0 0" display="flex" justifyContent="right">
           <ReactToPrint
-            trigger={() => <Button variant="contained" color="primary">
-
-              PDF
-            </Button>}
+            trigger={() => (
+              <Button variant="contained" color="primary">
+                PDF
+              </Button>
+            )}
             content={() => printComponentRef.current}
+            pageStyle={"@page {size: A4; margin: 200mm !important}"}
           />
           {/* <Button variant="contained" color="primary">
             
@@ -360,10 +365,20 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
         </Box>
       </Box>
 
-      <DialogContent ref={printComponentRef}>
+      <DialogContent>
+        <div style={{ display: "none" }}>
+          <PrintForm ref={printComponentRef} request_id={request_id} />
+        </div>
         {/* <DialogContentText>hello</DialogContentText> */}
         {/* <TextField label="Field" name = "Field" value = {formInfo.created_on}/> */}
-        <Box sx={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", border: 1, borderColor: "text.primary" }}>
+        <Box
+          sx={{
+            backgroundColor: "#eeeeee",
+            padding: "1vh 1vh 1vh 1vh",
+            border: 1,
+            borderColor: "text.primary",
+          }}
+        >
           <Grid item xs={12}>
             <TextField
               label="Name"
@@ -894,7 +909,13 @@ shortest route "
                 <InfoIcon />
               </Tooltip>
             </Box>
-            <Box style={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", borderColor: "primary.main" }}>
+            <Box
+              style={{
+                backgroundColor: "#eeeeee",
+                padding: "1vh 1vh 1vh 1vh",
+                borderColor: "primary.main",
+              }}
+            >
               <EstablishmentSectionForm
                 ref={childRef}
                 est_data={
@@ -919,7 +940,14 @@ shortest route "
                 Establishment Section
               </Typography>
             </Box>
-            <Box style={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", border: 1, borderColor: 'grey.500' }}>
+            <Box
+              style={{
+                backgroundColor: "#eeeeee",
+                padding: "1vh 1vh 1vh 1vh",
+                border: 1,
+                borderColor: "grey.500",
+              }}
+            >
               <Typography>
                 Fresh Recruit i.e. joining Govt. Service after 01.09.2008
                 /otherwise,
@@ -933,12 +961,14 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_joining_date"
-                        ] === undefined
-                          ? " "
-                          : formatDate(formInfo.form_data["establishment"][
                             "est_data_joining_date"
-                          ])
+                          ] === undefined
+                        ? " "
+                        : formatDate(
+                            formInfo.form_data["establishment"][
+                              "est_data_joining_date"
+                            ]
+                          )
                     }
                     fullWidth
                     InputProps={{
@@ -955,11 +985,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_block_year"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_block_year"
+                            "est_data_block_year"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_block_year"
                           ]
                     }
                     fullWidth
@@ -983,11 +1013,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_nature_last"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_nature_last"
+                            "est_data_nature_last"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_nature_last"
                           ]
                     }
                     fullWidth
@@ -1005,11 +1035,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_nature_current"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_nature_current"
+                            "est_data_nature_current"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_nature_current"
                           ]
                     }
                     fullWidth
@@ -1030,11 +1060,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_period_last_from"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_period_last_from"
+                            "est_data_period_last_from"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_last_from"
                           ]
                     }
                     fullWidth
@@ -1052,11 +1082,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_period_last_to"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_period_last_to"
+                            "est_data_period_last_to"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_last_to"
                           ]
                     }
                     fullWidth
@@ -1074,11 +1104,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_period_current_from"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_period_current_from"
+                            "est_data_period_current_from"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_current_from"
                           ]
                     }
                     fullWidth
@@ -1097,11 +1127,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_period_current_to"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_period_current_to"
+                            "est_data_period_current_to"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_period_current_to"
                           ]
                     }
                     fullWidth
@@ -1122,11 +1152,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_for"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_for"
+                            "est_data_last_ltc_for"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_ltc_for"
                           ]
                     }
                     fullWidth
@@ -1144,11 +1174,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_for"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_for"
+                            "est_data_current_ltc_for"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_ltc_for"
                           ]
                     }
                     fullWidth
@@ -1169,11 +1199,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_days"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_last_ltc_days"
+                            "est_data_last_ltc_days"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_ltc_days"
                           ]
                     }
                     fullWidth
@@ -1191,11 +1221,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_days"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_current_ltc_days"
+                            "est_data_current_ltc_days"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_ltc_days"
                           ]
                     }
                     fullWidth
@@ -1216,11 +1246,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_last_earned_leave_on"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_last_earned_leave_on"
+                            "est_data_last_earned_leave_on"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_earned_leave_on"
                           ]
                     }
                     fullWidth
@@ -1238,11 +1268,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_current_earned_leave_on"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_current_earned_leave_on"
+                            "est_data_current_earned_leave_on"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_earned_leave_on"
                           ]
                     }
                     fullWidth
@@ -1265,11 +1295,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_last_balance"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_last_balance"
+                            "est_data_last_balance"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_balance"
                           ]
                     }
                     fullWidth
@@ -1287,11 +1317,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_current_balance"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_current_balance"
+                            "est_data_current_balance"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_balance"
                           ]
                     }
                     fullWidth
@@ -1312,11 +1342,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_last_encashment_adm"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_last_encashment_adm"
+                            "est_data_last_encashment_adm"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_encashment_adm"
                           ]
                     }
                     fullWidth
@@ -1334,11 +1364,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_current_encashment_adm"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_current_encashment_adm"
+                            "est_data_current_encashment_adm"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_encashment_adm"
                           ]
                     }
                     fullWidth
@@ -1361,11 +1391,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_last_nature"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_last_nature"
+                            "est_data_last_nature"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_last_nature"
                           ]
                     }
                     fullWidth
@@ -1383,11 +1413,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                          "est_data_current_nature"
-                        ] === undefined
-                          ? " "
-                          : formInfo.form_data["establishment"][
-                          "est_data_current_nature"
+                            "est_data_current_nature"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["establishment"][
+                            "est_data_current_nature"
                           ]
                     }
                     fullWidth
@@ -1399,137 +1429,171 @@ shortest route "
                 </Grid>
               </Grid>
             </Box>
-            </div>
-            )}
-            {commentObj["establishment"] !== undefined ? (
-              // commentObj["establishment"][0]["review"] === true ? (
-              <div>
-                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
-                  Establishment Section Comments
-                </Typography>
-                <List>
-                  {
-                    commentObj.establishment.map(
-                      (comment) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0"}}>
-                        {Object.keys(comment["comments"]).map(
-                          (prop, i) => {
-                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || (String(comment["comments"][prop]).trim().length === 0))?<div key={i}></div>:(
-                              <ListItem key={i}>
-                                <ListItemIcon>
-                                  <PersonIcon />
-                                </ListItemIcon>
-                                <ListItemText
-                                  primary={prop}
-                                  secondary={
-                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
-                                  }
-                                />
-                              </ListItem>
-                            );
-                          }
-                        )}</Box>
-                      }
-                    )
-                  }
-                </List>
-              </div>
-            ) : (
-              <div></div>
-            )}
-            {commentObj["audit"] !== undefined ? (
-              // commentObj["establishment"][0]["review"] === true ? (
-              <div>
-                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
-                  Audit Section Comments
-                </Typography>
-                <List>
-                {
-                    commentObj.audit.map(
-                      (comment) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0"}}>
-                        {Object.keys(comment["comments"]).map(
-                          (prop, i) => {
-                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
-                              <ListItem key={i}>
-                                <ListItemIcon>
-                                  <PersonIcon />
-                                </ListItemIcon>
-                                <ListItemText
-                                  primary={prop}
-                                  secondary={
-                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
-                                  }
-                                />
-                              </ListItem>
-                            );
-                          }
-                        )}</Box>
-                      }
-                    )
-                  }
-                </List>
-              </div>
-            ) : (
-              // ) : (
-              //   <div>
-              //     <Typography
-              //       style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}
-              //     >
-              //       Establishment Section Comments
-              //     </Typography>
-              //   </div>
-              // )
-              <div></div>
-            )}
-            {commentObj["accounts"] !== undefined ? (
-              // commentObj["establishment"][0]["review"] === true ? (
-              <div>
-                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
-                  Accounts Section Comments
-                </Typography>
-                <List>
-                {
-                    commentObj.accounts.map(
-                      (comment) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0"}}>
-                        {Object.keys(comment["comments"]).map(
-                          (prop, i) => {
-                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
-                              <ListItem key={i}>
-                                <ListItemIcon>
-                                  <PersonIcon />
-                                </ListItemIcon>
-                                <ListItemText
-                                  primary={prop}
-                                  secondary={
-                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
-                                  }
-                                />
-                              </ListItem>
-                            );
-                          }
-                        )}</Box>
-                      }
-                    )
-                  }
-                </List>
-              </div>
-            ) : (
-              // ) : (
-              //   <div>
-              //     <Typography
-              //       style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}
-              //     >
-              //       Establishment Section Comments
-              //     </Typography>
-              //   </div>
-              // )
-              <div></div>
-            )}
-          
+          </div>
+        )}
+        {commentObj["establishment"] !== undefined ? (
+          // commentObj["establishment"][0]["review"] === true ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Establishment Section Comments
+            </Typography>
+            <List>
+              {commentObj.establishment.map((comment) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                    }}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {commentObj["audit"] !== undefined ? (
+          // commentObj["establishment"][0]["review"] === true ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Audit Section Comments
+            </Typography>
+            <List>
+              {commentObj.audit.map((comment) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                    }}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          // ) : (
+          //   <div>
+          //     <Typography
+          //       style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}
+          //     >
+          //       Establishment Section Comments
+          //     </Typography>
+          //   </div>
+          // )
+          <div></div>
+        )}
+        {commentObj["accounts"] !== undefined ? (
+          // commentObj["establishment"][0]["review"] === true ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Accounts Section Comments
+            </Typography>
+            <List>
+              {commentObj.accounts.map((comment) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                    }}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          // ) : (
+          //   <div>
+          //     <Typography
+          //       style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}
+          //     >
+          //       Establishment Section Comments
+          //     </Typography>
+          //   </div>
+          // )
+          <div></div>
+        )}
 
-        {permission !== "client" && process !== "past" && showCommentSection===true ? (
+        {permission !== "client" &&
+        process !== "past" &&
+        showCommentSection === true ? (
           <div>
             <br />
             <Typography style={{ fontWeight: "bold" }}>Comments</Typography>
@@ -1566,12 +1630,15 @@ shortest route "
                 }
               />
               <Box display="flex" justifyContent="center">
-                <Button type="submit" variant="contained" color="primary"
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
                   disabled={isSubmitting}
                 >
-                {isSubmitting && (
-                  <span className="spinner-grow spinner-grow-sm"></span>
-                )}
+                  {isSubmitting && (
+                    <span className="spinner-grow spinner-grow-sm"></span>
+                  )}
                   Send
                 </Button>
               </Box>
