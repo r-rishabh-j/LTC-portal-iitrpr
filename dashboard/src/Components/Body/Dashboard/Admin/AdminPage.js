@@ -8,6 +8,7 @@ import { useStyles } from "../../../Header/HeaderStyles"
 import Home from "../Home"
 import Charts from './Charts';
 import PreviousApplications from './PreviousApplications';
+import { ProfilePage } from '../ProfilePage';
 
 export default function AdminPage(props) {
 
@@ -49,6 +50,7 @@ export default function AdminPage(props) {
             element={<Notifications token={token} setToken={setToken} />}
           ></Route> */}
           <Route path="/logout" element={<Navigate to="/#/" />}></Route>
+          <Route path="/profile" element={<ProfilePage profile = {props.profileInfo}/>}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
         

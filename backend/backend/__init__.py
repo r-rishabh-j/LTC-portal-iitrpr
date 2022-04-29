@@ -20,6 +20,7 @@ if os.environ.get("ENABLE_EMAIL") == 'true':
     enable_email = True
 emailmanager = EmailManager(enabled=enable_email)
 
+
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app = Flask(__name__, static_url_path='', template_folder=os.path.abspath(
         './build'), static_folder=os.path.abspath('./build'))
@@ -32,7 +33,6 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=60)
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    # app.config['JWT_COOKIE_DOMAIN'] =  os.environ.get('COOKIE_DOMAIN')
 
     app.config["flask_profiler"] = {
         "enabled": True,
@@ -55,16 +55,18 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api = Api(app)
     jwt = JWTManager(app)
 
-    from .auth import RegisterUser, Logout, Login, IsLoggedIn
+    from .auth import Auth
     from .ltc_manager import LtcManager
     from .notifications import ClearUserNotifications, GetUserNotifications
     # migrate = Migrate(app, db)
 
-    api.add_resource(Login, '/api/login')
-    api.add_resource(Logout, '/api/logout')
-    api.add_resource(IsLoggedIn, '/api/is-logged-in')
+    api.add_resource(Auth.Login, '/api/login')
+    api.add_resource(Auth.Logout, '/api/logout')
+    api.add_resource(Auth.IsLoggedIn, '/api/is-logged-in')
     api.add_resource(LtcManager.ApplyForLTC, '/api/apply')
-    api.add_resource(RegisterUser, '/api/register')
+    api.add_resource(Auth.RegisterUser, '/api/register')
+    api.add_resource(Auth.GetSignature, '/api/get-signature')   
+    api.add_resource(Auth.UploadSignature, '/api/upload-signature')
     api.add_resource(LtcManager.GetLtcFormData, '/api/getformdata')
     api.add_resource(LtcManager.GetLtcFormMetaData, '/api/get-form-meta')
     api.add_resource(LtcManager.GetLtcFormMetaDataForUser, '/api/getmyforms')
@@ -97,12 +99,6 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     def user_lookup_callback(_jwt_header, jwt_data):
         email = jwt_data.get('sub', None)
         return Users.query.filter_by(email=email).one_or_none()
-
-    # @app.before_request
-    # @flask_profiler.profile()
-    # def analyse():
-    #     """Empty function, just runs before a route to analyse"""
-    #     pass
 
     @app.after_request
     def refresh_expiring_jwts(response):

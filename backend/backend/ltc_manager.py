@@ -56,8 +56,7 @@ class LtcManager:
             emailmanager.sendEmail(
                 current_user,
                 f'LTC Request, ID {new_request.request_id} created',
-                f'Your LTC Request, ID {new_request.request_id} has been created. '
-                'Visit LTC Portal for updates'
+                emailmanager.ltc_req_created_msg%(current_user.name, new_request.request_id)
             )
             db.session.commit()
             return make_response(jsonify({'status': 'ok', 'msg': 'Applied for LTC'}), 200)
@@ -515,6 +514,11 @@ class LtcManager:
                 form.stage = Stages.approved
                 approved_entry.approved_on = datetime.now()
             approved_entry.office_order = path
+            
+            emailmanager.sendEmail(user, 
+            f'Office order generated for LTC Request ID {form.request_id}',
+            emailmanager.ltc_office_order_msg%(user.name, request_id)
+            )
 
             db.session.commit()
             return jsonify({'success': 'Office Order Uploaded!'})

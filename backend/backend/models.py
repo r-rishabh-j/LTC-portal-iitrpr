@@ -560,7 +560,10 @@ class LTCRequests(db.Model):
             db.session.add(log)
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} is now approved, pending office order generation.')
-
+            emailmanager.sendEmail(
+                applicant, f'LTC request, ID {self.request_id} is now approved',
+                emailmanager.approval_msg%(applicant.name, self.request_id)
+                )
             # TODO: send notification to establishment section for office order generation!
 
             message = True, {'msg': 'LTC Approved'}
@@ -595,10 +598,9 @@ class LTCRequests(db.Model):
             form.status = 'declined'
         applicant.addNotification(
             f'Your LTC request, ID {self.request_id} has been declined.', level='error')
-        text = f"""Your LTC request, ID {self.request_id} has been declined.
-        Visit LTC Portal for more information.
-        """
-        emailmanager.sendEmail(applicant, 'LTC Request Declined', text)
+        # text = f"Your LTC request, ID {self.request_id} has been declined."+"Visit LTC Portal for more information."
+        emailmanager.sendEmail(applicant, f'LTC Request ID {self.request_id} Declined', emailmanager.decline_msg % (
+            applicant.name, self.request_id))
 
     def review_to_establishment(self, received_from, message):
         """

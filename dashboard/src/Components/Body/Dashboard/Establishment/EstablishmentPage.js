@@ -10,7 +10,7 @@ import Pending from "./Pending"
 import Past from './Past';
 import Review from './Review';
 import UploadOfficeOrder from './UploadOfficeOrder';
-
+import { ProfilePage } from '../ProfilePage';
 
 export default function EstablishmentPage(props){
     const classes = useStyles();
@@ -44,6 +44,7 @@ export default function EstablishmentPage(props){
           <Route path="/past" element={<Past />}></Route>
           <Route path="/review" element={<Review />}></Route>
           <Route path="/office_orders" element={<UploadOfficeOrder />}></Route>
+          <Route path="/profile" element={<ProfilePage profile = {props.profileInfo}/>}></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
