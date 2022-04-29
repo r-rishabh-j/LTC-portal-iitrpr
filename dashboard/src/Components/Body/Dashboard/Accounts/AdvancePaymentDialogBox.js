@@ -33,7 +33,6 @@ const AdvancePaymentDialogBox = ({ request_id }) => {
 
     function onClick(data) {
         // e.preventDefault();
-        console.log('f', file);
         if (file === undefined || file.length === 0) {
             alert('No file uploaded!');
             return;

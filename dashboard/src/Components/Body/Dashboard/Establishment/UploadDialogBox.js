@@ -16,7 +16,6 @@ import { DropzoneArea } from 'material-ui-dropzone';
 import { useForm, Controller, useFieldArray, register } from "react-hook-form";
 
 
-
 const UploadDialogBox = ({ request_id }) => {
   const [file, setFile] = useState(null);
 
@@ -30,10 +29,11 @@ const UploadDialogBox = ({ request_id }) => {
   function onClick(e) {
     e.preventDefault();
     // console.log('f', file);
-    if (file.length === 0) {
+    if (file === undefined || file.length === 0) {
       alert('No file uploaded!');
       return;
     }
+
     const formData = new FormData();
     formData.append('request_id', request_id);
     formData.append('office_order', file);

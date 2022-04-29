@@ -14,8 +14,10 @@ import axios from 'axios';
 import GeneratePDF from '../../Utilities/GeneratePDF'
 import DialogBox from './DialogBox';
 import ReviewBox from './ReviewBox'
+import {Box} from '@material-ui/core';
+const moment = require('moment');
 
-const PastApplications = ({permission}) => {
+const PastApplications = ({ permission }) => {
   //console.log(permission)
   const classes = useStyles();
 
@@ -151,18 +153,18 @@ const PastApplications = ({permission}) => {
 
   const stageElement = (cellValues) => {
     return (
-      (cellValues.row.stage!=='review') ?
-      <div
-        title={cellValues.formattedValue}
-        style={{
-          overflow: "hidden",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-        }}
-      >
-        {cellValues.formattedValue}
-      </div>:<Button style={{backgroundColor:"orange"}} variant="contained" onClick={(event) => {editForm(event, cellValues)}}>
-        Review</Button>
+      (cellValues.row.stage !== 'review') ?
+        <div
+          title={cellValues.formattedValue}
+          style={{
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {cellValues.formattedValue}
+        </div> : <Button style={{ backgroundColor: "orange" }} variant="contained" onClick={(event) => { editForm(event, cellValues) }}>
+          Review</Button>
     );
   };
   const cellElement = (cellValues) => {
@@ -180,10 +182,17 @@ const PastApplications = ({permission}) => {
     );
   };
 
+  function formatDate(date){
+    const d = moment(date).local().format("DD/MM/YYYY, h:mm A");
+    return d;
+  }
+
   const timeElement = (cellValues) => {
+    console.log('cc',cellValues);
+    const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
     return (
-      <div title={cellValues.formattedValue.replace('GMT', 'IST')} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-        {cellValues.formattedValue.replace('GMT', 'IST')}
+      <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+        {time}
       </div>
     );
   }
@@ -296,17 +305,20 @@ const PastApplications = ({permission}) => {
 
   return (
     <>
-      <div style={{ textAlign: "center" }}>
-        <Typography variant="body" style={{ margin: "auto", fontSize:"2.5vh" }}>
-          Past Applications
-        </Typography>
-      </div>
-
       <Paper
         elevation={10}
-        style={{ display: "flex", minHeight: "88vh", margin: "0 0.5vw 0 3vw" }}
+        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
+      >
+          <Typography variant="body" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
+            Past Applications
+          </Typography>
+      </Paper>
+      <Paper
+        elevation={10}
+        style={{ display: "flex", minHeight: "calc(98vh - 118px)", margin: "0 0.5vw 0 3vw" }}
       >
         <Grid container style={{ flexGrow: 1 }}>
+
           <DataGrid
             initialState={{
               sorting: { sortModel: [{ field: "request_id", sort: "desc" }] },
@@ -323,7 +335,7 @@ const PastApplications = ({permission}) => {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} status={status} />
+          <DialogBox request_id={id} permission={permission} status={status} showCommentSection={false}/>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close
@@ -339,7 +351,7 @@ const PastApplications = ({permission}) => {
           onClose={handleCloseReview}
           classes={{ paper: classes.dialogPaper }}
         >
-          <ReviewBox request_id={id}/>
+          <ReviewBox request_id={id} />
           <DialogActions>
             <Button onClick={handleCloseReview} color="primary">
               Close
@@ -350,6 +362,7 @@ const PastApplications = ({permission}) => {
           </DialogActions>
         </Dialog>
       </Paper>
+        <Box minHeight="2vh"></Box>
     </>
   );
 }

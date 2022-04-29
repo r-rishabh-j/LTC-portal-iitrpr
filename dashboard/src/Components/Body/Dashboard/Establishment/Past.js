@@ -7,12 +7,14 @@ import {
   Dialog,
   DialogActions,
   Typography,
+  Box
 } from "@material-ui/core";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import GeneratePDF from "../../../Utilities/GeneratePDF";
 import { useStyles } from "../DataGridStyles";
 import DialogBox from "../DialogBox";
+const moment = require('moment');
 
 function Past({ permission }){
   console.log("PAST", permission);
@@ -116,20 +118,19 @@ function Past({ permission }){
     );
   };
 
+  function formatDate(date){
+    const d = moment(date).format("DD/MM/YYYY, h:mm A");
+    return d;
+  }
+
   const timeElement = (cellValues) => {
+    const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
     return (
-      <div
-        title={cellValues.formattedValue.replace("GMT", "IST")}
-        style={{
-          overflow: "hidden",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-        }}
-      >
-        {cellValues.formattedValue.replace("GMT", "IST")}
+      <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+        {time}
       </div>
     );
-  };
+  }
 
   const columns = [
     {
@@ -235,14 +236,22 @@ function Past({ permission }){
 
   return (
     <>
-      <div style={{ textAlign: "center" }}>
+      {/* <div style={{ textAlign: "center" }}>
         <Typography variant="body" style={{ margin: "auto", fontSize:"3vh" }}>
           Past Applications
         </Typography>
-      </div>
+      </div> */}
       <Paper
         elevation={10}
-        style={{ display: "flex", height: "100vh", margin: "0 0.5vw 0 3vw" }}
+        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
+      >
+          <Typography variant="body" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
+            Past Applications
+          </Typography>
+      </Paper>
+      <Paper
+        elevation={10}
+        style={{ display: "flex", height: "calc(98vh - 118px)", margin: "0 0.5vw 0 3vw" }}
       >
         <Grid container style={{ flexGrow: 1 }}>
           <DataGrid
@@ -261,7 +270,7 @@ function Past({ permission }){
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} status={status} process={"past"}/>
+          <DialogBox request_id={id} permission={permission} status={status} process={"past"} showCommentSection={true}/>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close
@@ -269,6 +278,8 @@ function Past({ permission }){
           </DialogActions>
         </Dialog>
       </Paper>
+      <Box minHeight="2vh"></Box>
+
     </>
   );
 }

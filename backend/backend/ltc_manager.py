@@ -53,6 +53,12 @@ class LtcManager:
             new_request.form, new_request.attachments = form_data, filepath
             # initialise the application
             self.initialiseApplication(new_request, user)
+            emailmanager.sendEmail(
+                current_user,
+                f'LTC Request, ID {new_request.request_id} created',
+                f'Your LTC Request, ID {new_request.request_id} has been created. '
+                'Visit LTC Portal for updates'
+            )
             db.session.commit()
             return make_response(jsonify({'status': 'ok', 'msg': 'Applied for LTC'}), 200)
 
@@ -525,8 +531,7 @@ class LtcManager:
                     'request_id': pending_appl.request_id,
                     'user': applicant.email,
                     'name': applicant.name,
-                    # 'approved_on': pending_appl.approved_on,
-                    'approved_on': '3:00 GMT',
+                    'approved_on': pending_appl.approved_on,
                 })
             return jsonify({'pending': result})
     

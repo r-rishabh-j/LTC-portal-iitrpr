@@ -6,13 +6,14 @@ import {
   Dialog,
   DialogActions,
   Typography,
+  Box
 } from "@material-ui/core";
 import { DataGrid } from "@mui/x-data-grid";
 import { useStyles } from "../DataGridStyles";
 import axios from "axios";
 import DialogBox from '../DialogBox'
 import AdvancePaymentDialogBox from "./AdvancePaymentDialogBox";
-
+const moment = require('moment');
 
 function AdvancePayments() {
   const classes = useStyles();
@@ -79,20 +80,19 @@ function AdvancePayments() {
     );
   };
 
+  function formatDate(date){
+    const d = moment(date).format("DD/MM/YYYY, h:mm A");
+    return d;
+  }
+
   const timeElement = (cellValues) => {
+    const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
     return (
-      <div
-        title={cellValues.formattedValue.replace("GMT", "IST")}
-        style={{
-          overflow: "hidden",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-        }}
-      >
-        {cellValues.formattedValue.replace("GMT", "IST")}
+      <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+        {time}
       </div>
     );
-  };
+  }
 
   const columns = [
     {
@@ -165,14 +165,17 @@ function AdvancePayments() {
 
   return (
     <>
-      <div style={{ textAlign: "center" }}>
-        <Typography variant="h5" style={{ margin: "auto" }}>
-          Advance Payments
-        </Typography>
-      </div>
       <Paper
         elevation={10}
-        style={{ display: "flex", height: "100vh", margin: "0 0.5vw 0 3vw" }}
+        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
+      >
+          <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
+            Advance Payments
+          </Typography>
+      </Paper>
+      <Paper
+        elevation={10}
+        style={{ display: "flex", height: "calc(98vh - 118px)", margin: "0 0.5vw 0 3vw" }}
       >
         <Grid container style={{ flexGrow: 1 }}>
           <DataGrid
@@ -213,6 +216,7 @@ function AdvancePayments() {
           </DialogActions>
         </Dialog>
       </Paper>
+      <Box minHeight="2vh"></Box>
     </>
   );
 }

@@ -63,6 +63,15 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
 
+  navProfile:{
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#fff',
+      color: '#3c52b2',
+  },
+  height: "auto", margin: "2vh 0 0 0", textDecoration:"none"
+  },
+
   activeNavlinks: {
     color: blue["A700"],
     " & div": {

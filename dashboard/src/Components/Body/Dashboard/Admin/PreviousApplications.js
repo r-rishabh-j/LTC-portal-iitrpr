@@ -4,6 +4,7 @@ import { Grid, Paper, Typography } from "@material-ui/core";
 import { Button, ClickAwayListener } from "@mui/material";
 import axios from "axios";
 import GeneratePDF from "../../../Utilities/GeneratePDF";
+const moment = require('moment');
 
 const handleAttachmentClick = (event, cellValues) => {
   console.log(cellValues.row.request_id);
@@ -76,10 +77,16 @@ const cellElement = (cellValues) => {
     </div>
   );
 }
+function formatDate(date){
+  const d = moment(date).format("DD/MM/YYYY, h:mm A");
+  return d;
+}
+
 const timeElement = (cellValues) => {
+  const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
   return (
-    <div title={cellValues.formattedValue.replace('GMT', 'IST')} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-      {cellValues.formattedValue.replace('GMT', 'IST')}
+    <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+      {time}
     </div>
   );
 }
@@ -190,14 +197,17 @@ function PreviousApplications() {
 
   return (
     <>
-      <div style={{ textAlign: "center" }}>
-        <Typography variant="h5" style={{ margin: "auto" }}>
-          Previous Applications
-        </Typography>
-      </div>
       <Paper
         elevation={10}
-        style={{ display: "flex", height: "100vh", margin: "0 0.5vw 0 3vw" }}
+        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
+      >
+          <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
+            Past Applications
+          </Typography>
+      </Paper>
+      <Paper
+        elevation={10}
+        style={{ display: "flex", height: "calc(100vh - 118px)", margin: "0 0.5vw 0 3vw" }}
       >
         <Grid container style={{ flexGrow: 1 }}>
           <DataGrid

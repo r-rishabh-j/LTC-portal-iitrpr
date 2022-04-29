@@ -23,9 +23,10 @@ import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import EstablishmentSectionForm from "./Establishment/EstablishmentSectionForm";
 import PersonIcon from "@material-ui/icons/Person";
 import ReactToPrint from 'react-to-print';
+import "bootstrap/dist/css/bootstrap.min.css";
 const moment = require('moment');
 
-const DialogBox = ({ request_id, permission, process, status, email }) => {
+const DialogBox = ({ request_id, permission, process, status, email, showCommentSection }) => {
   console.log('permission', permission);
   const [formInfo, setFormInfo] = useState({
     created_on: "",
@@ -41,9 +42,9 @@ const DialogBox = ({ request_id, permission, process, status, email }) => {
   // const [accComments, setAccComments] = useState({});
   // const [estComments, setEstComments] = useState({});
   // const [estComments, setEstComments] = useState({});
-  
 
-  const { handleSubmit, control } = useForm({});
+
+  const { handleSubmit, control, formState: { isSubmitting } } = useForm({});
   const {
     handleSubmit: handleSubmitData,
     control: controlData,
@@ -115,9 +116,9 @@ const DialogBox = ({ request_id, permission, process, status, email }) => {
         }
       });
   };
-  
 
-  function formatDate(date){
+
+  function formatDate(date) {
     const d = moment(date).format("DD-MM-YYYY");
     return d;
   }
@@ -131,7 +132,7 @@ const DialogBox = ({ request_id, permission, process, status, email }) => {
     }
   }
 
-  const options_no_review= [
+  const options_no_review = [
     {
       index: 1,
       label: "Approve",
@@ -144,7 +145,7 @@ const DialogBox = ({ request_id, permission, process, status, email }) => {
     },
   ];
 
-  const options= [
+  const options = [
     {
       index: 1,
       label: "Recommend",
@@ -252,7 +253,7 @@ const DialogBox = ({ request_id, permission, process, status, email }) => {
       comment: data.comment,
       approval: data.approval,
     };
-    axios({
+    return axios({
       method: "POST",
       url: "/api/comment",
       data: req_data,
@@ -277,7 +278,7 @@ const DialogBox = ({ request_id, permission, process, status, email }) => {
     console.log(data);
     setEdit(false);
     const req_data = { request_id: request_id, stage_form: data };
-    axios({
+    return axios({
       method: "POST",
       url: "/api/fill-stage-form",
       data: req_data,
@@ -314,23 +315,23 @@ const DialogBox = ({ request_id, permission, process, status, email }) => {
       <Box display="flex" justifyContent="space-between">
         <Box text-overflow="wrap">
           <DialogTitle >LTC ID {formInfo.request_id}: {
-                formInfo.form_data["name"] === undefined
-                  ? " "
-                  : formInfo.form_data["name"]
-              }, {
-                formInfo["email"] === undefined
-                  ? " "
-                  : formInfo["email"]
-              } </DialogTitle>
+            formInfo.form_data["name"] === undefined
+              ? " "
+              : formInfo.form_data["name"]
+          }, {
+              formInfo["email"] === undefined
+                ? " "
+                : formInfo["email"]
+            } </DialogTitle>
         </Box>
         <Box margin="2vh 2vh 0 0" display="flex" justifyContent="right">
-        <ReactToPrint
-        trigger={() => <Button variant="contained" color="primary">
-            
-        PDF
-      </Button>}
-        content={() => printComponentRef.current}
-      />
+          <ReactToPrint
+            trigger={() => <Button variant="contained" color="primary">
+
+              PDF
+            </Button>}
+            content={() => printComponentRef.current}
+          />
           {/* <Button variant="contained" color="primary">
             
             PDF
@@ -358,11 +359,11 @@ const DialogBox = ({ request_id, permission, process, status, email }) => {
           {/* <Button>Office Order</Button> */}
         </Box>
       </Box>
-      
+
       <DialogContent ref={printComponentRef}>
         {/* <DialogContentText>hello</DialogContentText> */}
         {/* <TextField label="Field" name = "Field" value = {formInfo.created_on}/> */}
-        <Box sx={{ backgroundColor: "#eeeeee", padding:"1vh 1vh 1vh 1vh", border:1, borderColor:"text.primary"}}>
+        <Box sx={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", border: 1, borderColor: "text.primary" }}>
           <Grid item xs={12}>
             <TextField
               label="Name"
@@ -437,7 +438,7 @@ Service/Date of Joining with IIT Ropar"
                 value={String(
                   formInfo.form_data["joining_date"] === undefined
                     ? " "
-                    : formInfo.form_data["joining_date"]
+                    : formatDate(formInfo.form_data["joining_date"])
                 ).slice(0, 10)}
                 fullWidth
                 InputProps={{
@@ -482,7 +483,7 @@ Service/Date of Joining with IIT Ropar"
                 value={String(
                   formInfo.form_data["nature_from"] === undefined
                     ? " "
-                    : formInfo.form_data["nature_from"]
+                    : formatDate(formInfo.form_data["nature_from"])
                 ).slice(0, 10)}
                 fullWidth
                 InputProps={{
@@ -497,7 +498,7 @@ Service/Date of Joining with IIT Ropar"
                 value={String(
                   formInfo.form_data["nature_to"] === undefined
                     ? " "
-                    : formInfo.form_data["nature_to"]
+                    : formatDate(formInfo.form_data["nature_to"])
                 ).slice(0, 10)}
                 fullWidth
                 InputProps={{
@@ -532,7 +533,7 @@ Service/Date of Joining with IIT Ropar"
                 value={String(
                   formInfo.form_data["prefix_from"] === undefined
                     ? " "
-                    : formInfo.form_data["prefix_from"]
+                    : formatDate(formInfo.form_data["prefix_from"])
                 ).slice(0, 10)}
                 fullWidth
                 InputProps={{
@@ -547,7 +548,7 @@ Service/Date of Joining with IIT Ropar"
                 value={String(
                   formInfo.form_data["prefix_to"] === undefined
                     ? " "
-                    : formInfo.form_data["prefix_to"]
+                    : formatDate(formInfo.form_data["prefix_to"])
                 ).slice(0, 10)}
                 fullWidth
                 InputProps={{
@@ -565,7 +566,7 @@ Service/Date of Joining with IIT Ropar"
                 value={String(
                   formInfo.form_data["suffix_from"] === undefined
                     ? " "
-                    : formInfo.form_data["suffix_from"]
+                    : formatDate(formInfo.form_data["suffix_from"])
                 ).slice(0, 10)}
                 fullWidth
                 InputProps={{
@@ -580,7 +581,7 @@ Service/Date of Joining with IIT Ropar"
                 value={String(
                   formInfo.form_data["suffix_to"] === undefined
                     ? " "
-                    : formInfo.form_data["suffix_to"]
+                    : formatDate(formInfo.form_data["suffix_to"])
                 ).slice(0, 10)}
                 fullWidth
                 InputProps={{
@@ -615,7 +616,7 @@ entitled to LTC"
                 value={String(
                   formInfo.form_data["self_date_outward"] === undefined
                     ? " "
-                    : formInfo.form_data["self_date_outward"].slice(0, 10)
+                    : formatDate(formInfo.form_data["self_date_outward"])
                 )}
                 fullWidth
                 InputProps={{
@@ -630,7 +631,7 @@ entitled to LTC"
                 value={String(
                   formInfo.form_data["self_date_inward"] === undefined
                     ? " "
-                    : formInfo.form_data["self_date_inward"].slice(0, 10)
+                    : formatDate(formInfo.form_data["self_date_inward"])
                 )}
                 fullWidth
                 InputProps={{
@@ -650,7 +651,7 @@ entitled to LTC"
                 value={
                   formInfo.form_data["family_date_outward"] === undefined
                     ? " "
-                    : formInfo.form_data["family_date_outward"].slice(0, 10)
+                    : formatDate(formInfo.form_data["family_date_outward"])
                 }
                 fullWidth
                 InputProps={{
@@ -665,7 +666,7 @@ entitled to LTC"
                 value={
                   formInfo.form_data["family_date_inward"] === undefined
                     ? " "
-                    : formInfo.form_data["family_date_inward"].slice(0, 10)
+                    : formatDate(formInfo.form_data["family_date_inward"])
                 }
                 fullWidth
                 InputProps={{
@@ -893,7 +894,7 @@ shortest route "
                 <InfoIcon />
               </Tooltip>
             </Box>
-            <Box style={{backgroundColor: "#eeeeee", padding:"1vh 1vh 1vh 1vh", borderColor:"primary.main"}}>
+            <Box style={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", borderColor: "primary.main" }}>
               <EstablishmentSectionForm
                 ref={childRef}
                 est_data={
@@ -915,10 +916,10 @@ shortest route "
               style={{ margin: "5vh 0 1vh 0" }}
             >
               <Typography style={{ fontWeight: "bold" }}>
-                Establishment Section 
+                Establishment Section
               </Typography>
             </Box>
-            <Box style={{ backgroundColor: "#eeeeee", padding:"1vh 1vh 1vh 1vh", border:1,  borderColor: 'grey.500' }}>
+            <Box style={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", border: 1, borderColor: 'grey.500' }}>
               <Typography>
                 Fresh Recruit i.e. joining Govt. Service after 01.09.2008
                 /otherwise,
@@ -932,12 +933,12 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_joining_date"
-                          ] === undefined
-                        ? " "
-                        : formatDate(formInfo.form_data["establishment"][
                           "est_data_joining_date"
-                        ])
+                        ] === undefined
+                          ? " "
+                          : formatDate(formInfo.form_data["establishment"][
+                            "est_data_joining_date"
+                          ])
                     }
                     fullWidth
                     InputProps={{
@@ -954,11 +955,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_block_year"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_block_year"
+                          "est_data_block_year"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_block_year"
                           ]
                     }
                     fullWidth
@@ -982,11 +983,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_nature_last"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_nature_last"
+                          "est_data_nature_last"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_nature_last"
                           ]
                     }
                     fullWidth
@@ -1004,11 +1005,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_nature_current"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_nature_current"
+                          "est_data_nature_current"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_nature_current"
                           ]
                     }
                     fullWidth
@@ -1029,11 +1030,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_period_last_from"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_period_last_from"
+                          "est_data_period_last_from"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_period_last_from"
                           ]
                     }
                     fullWidth
@@ -1051,11 +1052,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_period_last_to"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_period_last_to"
+                          "est_data_period_last_to"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_period_last_to"
                           ]
                     }
                     fullWidth
@@ -1073,11 +1074,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_period_current_from"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_period_current_from"
+                          "est_data_period_current_from"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_period_current_from"
                           ]
                     }
                     fullWidth
@@ -1096,11 +1097,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_period_current_to"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_period_current_to"
+                          "est_data_period_current_to"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_period_current_to"
                           ]
                     }
                     fullWidth
@@ -1121,11 +1122,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_last_ltc_for"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_last_ltc_for"
+                          "est_data_last_ltc_for"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_last_ltc_for"
                           ]
                     }
                     fullWidth
@@ -1143,11 +1144,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_current_ltc_for"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_current_ltc_for"
+                          "est_data_current_ltc_for"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_current_ltc_for"
                           ]
                     }
                     fullWidth
@@ -1168,11 +1169,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_last_ltc_days"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_last_ltc_days"
+                          "est_data_last_ltc_days"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_last_ltc_days"
                           ]
                     }
                     fullWidth
@@ -1190,11 +1191,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_current_ltc_days"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_current_ltc_days"
+                          "est_data_current_ltc_days"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_current_ltc_days"
                           ]
                     }
                     fullWidth
@@ -1215,11 +1216,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_last_earned_leave_on"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_last_earned_leave_on"
+                          "est_data_last_earned_leave_on"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_last_earned_leave_on"
                           ]
                     }
                     fullWidth
@@ -1237,11 +1238,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_current_earned_leave_on"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_current_earned_leave_on"
+                          "est_data_current_earned_leave_on"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_current_earned_leave_on"
                           ]
                     }
                     fullWidth
@@ -1264,11 +1265,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_last_balance"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_last_balance"
+                          "est_data_last_balance"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_last_balance"
                           ]
                     }
                     fullWidth
@@ -1286,11 +1287,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_current_balance"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_current_balance"
+                          "est_data_current_balance"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_current_balance"
                           ]
                     }
                     fullWidth
@@ -1311,11 +1312,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_last_encashment_adm"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_last_encashment_adm"
+                          "est_data_last_encashment_adm"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_last_encashment_adm"
                           ]
                     }
                     fullWidth
@@ -1333,11 +1334,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_current_encashment_adm"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_current_encashment_adm"
+                          "est_data_current_encashment_adm"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_current_encashment_adm"
                           ]
                     }
                     fullWidth
@@ -1360,11 +1361,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_last_nature"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_last_nature"
+                          "est_data_last_nature"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_last_nature"
                           ]
                     }
                     fullWidth
@@ -1382,11 +1383,11 @@ shortest route "
                       formInfo.form_data["establishment"] === undefined
                         ? ""
                         : formInfo.form_data["establishment"][
-                            "est_data_current_nature"
-                          ] === undefined
-                        ? " "
-                        : formInfo.form_data["establishment"][
-                            "est_data_current_nature"
+                          "est_data_current_nature"
+                        ] === undefined
+                          ? " "
+                          : formInfo.form_data["establishment"][
+                          "est_data_current_nature"
                           ]
                     }
                     fullWidth
@@ -1398,6 +1399,8 @@ shortest route "
                 </Grid>
               </Grid>
             </Box>
+            </div>
+            )}
             {commentObj["establishment"] !== undefined ? (
               // commentObj["establishment"][0]["review"] === true ? (
               <div>
@@ -1405,35 +1408,33 @@ shortest route "
                   Establishment Section Comments
                 </Typography>
                 <List>
-                  {Object.keys(commentObj.establishment[0]["comments"]).map(
-                    (prop, i) => {
-                      return (
-                        <ListItem key={i}>
-                          <ListItemIcon>
-                            <PersonIcon />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={prop}
-                            secondary={
-                              commentObj.establishment[0]["comments"][prop]
-                            }
-                          />
-                        </ListItem>
-                      );
-                    }
-                  )}
+                  {
+                    commentObj.establishment.map(
+                      (comment) =>{
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0"}}>
+                        {Object.keys(comment["comments"]).map(
+                          (prop, i) => {
+                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || (String(comment["comments"][prop]).trim().length === 0))?<div key={i}></div>:(
+                              <ListItem key={i}>
+                                <ListItemIcon>
+                                  <PersonIcon />
+                                </ListItemIcon>
+                                <ListItemText
+                                  primary={prop}
+                                  secondary={
+                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
+                                  }
+                                />
+                              </ListItem>
+                            );
+                          }
+                        )}</Box>
+                      }
+                    )
+                  }
                 </List>
               </div>
             ) : (
-              // ) : (
-              //   <div>
-              //     <Typography
-              //       style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}
-              //     >
-              //       Establishment Section Comments
-              //     </Typography>
-              //   </div>
-              // )
               <div></div>
             )}
             {commentObj["audit"] !== undefined ? (
@@ -1443,21 +1444,30 @@ shortest route "
                   Audit Section Comments
                 </Typography>
                 <List>
-                  {Object.keys(commentObj.audit[0]["comments"]).map(
-                    (prop, i) => {
-                      return (
-                        <ListItem key={i}>
-                          <ListItemIcon>
-                            <PersonIcon />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={prop}
-                            secondary={commentObj.audit[0]["comments"][prop]}
-                          />
-                        </ListItem>
-                      );
-                    }
-                  )}
+                {
+                    commentObj.audit.map(
+                      (comment) =>{
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0"}}>
+                        {Object.keys(comment["comments"]).map(
+                          (prop, i) => {
+                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
+                              <ListItem key={i}>
+                                <ListItemIcon>
+                                  <PersonIcon />
+                                </ListItemIcon>
+                                <ListItemText
+                                  primary={prop}
+                                  secondary={
+                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
+                                  }
+                                />
+                              </ListItem>
+                            );
+                          }
+                        )}</Box>
+                      }
+                    )
+                  }
                 </List>
               </div>
             ) : (
@@ -1479,21 +1489,30 @@ shortest route "
                   Accounts Section Comments
                 </Typography>
                 <List>
-                  {Object.keys(commentObj.accounts[0]["comments"]).map(
-                    (prop, i) => {
-                      return (
-                        <ListItem key={i}>
-                          <ListItemIcon>
-                            <PersonIcon />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={prop}
-                            secondary={commentObj.accounts[0]["comments"][prop]}
-                          />
-                        </ListItem>
-                      );
-                    }
-                  )}
+                {
+                    commentObj.accounts.map(
+                      (comment) =>{
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0"}}>
+                        {Object.keys(comment["comments"]).map(
+                          (prop, i) => {
+                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
+                              <ListItem key={i}>
+                                <ListItemIcon>
+                                  <PersonIcon />
+                                </ListItemIcon>
+                                <ListItemText
+                                  primary={prop}
+                                  secondary={
+                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
+                                  }
+                                />
+                              </ListItem>
+                            );
+                          }
+                        )}</Box>
+                      }
+                    )
+                  }
                 </List>
               </div>
             ) : (
@@ -1508,39 +1527,9 @@ shortest route "
               // )
               <div></div>
             )}
-          </div>
-        )}
+          
 
-        {/* <Typography style={{ margin: "5vh 0 0 0", fontWeight: "bold" }}>
-          Comment History
-        </Typography> */}
-        {/*make component for react flow chart*/}
-        {/* <div>{comments.map(function(d, idx){
-          return (<li key={idx}>{d}</li>)
-        })}</div> */}
-        {/* {comment_data.map( sections =>(Object.keys(sections).map((container, i) =>{
-          return (
-            <div key={i}>
-              {container}
-              {Object.keys(sections[container]).map(content => {
-                return <div> {sections[container][content]} </div>;
-              })}
-              </div>
-          )
-        })))} */}
-        {/* {comments.map((d) =>
-          Object.keys(d).map((prop, i) =>
-            d[prop] !== null ? (
-              <li key={i}>
-                {prop}:&nbsp;{d[prop]}
-              </li>
-            ) : (
-              <div key={i} />
-            )
-          )
-        )} */}
-
-        {permission !== "client" && process !== "past" ? (
+        {permission !== "client" && process !== "past" && showCommentSection===true ? (
           <div>
             <br />
             <Typography style={{ fontWeight: "bold" }}>Comments</Typography>
@@ -1577,7 +1566,12 @@ shortest route "
                 }
               />
               <Box display="flex" justifyContent="center">
-                <Button type="submit" variant="contained" color="primary">
+                <Button type="submit" variant="contained" color="primary"
+                  disabled={isSubmitting}
+                >
+                {isSubmitting && (
+                  <span className="spinner-grow spinner-grow-sm"></span>
+                )}
                   Send
                 </Button>
               </Box>

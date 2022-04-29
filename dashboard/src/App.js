@@ -15,7 +15,6 @@ import RegistrarPage from './Components/Body/Dashboard/Registrar/RegistrarPage';
 
 function App() {
   const [isLoggedIn, profileInfo] = useAuthCookie();
-  // const profileInfo = JSON.parse(sessionStorage.getItem('profile'));
   const role = profileInfo.permission;
   let view;
   switch (role) {
@@ -53,35 +52,13 @@ function App() {
       {isLoggedIn === null ? (<LoadingPage />) :
         (isLoggedIn === false ? (<GoogleLogin />) :
           (
-            // profileInfo.permission === "client" ? (
-            //   <HeaderComponent
-            //     profileInfo={profileInfo}
-            //   />
-            // ) : (
-            //   <AdminPage profileInfo={profileInfo}/>
-            // )
             view
           )
 
         )
 
       }
-
-      {/* {!isLoggedIn && isLoggedIn !== true && isLoggedIn !== undefined ? (
-        <GoogleLogin />
-      ) : profileInfo.permission == "client" ? (
-        <HeaderComponent
-          token={token}
-          setToken={setToken}
-          profileInfo={profileInfo}
-        />
-      ) : (
-        <AdminPage />
-      )
-
-        // <AdminPage />
-      } */}
-      </Router>
+    </Router>
   );
 }
 

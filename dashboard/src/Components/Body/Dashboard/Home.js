@@ -8,13 +8,16 @@ import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import { margin, typography } from '@mui/system';
 import ClearIcon from '@material-ui/icons/Clear';
 import { Alert, AlertTitle } from '@mui/material';
+const moment = require('moment');
 
 export default function Home() {
   const classes = useStyles();
   const sizeRef = useRef();
 
   const [profileInfo, setProfileInfo] = useState({});
-  const [notifications, setNotifications] = useState([])
+  const [notifications, setNotifications] = useState([]);
+
+  
 
   // var h = sizeRef.current.offsetHeight;
 
@@ -97,6 +100,11 @@ export default function Home() {
         }
       });
 
+  }
+
+  function formatDate(date){
+    const d = moment(date).format("MMMM Do YYYY, h:mm a");
+    return d;
   }
 
   return (
@@ -197,10 +205,10 @@ export default function Home() {
                           // whiteSpace: "nowrap",
                           // textOverflow: "ellipsis"
                         }}>
-                        <AlertTitle justifyContent="center">Info</AlertTitle>
+                        <AlertTitle justifyContent="center">{formatDate(item.time)}</AlertTitle>
                         <div style={{ textOverflow: "ellipsis" }}>
                           <Typography variant="body1" style={{ padding: "0.5vh" }}>
-                            {item.time+': '+item.content}
+                            {item.content}
                           </Typography>
                         </div>
                         {/* This is an info alert — <strong>check it out!</strong> */}

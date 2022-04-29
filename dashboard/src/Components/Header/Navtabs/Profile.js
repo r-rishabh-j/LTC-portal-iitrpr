@@ -7,9 +7,11 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { ListItem, ListItemIcon, ListItemText, Avatar } from "@mui/material";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { Link } from "react-router-dom";
 
 import altImage from "./avatar.png";
+import { ProfilePage } from '../../Body/Dashboard/ProfilePage';
 
 export default function Profile(props) {
 
@@ -43,7 +45,8 @@ export default function Profile(props) {
   }
 
   const dropDownData = [
-    { label: "Logout", icon: <ExitToAppIcon />, link: "/" }
+    { label: "Profile", icon: <AccountBoxIcon />, link: "/profile", action:()=>{} },
+    { label: "Logout", icon: <ExitToAppIcon />, link: "/", action: logOut }
   ]
 
   return (
@@ -66,7 +69,7 @@ export default function Profile(props) {
             <Box
               display="flex"
               justifyContent="space-between"
-              onClick={logOut}
+              onClick={item.action}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText>{item.label}</ListItemText>

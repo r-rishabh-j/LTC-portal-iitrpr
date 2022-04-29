@@ -28,7 +28,7 @@ export default function Navbar({ handleDrawerToggle, profileInfo }) {
         </Hidden>
         <Hidden mdUp>
           <IconButton onClick={handleDrawerToggle}>
-            <MenuIcon />
+            <MenuIcon style={{color: "white"}}/>
           </IconButton>
         </Hidden>
       </Toolbar>

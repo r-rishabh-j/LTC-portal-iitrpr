@@ -10,6 +10,7 @@ import Notifications from '../Body/Dashboard/Notifications';
 import { Box } from "@material-ui/core";
 import { useStyles } from './HeaderStyles';
 import axios from "axios";
+import { ProfilePage } from '../Body/Dashboard/ProfilePage';
 
 export default function HeaderComponent(props) {
   const classes = useStyles();
@@ -47,6 +48,7 @@ export default function HeaderComponent(props) {
             element={<CreateApplication profileInfo={props.profileInfo}/>}
           ></Route>
           <Route path="/past" element={<PastApplications permission = {props.profileInfo.permission}/>}></Route>
+          <Route path="/profile" element={<ProfilePage profile = {props.profileInfo}/>}></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>

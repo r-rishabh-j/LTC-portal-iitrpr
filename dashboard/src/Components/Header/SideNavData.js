@@ -145,15 +145,17 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
 
   return (
     <>
-      <Box style={{ height: "auto", margin: "2vh 0 0 0" }}>
+      <Box style={{ height: "auto", margin: "2vh 0 0 0", textDecoration:"none"}} component={NavLink} 
+            to={'/profile'}>
         <center>
           <img
             src={(profileInfo.picture===null)?require("./Navtabs/avatar.png"):profileInfo.picture}
             alt={"Profile Image"}
             style={{ width: "8vw", borderRadius: "50%" }}
             referrerPolicy={"no-referrer"}
-          ></img>
-          <div style={{ margin: "2vh 0 0 0" }}>
+          >
+          </img>
+          <Box style={{ margin: "2vh 0 0 0" }}>
             <Typography
               variant="body1"
               style={{ fontWeight: "bold", margin: "auto", color: blueGrey["A700"] }}
@@ -161,7 +163,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
               {" "}
               {profileInfo.name}
             </Typography>
-          </div>
+          </Box>
 
           <Box>
             <div style={{ margin: "2vh 0 0 0vw" }}>
