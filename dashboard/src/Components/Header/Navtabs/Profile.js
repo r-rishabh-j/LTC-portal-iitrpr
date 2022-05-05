@@ -11,12 +11,10 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { Link } from "react-router-dom";
 
 import altImage from "./avatar.png";
-import { ProfilePage } from '../../Body/Dashboard/ProfilePage';
 
 export default function Profile(props) {
 
   const [anchorEl, setAnchorEl] = useState(null);
-  // const image = JSON.parse(sessionStorage.getItem('profile')).picture;
   const image = props.picture;
 
   const handleClick = (event) => {

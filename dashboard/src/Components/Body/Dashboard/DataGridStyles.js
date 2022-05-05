@@ -25,5 +25,12 @@ export const useStyles = makeStyles((theme) => ({
     maxHeight: "auto",
     minWidth: '50vw',
     maxWidth: '55vw'
+  },
+  signatureUploadDialogPaper:{
+    minHeight: "30vh",
+    maxHeight: "auto",
+    minWidth: '30vw',
+    maxWidth: '55vw',
+    marginLeft:"18vw"
   }
 }));

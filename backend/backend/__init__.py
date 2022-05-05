@@ -65,7 +65,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(Auth.IsLoggedIn, '/api/is-logged-in')
     api.add_resource(LtcManager.ApplyForLTC, '/api/apply')
     api.add_resource(Auth.RegisterUser, '/api/register')
-    api.add_resource(Auth.GetSignature, '/api/get-signature')   
+    api.add_resource(Auth.GetSignature, '/api/get-signature')
     api.add_resource(Auth.UploadSignature, '/api/upload-signature')
     api.add_resource(LtcManager.GetLtcFormData, '/api/getformdata')
     api.add_resource(LtcManager.GetLtcFormMetaData, '/api/get-form-meta')

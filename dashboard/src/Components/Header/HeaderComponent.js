@@ -10,7 +10,7 @@ import Notifications from '../Body/Dashboard/Notifications';
 import { Box } from "@material-ui/core";
 import { useStyles } from './HeaderStyles';
 import axios from "axios";
-import { ProfilePage } from '../Body/Dashboard/ProfilePage';
+import { ProfilePage } from '../Body/Dashboard/Profile/ProfilePage';
 
 export default function HeaderComponent(props) {
   const classes = useStyles();

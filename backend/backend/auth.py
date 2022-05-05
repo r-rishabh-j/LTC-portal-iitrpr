@@ -109,8 +109,9 @@ class Auth:
     class UploadSignature(Resource):
         @check_role()
         def post(self, permission):
-            user:Users = current_user
+            user: Users = current_user
             sign = request.files.get('signature', None)
+            print(sign)
             try:
                 path = filemanager.saveSignature(sign, current_user.id)
                 user.signature = path
@@ -123,8 +124,8 @@ class Auth:
         @check_role()
         def post(self, permission):
             sign_path = current_user.signature
-            sign_path = '../dashboard/src/Components/Body/Dashboard/sign.jpeg'
+            # sign_path = '../dashboard/src/Components/Body/Dashboard/sign.jpeg'
             if sign_path == None or str(sign_path).isspace():
-                return filemanager.sendFile('./static/no-sign.png', 'no-sign.png');
+                return filemanager.sendFile('./static/no-sign.png', 'no-sign.png')
             print(os.path.split(sign_path)[1])
             return filemanager.sendFile(sign_path, os.path.split(sign_path)[1])

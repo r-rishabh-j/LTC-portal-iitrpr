@@ -1,15 +1,28 @@
-import { Box, Button, Paper, requirePropFactory } from '@material-ui/core'
+import { Box, Button, Dialog, Paper, requirePropFactory, DialogActions } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { useRef } from 'react';
 import { Typography } from '@material-ui/core';
 import axios from 'axios';
 import { Divider } from '@mui/material';
 import { Switch } from '@material-ui/core';
+import SignatureUploadDialog from './SignatureUploadDialog';
+import { useStyles } from '../DataGridStyles';
 
 export const ProfilePage = ({ profile }) => {
+    const classes = useStyles();
     const [signature, setSignature] = useState(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
-    const [switchState, setSwitchState] = React.useState(false);
+    function handleDialogClose() {
+        setDialogOpen(false);
+    }
+
+    function handleDialogOpen() {
+        setDialogOpen(true);
+    }
+
+
+    const [switchState, setSwitchState] = useState(false);
 
     const handleChange = (event) => {
         setSwitchState(event.target.checked);
@@ -21,9 +34,7 @@ export const ProfilePage = ({ profile }) => {
             }
         })
             .then((response) => {
-                console.log(response)
-                // const src = URL.createObjectURL(response.data)
-                // setSignature(src);
+                console.log(response);
             })
             .catch((error) => {
                 if (error.response) {
@@ -102,7 +113,7 @@ export const ProfilePage = ({ profile }) => {
                             <Box margin={"0 0 0 0vh"}>
                                 <img src={signature} width="300px" height="300px" alt='No Signature' style={{ borderWidth: "1px", borderColor: "black", borderStyle: "solid", marginTop: "2vh" }}></img>
                             </Box>
-                            <Button style={{ margin: "2vh 0 0 0vw" }} color="primary" variant="contained">
+                            <Button style={{ margin: "2vh 0 0 0vw" }} color="primary" variant="contained" onClick={handleDialogOpen}>
                                 Upload Signature
                             </Button>
                         </Box>
@@ -129,6 +140,18 @@ export const ProfilePage = ({ profile }) => {
                 </Paper>
                 <Box minHeight="2vh"></Box>
             </Box>
+            <Dialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+                classes={{ paper: classes.signatureUploadDialogPaper }}
+            >
+                <SignatureUploadDialog profile={profile} />
+                <DialogActions>
+                    <Button onClick={handleDialogClose} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     )
 }

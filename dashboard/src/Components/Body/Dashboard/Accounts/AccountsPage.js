@@ -9,7 +9,7 @@ import Home from "../Home";
 import Pending from '../Establishment/Pending';
 import Past from '../Establishment/Past';
 import AdvancePayments from './AdvancePayment';
-import { ProfilePage } from '../ProfilePage';
+import { ProfilePage } from '../Profile/ProfilePage';
 
 export default function AccountsPage(props){
     const classes = useStyles();

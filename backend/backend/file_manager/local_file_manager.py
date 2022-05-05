@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from flask import send_file
 from PIL import Image
 
+
 class LocalFileManager:
     def __init__(self, data_dir):
         self.data_dir = data_dir+'/data'
@@ -33,24 +34,23 @@ class LocalFileManager:
         filepath = os.path.join(store_dir, filename)
         file.save(filepath)
         return filepath
-    
+
     def saveSignature(self, file, u_id):
-        im = Image.open(file)
-        im.verify()
+        _, ext = os.path.splitext(file.filename)
+        if (str(ext).lower() not in ['.png', '.jpg', '.jpeg']):
+            raise Exception('Invalid File Type!')
         user_signature_dir = os.path.join(self.signature_path, str(u_id))
         if not os.path.exists(user_signature_dir):
             os.mkdir(user_signature_dir)
-        for file in os.listdir(user_signature_dir):
-            os.remove(os.path.join(user_signature_dir, file))
-        _, ext = os.path.splitext(file.filename)
-        assert str(ext).lower() in ['.png', '.jpg', '.jpeg']
+        for pic in os.listdir(user_signature_dir):
+            os.remove(os.path.join(user_signature_dir, pic))
         filepath = os.path.join(user_signature_dir, f'signature_{u_id}'+ext)
         file.save(filepath)
-        im.close()
         return filepath
 
     def sendFile(self, attachment_path, filename):
         abs_path = os.path.abspath(attachment_path)
         print(abs_path)
-        f= send_file(abs_path, as_attachment=True, attachment_filename=filename)
+        f = send_file(abs_path, as_attachment=True,
+                      attachment_filename=filename)
         return f

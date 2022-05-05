@@ -8,7 +8,8 @@ import { useStyles } from "../../../Header/HeaderStyles";
 import Home from "../Home";
 import Pending from '../Establishment/Pending';
 import Past from "../Establishment/Past";
-import { ProfilePage } from '../ProfilePage';
+import { ProfilePage } from '../Profile/ProfilePage';
+
 
 function AuditPage(props) {
     const classes = useStyles();

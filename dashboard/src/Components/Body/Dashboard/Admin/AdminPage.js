@@ -8,7 +8,7 @@ import { useStyles } from "../../../Header/HeaderStyles"
 import Home from "../Home"
 import Charts from './Charts';
 import PreviousApplications from './PreviousApplications';
-import { ProfilePage } from '../ProfilePage';
+import { ProfilePage } from '../Profile/ProfilePage';
 
 export default function AdminPage(props) {
 
