@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { Typography } from '@material-ui/core';
 import axios from 'axios';
 import { Divider } from '@mui/material';
-import {Switch} from '@material-ui/core';
+import { Switch } from '@material-ui/core';
 
 export const ProfilePage = ({ profile }) => {
     const [signature, setSignature] = useState(null);
@@ -13,6 +13,26 @@ export const ProfilePage = ({ profile }) => {
 
     const handleChange = (event) => {
         setSwitchState(event.target.checked);
+        axios({
+            method: "POST",
+            url: "/api/set-email-pref",
+            data: {
+                pref: event.target.checked
+            }
+        })
+            .then((response) => {
+                console.log(response)
+                // const src = URL.createObjectURL(response.data)
+                // setSignature(src);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                }
+            });
+
     };
 
     useEffect(() => {
@@ -22,7 +42,7 @@ export const ProfilePage = ({ profile }) => {
             responseType: "blob"
         })
             .then((response) => {
-                console.log(response)
+                // console.log(response)
                 const src = URL.createObjectURL(response.data)
                 setSignature(src);
             })
@@ -33,7 +53,27 @@ export const ProfilePage = ({ profile }) => {
                     console.log(error.response.headers);
                 }
             });
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        return axios({
+            method: "GET",
+            url: "/api/get-email-pref",
+        })
+            .then((response) => {
+                console.log('pref', response.data)
+                setSwitchState(response.data.pref);
+                // const src = URL.createObjectURL(response.data)
+                // setSignature(src);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                }
+            });
+    }, []);
 
     return (
         <>
@@ -71,7 +111,7 @@ export const ProfilePage = ({ profile }) => {
                             <Typography variant='h6' style={{ fontWeight: "bold" }}>
                                 Email Preferences
                             </Typography>
-                            <div style={{margin:"3vh 0 3vh 0"}}>
+                            <div style={{ margin: "3vh 0 3vh 0" }}>
                                 Do you want to receive email notifications?
                             </div>
                             Off

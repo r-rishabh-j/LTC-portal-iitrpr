@@ -44,23 +44,8 @@ const PastApplications = ({ permission }) => {
       responseType: "blob",
     })
       .then((response) => {
-        // const url = window.URL.createObjectURL(new Blob([response.data]));
-        // const link = document.createElement("a");
-        // link.href = url;
-        // link.setAttribute(
-        //   "view",
-        //   "ltc_" + cellValues.row.request_id + ".pdf"
-        // ); //or any other extension
-        // document.body.appendChild(link);
-        // link.click();
-        // console.log(response.data.type);
-        // console.log(response.headers.get('content-type'));
-        // var contentType = response.headers.get('content-type');
-        // console.log('c', contentType);
         var blob = new Blob([response.data], { type: response.data.type });
         var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
-
-        //window.open(url, '_blank', '');
         var anchor = document.createElement('a');
         anchor.href = url;
         anchor.target = '_blank';
@@ -115,26 +100,6 @@ const PastApplications = ({ permission }) => {
     console.log('status', cellValues.row.stage);
     setStatus(cellValues.row.stage);
     setId(cellValues.row.request_id);
-    // console.log(cellValues.row.request_id);
-    // const data = { request_id: cellValues.row.request_id };
-    // axios({
-    //   method: "post",
-    //   url: "api/getformdata",
-    //   data: JSON.stringify(data),
-    //   headers: { "Content-type": "application/json" },
-    // })
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     //GeneratePDF(response.data.data.form_data);
-    //     form_data = response.data;
-    //   })
-    //   .catch((error) => {
-    //     if (error.response) {
-    //       console.log(error.response);
-    //       console.log(error.response.status);
-    //       alert("Form not found");
-    //     }
-    //   });
   };
 
   const handleClose = () => {
@@ -188,7 +153,7 @@ const PastApplications = ({ permission }) => {
   }
 
   const timeElement = (cellValues) => {
-    console.log('cc',cellValues);
+    // console.log('cc',cellValues);
     const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
     return (
       <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
@@ -245,63 +210,11 @@ const PastApplications = ({ permission }) => {
             >
               View
             </Button>
-            {/* <Dialog open={open} onClose={handleClose} classes={{paper: classes.dialogPaper}}>
-              <DialogBox request_id={cellValues.row.request_id}/>
-              <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                  Close
-                </Button>
-                <Button onClick={handleClose} color="primary" autoFocus>
-                  Approve
-                </Button>
-              </DialogActions>
-            </Dialog> */}
           </>
         );
       },
     },
-    // {
-    //   field: "pdf",
-    //   headerName: "PDF",
-    //   minWidth: 150,
-    //   renderCell: (cellValues) => {
-    //     return (
-    //       <Button
-    //         variant="contained"
-    //         color="primary"
-    //         onClick={(event) => {
-    //           handleFormClick(event, cellValues);
-    //         }}
-    //       >
-    //         Download
-    //       </Button>
-    //     );
-    //   },
-    // },
-    // {
-    //   field: "attachment",
-    //   headerName: "Attachment",
-    //   minWidth: 150,
-    //   renderCell: (cellValues) => {
-    //     return (
-    //       <Button
-    //         variant="contained"
-    //         color="primary"
-    //         onClick={(event) => {
-    //           handleAttachmentClick(event, cellValues);
-    //         }}
-    //       >
-    //         View
-    //       </Button>
-    //     );
-    //   },
-    // },
   ];
-
-  // const rows = [
-  //   { id: 1, date: "11-03-2022" },
-  //   { id: 2, date: "12-03-2022" },
-  // ];
 
   return (
     <>
@@ -340,9 +253,6 @@ const PastApplications = ({ permission }) => {
             <Button onClick={handleClose} color="primary">
               Close
             </Button>
-            {/* <Button onClick={handleClose} color="primary" autoFocus>
-              Approve
-            </Button> */}
           </DialogActions>
         </Dialog>
 
@@ -356,9 +266,6 @@ const PastApplications = ({ permission }) => {
             <Button onClick={handleCloseReview} color="primary">
               Close
             </Button>
-            {/* <Button onClick={handleClose} color="primary" autoFocus>
-              Approve
-            </Button> */}
           </DialogActions>
         </Dialog>
       </Paper>

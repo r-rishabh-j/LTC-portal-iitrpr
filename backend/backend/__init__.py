@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
 from flask_migrate import Migrate
 from .file_manager import create_file_manager
-from .email_manager import EmailManager
+from .email_manager.email_manager import EmailManager
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -57,7 +57,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
 
     from .auth import Auth
     from .ltc_manager import LtcManager
-    from .notifications import ClearUserNotifications, GetUserNotifications
+    from .notifications import ClearUserNotifications, GetUserNotifications, GetEmailPref, SetEmailPref
     # migrate = Migrate(app, db)
 
     api.add_resource(Auth.Login, '/api/login')
@@ -77,6 +77,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(LtcManager.CommentOnLTC, '/api/comment')
     api.add_resource(LtcManager.FillStageForm, '/api/fill-stage-form')
     api.add_resource(GetUserNotifications, '/api/getnotifications')
+    api.add_resource(GetEmailPref, '/api/get-email-pref')
+    api.add_resource(SetEmailPref, '/api/set-email-pref')
     api.add_resource(ClearUserNotifications, '/api/clearnotifications')
     api.add_resource(LtcManager.GetEstablishmentReview,
                      '/api/establishment-review')
