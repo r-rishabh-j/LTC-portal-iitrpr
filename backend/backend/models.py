@@ -462,6 +462,11 @@ class LTCRequests(db.Model):
             self.comments[user.department][-1]['review'] = True
         flag_modified(self, "comments")
         db.session.merge(self)
+    
+    def removeLastComment(self, department):
+        for user in self.comments[user.department][-1]['approved']:
+            self.comments[user.department][-1]['approved'][user] = None
+            self.comments[user.department][-1]['comments'][user] = None
 
     def forward(self, applicant: Users):
         """
@@ -715,134 +720,3 @@ class LTCApproved(db.Model):
         self.request_id = request_id
         self.approved_on = datetime.now()
         self.office_order = None
-
-# STAGES = [
-#         {
-#             'id': 'establishment',
-#             'name': 'Establishment Section Approval Pending',
-#             'department': 'establishment',
-#             'role': 'establishment',
-#             'table': EstablishmentLogs
-#         },
-#         {
-#             'id': 'audit',
-#             'name': 'Audit Section Approval Pending',
-#             'department': 'audit',
-#             'role': 'audit',
-#             'table': AuditLogs
-#         },
-#         {
-#             'id': 'accounts',
-#             'name': 'Accounts Section Approval Pending',
-#             'department': 'accounts',
-#             'role': 'accounts',
-#             'table': AccountsLogs
-#         },
-#         {
-#             'id': 'registar',
-#             'name': 'Registrar Approval Pending',
-#             'department': 'registrar',
-#             'role': 'registrar',
-#             'table': RegistrarLogs
-#         },
-#         {
-#             'id': 'deanfa',
-#             'name': 'Dean FA Approval Pending',
-#             'department': 'deanfa',
-#             'role': 'deanfa',
-#             'table': DeanLogs
-#         },
-#         {
-#             'id': 'office_order_pending',
-#             'name': 'Approved, office order pending',
-#             'approval_status': True,
-#             'department': 'establishment',
-#             'role': 'establishment',
-#         },
-#         {
-#             'id': 'office_order_generated',
-#             'name': 'Approved, office order generated',
-#             'approval_status': True,
-#             'department': 'establishment',
-#             'role': 'establishment',
-#         },
-#         {
-#             'id': 'advance_pending',
-#             'name': 'Advance sum pending',
-#             'approval_status': True,
-#             'advance_payment_stage': False,
-#             'department': 'accounts'
-#         },
-#         {
-#             'id': 'advance_paid',
-#             'name': 'Advance sum issued',
-#             'approval_status': True,
-#             'advance_payment_stage': False,
-#             'department': 'accounts',
-#         },
-#     ]
-# STAGES = [
-    #     # {
-    #     #     'id': 'department',
-    #     #     'name': 'Department',
-    #     #     'department': 'department'
-    #     # },
-    #     {
-    #         'id': 'establishment',
-    #         'name': 'Establishment Section Approval Pending',
-    #         'department': 'establishment',
-    #         'role': 'establishment'
-    #     },
-    #     {
-    #         'id': 'audit',
-    #         'name': 'Audit Section Approval Pending',
-    #         'department': 'audit',
-    #         'role': 'audit'
-    #     },
-    #     {
-    #         'id': 'accounts',
-    #         'name': 'Accounts Section Approval Pending',
-    #         'department': 'accounts',
-    #         'role': 'accounts'
-    #     },
-    #     {
-    #         'id': 'registar',
-    #         'name': 'Registrar Approval Pending',
-    #         'department': 'registrar',
-    #         'role': 'registrar'
-    #     },
-    #     {
-    #         'id': 'deanfa',
-    #         'name': 'Dean FA Approval Pending',
-    #         'department': 'deanfa',
-    #         'role': 'deanfa'
-    #     },
-    #     {
-    #         'id': 'office_order_pending',
-    #         'name': 'Approved, office order pending',
-    #         'approval_status': True,
-    #         'department': 'establishment',
-    #         'role': 'establishment',
-    #     },
-    #     {
-    #         'id': 'office_order_generated',
-    #         'name': 'Approved, office order generated',
-    #         'approval_status': True,
-    #         'department': 'establishment',
-    #         'role': 'establishment',
-    #     }, ]
-
-    # ADVANCE_PAYMENT_STAGES = [
-    #     {
-    #         'id': 'advance_pending',
-    #         'name': 'Advance sum pending',
-    #         'approval_status': True,
-    #         'department': 'accounts'
-    #     },
-    #     {
-    #         'id': 'advance_paid',
-    #         'name': 'Advance sum issued',
-    #         'approval_status': True,
-    #         'department': 'accounts'
-    #     },
-    # ]

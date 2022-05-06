@@ -400,10 +400,10 @@ class LtcManager:
             db_form: LTCRequests = LTCRequests.query.get(request_id)
             print(db_form.form)
             # Take care not to patch department form fields
-            # restricted_fields = {stage: True for stage in Stages}
+            restricted_fields = {stage: True for stage in Stages.__dict__}
             for field in updated_form:
-                # if restricted_fields.get(field, False):
-                #     continue
+                if restricted_fields.get(field, False):
+                    continue
                 if db_form.form.get(str(field), None) != None:
                     db_form.form[str(field)] = updated_form[field]
 
@@ -433,21 +433,24 @@ class LtcManager:
             # fetch updated establishment section form fields
             # updated_form = json.loads(request.form.get('form'))
             comment = json.loads(request.form.get('comments'))
+            action = json.loads(request.form.get('action'))
             db_form: LTCRequests = LTCRequests.query.get(request_id)
+            applicant: Users = Users.query.get(db_form.id)
 
-            # db_form.form[Stages.establishment] = updated_form
-            # flag_modified(db_form, "form")
-            # db.session.merge(db_form)
-
-            # add comment
-            db_form.addComment(current_user, comment, True, True)
-            # mark the application as new in the sender's table
-            est_review: EstablishmentReview = EstablishmentReview.query.get(
-                request_id)
-            sender_table_ref = Departments.getDeptRequestTableByName(
-                est_review.received_from)
-            sender_table_ref.status = 'new'
-            db.session.delete(est_review)
+            if action == 'send_to_user':
+                db_form.send_for_review(current_user, applicant, comment)
+                db_form.addComment(current_user, comment, False, True)
+            elif action == 'resolve':
+                # add comment
+                # mark the application as new in the sender's table
+                db_form.removeLastComment(Stages.establishment)
+                db_form.addComment(current_user, comment, True, True)
+                est_review: EstablishmentReview = EstablishmentReview.query.get(
+                    request_id)
+                sender_table_ref = Departments.getDeptRequestTableByName(
+                    est_review.received_from)
+                sender_table_ref.status = 'new'
+                db.session.delete(est_review)
 
             db.session.commit()
             return jsonify({'msg': 'Updated'})
@@ -478,11 +481,9 @@ class LtcManager:
             if kwargs['permission'] == Permissions.dept_head:
                 new = db.session.query(table_ref, LTCRequests, Users).join(Users).join(
                     table_ref).filter(table_ref.status == 'new', Users.department == user.department)
-                # print(new)
             else:
                 new = db.session.query(table_ref, LTCRequests, Users).join(
                     Users).join(table_ref).filter(table_ref.status == 'new')
-                # print(new)
             pending = []
 
             for dept_log, form, applicant in new:
@@ -516,8 +517,8 @@ class LtcManager:
             form: LTCRequests = LTCRequests.query.get(request_id)
             approved_entry: LTCApproved = LTCApproved.query.get(request_id)
             user: Users = Users.query.get(form.user_id)
-            # if not approved_entry:
-            #     abort(400, error='Form not yet approved')
+            if not approved_entry:
+                abort(400, error='Form not yet approved')
             path = filemanager.saveFile(file, user.id)
             print(path)
 
@@ -625,17 +626,22 @@ class LtcManager:
 
     class PrintForm(Resource):
         @check_role()
-        def post(self, permission):
+        def get(self, permission):
             analyse()
             request_id = (request.form.get('request_id', None))
-            request_id = 1
             if request_id == None:
                 abort(400, error='Invalid request ID')
             request_id = int(request_id)
             form_data: LTCRequests = LTCRequests.query.get(request_id)
             applicant: Users = Users.query.get(form_data.user_id)
+
+            if permission == Permissions.client:
+                if applicant.id != current_user.id:
+                    abort(400, error='unauthorised')
+
             response = {}
             response['form'] = form_data.form
+            response['comments'] = form_data.comments
 
             response['signatures'] = {}
 
@@ -643,13 +649,15 @@ class LtcManager:
                 applicant.signature)
             # signatures
             if form_data.stage in [Stages.approved, Stages.advance_pending, Stages.availed]:
-                # establishment section
-                stages = [Stages.establishment, Stages.audit,
-                          Stages.accounts, Stages.registrar, Stages.deanfa]
-                permissions = [Permissions.establishment, Permissions.audit,
-                               Permissions.accounts, Permissions.registrar, Permissions.deanfa]
+                stages = [
+                    (Stages.establishment, Permissions.establishment),
+                    (Stages.audit, Permissions.audit),
+                    (Stages.accounts, Permissions.accounts),
+                    (Stages.registrar, Permissions.registrar),
+                    (Stages.deanfa, Permissions.deanfa),
+                ]
 
-                for stage, permission in zip(stages, permissions):
+                for stage, permission in stages:
                     query = db.session.query(Users, StageUsers).join(
                         StageUsers).filter(Users.permission == permission)
                     signatures = []

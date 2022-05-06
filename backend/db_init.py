@@ -1,4 +1,3 @@
-
 from backend import create_app
 from backend.models import Departments, Users, LTCRequests, EstablishmentLogs, DeanLogs, DepartmentLogs, \
     AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs, EstablishmentReview, AdvanceRequests, StageUsers
