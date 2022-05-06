@@ -359,6 +359,21 @@ class LtcManager:
 
             return jsonify({'review': to_review})
 
+    class EditStageForm(Resource):
+        @role_required(role=Permissions.establishment)
+        def post(self, **kwargs):
+            analyse()
+            request_id = request.form.get('request_id')
+            updated_form = json.loads(request.form.get('form'))
+            db_form: LTCRequests = LTCRequests.query.get(request_id)
+
+            db_form.form[Stages.establishment] = updated_form
+            flag_modified(db_form, "form")
+            db.session.merge(db_form)
+
+            db.session.commit()
+            return jsonify({'msg': 'Updated'})
+
     class ResolveReviewRequest(Resource):
         allowed_roles = [
             Permissions.establishment,
@@ -414,15 +429,15 @@ class LtcManager:
             db.session.commit()
             return jsonify({'msg': 'Updated'})
 
-        def resolveEstablishmentReview(self, request_id, updated_form):
+        def resolveEstablishmentReview(self, request_id):
             # fetch updated establishment section form fields
-            updated_form = json.loads(request.form.get('form'))
+            # updated_form = json.loads(request.form.get('form'))
             comment = json.loads(request.form.get('comments'))
             db_form: LTCRequests = LTCRequests.query.get(request_id)
 
-            db_form.form[Stages.establishment] = updated_form
-            flag_modified(db_form, "form")
-            db.session.merge(db_form)
+            # db_form.form[Stages.establishment] = updated_form
+            # flag_modified(db_form, "form")
+            # db.session.merge(db_form)
 
             # add comment
             db_form.addComment(current_user, comment, True, True)
@@ -618,20 +633,21 @@ class LtcManager:
                 abort(400, error='Invalid request ID')
             request_id = int(request_id)
             form_data: LTCRequests = LTCRequests.query.get(request_id)
-            applicant:Users = Users.query.get(form_data.user_id)
+            applicant: Users = Users.query.get(form_data.user_id)
             response = {}
             response['form'] = form_data.form
 
             response['signatures'] = {}
 
-            response['signatures']['user'] = None if applicant.signature == None else filemanager.sendFileAsBlob(applicant.signature)
+            response['signatures']['user'] = None if applicant.signature == None else filemanager.sendFileAsBlob(
+                applicant.signature)
             # signatures
             if form_data.stage in [Stages.approved, Stages.advance_pending, Stages.availed]:
                 # establishment section
                 stages = [Stages.establishment, Stages.audit,
                           Stages.accounts, Stages.registrar, Stages.deanfa]
-                permissions = [Permissions.establishment, Permissions.audit, Permissions.accounts, Permissions.registrar, Permissions.deanfa]
-
+                permissions = [Permissions.establishment, Permissions.audit,
+                               Permissions.accounts, Permissions.registrar, Permissions.deanfa]
 
                 for stage, permission in zip(stages, permissions):
                     query = db.session.query(Users, StageUsers).join(
@@ -639,11 +655,11 @@ class LtcManager:
                     signatures = []
 
                     for user, stage_user in query:
-                        file = None if user.signature == None else filemanager.sendFileAsBlob(user.signature)
+                        file = None if user.signature == None else filemanager.sendFileAsBlob(
+                            user.signature)
                         signatures.append({
                             stage_user.designation: file
                         })
                     response['signatures'][stage] = signatures
-                
 
             return {'data': response}

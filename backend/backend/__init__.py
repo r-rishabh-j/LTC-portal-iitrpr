@@ -92,6 +92,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/update-advance-payment')
     api.add_resource(LtcManager.ResolveReviewRequest,
                      '/api/resolve-review')
+    api.add_resource(LtcManager.EditStageForm,
+                     '/api/edit-stage-form')
     api.add_resource(LtcManager.PrintForm,
                      '/api/print-form')
 
