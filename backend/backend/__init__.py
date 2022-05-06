@@ -92,6 +92,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/update-advance-payment')
     api.add_resource(LtcManager.ResolveReviewRequest,
                      '/api/resolve-review')
+    api.add_resource(LtcManager.PrintForm,
+                     '/api/print-form')
 
     @jwt.user_identity_loader
     def user_identity_loader(user: Users):

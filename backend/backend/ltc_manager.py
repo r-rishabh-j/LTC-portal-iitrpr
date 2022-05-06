@@ -1,20 +1,22 @@
 # from email.mime import application
+from math import perm
 import os
 import json
 from . import db
 from . import filemanager
-from .models import Stages
+from .models import StageUsers, Stages
 from .analyse import analyse
 from markupsafe import escape
 from datetime import datetime
 from flask_jwt_extended import current_user
 from flask import jsonify, request, make_response
 from sqlalchemy.orm.attributes import flag_modified
-from flask_restful import Resource, reqparse, abort, fields
+from flask_restful import Resource, abort, fields
 from .role_manager import Permissions, role_required, roles_required, check_role
 from .models import ApplicationStatus, EstablishmentLogs, EstablishmentReview, LTCApproved,\
     Users, LTCRequests, Departments, AdvanceRequests
 from . import emailmanager
+
 
 class LtcManager:
     class ApplyForLTC(Resource):
@@ -56,7 +58,8 @@ class LtcManager:
             emailmanager.sendEmail(
                 current_user,
                 f'LTC Request, ID {new_request.request_id} created',
-                emailmanager.ltc_req_created_msg%(current_user.name, new_request.request_id)
+                emailmanager.ltc_req_created_msg % (
+                    current_user.name, new_request.request_id)
             )
             db.session.commit()
             return make_response(jsonify({'status': 'ok', 'msg': 'Applied for LTC'}), 200)
@@ -218,7 +221,7 @@ class LtcManager:
             user: Users = current_user
             forms = LTCRequests.query.filter_by(user_id=user.id)
             results = []
-            
+
             for form in forms:
                 form: LTCRequests
                 results.append({
@@ -398,9 +401,11 @@ class LtcManager:
             db.session.merge(db_form)
 
             # TODO: update establishment review table
-            est_review_entry: EstablishmentReview = EstablishmentReview.query.get(request_id)
+            est_review_entry: EstablishmentReview = EstablishmentReview.query.get(
+                request_id)
             if est_review_entry == None:  # review was sent by establishment
-                est_entry: EstablishmentLogs = EstablishmentLogs.query.get(request_id)
+                est_entry: EstablishmentLogs = EstablishmentLogs.query.get(
+                    request_id)
                 est_entry.status = ApplicationStatus.new
                 db_form.stage = Stages.establishment
             else:  # review was sent through establishment, i.e was sent by some other stage originally
@@ -422,8 +427,10 @@ class LtcManager:
             # add comment
             db_form.addComment(current_user, comment, True, True)
             # mark the application as new in the sender's table
-            est_review: EstablishmentReview = EstablishmentReview.query.get(request_id)
-            sender_table_ref = Departments.getDeptRequestTableByName(est_review.received_from)
+            est_review: EstablishmentReview = EstablishmentReview.query.get(
+                request_id)
+            sender_table_ref = Departments.getDeptRequestTableByName(
+                est_review.received_from)
             sender_table_ref.status = 'new'
             db.session.delete(est_review)
 
@@ -455,11 +462,11 @@ class LtcManager:
             new = None
             if kwargs['permission'] == Permissions.dept_head:
                 new = db.session.query(table_ref, LTCRequests, Users).join(Users).join(
-                    table_ref).filter(table_ref.status=='new', Users.department==user.department)
+                    table_ref).filter(table_ref.status == 'new', Users.department == user.department)
                 # print(new)
             else:
                 new = db.session.query(table_ref, LTCRequests, Users).join(
-                    Users).join(table_ref).filter(table_ref.status=='new')
+                    Users).join(table_ref).filter(table_ref.status == 'new')
                 # print(new)
             pending = []
 
@@ -514,11 +521,12 @@ class LtcManager:
                 form.stage = Stages.approved
                 approved_entry.approved_on = datetime.now()
             approved_entry.office_order = path
-            
-            emailmanager.sendEmail(user, 
-            f'Office order generated for LTC Request ID {form.request_id}',
-            emailmanager.ltc_office_order_msg%(user.name, request_id)
-            )
+
+            emailmanager.sendEmail(user,
+                                   f'Office order generated for LTC Request ID {form.request_id}',
+                                   emailmanager.ltc_office_order_msg % (
+                                       user.name, request_id)
+                                   )
 
             db.session.commit()
             return jsonify({'success': 'Office Order Uploaded!'})
@@ -538,7 +546,7 @@ class LtcManager:
                     'approved_on': pending_appl.approved_on,
                 })
             return jsonify({'pending': result})
-    
+
     class GetOfficeOrder(Resource):
         @check_role()
         def post(self, permission):
@@ -589,24 +597,53 @@ class LtcManager:
             print(amount)
             if None in [request_id, amount, comments, payment_proof]:
                 abort(400)
-            adv_req:AdvanceRequests = AdvanceRequests.query.filter_by(request_id=request_id).first()
+            adv_req: AdvanceRequests = AdvanceRequests.query.filter_by(
+                request_id=request_id).first()
             adv_req.payment(amount, comments)
             adv_req.payment_docs(current_user, payment_proof)
-            
 
-            app_form:LTCApproved = LTCApproved.query.get(request_id)
-            form:LTCRequests = LTCRequests.query.get(request_id)
+            app_form: LTCApproved = LTCApproved.query.get(request_id)
+            form: LTCRequests = LTCRequests.query.get(request_id)
             form.stage = Stages.approved
             db.session.commit()
             return jsonify({"success": "uploaded proofs"})
-    
+
     class PrintForm(Resource):
         @check_role()
         def post(self, permission):
             analyse()
             request_id = (request.form.get('request_id', None))
+            request_id = 1
             if request_id == None:
                 abort(400, error='Invalid request ID')
             request_id = int(request_id)
-            
+            form_data: LTCRequests = LTCRequests.query.get(request_id)
+            applicant:Users = Users.query.get(form_data.user_id)
+            response = {}
+            response['form'] = form_data.form
 
+            response['signatures'] = {}
+
+            response['signatures']['user'] = None if applicant.signature == None else filemanager.sendFileAsBlob(applicant.signature)
+            # signatures
+            if form_data.stage in [Stages.approved, Stages.advance_pending, Stages.availed]:
+                # establishment section
+                stages = [Stages.establishment, Stages.audit,
+                          Stages.accounts, Stages.registrar, Stages.deanfa]
+                permissions = [Permissions.establishment, Permissions.audit, Permissions.accounts, Permissions.registrar, Permissions.deanfa]
+
+
+                for stage, permission in zip(stages, permissions):
+                    query = db.session.query(Users, StageUsers).join(
+                        StageUsers).filter(Users.permission == permission)
+                    signatures = []
+
+                    for user, stage_user in query:
+                        file = None if user.signature == None else filemanager.sendFileAsBlob(user.signature)
+                        signatures.append({
+                            stage_user.designation: file
+                        })
+                    response['signatures'][stage] = signatures
+                
+
+            return {'data': response}

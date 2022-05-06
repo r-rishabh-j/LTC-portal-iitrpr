@@ -1378,8 +1378,8 @@ shortest route "
                 <List>
                   {
                     commentObj.establishment.map(
-                      (comment) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}}>
+                      (comment, j) =>{
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}} key={j}>
                         {Object.keys(comment["comments"]).map(
                           (prop, i) => {
                             return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || (String(comment["comments"][prop]).trim().length === 0))?<div key={i}></div>:(
@@ -1414,8 +1414,8 @@ shortest route "
                 <List>
                 {
                     commentObj.audit.map(
-                      (comment) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}}>
+                      (comment, j) =>{
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}} key={j}>
                         {Object.keys(comment["comments"]).map(
                           (prop, i) => {
                             return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
@@ -1449,8 +1449,8 @@ shortest route "
                 <List>
                 {
                     commentObj.accounts.map(
-                      (comment) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}}>
+                      (comment, j) =>{
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}} key={j}>
                         {Object.keys(comment["comments"]).map(
                           (prop, i) => {
                             return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
@@ -1484,8 +1484,8 @@ shortest route "
                 <List>
                 {
                     commentObj.registrar.map(
-                      (comment) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}}>
+                      (comment, j) =>{
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}} key={j}>
                         {Object.keys(comment["comments"]).map(
                           (prop, i) => {
                             return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
@@ -1519,8 +1519,8 @@ shortest route "
                 <List>
                 {
                     commentObj.deanfa.map(
-                      (comment) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}}>
+                      (comment, j) =>{
+                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}} key={j}>
                         {Object.keys(comment["comments"]).map(
                           (prop, i) => {
                             return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(

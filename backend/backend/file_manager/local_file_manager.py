@@ -3,7 +3,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import send_file
 from PIL import Image
-
+import base64
 
 class LocalFileManager:
     def __init__(self, data_dir):
@@ -47,6 +47,11 @@ class LocalFileManager:
         filepath = os.path.join(user_signature_dir, f'signature_{u_id}'+ext)
         file.save(filepath)
         return filepath
+    
+    def sendFileAsBlob(self, path):
+        f = open(path, 'rb')
+        res = (base64.b64encode(f.read()))
+        return str(res)
 
     def sendFile(self, attachment_path, filename):
         abs_path = os.path.abspath(attachment_path)
