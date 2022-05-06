@@ -581,7 +581,8 @@ class LtcManager:
         @role_required(role=Permissions.accounts)
         def post(self):
             analyse()
-            request_id = request.form.get('request_id', None)
+            request_id = (request.form.get('request_id', None))
+            request_id = int(request_id)
             amount = request.form.get('amount', None)
             comments = request.form.get('comments', None)
             payment_proof = request.files.get('payment_proof', None)
@@ -598,4 +599,14 @@ class LtcManager:
             form.stage = Stages.approved
             db.session.commit()
             return jsonify({"success": "uploaded proofs"})
+    
+    class PrintForm(Resource):
+        @check_role()
+        def post(self, permission):
+            analyse()
+            request_id = (request.form.get('request_id', None))
+            if request_id == None:
+                abort(400, error='Invalid request ID')
+            request_id = int(request_id)
+            
 

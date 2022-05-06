@@ -1,7 +1,7 @@
 import os
 from flask_cors import CORS
 from flask_restful import Api
-from flask import Flask, make_response, redirect, render_template, send_from_directory
+from flask import Flask, make_response, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
@@ -31,7 +31,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config['SQLALCHEMY_POOL_TIMEOUT'] = 5
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=60)
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=5)
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
     app.config["flask_profiler"] = {

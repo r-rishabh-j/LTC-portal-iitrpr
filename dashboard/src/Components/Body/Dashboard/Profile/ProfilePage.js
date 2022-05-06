@@ -53,7 +53,6 @@ export const ProfilePage = ({ profile }) => {
             responseType: "blob"
         })
             .then((response) => {
-                // console.log(response)
                 const src = URL.createObjectURL(response.data)
                 setSignature(src);
             })
@@ -72,10 +71,7 @@ export const ProfilePage = ({ profile }) => {
             url: "/api/get-email-pref",
         })
             .then((response) => {
-                console.log('pref', response.data)
                 setSwitchState(response.data.pref);
-                // const src = URL.createObjectURL(response.data)
-                // setSignature(src);
             })
             .catch((error) => {
                 if (error.response) {

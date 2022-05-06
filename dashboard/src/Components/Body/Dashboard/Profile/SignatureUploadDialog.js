@@ -22,7 +22,6 @@ const SignatureUploadDialog = ({ profile }) => {
   const { handleSubmit, formState: { isSubmitting } } = useForm();
 
   function onUpload(file) {
-    console.log('o', file);
     setFile(file[0]);
   }
 

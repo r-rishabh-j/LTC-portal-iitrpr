@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogActions,
   Typography,
+  Box
 } from "@material-ui/core";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
@@ -240,7 +241,7 @@ function Review({ permission }) {
       </Paper>
       <Paper
         elevation={10}
-        style={{ display: "flex", height: "calc(100vh - 118px)", margin: "0 0.5vw 0 3vw" }}
+        style={{ display: "flex", height: "calc(98vh - 118px)", margin: "0 0.5vw 0 3vw" }}
       >
         <Grid container style={{ flexGrow: 1 }}>
           <DataGrid
@@ -267,6 +268,7 @@ function Review({ permission }) {
           </DialogActions>
         </Dialog>
       </Paper>
+      <Box minHeight="2vh"></Box>
     </>
   );
 }

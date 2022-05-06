@@ -107,6 +107,31 @@ class Users(db.Model):
         flag_modified(self, "notifications")
         db.session.merge(self)
 
+class StageUsers(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    designation = db.Column(db.String)
+
+    # TODO: Write all possible designations for stage users 
+    class Designations:
+        deanfa = 'Dean FA'
+        registrar = 'Registrar'
+
+        establishment_junior_assistant = 'Junior Assistant'
+        establishment_junior_superitendent = 'Junior Superintendent'
+        establishment_assistant_registrar = 'Assistant Registrar'
+        establishment_deputy_registrar = 'Deputy Registrar'
+
+        senior_audit_officer = 'Senior Audit Officer'
+        assistant_audit_officer = 'Assistant Audit Officer'
+
+        accounts_junior_accountant = 'Junior Accountant'
+        accounts_junior_accounts_officer = 'Junior Accounts Officer'
+        accounts_assistant_registrar = 'Assistant Registrar'
+        accounts_deputy_registrar = 'Deputy Registrar'
+
+    def __init__(self, user_id, designation) -> None:
+        self.user_id = user_id
+        self.designation = designation
 
 class Measurements(db.Model):
     __tablename__ = 'analytics'
