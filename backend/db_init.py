@@ -56,9 +56,8 @@ stage_users_list = [
     },
 ]
 
+hod_cs = Users(email='hod_cse@email', name='HOD CSE',dept='cse', permission='dept_head')
 hod_list = [
-    # Users(email='hod_cse@email', name='HOD CSE',
-    #       dept='cse', permission='dept_head'),
     {
         'user': Users(email='establishment_head@email', name='Establishment Section Head',
                       dept='establishment', permission='establishment', designation='Establishment Section'),
@@ -130,6 +129,7 @@ with app.app_context() as ctx:
 
     for head in hod_list:
         db.session.add(head['user'])
+    db.session.add(hod_cs)
     db.session.commit()
 
     for head in hod_list:
@@ -139,6 +139,10 @@ with app.app_context() as ctx:
         db.session.refresh(user['user'])
         stage_user = StageUsers(user['user'].id, user['designation'])
         db.session.add(stage_user)
+
+    db.session.refresh(hod_cs)
+    dept: Departments = Departments.query.get(hod_cs.department)
+    dept.dept_head = hod_cs.id
 
     for head in hod_list:
         dept: Departments = Departments.query.get(head['user'].department)

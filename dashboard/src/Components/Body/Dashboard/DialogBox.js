@@ -57,7 +57,7 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
     reset,
   } = useForm();
   const { handleSubmit: handleSubmitReview,
-  control: controlReview} = useForm();
+  control: controlReview, formState: { isSubmittingReview }} = useForm();
   let array = [];
   const [edit, setEdit] = useState(false);
 
@@ -281,7 +281,7 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
     };
     return axios({
       method: "POST",
-      url: "/api/comment",
+      url: "/api/resolve-review",
       data: req_data,
     })
       .then((response) => {
@@ -2030,7 +2030,7 @@ shortest route "
               </Box>
               <FormInputRadio
                 name="action"
-                control={control}
+                control={controlReview}
                 label="action"
                 options={
                   est_review_options
@@ -2041,9 +2041,9 @@ shortest route "
                   type="submit"
                   variant="contained"
                   color="primary"
-                  disabled={isSubmitting}
+                  disabled={isSubmittingReview}
                 >
-                  {isSubmitting && (
+                  {isSubmittingReview && (
                     <span className="spinner-grow spinner-grow-sm"></span>
                   )}
                   Send

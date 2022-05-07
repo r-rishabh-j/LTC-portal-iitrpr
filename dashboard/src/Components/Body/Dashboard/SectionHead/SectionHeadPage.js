@@ -10,7 +10,7 @@ import Pending from "../Establishment/Pending";
 import Past from "../Establishment/Past";
 import { ProfilePage } from "../Profile/ProfilePage";
 
-function SectionHeadPage() {
+function SectionHeadPage(props) {
   
     const classes = useStyles();
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -34,7 +34,7 @@ function SectionHeadPage() {
         handleDrawerClose={handleDrawerClose}
         profileInfo={props.profileInfo}
 
-        userType="deanfa"
+        userType="dept_head"
       />
       <Box className={classes.wrapper}>
         <Routes>

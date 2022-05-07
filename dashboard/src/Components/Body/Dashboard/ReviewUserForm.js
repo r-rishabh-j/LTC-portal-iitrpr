@@ -919,7 +919,7 @@ shortest route"
                 onChange={onChange}
                 value={value}
                 error={!!error}
-                type="text"
+                type="number"
                 color="primary"
                 fullWidth
                 margin="normal"
