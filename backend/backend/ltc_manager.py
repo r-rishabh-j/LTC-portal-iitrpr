@@ -383,15 +383,14 @@ class LtcManager:
         @roles_required(roles=allowed_roles)
         def post(self, permission):
             analyse()
-            request_id = request.form.get('request_id')
-            print(request_id)
             if permission == Permissions.establishment:
-                return self.resolveEstablishmentReview(request_id,)
+                return self.resolveEstablishmentReview()
             else:
-                return self.resolveClientReview(request_id,)
+                return self.resolveClientReview()
 
-        def resolveClientReview(self, request_id):
+        def resolveClientReview(self):
             # get updated form
+            request_id = (request.form.get('request_id'))
             updated_form: dict = json.loads(request.form.get('form'))
             print(updated_form)
             updated_file = request.files.get('attachment', None)
@@ -424,32 +423,42 @@ class LtcManager:
                 est_entry.status = ApplicationStatus.new
                 db_form.stage = Stages.establishment
             else:  # review was sent through establishment, i.e was sent by some other stage originally
-                est_review_entry.status = EstablishmentReview.Status.reviewed_by_user
-                db_form.stage = EstablishmentReview.received_from
+                status = (str(EstablishmentReview.Status.reviewed_by_user))
+                est_review_entry.status = status
+                received_from = str(est_review_entry.received_from)
+                print(received_from)
+                db_form.stage = received_from
             db.session.commit()
             return jsonify({'msg': 'Updated'})
 
-        def resolveEstablishmentReview(self, request_id):
+        def resolveEstablishmentReview(self):
             # fetch updated establishment section form fields
             # updated_form = json.loads(request.form.get('form'))
-            comment = json.loads(request.form.get('comments'))
-            action = json.loads(request.form.get('action'))
+            request_id = request.json.get('request_id')
+            comment = (request.json.get('comment'))
+            action = (request.json.get('action'))
+            print('action', action)
+            print('comment', comment)
+            print('req', request_id)
             db_form: LTCRequests = LTCRequests.query.get(request_id)
-            applicant: Users = Users.query.get(db_form.id)
+            applicant: Users = Users.query.get(db_form.request_id)
 
+            est_review: EstablishmentReview = EstablishmentReview.query.get(request_id)
             if action == 'send_to_user':
                 db_form.send_for_review(current_user, applicant, comment)
+                est_review.status = est_review.Status.sent_to_user
                 db_form.addComment(current_user, comment, False, True)
             elif action == 'resolve':
                 # add comment
                 # mark the application as new in the sender's table
                 db_form.removeLastComment(Stages.establishment)
+                # db_form.removeLastComment(est_review.)
                 db_form.addComment(current_user, comment, True, True)
-                est_review: EstablishmentReview = EstablishmentReview.query.get(
-                    request_id)
                 sender_table_ref = Departments.getDeptRequestTableByName(
                     est_review.received_from)
-                sender_table_ref.status = 'new'
+                print(sender_table_ref)
+                sender_row_ref = sender_table_ref.query.get(request_id)
+                sender_row_ref.status = 'new'
                 db.session.delete(est_review)
 
             db.session.commit()

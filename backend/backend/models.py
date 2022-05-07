@@ -464,9 +464,11 @@ class LTCRequests(db.Model):
         db.session.merge(self)
     
     def removeLastComment(self, department):
-        for user in self.comments[user.department][-1]['approved']:
-            self.comments[user.department][-1]['approved'][user] = None
-            self.comments[user.department][-1]['comments'][user] = None
+        for user in self.comments[department][-1]['approved']:
+            self.comments[department][-1]['approved'][user] = None
+            self.comments[department][-1]['comments'][user] = None
+        flag_modified(self, "comments")
+        db.session.merge(self)
 
     def forward(self, applicant: Users):
         """
@@ -687,7 +689,7 @@ class LTCRequests(db.Model):
             )
 
             for key in self.comments[reviewer.department][-1]['approved']:
-                self.comments[Stages.establishment][-1]['approved'][key] = None
+                self.comments[reviewer.department][-1]['approved'][key] = None
 
             flag_modified(self, "comments")
             db.session.merge(self)

@@ -12,6 +12,7 @@ import { Typography } from '@material-ui/core';
 import DeanPage from './Components/Body/Dashboard/DeanFA/DeanPage';
 import AuditPage from './Components/Body/Dashboard/Audit/AuditPage';
 import RegistrarPage from './Components/Body/Dashboard/Registrar/RegistrarPage';
+import SectionHeadPage from './Components/Body/Dashboard/SectionHead/SectionHeadPage';
 
 function App() {
   const [isLoggedIn, profileInfo] = useAuthCookie();
@@ -38,6 +39,8 @@ function App() {
       break;
     case "audit":
       view = <AuditPage profileInfo={profileInfo} />;
+    case "dept_head":
+      view = <SectionHeadPage profileInfo={profileInfo} />;
       break;
     default:
       view = (
