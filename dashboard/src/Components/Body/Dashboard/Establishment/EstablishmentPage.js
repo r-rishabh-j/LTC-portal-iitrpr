@@ -35,16 +35,24 @@ export default function EstablishmentPage(props){
         handleDrawerToggle={handleDrawerToggle}
         handleDrawerClose={handleDrawerClose}
         profileInfo={props.profileInfo}
-
         userType="establishment"
       />
       <Box className={classes.wrapper}>
         <Routes>
-          <Route path="/new" element={<Pending permission = {props.profileInfo.permission}/>}></Route>
+          <Route
+            path="/new"
+            element={<Pending permission={props.profileInfo.permission} />}
+          ></Route>
           <Route path="/past" element={<Past />}></Route>
-          <Route path="/review" element={<Review />}></Route>
+          <Route
+            path="/review"
+            element={<Review permission={props.profileInfo.permission} />}
+          ></Route>
           <Route path="/office_orders" element={<UploadOfficeOrder />}></Route>
-          <Route path="/profile" element={<ProfilePage profile = {props.profileInfo}/>}></Route>
+          <Route
+            path="/profile"
+            element={<ProfilePage profile={props.profileInfo} />}
+          ></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>

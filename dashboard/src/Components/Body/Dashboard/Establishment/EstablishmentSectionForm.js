@@ -1,5 +1,5 @@
 import React from 'react'
-import { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
+import { useEffect, useState, forwardRef} from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { TextField, Box, Button,Typography, Grid } from "@mui/material";
 import DateFnsUtils from "@date-io/date-fns";
@@ -10,9 +10,10 @@ import {
 import axios from "axios";
 
 
-const EstablishmentSectionForm = forwardRef(({est_data, request_id}, ref) => {
+const EstablishmentSectionForm = forwardRef(({est_data, request_id, setEditState}, ref) => {
   const {control, handleSubmit, reset} = useForm()
   const [edit, setEdit] = useState(false)
+  
 
   useEffect(() => {
     reset(est_data)
@@ -21,6 +22,7 @@ const EstablishmentSectionForm = forwardRef(({est_data, request_id}, ref) => {
 function onSubmitEstData(data){
   console.log(data);
   setEdit(false);
+  setEditState(false);
   const req_data = { request_id: request_id, stage_form: data };
   axios({
     method: "POST",
@@ -42,32 +44,32 @@ function onSubmitEstData(data){
     });
 };
 
-useImperativeHandle(ref, () => ({
+// useImperativeHandle(ref, () => ({
   
-  onSubmitEstData(data){
-  console.log(data);
-  setEdit(false);
-  const req_data = { request_id: request_id, stage_form: data };
-  axios({
-    method: "POST",
-    url: "/api/fill-stage-form",
-    data: req_data,
-  })
-    .then((response) => {
-      console.log("s", response.status);
-      alert("Data added!");
-    })
-    .catch((error) => {
-      if (error.response) {
-        console.log("e", error.response);
-        console.log(error.response);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-        alert(error.response.data.error);
-      }
-    });
-}
-}))
+//   onSubmitEstData(data){
+//   console.log(data);
+//   setEdit(false);
+//   const req_data = { request_id: request_id, stage_form: data };
+//   axios({
+//     method: "POST",
+//     url: "/api/fill-stage-form",
+//     data: req_data,
+//   })
+//     .then((response) => {
+//       console.log("s", response.status);
+//       alert("Data added!");
+//     })
+//     .catch((error) => {
+//       if (error.response) {
+//         console.log("e", error.response);
+//         console.log(error.response);
+//         console.log(error.response.status);
+//         console.log(error.response.headers);
+//         alert(error.response.data.error);
+//       }
+//     });
+// }
+// }))
 
   return (
     <div>
@@ -85,7 +87,7 @@ useImperativeHandle(ref, () => ({
             type="button"
             variant="contained"
             color="primary"
-            onClick={() => setEdit(true)}
+            onClick={() => {setEdit(true); setEditState(true)}}
           >
             Edit
           </Button>

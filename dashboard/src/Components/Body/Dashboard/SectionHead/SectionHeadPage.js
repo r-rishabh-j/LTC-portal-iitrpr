@@ -6,12 +6,12 @@ import Navbar from "../../../Header/Navbar";
 import SideNav from "../../../Header/SideNav";
 import { useStyles } from "../../../Header/HeaderStyles";
 import Home from "../Home";
-import Pending from '../Establishment/Pending';
-import Past from '../Establishment/Past';
-import AdvancePayments from './AdvancePayment';
-import { ProfilePage } from '../Profile/ProfilePage';
+import Pending from "../Establishment/Pending";
+import Past from "../Establishment/Past";
+import { ProfilePage } from "../Profile/ProfilePage";
 
-export default function AccountsPage(props){
+function SectionHeadPage() {
+  
     const classes = useStyles();
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -22,7 +22,6 @@ export default function AccountsPage(props){
     const handleDrawerClose = (i) => {
       setMobileOpen(false);
     };
-
   return (
     <div>
       <Navbar
@@ -33,26 +32,22 @@ export default function AccountsPage(props){
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
         handleDrawerClose={handleDrawerClose}
-        userType="accounts"
         profileInfo={props.profileInfo}
+
+        userType="deanfa"
       />
       <Box className={classes.wrapper}>
         <Routes>
-          <Route
-            path="/new"
-            element={<Pending permission={props.profileInfo.permission} />}
-          ></Route>
-          <Route path="/past" element={<Past />}></Route>
-          <Route path="/advance-payment" element={<AdvancePayments />}></Route>
+          <Route path="/new" element={<Pending permission={"dept_head"}  />}></Route>
+          <Route path="/past" element={<Past permission={"dept_head"} />}></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
-          <Route
-            path="/profile"
-            element={<ProfilePage profile={props.profileInfo} />}
-          ></Route>
+          <Route path="/profile" element={<ProfilePage profile = {props.profileInfo}/>}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
       </Box>
     </div>
   );
-};
+  
+}
 
+export default SectionHeadPage

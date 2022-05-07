@@ -17,6 +17,7 @@ const moment = require('moment');
 
 function Review({ permission }) {
   const classes = useStyles();
+  console.log("In Review permission", permission)
 
   const [tableData, setTableData] = useState([]);
 
@@ -260,7 +261,7 @@ function Review({ permission }) {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} process="review" showCommentSection={true}/>
+          <DialogBox request_id={id} permission={permission} process="review" showReviewCommentSection={true}/>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close

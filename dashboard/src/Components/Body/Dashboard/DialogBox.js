@@ -21,14 +21,15 @@ import { useForm } from "react-hook-form";
 import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import EstablishmentSectionForm from "./Establishment/EstablishmentSectionForm";
+import AccountsSectionForm from "./Accounts/AccountsSectionForm";
 import PersonIcon from "@material-ui/icons/Person";
 import ReactToPrint from 'react-to-print';
 import "bootstrap/dist/css/bootstrap.min.css";
 import PrintForm from "./PrintForm";
 const moment = require('moment');
 
-const DialogBox = ({ request_id, permission, process, status, email, showCommentSection }) => {
-  console.log('permission', permission);
+const DialogBox = ({ request_id, permission, process, status, email, showCommentSection, showReviewCommentSection }) => {
+  console.log('permission', permission, "process", process);
   const [formInfo, setFormInfo] = useState({
     created_on: "",
     request_id: "",
@@ -55,6 +56,8 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
     control: controlData,
     reset,
   } = useForm();
+  const { handleSubmit: handleSubmitReview,
+  control: controlReview} = useForm();
   let array = [];
   const [edit, setEdit] = useState(false);
 
@@ -68,6 +71,11 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
   //       }
 
   //   }
+
+  const setEditState = (state) => {
+    setEdit(state)
+  }
+
   const handleAttachmentClick = () => {
     // console.log(cellValues.row.request_id);
     const data = { request_id: request_id };
@@ -169,6 +177,20 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
     },
   ];
 
+    const est_review_options = [
+      {
+        index: 1,
+        label: "Mark as Resolved and Recommend",
+        value: "resolve",
+      },
+      {
+        index: 2,
+        label: "Send back to user",
+        value: "send_to_user",
+      },
+      
+    ];
+
   useEffect(() => {
     const data = { request_id: request_id };
     axios({
@@ -212,11 +234,50 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
 
   const onSubmit = (data) => {
     console.log(data);
+    if(edit){
+      alert("Section Data was edited but not saved. Kindly save before submitting.")
+      return
+    }
 
     const req_data = {
       request_id: request_id,
       comment: data.comment,
       approval: data.approval,
+    };
+    return axios({
+      method: "POST",
+      url: "/api/comment",
+      data: req_data,
+    })
+      .then((response) => {
+        console.log("s", response.status);
+        alert("Comment added!");
+        window.location.reload();
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log("e", error.response);
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          alert(error.response.data.error);
+        }
+      });
+  };
+
+  const onSubmitReview = (data) => {
+    console.log(data);
+    if (edit) {
+      alert(
+        "Section Data was edited but not saved. Kindly save before submitting."
+      );
+      return;
+    }
+
+    const req_data = {
+      request_id: request_id,
+      comment: data.comment,
+      action: data.action,
     };
     return axios({
       method: "POST",
@@ -329,7 +390,13 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
         </div>
         {/* <DialogContentText>hello</DialogContentText> */}
         {/* <TextField label="Field" name = "Field" value = {formInfo.created_on}/> */}
-        <Box sx={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", borderRadius:"10px" }} >
+        <Box
+          sx={{
+            backgroundColor: "#eeeeee",
+            padding: "1vh 1vh 1vh 1vh",
+            borderRadius: "10px",
+          }}
+        >
           <Grid item xs={12}>
             <TextField
               label="Name"
@@ -840,7 +907,8 @@ shortest route "
           />
         </Box>
 
-        {permission === "establishment" && process === "new" ? (
+        {permission === "establishment" &&
+        (process === "new" || process === "review") ? (
           <>
             <Box
               display="flex"
@@ -860,7 +928,13 @@ shortest route "
                 <InfoIcon />
               </Tooltip>
             </Box>
-            <Box style={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", borderRadius:"10px" }}>
+            <Box
+              style={{
+                backgroundColor: "#eeeeee",
+                padding: "1vh 1vh 1vh 1vh",
+                borderRadius: "10px",
+              }}
+            >
               <EstablishmentSectionForm
                 ref={childRef}
                 est_data={
@@ -869,7 +943,7 @@ shortest route "
                     : formInfo.form_data["establishment"]
                 }
                 request_id={request_id}
-                onSubmitEstData={onSubmitEstData}
+                setEditState={setEditState}
               />
             </Box>
           </>
@@ -885,7 +959,13 @@ shortest route "
                 Establishment Section
               </Typography>
             </Box>
-            <Box style={{ backgroundColor: "#eeeeee", padding: "1vh 1vh 1vh 1vh", borderRadius:"10px" }}>
+            <Box
+              style={{
+                backgroundColor: "#eeeeee",
+                padding: "1vh 1vh 1vh 1vh",
+                borderRadius: "10px",
+              }}
+            >
               <Typography>
                 Fresh Recruit i.e. joining Govt. Service after 01.09.2008
                 /otherwise,
@@ -1367,186 +1447,502 @@ shortest route "
                 </Grid>
               </Grid>
             </Box>
-            </div>
-            )}
-            {commentObj["establishment"] !== undefined ? (
-              // commentObj["establishment"][0]["review"] === true ? (
-              <div>
-                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
-                  Establishment Section Comments
-                </Typography>
-                <List>
-                  {
-                    commentObj.establishment.map(
-                      (comment, j) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}} key={j}>
-                        {Object.keys(comment["comments"]).map(
-                          (prop, i) => {
-                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || (String(comment["comments"][prop]).trim().length === 0))?<div key={i}></div>:(
-                              <ListItem key={i}>
-                                <ListItemIcon>
-                                  <PersonIcon />
-                                </ListItemIcon>
-                                <ListItemText
-                                  primary={prop}
-                                  secondary={
-                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
-                                  }
-                                />
-                              </ListItem>
-                            );
-                          }
-                        )}</Box>
+          </div>
+        )}
+
+        {permission === "accounts" &&
+        (process === "new" || process === "review") ? (
+          <>
+            <Box
+              display="flex"
+              justifyContent="start"
+              style={{ margin: "5vh 0 0 0" }}
+            >
+              <Typography style={{ fontWeight: "bold" }}>
+                Accounts Section Data
+              </Typography>
+              <Tooltip
+                title={
+                  <div style={{ fontSize: "1.5em" }}>
+                    Remember to click save after editing the data
+                  </div>
+                }
+              >
+                <InfoIcon />
+              </Tooltip>
+            </Box>
+            <Box
+              style={{
+                backgroundColor: "#eeeeee",
+                padding: "1vh 1vh 1vh 1vh",
+                borderRadius: "10px",
+              }}
+            >
+              <AccountsSectionForm
+                acc_data={
+                  formInfo.form_data["accounts"] === undefined
+                    ? {
+                        entities: [
+                          {
+                            from: "",
+                            to: "",
+                            mode_of_travel: "",
+                            num_fares: "",
+                            single_fare: "",
+                            amount: "",
+                          },
+                        ],
                       }
-                    )
+                    : formInfo.form_data["accounts"]
+                }
+                request_id={request_id}
+                setEditState={setEditState}
+              />
+            </Box>
+          </>
+        ) : (
+          //est data for non establishment stages
+          <div>
+            <Box
+              display="flex"
+              justifyContent="start"
+              style={{ margin: "5vh 0 1vh 0" }}
+            >
+              <Typography style={{ fontWeight: "bold" }}>
+                Accounts Section
+              </Typography>
+            </Box>
+            <Box
+              style={{
+                backgroundColor: "#eeeeee",
+                padding: "1vh 1vh 1vh 1vh",
+                borderRadius: "10px",
+              }}
+            >
+              {formInfo.form_data["accounts"] !== undefined &&
+              formInfo.form_data["accounts"]["entities"] !== undefined ? (
+                formInfo.form_data["accounts"]["entities"].map(
+                  (item, index) => {
+                    return (
+                      <div key={index}>
+                        <Grid container spacing={1}>
+                          <Grid item xs={2}>
+                            <TextField
+                              label="From"
+                              value={item.from}
+                              fullWidth
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                              InputLabelProps={{ shrink: true }}
+                            />
+                          </Grid>
+                          <Grid item xs={1}>
+                            <TextField
+                              label="To"
+                              value={item.to}
+                              fullWidth
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                              InputLabelProps={{ shrink: true }}
+                            />
+                          </Grid>
+                          <Grid item xs={2}>
+                            <TextField
+                              label="Mode of Travel"
+                              value={item.mode_of_travel}
+                              fullWidth
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                              InputLabelProps={{ shrink: true }}
+                            />
+                          </Grid>
+                          <Grid item xs={2}>
+                            <TextField
+                              label="No. of Fares"
+                              value={item.num_fares}
+                              fullWidth
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                              InputLabelProps={{ shrink: true }}
+                            />
+                          </Grid>
+                          <Grid item xs={2}>
+                            <TextField
+                              label="Single Fare"
+                              value={item.single_fare}
+                              fullWidth
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                              InputLabelProps={{ shrink: true }}
+                            />
+                          </Grid>
+                          <Grid item xs={1}>
+                            <TextField
+                              label="Amount"
+                              value={item.amount}
+                              fullWidth
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                              InputLabelProps={{ shrink: true }}
+                            />
+                          </Grid>
+                        </Grid>
+                      </div>
+                    );
                   }
-                </List>
-              </div>
-            ) : (
-              <div></div>
-            )}
-            {commentObj["audit"] !== undefined ? (
-              // commentObj["establishment"][0]["review"] === true ? (
-              <div>
-                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
-                  Audit Section Comments
+                )
+              ) : (
+                <div></div>
+              )}
+              <Grid container spacing={2} style={{ margin: "1vh 0 0 0" }}>
+                <Grid item xs={9} />
+                <Grid item xs={1}>
+                  <Typography style={{ fontWeight: "bold" }}>Total</Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    name="total"
+                    label="Total(₹)"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"]["total"] === undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["total"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography>Advance admissible (90% of above):</Typography>
+                <TextField
+                  name="adv_admissible"
+                  label="Advance Admissible(₹)"
+                  value={
+                    formInfo.form_data["accounts"] === undefined
+                      ? ""
+                      : formInfo.form_data["accounts"]["adv_admissible"] ===
+                        undefined
+                      ? " "
+                      : formInfo.form_data["accounts"]["adv_admissible"]
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
+                />
+                <Typography>Passed for:</Typography>
+                <TextField
+                  name="passed"
+                  label="Passed(₹)"
+                  value={
+                    formInfo.form_data["accounts"] === undefined
+                      ? ""
+                      : formInfo.form_data["accounts"]["passed"] === undefined
+                      ? " "
+                      : formInfo.form_data["accounts"]["passed"]
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
+                />
+                <Typography> In Words:</Typography>
+                <TextField
+                  name="in_words"
+                  label="In Words(₹)"
+                  value={
+                    formInfo.form_data["accounts"] === undefined
+                      ? ""
+                      : formInfo.form_data["accounts"]["in_words"] === undefined
+                      ? " "
+                      : formInfo.form_data["accounts"]["in_words"]
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
+                />
+                <Typography>
+                  Debitable to LTC advance Dr./Mr./Mrs./Ms.:
+                  <TextField
+                    name="debit_to"
+                    label="Name"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"]["debit_to"] ===
+                          undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["debit_to"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
                 </Typography>
-                <List>
-                {
-                    commentObj.audit.map(
-                      (comment, j) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}} key={j}>
-                        {Object.keys(comment["comments"]).map(
-                          (prop, i) => {
-                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
-                              <ListItem key={i}>
-                                <ListItemIcon>
-                                  <PersonIcon />
-                                </ListItemIcon>
-                                <ListItemText
-                                  primary={prop}
-                                  secondary={
-                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
-                                  }
-                                />
-                              </ListItem>
-                            );
-                          }
-                        )}</Box>
-                      }
-                    )
-                  }
-                </List>
-              </div>
-            ) : (
-              <div></div>
-            )}
-            {commentObj["accounts"] !== undefined ? (
-              <div>
-                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
-                  Accounts Section Comments
-                </Typography>
-                <List>
-                {
-                    commentObj.accounts.map(
-                      (comment, j) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}} key={j}>
-                        {Object.keys(comment["comments"]).map(
-                          (prop, i) => {
-                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
-                              <ListItem key={i}>
-                                <ListItemIcon>
-                                  <PersonIcon />
-                                </ListItemIcon>
-                                <ListItemText
-                                  primary={prop}
-                                  secondary={
-                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
-                                  }
-                                />
-                              </ListItem>
-                            );
-                          }
-                        )}</Box>
-                      }
-                    )
-                  }
-                </List>
-              </div>
-            ) : (
-              <div></div>
-            )}
-            {commentObj["registrar"] !== undefined ? (
-              <div>
-                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
-                  Registrar Comments
-                </Typography>
-                <List>
-                {
-                    commentObj.registrar.map(
-                      (comment, j) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}} key={j}>
-                        {Object.keys(comment["comments"]).map(
-                          (prop, i) => {
-                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
-                              <ListItem key={i}>
-                                <ListItemIcon>
-                                  <PersonIcon />
-                                </ListItemIcon>
-                                <ListItemText
-                                  primary={prop}
-                                  secondary={
-                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
-                                  }
-                                />
-                              </ListItem>
-                            );
-                          }
-                        )}</Box>
-                      }
-                    )
-                  }
-                </List>
-              </div>
-            ) : (
-              <div></div>
-            )}
-            {commentObj["deanfa"] !== undefined ? (
-              <div>
-                <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
-                  Dean Comments
-                </Typography>
-                <List>
-                {
-                    commentObj.deanfa.map(
-                      (comment, j) =>{
-                        return <Box style={{backgroundColor:"#eeeeee", margin:"1vh 0 1vh 0", borderRadius:"10px"}} key={j}>
-                        {Object.keys(comment["comments"]).map(
-                          (prop, i) => {
-                            return (comment["comments"][prop]===undefined || comment["comments"][prop]===null || String(comment["comments"][prop]).trim().length === 0)?<div key={i}></div>:(
-                              <ListItem key={i}>
-                                <ListItemIcon>
-                                  <PersonIcon />
-                                </ListItemIcon>
-                                <ListItemText
-                                  primary={prop}
-                                  secondary={
-                                    (comment["approved"][prop]===true?'Recommended':'Not Recommended')+': '+comment["comments"][prop]
-                                  }
-                                />
-                              </ListItem>
-                            );
-                          }
-                        )}</Box>
-                      }
-                    )
-                  }
-                </List>
-              </div>
-            ) : (
-              <div></div>
-            )}
-          
+              </Grid>
+            </Box>
+          </div>
+        )}
+        {commentObj["establishment"] !== undefined ? (
+          // commentObj["establishment"][0]["review"] === true ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Establishment Section Comments
+            </Typography>
+            <List>
+              {commentObj.establishment.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {commentObj["audit"] !== undefined ? (
+          // commentObj["establishment"][0]["review"] === true ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Audit Section Comments
+            </Typography>
+            <List>
+              {commentObj.audit.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {commentObj["accounts"] !== undefined ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Accounts Section Comments
+            </Typography>
+            <List>
+              {commentObj.accounts.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {commentObj["registrar"] !== undefined ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Registrar Comments
+            </Typography>
+            <List>
+              {commentObj.registrar.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {commentObj["deanfa"] !== undefined ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Dean Comments
+            </Typography>
+            <List>
+              {commentObj.deanfa.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
 
         {permission !== "client" &&
         process !== "past" &&
@@ -1584,6 +1980,60 @@ shortest route "
                   permission === "deanfa" || permission === "registrar"
                     ? options_no_review
                     : options
+                }
+              />
+              <Box display="flex" justifyContent="center">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting && (
+                    <span className="spinner-grow spinner-grow-sm"></span>
+                  )}
+                  Send
+                </Button>
+              </Box>
+            </form>
+          </div>
+        ) : (
+          <div />
+        )}
+
+        {
+        showReviewCommentSection === true ? (
+          <div>
+            <br />
+            <Typography style={{ fontWeight: "bold" }}>Comments</Typography>
+            <form onSubmit={handleSubmitReview(onSubmitReview)}>
+              <FormInputText
+                name="comment"
+                control={controlReview}
+                label="Add new comment"
+                defaultValue=" "
+                multiline={true}
+                rows={4}
+              />
+              <Box display="flex" justifyContent="start">
+                <Typography style={{ fontWeight: "bold" }}>Action</Typography>
+                <Tooltip
+                  title={
+                    <div style={{ fontSize: "1.5em" }}>
+                      Section Heads must ensure that the section specific
+                      information is filled before sending the form forward
+                    </div>
+                  }
+                >
+                  <InfoIcon />
+                </Tooltip>
+              </Box>
+              <FormInputRadio
+                name="action"
+                control={control}
+                label="action"
+                options={
+                  est_review_options
                 }
               />
               <Box display="flex" justifyContent="center">
