@@ -115,6 +115,16 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
       icon: <HistoryIcon />,
     },
   ];
+  const hodList = [
+    { label: "Home", link: "/home", icon: <HomeIcon /> },
+
+    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    {
+      label: "Past Applications",
+      link: "/past",
+      icon: <HistoryIcon />,
+    },
+  ];
 
   let listItemData;
   switch (userType) {
@@ -136,6 +146,8 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
     case "deanfa":
       listItemData = deanfaList;
       break;
+    case "dept_head":
+      listItemData = hodList;
     default:
       listItemData = applicantList;
       break;
