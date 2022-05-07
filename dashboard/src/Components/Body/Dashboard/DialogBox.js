@@ -56,8 +56,11 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
     control: controlData,
     reset,
   } = useForm();
-  const { handleSubmit: handleSubmitReview,
-  control: controlReview, formState: { isSubmittingReview }} = useForm();
+  const {
+    handleSubmit: handleSubmitReview,
+    control: controlReview,
+    formState: { isSubmittingReview },
+  } = useForm();
   let array = [];
   const [edit, setEdit] = useState(false);
 
@@ -2031,7 +2034,7 @@ shortest route "
               <FormInputRadio
                 name="action"
                 control={controlReview}
-                label="action"
+                label="Action"
                 options={
                   est_review_options
                 }
