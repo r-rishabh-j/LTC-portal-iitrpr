@@ -388,7 +388,8 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
       </Box>
 
       <DialogContent>
-        <div style={{ display: "none" }}>
+        {/* <div style={{ display: "none" }}> */}
+        <div>
           <PrintForm ref={printComponentRef} request_id={request_id} />
         </div>
         {/* <DialogContentText>hello</DialogContentText> */}

@@ -635,9 +635,10 @@ class LtcManager:
 
     class PrintForm(Resource):
         @check_role()
-        def get(self, permission):
+        def post(self, permission):
             analyse()
-            request_id = (request.form.get('request_id', None))
+            request_id = (request.json.get('request_id', None))
+            print(request_id)
             if request_id == None:
                 abort(400, error='Invalid request ID')
             request_id = int(request_id)

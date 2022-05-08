@@ -148,6 +148,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
       break;
     case "dept_head":
       listItemData = hodList;
+      break;
     default:
       listItemData = applicantList;
       break;

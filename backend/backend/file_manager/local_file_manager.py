@@ -50,7 +50,8 @@ class LocalFileManager:
     
     def sendFileAsBlob(self, path):
         f = open(path, 'rb')
-        res = (base64.b64encode(f.read()))
+        res = (base64.standard_b64encode(f.read()))
+        print(res)
         return str(res)
 
     def sendFile(self, attachment_path, filename):

@@ -1,44 +1,46 @@
-import { Typography } from '@material-ui/core'
-import { Box } from '@mui/system'
-import React from 'react'
-import {useState, useEffect, forwardRef} from 'react'
-import axios from "axios"
-import {Grid, TextField} from "@material-ui/core";
+import { Typography } from "@material-ui/core";
+import { Box } from "@mui/system";
+import React from "react";
+import { useState, useEffect, forwardRef } from "react";
+import axios from "axios";
+import { Grid, TextField } from "@material-ui/core";
 
 const moment = require("moment");
 
 function formatDate(date) {
-    const d = moment(date).format("DD-MM-YYYY");
-    return d;
+  const d = moment(date).format("DD-MM-YYYY");
+  return d;
 }
 
 const PrintForm = forwardRef((props, ref) => {
-    const [formInfo, setFormInfo] = useState({
-      created_on: "",
-      request_id: "",
-      form_data: { establishment: {} },
-      comments: {},
-    });
-    useEffect(() => {
-      const data = { request_id: props.request_id };
-      axios({
-        method: "post",
-        url: "api/getformdata",
-        data: JSON.stringify(data),
-        headers: { "Content-type": "application/json" },
+  console.log("print form for", props.request_id);
+  const [formInfo, setFormInfo] = useState({
+    created_on: "",
+    request_id: "",
+    form: { establishment: {} },
+    comments: {},
+  });
+  useEffect(() => {
+    const data = { request_id: props.request_id };
+    axios({
+      method: "post",
+      url: "api/print-form",
+      data: JSON.stringify(data),
+      headers: { "Content-type": "application/json" },
+    })
+      .then((response) => {
+        console.log("print preview", response.data.data);
+        setFormInfo(response.data.data);
+        console.log(response.data.data.signatures.user)
       })
-        .then((response) => {
-          console.log("print preview", response.data.data);
-          setFormInfo(response.data.data);
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log(error.response);
-            console.log(error.response.status);
-            alert("Form not found");
-          }
-        });
-    }, []);
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          alert("Form not found");
+        }
+      });
+  }, []);
   return (
     <div ref={ref}>
       <Box display="flex" justifyContent="space-between">
@@ -77,11 +79,9 @@ const PrintForm = forwardRef((props, ref) => {
           <TextField
             label="Name"
             value={
-              formInfo.form_data["name"] === undefined
-                ? " "
-                : formInfo.form_data["name"]
+              formInfo.form["name"] === undefined ? " " : formInfo.form["name"]
             }
-            // value={getVal(formInfo.form_data["name"], " ")}
+            // value={getVal(formInfo.form["name"], " ")}
             fullWidth
             InputProps={{
               readOnly: true,
@@ -95,9 +95,9 @@ const PrintForm = forwardRef((props, ref) => {
             <TextField
               label="Designation"
               value={
-                formInfo.form_data["designation"] === undefined
+                formInfo.form["designation"] === undefined
                   ? " "
-                  : formInfo.form_data["designation"]
+                  : formInfo.form["designation"]
               }
               fullWidth
               InputProps={{
@@ -109,11 +109,11 @@ const PrintForm = forwardRef((props, ref) => {
           <Grid item xs={6}>
             <TextField
               label="Department"
-              // value={getVal(formInfo.form_data["department"], " ")}
+              // value={getVal(formInfo.form["department"], " ")}
               value={
-                formInfo.form_data["department"] === undefined
+                formInfo.form["department"] === undefined
                   ? " "
-                  : formInfo.form_data["department"]
+                  : formInfo.form["department"]
               }
               fullWidth
               InputProps={{
@@ -128,11 +128,11 @@ const PrintForm = forwardRef((props, ref) => {
             <TextField
               label="Employee Code"
               value={
-                formInfo.form_data["emp_code"] === undefined
+                formInfo.form["emp_code"] === undefined
                   ? " "
-                  : formInfo.form_data["emp_code"]
+                  : formInfo.form["emp_code"]
               }
-              // value={getVal(formInfo.form_data["emp_code"], " ")}
+              // value={getVal(formInfo.form["emp_code"], " ")}
               fullWidth
               InputProps={{
                 readOnly: true,
@@ -145,9 +145,9 @@ const PrintForm = forwardRef((props, ref) => {
               label="Date of entering the Central Government
 Service/Date of Joining with IIT Ropar"
               value={String(
-                formInfo.form_data["joining_date"] === undefined
+                formInfo.form["joining_date"] === undefined
                   ? " "
-                  : formatDate(formInfo.form_data["joining_date"])
+                  : formatDate(formInfo.form["joining_date"])
               ).slice(0, 10)}
               fullWidth
               InputProps={{
@@ -160,9 +160,9 @@ Service/Date of Joining with IIT Ropar"
         <TextField
           label="Pay Level"
           value={
-            formInfo.form_data["band_pay"] === undefined
+            formInfo.form["band_pay"] === undefined
               ? " "
-              : formInfo.form_data["band_pay"]
+              : formInfo.form["band_pay"]
           }
           fullWidth
           InputProps={{
@@ -175,9 +175,9 @@ Service/Date of Joining with IIT Ropar"
         <TextField
           label="Nature"
           value={
-            formInfo.form_data["nature"] === undefined
+            formInfo.form["nature"] === undefined
               ? " "
-              : formInfo.form_data["nature"]
+              : formInfo.form["nature"]
           }
           fullWidth
           InputProps={{
@@ -190,9 +190,9 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="From"
               value={String(
-                formInfo.form_data["nature_from"] === undefined
+                formInfo.form["nature_from"] === undefined
                   ? " "
-                  : formatDate(formInfo.form_data["nature_from"])
+                  : formatDate(formInfo.form["nature_from"])
               ).slice(0, 10)}
               fullWidth
               InputProps={{
@@ -205,9 +205,9 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="To"
               value={String(
-                formInfo.form_data["nature_to"] === undefined
+                formInfo.form["nature_to"] === undefined
                   ? " "
-                  : formatDate(formInfo.form_data["nature_to"])
+                  : formatDate(formInfo.form["nature_to"])
               ).slice(0, 10)}
               fullWidth
               InputProps={{
@@ -220,9 +220,9 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="No. of Days"
               value={
-                formInfo.form_data["num_days"] === undefined
+                formInfo.form["num_days"] === undefined
                   ? " "
-                  : formInfo.form_data["num_days"]
+                  : formInfo.form["num_days"]
               }
               fullWidth
               InputProps={{
@@ -240,9 +240,9 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="From"
               value={String(
-                formInfo.form_data["prefix_from"] === undefined
+                formInfo.form["prefix_from"] === undefined
                   ? " "
-                  : formatDate(formInfo.form_data["prefix_from"])
+                  : formatDate(formInfo.form["prefix_from"])
               ).slice(0, 10)}
               fullWidth
               InputProps={{
@@ -255,9 +255,9 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="To"
               value={String(
-                formInfo.form_data["prefix_to"] === undefined
+                formInfo.form["prefix_to"] === undefined
                   ? " "
-                  : formatDate(formInfo.form_data["prefix_to"])
+                  : formatDate(formInfo.form["prefix_to"])
               ).slice(0, 10)}
               fullWidth
               InputProps={{
@@ -273,9 +273,9 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="From"
               value={String(
-                formInfo.form_data["suffix_from"] === undefined
+                formInfo.form["suffix_from"] === undefined
                   ? " "
-                  : formatDate(formInfo.form_data["suffix_from"])
+                  : formatDate(formInfo.form["suffix_from"])
               ).slice(0, 10)}
               fullWidth
               InputProps={{
@@ -288,9 +288,9 @@ Service/Date of Joining with IIT Ropar"
             <TextField
               label="To"
               value={String(
-                formInfo.form_data["suffix_to"] === undefined
+                formInfo.form["suffix_to"] === undefined
                   ? " "
-                  : formatDate(formInfo.form_data["suffix_to"])
+                  : formatDate(formInfo.form["suffix_to"])
               ).slice(0, 10)}
               fullWidth
               InputProps={{
@@ -305,9 +305,9 @@ Service/Date of Joining with IIT Ropar"
           label="Whether spouse is employed, if yes whether
 entitled to LTC"
           value={
-            formInfo.form_data["spouse_is_employed"] === undefined
+            formInfo.form["spouse_is_employed"] === undefined
               ? " "
-              : formInfo.form_data["spouse_is_employed"]
+              : formInfo.form["spouse_is_employed"]
           }
           fullWidth
           InputProps={{
@@ -323,9 +323,9 @@ entitled to LTC"
             <TextField
               label="Date of Outward journey"
               value={String(
-                formInfo.form_data["self_date_outward"] === undefined
+                formInfo.form["self_date_outward"] === undefined
                   ? " "
-                  : formatDate(formInfo.form_data["self_date_outward"])
+                  : formatDate(formInfo.form["self_date_outward"])
               )}
               fullWidth
               InputProps={{
@@ -338,9 +338,9 @@ entitled to LTC"
             <TextField
               label="Date of Inward journey"
               value={String(
-                formInfo.form_data["self_date_inward"] === undefined
+                formInfo.form["self_date_inward"] === undefined
                   ? " "
-                  : formatDate(formInfo.form_data["self_date_inward"])
+                  : formatDate(formInfo.form["self_date_inward"])
               )}
               fullWidth
               InputProps={{
@@ -358,9 +358,9 @@ entitled to LTC"
             <TextField
               label="Date of Outward journey"
               value={
-                formInfo.form_data["family_date_outward"] === undefined
+                formInfo.form["family_date_outward"] === undefined
                   ? " "
-                  : formatDate(formInfo.form_data["family_date_outward"])
+                  : formatDate(formInfo.form["family_date_outward"])
               }
               fullWidth
               InputProps={{
@@ -373,9 +373,9 @@ entitled to LTC"
             <TextField
               label="Date of Inward journey"
               value={
-                formInfo.form_data["family_date_inward"] === undefined
+                formInfo.form["family_date_inward"] === undefined
                   ? " "
-                  : formatDate(formInfo.form_data["family_date_inward"])
+                  : formatDate(formInfo.form["family_date_inward"])
               }
               fullWidth
               InputProps={{
@@ -388,9 +388,9 @@ entitled to LTC"
         <TextField
           label="Home Town as recorded in the Service Book"
           value={
-            formInfo.form_data["home_town"] === undefined
+            formInfo.form["home_town"] === undefined
               ? " "
-              : formInfo.form_data["home_town"]
+              : formInfo.form["home_town"]
           }
           fullWidth
           InputProps={{
@@ -401,9 +401,9 @@ entitled to LTC"
           label="Nature of LTC to be availed, Home Town /
 Anywhere in India with Block Year"
           value={
-            formInfo.form_data["ltc_nature"] === undefined
+            formInfo.form["ltc_nature"] === undefined
               ? " "
-              : formInfo.form_data["ltc_nature"]
+              : formInfo.form["ltc_nature"]
           }
           fullWidth
           InputProps={{
@@ -414,9 +414,7 @@ Anywhere in India with Block Year"
         <TextField
           label="If, anywhere in India, the place to be visited"
           value={
-            formInfo.form_data["place"] === undefined
-              ? " "
-              : formInfo.form_data["place"]
+            formInfo.form["place"] === undefined ? " " : formInfo.form["place"]
           }
           fullWidth
           InputProps={{
@@ -430,9 +428,9 @@ Anywhere in India with Block Year"
 headquarter to Home Town/Place of visit by
 shortest route "
               value={
-                formInfo.form_data["est_fare"] === undefined
+                formInfo.form["est_fare"] === undefined
                   ? " "
-                  : formInfo.form_data["est_fare"]
+                  : formInfo.form["est_fare"]
               }
               fullWidth
               InputProps={{
@@ -447,8 +445,8 @@ shortest route "
           Person(s) in respect of whom LTC is proposed to be availed:
         </Typography>
 
-        {formInfo.form_data["dependents"] !== undefined ? (
-          formInfo.form_data["dependents"].map((item, index) => {
+        {formInfo.form["dependents"] !== undefined ? (
+          formInfo.form["dependents"].map((item, index) => {
             return (
               <div key={index}>
                 <Grid container spacing={1}>
@@ -542,9 +540,9 @@ shortest route "
             <TextField
               label="Advance Required"
               value={
-                formInfo.form_data["adv_is_required"] === undefined
+                formInfo.form["adv_is_required"] === undefined
                   ? " "
-                  : formInfo.form_data["adv_is_required"]
+                  : formInfo.form["adv_is_required"]
               }
               fullWidth
               InputProps={{
@@ -557,9 +555,9 @@ shortest route "
             <TextField
               label="Encashment Required"
               value={
-                formInfo.form_data["encashment_is_required"] === undefined
+                formInfo.form["encashment_is_required"] === undefined
                   ? " "
-                  : formInfo.form_data["encashment_is_required"]
+                  : formInfo.form["encashment_is_required"]
               }
               fullWidth
               InputProps={{
@@ -572,9 +570,9 @@ shortest route "
         <TextField
           label="No. of encashment of leave days "
           value={
-            formInfo.form_data["encashment_days"] === undefined
+            formInfo.form["encashment_days"] === undefined
               ? " "
-              : formInfo.form_data["encashment_days"]
+              : formInfo.form["encashment_days"]
           }
           fullWidth
           InputProps={{
@@ -614,20 +612,22 @@ shortest route "
               My spouse is not employed in Government service / my spouse is
               employed in government service and the concession has not been
               availed of by him/her separately of himself/herself or for any of
-              the family members for the{formInfo.form_data["establishment"] === undefined
-                    ? ""
-                    : formInfo.form_data["establishment"][
-                        "est_data_block_year"
-                      ] === undefined
-                    ? " "
-                    : formInfo.form_data["establishment"]["est_data_block_year"]}
+              the family members for the
+              {formInfo.form["establishment"] === undefined
+                ? ""
+                : formInfo.form["establishment"]["est_data_block_year"] ===
+                  undefined
+                ? " "
+                : formInfo.form["establishment"]["est_data_block_year"]}
               block year.
             </li>
           </Typography>
         </ol>
       </Box>
       <Box display="flex" justifyContent="right">
-        <img src={require("./sign.jpeg")} width="100px" />
+        {formInfo.signatures !== undefined && (formInfo.signatures.user !== undefined || formInfo.signatures.user !== null)?
+        <img src={`data:image/jpeg;base64,${(formInfo.signatures["user"].slice(2, -1))}`} width="175px" />: <div/>}
+        {/* <img src=`data:image/png;base64,${formInfo.sig}` width="100px" /> */}
       </Box>
       <Box display="flex" justifyContent="right">
         <Typography variant="body2" style={{ fontWeight: "bold" }}>
@@ -662,16 +662,13 @@ shortest route "
               name="est_data_joining_date"
               label="Date of joining"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
-                      "est_data_joining_date"
-                    ] === undefined
+                  : formInfo.form["establishment"]["est_data_joining_date"] ===
+                    undefined
                   ? " "
                   : formatDate(
-                      formInfo.form_data["establishment"][
-                        "est_data_joining_date"
-                      ]
+                      formInfo.form["establishment"]["est_data_joining_date"]
                     )
               }
               fullWidth
@@ -686,13 +683,12 @@ shortest route "
               name="est_data_block_year"
               label="Block Year"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
-                      "est_data_block_year"
-                    ] === undefined
+                  : formInfo.form["establishment"]["est_data_block_year"] ===
+                    undefined
                   ? " "
-                  : formInfo.form_data["establishment"]["est_data_block_year"]
+                  : formInfo.form["establishment"]["est_data_block_year"]
               }
               fullWidth
               InputProps={{
@@ -712,13 +708,12 @@ shortest route "
               name="est_data_nature_last"
               label="Last Availed"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
-                      "est_data_nature_last"
-                    ] === undefined
+                  : formInfo.form["establishment"]["est_data_nature_last"] ===
+                    undefined
                   ? " "
-                  : formInfo.form_data["establishment"]["est_data_nature_last"]
+                  : formInfo.form["establishment"]["est_data_nature_last"]
               }
               fullWidth
               InputProps={{
@@ -732,15 +727,13 @@ shortest route "
               name="est_data_nature_current"
               label="Current LTC"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_nature_current"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
-                      "est_data_nature_current"
-                    ]
+                  : formInfo.form["establishment"]["est_data_nature_current"]
               }
               fullWidth
               InputProps={{
@@ -757,15 +750,13 @@ shortest route "
               name="est_data_period_last_from"
               label="Last Availed From"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_period_last_from"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
-                      "est_data_period_last_from"
-                    ]
+                  : formInfo.form["establishment"]["est_data_period_last_from"]
               }
               fullWidth
               InputProps={{
@@ -779,15 +770,13 @@ shortest route "
               name="est_data_period_last_to"
               label="Last Availed To"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_period_last_to"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
-                      "est_data_period_last_to"
-                    ]
+                  : formInfo.form["establishment"]["est_data_period_last_to"]
               }
               fullWidth
               InputProps={{
@@ -801,13 +790,13 @@ shortest route "
               name="est_data_period_current_from"
               label="Current LTC From"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_period_current_from"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_period_current_from"
                     ]
               }
@@ -824,15 +813,13 @@ shortest route "
               name="est_data_period_current_to"
               label="Current LTC To"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_period_current_to"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
-                      "est_data_period_current_to"
-                    ]
+                  : formInfo.form["establishment"]["est_data_period_current_to"]
               }
               fullWidth
               InputProps={{
@@ -849,13 +836,12 @@ shortest route "
               name="est_data_last_ltc_for"
               label="Last Availed"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
-                      "est_data_last_ltc_for"
-                    ] === undefined
+                  : formInfo.form["establishment"]["est_data_last_ltc_for"] ===
+                    undefined
                   ? " "
-                  : formInfo.form_data["establishment"]["est_data_last_ltc_for"]
+                  : formInfo.form["establishment"]["est_data_last_ltc_for"]
               }
               fullWidth
               InputProps={{
@@ -869,15 +855,13 @@ shortest route "
               name="est_data_current_ltc_for"
               label="Current LTC"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_current_ltc_for"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
-                      "est_data_current_ltc_for"
-                    ]
+                  : formInfo.form["establishment"]["est_data_current_ltc_for"]
               }
               fullWidth
               InputProps={{
@@ -894,15 +878,12 @@ shortest route "
               name="est_data_last_ltc_days"
               label="Last Availed"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
-                      "est_data_last_ltc_days"
-                    ] === undefined
+                  : formInfo.form["establishment"]["est_data_last_ltc_days"] ===
+                    undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
-                      "est_data_last_ltc_days"
-                    ]
+                  : formInfo.form["establishment"]["est_data_last_ltc_days"]
               }
               fullWidth
               InputProps={{
@@ -916,15 +897,13 @@ shortest route "
               name="est_data_current_ltc_days"
               label="Current LTC"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_current_ltc_days"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
-                      "est_data_current_ltc_days"
-                    ]
+                  : formInfo.form["establishment"]["est_data_current_ltc_days"]
               }
               fullWidth
               InputProps={{
@@ -941,13 +920,13 @@ shortest route "
               name="est_data_last_earned_leave_on"
               label="Last Availed"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_last_earned_leave_on"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_last_earned_leave_on"
                     ]
               }
@@ -963,13 +942,13 @@ shortest route "
               name="est_data_current_earned_leave_on"
               label="Current LTC"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_current_earned_leave_on"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_current_earned_leave_on"
                     ]
               }
@@ -988,13 +967,12 @@ shortest route "
               name="est_data_last_balance"
               label="Last Availed"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
-                      "est_data_last_balance"
-                    ] === undefined
+                  : formInfo.form["establishment"]["est_data_last_balance"] ===
+                    undefined
                   ? " "
-                  : formInfo.form_data["establishment"]["est_data_last_balance"]
+                  : formInfo.form["establishment"]["est_data_last_balance"]
               }
               fullWidth
               InputProps={{
@@ -1008,15 +986,13 @@ shortest route "
               name="est_data_current_balance"
               label="Current LTC"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_current_balance"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
-                      "est_data_current_balance"
-                    ]
+                  : formInfo.form["establishment"]["est_data_current_balance"]
               }
               fullWidth
               InputProps={{
@@ -1033,13 +1009,13 @@ shortest route "
               name="est_data_last_encashment_adm"
               label="Last Availed"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_last_encashment_adm"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_last_encashment_adm"
                     ]
               }
@@ -1055,13 +1031,13 @@ shortest route "
               name="est_data_current_encashment_adm"
               label="Current LTC"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_current_encashment_adm"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_current_encashment_adm"
                     ]
               }
@@ -1082,13 +1058,12 @@ shortest route "
               name="est_data_last_nature"
               label="Last Availed"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
-                      "est_data_last_nature"
-                    ] === undefined
+                  : formInfo.form["establishment"]["est_data_last_nature"] ===
+                    undefined
                   ? " "
-                  : formInfo.form_data["establishment"]["est_data_last_nature"]
+                  : formInfo.form["establishment"]["est_data_last_nature"]
               }
               fullWidth
               InputProps={{
@@ -1102,15 +1077,13 @@ shortest route "
               name="est_data_current_nature"
               label="Current LTC"
               value={
-                formInfo.form_data["establishment"] === undefined
+                formInfo.form["establishment"] === undefined
                   ? ""
-                  : formInfo.form_data["establishment"][
+                  : formInfo.form["establishment"][
                       "est_data_current_nature"
                     ] === undefined
                   ? " "
-                  : formInfo.form_data["establishment"][
-                      "est_data_current_nature"
-                    ]
+                  : formInfo.form["establishment"]["est_data_current_nature"]
               }
               fullWidth
               InputProps={{
@@ -1123,6 +1096,6 @@ shortest route "
       </Box>
     </div>
   );
-})
+});
 
-export default PrintForm
+export default PrintForm;
