@@ -113,8 +113,9 @@ class Auth:
             sign = request.files.get('signature', None)
             print(sign)
             try:
-                path = filemanager.saveSignature(sign, current_user.id)
-                user.signature = path
+                # path = filemanager.saveSignature(sign, current_user.id)
+                # user.signature = path
+                user.signature = filemanager.fileAsB64(sign)
             except Exception as e:
                 return abort(400, error=f'{e}')
             db.session.commit()
@@ -123,8 +124,5 @@ class Auth:
     class GetSignature(Resource):
         @check_role()
         def post(self, permission):
-            sign_path = current_user.signature
-            if sign_path == None or str(sign_path).isspace():
-                return filemanager.sendFile('./static/no-sign.png', 'no-sign.png')
-            print(os.path.split(sign_path)[1])
-            return filemanager.sendFile(sign_path, os.path.split(sign_path)[1])
+            sign = current_user.signature
+            return {'signature': sign}

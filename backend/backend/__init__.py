@@ -26,7 +26,7 @@ filemanager = create_file_manager(upload_folder=UPLOAD_FOLDER)
 enable_email = False
 if os.environ.get("ENABLE_EMAIL") == 'true':
     enable_email = True
-emailmanager = EmailManager(enabled=enable_email, queue=None)
+emailmanager = EmailManager(enabled=enable_email, queue={'queue': task_queue})
 
 
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):

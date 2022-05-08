@@ -21,11 +21,12 @@ Office order for LTC Request ID %s has been generated.
 Visit LTC Portal for more information.
 """
 
-    def __init__(self,  enabled=True, queue=None) -> None:
+    def __init__(self,  enabled=True, queue:dict=None) -> None:
         self.sender_address = os.environ.get('EMAIL_ID')
         self.sender_pass = os.environ.get('EMAIL_APP_PASSWORD')
         self.enabled = enabled
-        self.task_queue = queue
+        self.queuing = True if 'queue' in queue.keys() else False
+        self.task_queue = None if not self.queuing else queue['queue']
         self.__connect()
 
     def __connect(self):
@@ -44,29 +45,46 @@ Visit LTC Portal for more information.
 
     def __sendEmail(self, receiver, subject, message_text):
         if receiver['pref'] == True:
-            message = MIMEMultipart()
-            message['From'] = self.sender_address
-            message['To'] = receiver['email']
-            # The subject line
-            message['Subject'] = subject
-            # The body and the attachments for the mail
-            message.attach(MIMEText(message_text, 'plain'))
-            # Create SMTP session for sending the mail
-            text = message.as_string()
-            print(text)
-            self.session.sendmail(self.sender_address, receiver['email'], text)
+            try:
+                if self.enabled:
+                    session = smtplib.SMTP(
+                        'smtp.gmail.com', 587)  # use gmail with port
+                    session.starttls()  # enable security
+                    # login with mail_id and password
+                    session.login(self.sender_address, self.sender_pass)
+                    message = MIMEMultipart()
+                    message['From'] = self.sender_address
+                    message['To'] = receiver['email']
+                    # The subject line
+                    message['Subject'] = subject
+                    # The body and the attachments for the mail
+                    message.attach(MIMEText(message_text, 'plain'))
+                    # Create SMTP session for sending the mail
+                    text = message.as_string()
+                    print(text)
+                    session.sendmail(self.sender_address, receiver['email'], text)
+                else:
+                    print('Email Disabled.')
+            except:
+                if self.enabled:
+                    print('Not able to create email session')
+            
 
     def sendEmail(self, receiver, subject, message_text):
         if not self.enabled:
             return
         try:
             try:
+                # rec = {
+                #     'email':str(receiver.email),
+                #     'pref':(receiver.email_pref)
+                # }
                 rec = {
-                    'email':str(receiver.email),
-                    'pref':(receiver.email_pref)
+                    'email':'2019csb1286@iitrpr.ac.in',
+                    'pref':True
                 }
-                if self.task_queue!=None:
-                    self.task_queue.enqueue(self.__sendEmail, rec, subject, message_text)
+                if self.queuing == True:
+                    self.task_queue.enqueue(self.__sendEmail, rec, 'subject', 'message_text')
                 else:
                     self.__sendEmail(rec, subject, message_text)
             except (smtplib.SMTPServerDisconnected, smtplib.SMTPConnectError, smtplib.SMTPSenderRefused) as e:
@@ -74,7 +92,7 @@ Visit LTC Portal for more information.
                 print(e)
                 try:
                     self.__connect()
-                    if self.task_queue!=None:
+                    if self.task_queue == True:
                         self.task_queue.enqueue(self.__sendEmail, rec, subject, message_text)
                     else:
                         self.__sendEmail(rec, subject, message_text)

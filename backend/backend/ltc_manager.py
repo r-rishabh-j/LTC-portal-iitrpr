@@ -655,8 +655,7 @@ class LtcManager:
 
             response['signatures'] = {}
 
-            response['signatures']['user'] = None if applicant.signature == None else filemanager.sendFileAsBlob(
-                applicant.signature)
+            response['signatures']['user'] = applicant.signature
             # signatures
             if form_data.stage in [Stages.approved, Stages.advance_pending, Stages.availed]:
                 stages = [
@@ -673,8 +672,7 @@ class LtcManager:
                     signatures = []
 
                     for user, stage_user in query:
-                        file = None if user.signature == None else filemanager.sendFileAsBlob(
-                            user.signature)
+                        file = user.signature 
                         signatures.append({
                             stage_user.designation: file
                         })

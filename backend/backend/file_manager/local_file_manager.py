@@ -54,6 +54,10 @@ class LocalFileManager:
         print(res)
         return str(res)
 
+    def fileAsB64(self, file):
+        res = (base64.standard_b64encode(file.read()))
+        return str(res)
+
     def sendFile(self, attachment_path, filename):
         abs_path = os.path.abspath(attachment_path)
         print(abs_path)

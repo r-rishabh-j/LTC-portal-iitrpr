@@ -50,11 +50,11 @@ export const ProfilePage = ({ profile }) => {
         axios({
             method: "POST",
             url: "/api/get-signature",
-            responseType: "blob"
+            // responseType: "blob"
         })
             .then((response) => {
-                const src = URL.createObjectURL(response.data)
-                setSignature(src);
+                // const src = URL.createObjectURL(response.data)
+                setSignature(response.data.signature);
             })
             .catch((error) => {
                 if (error.response) {
@@ -107,7 +107,9 @@ export const ProfilePage = ({ profile }) => {
                                 </Typography>
                             </Box>
                             <Box margin={"0 0 0 0vh"}>
-                                <img src={signature} width="300px" height="300px" alt='No Signature' style={{ borderWidth: "1px", borderColor: "black", borderStyle: "solid", marginTop: "2vh" }}></img>
+                                {/* <img src={signature} width="300px" height="300px" alt='No Signature' style={{ borderWidth: "1px", borderColor: "black", borderStyle: "solid", marginTop: "2vh" }}></img> */}
+                                {signature!==null && signature!==undefined?
+                                <img src={`data:image/jpeg;base64,${(signature.slice(2, -1))}`} width="400px" />: <div><br></br>No signature!</div>}
                             </Box>
                             <Button style={{ margin: "2vh 0 0 0vw" }} color="primary" variant="contained" onClick={handleDialogOpen}>
                                 Upload Signature

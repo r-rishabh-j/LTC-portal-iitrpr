@@ -7,4 +7,4 @@ def create_file_manager(upload_folder):
         print('Connected to Google Cloud Storage')
         return GcpFileManager(os.environ.get("GCP_BUCKET"), upload_folder)
     else:
-        return LocalFileManager(os.path.abspath(upload_folder))
+        return LocalFileManager((upload_folder))
