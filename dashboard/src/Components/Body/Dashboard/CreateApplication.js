@@ -7,7 +7,7 @@ import {
   Box,
   Fab
 } from "@material-ui/core";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useForm, Controller, useFieldArray, get } from "react-hook-form";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useStyles } from "./FormStyles";
@@ -21,7 +21,23 @@ import useAuthCookie from "../../Login/useAuthCookie";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FieldArrayInput } from "../../Utilities/FieldArrayInput";
 
+// function getCookie(name) {
+//   if (!document.cookie) {
+//     return null;
+//   }
 
+//   const xsrfCookies = document.cookie.split(';')
+//     .map(c => c.trim())
+//     .filter(c => c.startsWith(name + '='));
+
+//   if (xsrfCookies.length === 0) {
+//     return null;
+//   }
+//   return decodeURIComponent(xsrfCookies[0].split('=')[1]);
+// }
+
+// const csrf = getCookie('csrf_access_token');
+// console.log('csrf', csrf);
 
 export default function CreateApplication({profileInfo}) {
   console.log(profileInfo);
@@ -67,7 +83,7 @@ export default function CreateApplication({profileInfo}) {
     return axios({
       method: "POST",
       url: "/api/apply",
-      data: formData
+      data: formData,
     })
       .then((response) => {
         alert("Application submitted!")

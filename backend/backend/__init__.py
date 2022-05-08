@@ -6,19 +6,27 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
 from flask_migrate import Migrate
+import redis
+from rq import Queue
 from .file_manager import create_file_manager
 from .email_manager.email_manager import EmailManager
 from dotenv import load_dotenv
+import redis
+from rq import Queue
 
 load_dotenv()
 db = SQLAlchemy()
 UPLOAD_FOLDER = 'uploads'
+
+redis_conn = redis.Redis()
+task_queue = Queue(connection=redis_conn)
+
 filemanager = create_file_manager(upload_folder=UPLOAD_FOLDER)
 
 enable_email = False
 if os.environ.get("ENABLE_EMAIL") == 'true':
     enable_email = True
-emailmanager = EmailManager(enabled=enable_email)
+emailmanager = EmailManager(enabled=enable_email, queue=None)
 
 
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):

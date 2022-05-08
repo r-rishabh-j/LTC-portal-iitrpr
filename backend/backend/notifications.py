@@ -35,6 +35,6 @@ class SetEmailPref(Resource):
         pref = setting.get('pref')
         if pref not in [True, False]:
             abort(400)
-        current_user.email_pref = pref
+        current_user.email_pref = bool(pref)
         db.session.commit()
         return {'pref': current_user.email_pref}

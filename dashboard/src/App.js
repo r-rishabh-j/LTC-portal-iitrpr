@@ -39,6 +39,7 @@ function App() {
       break;
     case "audit":
       view = <AuditPage profileInfo={profileInfo} />;
+      break;
     case "dept_head":
       view = <SectionHeadPage profileInfo={profileInfo} />;
       break;
