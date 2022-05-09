@@ -111,10 +111,9 @@ class Auth:
         def post(self, permission):
             user: Users = current_user
             sign = request.files.get('signature', None)
-            print(sign)
+            if (os.path.splitext(str(sign.filename).lower())[1] not in ['.png', '.jpeg', '.jpg']):
+                abort(400, error='invalid file type')
             try:
-                # path = filemanager.saveSignature(sign, current_user.id)
-                # user.signature = path
                 user.signature = filemanager.fileAsB64(sign)
             except Exception as e:
                 return abort(400, error=f'{e}')

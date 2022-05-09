@@ -4,8 +4,6 @@ import axios from 'axios'
 import { Paper, Typography, Box, Button } from '@material-ui/core'
 import { useStyles } from "../../Header/HeaderStyles.js";
 import NotificationsPausedIcon from "@material-ui/icons/NotificationsPaused";
-import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
-import { margin, typography } from '@mui/system';
 import ClearIcon from '@material-ui/icons/Clear';
 import { Alert, AlertTitle } from '@mui/material';
 const moment = require('moment');
@@ -17,10 +15,6 @@ export default function Home() {
   const [profileInfo, setProfileInfo] = useState({});
   const [notifications, setNotifications] = useState([]);
 
-  
-
-  // var h = sizeRef.current.offsetHeight;
-
   useEffect(() => {
     axios({
       method: "GET",
@@ -28,10 +22,7 @@ export default function Home() {
       data: {},
     })
       .then((response) => {
-        //console.log(response.data.claims);
         setProfileInfo(response.data.claims);
-        //console.log("status " + isLoggedIn);    //updated outside of useEffect
-        //console.log(profileInfo)
       })
       .catch((error) => {
         if (error.response) {
@@ -102,7 +93,7 @@ export default function Home() {
 
   }
 
-  function formatDate(date){
+  function formatDate(date) {
     const d = moment(date).format("MMMM Do YYYY, h:mm a");
     return d;
   }
@@ -111,59 +102,11 @@ export default function Home() {
     <>
       <Box ref={sizeRef}
         style={{ display: "flex", flexFlow: "column" }}
-      // justifyContent="space-between"
       >
-        {/* <Box style={{ flex: "0 1 auto", height:"35vh" }}>
-          <center>
-            <img
-              src={profileInfo.picture}
-              alt="Profile image"
-              style={{ width: "10vw", borderRadius: "50%" }}
-              referrerPolicy={"no-referrer"}
-            ></img>
-            <Typography
-              variant="h5"
-              style={{ fontWeight: "bold", margin: "auto" }}
-            >
-              {" "}
-              {profileInfo.name}
-            </Typography>
-            <Typography variant="h6" style={{ margin: "auto" }}>
-              {" "}
-              {profileInfo.department}
-            </Typography>
-            <Typography variant="h6" style={{ margin: "auto" }}>
-              {" "}
-              {profileInfo.email}
-            </Typography>
-          </center>
-          
-        </Box> */}
-
-
-
-        {/* <Paper
-          // elevation={10}
-          style={{
-            margin: "0 0 0 3vw",
-            // height: "calc(`100vh - sizeRef.current.offsetHeight`)",
-            minHeight: "91.5vh",
-            width: "80vw",
-            backgroundColor: "#efefef",
-            // overflowY: "scroll",
-            flex: "1 1 auto",
-          }}
-        > */}
-
         <Box
           style={{
             margin: "0 0 0 3vw",
             minHeight: "calc(100vh - 81px)",
-            // minHeight: "89vh",
-            // width: "80vw",
-            // backgroundColor: "#efefef",
-            // overflowY: "scroll",
-            // overflow:"auto",
             flex: "1 1 auto",
             width: "auto"
           }}
@@ -173,13 +116,11 @@ export default function Home() {
             <Typography variant="h5" style={{ visibility: "hidden" }}>
               Notifications
             </Typography>
-            {/* <Typography variant="h5">Notifications</Typography> */}
-
             <Button
               title='Clear Notifications'
               variant="contained"
               // color="primary"
-              style={{ borderRadius: "35%" }}
+              style={{ borderRadius: "35%", marginRight: "1vw" }}
               onClick={clearNotifications}
             >
               <ClearIcon />
@@ -187,56 +128,27 @@ export default function Home() {
           </Box>
           {notifications.length !== 0 ? (
             // <center>
-              <div style={{ listStyle: "none" }}>
-                {/* <Alert severity="info">
-                <AlertTitle>Info</AlertTitle>
-                This is an info alert — <strong>check it out!</strong>
-              </Alert> */}
-                {notifications.map((item, i) => (
-                  <li key={i}>
-                    <Box display="flex" text-overflow="ellipsis" title={item.content}>
-                      <Alert severity={item.level===undefined ? "info": item.level} style={{
-                          height: "auto",
-                          width: "100%",
-                          margin: "1vw",
-                          // textAlign: "center",
-                          overflowX: "wrap"
-                          // overflow: "hidden",
-                          // whiteSpace: "nowrap",
-                          // textOverflow: "ellipsis"
-                        }}>
-                        <AlertTitle justifyContent="center">{formatDate(item.time)}</AlertTitle>
-                        <div style={{ textOverflow: "ellipsis" }}>
-                          <Typography variant="body1" style={{ padding: "0.5vh" }}>
-                            {item.content}
-                          </Typography>
-                        </div>
-                        {/* This is an info alert — <strong>check it out!</strong> */}
-                      </Alert>
-                      {/* <Paper
-                        elevation={0}
-                        style={{
-                          height: "auto",
-                          width: "100%",
-                          margin: "1vw",
-                          textAlign: "center",
-                          overflowX: "wrap"
-                          // overflow: "hidden",
-                          // whiteSpace: "nowrap",
-                          // textOverflow: "ellipsis"
-                        }}
-                      >
-                        <NotificationsActiveIcon />
-                        <div style={{ textOverflow: "ellipsis" }}>
-                          <Typography variant="body1" style={{ padding: "0.5vh" }}>
-                            {item.time+': '+item.content}
-                          </Typography>
-                        </div>
-                      </Paper> */}
-                    </Box>
-                  </li>
-                ))}
-              </div>
+            <div style={{ listStyle: "none" }}>
+              {notifications.map((item, i) => (
+                <li key={i}>
+                  <Box display="flex" text-overflow="ellipsis" title={item.content}>
+                    <Alert severity={item.level === undefined ? "info" : item.level} style={{
+                      height: "auto",
+                      width: "100%",
+                      margin: "1vw",
+                      overflowX: "wrap",
+                    }}>
+                      <AlertTitle justifyContent="center">{formatDate(item.time)}</AlertTitle>
+                      <div style={{ textOverflow: "ellipsis" }}>
+                        <Typography variant="body1" style={{ padding: "0.5vh" }}>
+                          {item.content}
+                        </Typography>
+                      </div>
+                    </Alert>
+                  </Box>
+                </li>
+              ))}
+            </div>
             // </center>
           ) : (
             <Box display="flex" justifyContent="center">
@@ -259,7 +171,6 @@ export default function Home() {
               </Paper>
             </Box>
           )}
-          {/* </Paper> */}
         </Box>
       </Box>
     </>

@@ -91,10 +91,15 @@ export default function CreateApplication({profileInfo}) {
       })
       .catch((error) => {
         if (error.response) {
-          console.log(error.response);
+          console.log('error is',error.response);
           console.log(error.response.status);
           console.log(error.response.headers);
-          alert('Error. Please try logging in again');
+          if (error.response.status === 413){
+            alert('File size too large!');
+          }
+          else{
+            alert('Error. Please try logging in again');
+          }
         }
       });
   };

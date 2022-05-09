@@ -85,20 +85,25 @@ export const ProfilePage = ({ profile }) => {
     return (
         <>
             <Box style={{ display: "flex", flexFlow: "column" }}>
+                <Paper
+                    elevation={5}
+                    style={{
+                        display: "flex", backgroundColor: '#263238', flex: "1 1 auto",
+                        width: "auto", margin: "0 17.5vw 0 20vw",
+                    }}
+                    width="auto"
+                >
+                    <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
+                        Profile
+                    </Typography>
+                </Paper>
                 <Paper style={{
                     margin: "0 17.5vw 0 20vw",
                     minHeight: "calc(98vh - 81px)",
                     flex: "1 1 auto",
-                    width: "auto"
+                    width: "auto",
+                    overflowX: "scroll"
                 }} >
-                    <Paper
-                        elevation={5}
-                        style={{ display: "flex", backgroundColor: '#263238' }}
-                    >
-                        <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
-                            Profile
-                        </Typography>
-                    </Paper>
                     <center>
                         <Box>
                             <Box margin={"3vh 0 0 0vh"}>
@@ -108,8 +113,8 @@ export const ProfilePage = ({ profile }) => {
                             </Box>
                             <Box margin={"0 0 0 0vh"}>
                                 {/* <img src={signature} width="300px" height="300px" alt='No Signature' style={{ borderWidth: "1px", borderColor: "black", borderStyle: "solid", marginTop: "2vh" }}></img> */}
-                                {signature!==null && signature!==undefined?
-                                <img src={`data:image/jpeg;base64,${(signature.slice(2, -1))}`} width="400px" />: <div><br></br>No signature!</div>}
+                                {signature !== null && signature !== undefined ?
+                                    <img src={`data:image/jpeg;base64,${(signature.slice(2, -1))}`} height="150vh" style={{ borderWidth: "1px", borderColor: "black", borderStyle: "solid", marginTop: "2vh" }} /> : <div><h5><br></br>No signature!</h5></div>}
                             </Box>
                             <Button style={{ margin: "2vh 0 0 0vw" }} color="primary" variant="contained" onClick={handleDialogOpen}>
                                 Upload Signature

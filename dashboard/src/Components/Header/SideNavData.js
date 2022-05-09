@@ -158,48 +158,49 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
 
   return (
     <>
-      <Box style={{ height: "auto", margin: "2vh 0 0 0", textDecoration:"none"}} component={NavLink} 
-            to={'/profile'}>
-        <center>
-          <img
-            src={(profileInfo.picture===null)?require("./Navtabs/avatar.png"):profileInfo.picture}
-            alt={"Profile Image"}
-            style={{ width: "8vw", borderRadius: "50%" }}
-            referrerPolicy={"no-referrer"}
-          >
-          </img>
-          <Box style={{ margin: "2vh 0 0 0" }}>
-            <Typography
-              variant="body1"
-              style={{ fontWeight: "bold", margin: "auto", color: blueGrey["A700"] }}
+
+        <Box style={{ height: "auto", margin: "2vh 0 0 0", textDecoration: "none" }} component={NavLink}
+            className={classes.navlinks}
+            to={'/profile'} title="Profile Page" >
+          <center>
+            <img
+              src={(profileInfo.picture === null) ? require("./Navtabs/avatar.png") : profileInfo.picture}
+              alt={"Profile Image"}
+              style={{ width: "8vw", borderRadius: "50%" }}
+              referrerPolicy={"no-referrer"}
             >
-              {" "}
-              {profileInfo.name}
-            </Typography>
-          </Box>
-
-          <Box>
-            <div style={{ margin: "2vh 0 0 0vw" }}>
-              <Typography variant="body1" style={{ margin: "auto", color: blueGrey["A700"] }}>
+            </img>
+            <Box style={{ margin: "2vh 0 0 0" }}>
+              <Typography
+                variant="body1"
+                style={{ fontWeight: "bold", margin: "auto", color: blueGrey["A700"] }}
+              >
                 {" "}
-                <DomainIcon />
-                &nbsp;
-                {profileInfo.department}
+                {profileInfo.name}
               </Typography>
-            </div>
+            </Box>
+            <Box>
+              <div style={{ margin: "2vh 0 0 0vw" }}>
+                <Typography variant="body1" style={{ margin: "auto", color: blueGrey["A700"] }}>
+                  {" "}
+                  <DomainIcon />
+                  &nbsp;
+                  {profileInfo.department}
+                </Typography>
+              </div>
 
-            <div>
-              <Typography variant="body1" style={{ margin: "auto", color: blueGrey["A700"] }}>
-                <EmailIcon />
-                {" "}
-                &nbsp;
-                {profileInfo.email}
-              </Typography>
-            </div>
-          </Box>
-        </center>
-      </Box>
-      <Divider style={{marginTop: "2vh"}} variant="middle" />
+              <div>
+                <Typography variant="body1" style={{ margin: "auto", color: blueGrey["A700"] }}>
+                  <EmailIcon />
+                  {" "}
+                  &nbsp;
+                  {profileInfo.email}
+                </Typography>
+              </div>
+            </Box>
+          </center>
+        </Box>
+      <Divider style={{ marginTop: "2vh" }} variant="middle" />
       <List style={{ margin: "0vh 0 0 0" }}>
         {listItemData.map((item, i) => (
           <Button

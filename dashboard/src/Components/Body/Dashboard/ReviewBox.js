@@ -27,7 +27,6 @@ const ReviewBox = ({request_id}) => {
         .then((response) => {
           console.log(response.data.data);
           setFormInfo(response.data.data);
-          //reset(formInfo.form_data)
         })
         .catch((error) => {
           if (error.response) {
