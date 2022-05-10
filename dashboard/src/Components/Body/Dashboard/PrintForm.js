@@ -625,7 +625,7 @@ shortest route "
         </ol>
       </Box>
       <Box display="flex" justifyContent="right">
-        {formInfo.signatures !== undefined && (formInfo.signatures.user !== undefined || formInfo.signatures.user !== null)?
+        {formInfo.signatures !== undefined && (formInfo.signatures.user !== undefined && formInfo.signatures.user !== null)?
         <img src={`data:image/jpeg;base64,${(formInfo.signatures["user"].slice(2, -1))}`} width="175px" />: <div/>}
         {/* <img src=`data:image/png;base64,${formInfo.sig}` width="100px" /> */}
       </Box>

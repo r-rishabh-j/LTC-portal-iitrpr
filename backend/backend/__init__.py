@@ -5,14 +5,11 @@ from flask import Flask, make_response, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
-from flask_migrate import Migrate
 import redis
 from rq import Queue
-from .file_manager import create_file_manager
+from .file_manager.encoded_file_manager import EncodedFileManager
 from .email_manager.email_manager import EmailManager
 from dotenv import load_dotenv
-import redis
-from rq import Queue
 
 load_dotenv()
 db = SQLAlchemy()
@@ -21,7 +18,7 @@ UPLOAD_FOLDER = 'uploads'
 redis_conn = redis.Redis()
 task_queue = Queue(connection=redis_conn)
 
-filemanager = create_file_manager(upload_folder=UPLOAD_FOLDER)
+filemanager = EncodedFileManager()
 
 enable_email = False
 if os.environ.get("ENABLE_EMAIL") == 'true':
@@ -32,7 +29,8 @@ emailmanager = EmailManager(enabled=enable_email, queue={'queue': task_queue})
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app = Flask(__name__, static_url_path='', template_folder=os.path.abspath(
         './build'), static_folder=os.path.abspath('./build'))
-    CORS(app)
+    if os.environ.get('FLASK_ENV') == 'development':
+        CORS(app)
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET')
     app.config['SQLALCHEMY_DATABASE_URI'] = db_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -67,7 +65,6 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     from .auth import Auth
     from .ltc_manager import LtcManager
     from .notifications import ClearUserNotifications, GetUserNotifications, GetEmailPref, SetEmailPref
-    # migrate = Migrate(app, db)
 
     api.add_resource(Auth.Login, '/api/login')
     api.add_resource(Auth.Logout, '/api/logout')

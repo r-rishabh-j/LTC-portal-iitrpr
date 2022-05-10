@@ -23,10 +23,12 @@ class ClearUserNotifications(Resource):
         db.session.commit()
         return jsonify({'msg': 'Notifications cleared'})
 
+
 class GetEmailPref(Resource):
     @check_role()
     def get(self, **kwargs):
         return {'pref': current_user.email_pref}
+
 
 class SetEmailPref(Resource):
     @check_role()

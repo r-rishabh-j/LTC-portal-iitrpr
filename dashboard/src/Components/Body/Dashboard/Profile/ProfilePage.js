@@ -99,7 +99,7 @@ export const ProfilePage = ({ profile }) => {
                 </Paper>
                 <Paper style={{
                     margin: "0 17.5vw 0 20vw",
-                    minHeight: "calc(98vh - 81px)",
+                    minHeight: "calc(98vh - 118px)",
                     flex: "1 1 auto",
                     width: "auto",
                     overflowX: "scroll"

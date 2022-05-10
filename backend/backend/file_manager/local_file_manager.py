@@ -5,6 +5,7 @@ from flask import send_file
 from PIL import Image
 import base64
 
+
 class LocalFileManager:
     def __init__(self, data_dir):
         self.data_dir = data_dir+'/data'
@@ -47,7 +48,7 @@ class LocalFileManager:
         filepath = os.path.join(user_signature_dir, f'signature_{u_id}'+ext)
         file.save(filepath)
         return filepath
-    
+
     def sendFileAsBlob(self, path):
         f = open(path, 'rb')
         res = (base64.standard_b64encode(f.read()))

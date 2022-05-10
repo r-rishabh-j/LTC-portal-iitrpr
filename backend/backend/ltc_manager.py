@@ -4,7 +4,7 @@ import os
 import json
 from . import db
 from . import filemanager
-from .models import StageUsers, Stages
+from .models import LTCOfficeOrders, LTCProofUploads, StageUsers, Stages
 from .analyse import analyse
 from markupsafe import escape
 from datetime import datetime
@@ -24,14 +24,14 @@ class LtcManager:
         Puts the request in LTCRequests, DepartmentLogs and Establishment Logs
         """
 
-        def initialiseApplication(self, new_request: LTCRequests, current_user: Users):
-            """
-            Initialise a new application.
-            """
-            db.session.add(new_request)
-            db.session.commit()
-            db.session.refresh(new_request)
-            new_request.forward(current_user)
+        # def initialiseApplication(self, new_request: LTCRequests, current_user: Users):
+        #     """
+        #     Initialise a new application.
+        #     """
+        #     db.session.add(new_request)
+        #     db.session.commit()
+        #     db.session.refresh(new_request)
+        #     new_request.forward(current_user)
 
         @role_required('client')
         def post(self):
@@ -41,10 +41,7 @@ class LtcManager:
             file = request.files.get('attachments')
             # get form data
             form_data = json.loads(request.form.get('form'))
-            filepath = None
             # save file at filepath
-            if file != None:
-                filepath = filemanager.saveFile(file, user.id)
             print(form_data)
             # remove key attachments (which is redudant) from form json
             form_data.pop('attachments')
@@ -52,16 +49,28 @@ class LtcManager:
             form_data['accounts'] = {}
             # add LTC request to table
             new_request: LTCRequests = LTCRequests(user_id=user.id)
-            new_request.form, new_request.attachments = form_data, filepath
+            new_request.form = form_data
             # initialise the application
-            self.initialiseApplication(new_request, user)
+            db.session.add(new_request)
+            db.session.commit()
+
+            db.session.refresh(new_request)
+            new_request.forward(current_user)
+
+            if file != None:
+                # filepath = filemanager.saveFile(file, user.id)
+                filename = file.filename
+                file_encoding = filemanager.encodeFile(file)
+                ltc_upload = LTCProofUploads(new_request.request_id, file_encoding, filename)
+                db.session.add(ltc_upload)
+            db.session.commit()
+
             emailmanager.sendEmail(
                 current_user,
                 f'LTC Request, ID {new_request.request_id} created',
                 emailmanager.ltc_req_created_msg % (
                     current_user.name, new_request.request_id)
             )
-            db.session.commit()
             return make_response(jsonify({'status': 'ok', 'msg': 'Applied for LTC'}), 200)
 
     class FillStageForm(Resource):
@@ -203,12 +212,16 @@ class LtcManager:
             if permission == Permissions.client:
                 if form.user_id != current_user.id:
                     return abort(403, status={'error': 'Forbidden resource'})
-            attachment_path = form.attachments
-            if not attachment_path or attachment_path == "":
+            ltc_upload:LTCProofUploads = LTCProofUploads.query.get(request_id)
+            if ltc_upload == None:
                 return abort(404, status={'error': 'No attachment'})
-            _, ext = os.path.splitext(attachment_path)
-            filename = f'ltc_{request_id}_proofs'+ext
-            return filemanager.sendFile(attachment_path, filename)
+
+            return filemanager.sendFile(ltc_upload.file, ltc_upload.filename)
+            # attachment_path = form.attachments
+            # if not attachment_path or attachment_path == "":
+            # _, ext = os.path.splitext(attachment_path)
+            # filename = f'ltc_{request_id}_proofs'+ext
+            # return filemanager.sendFile(attachment_path, filename)
 
     class GetLtcFormMetaDataForUser(Resource):
         """
@@ -408,8 +421,14 @@ class LtcManager:
 
             # update attachments if any
             if updated_file != None:
-                filepath = filemanager.saveFile(updated_file, db_form.user_id)
-                db_form.attachments = filepath
+                ltc_upload:LTCProofUploads = LTCProofUploads.query.get(request_id)
+                if ltc_upload == None:
+                    ltc_upload = LTCProofUploads(request_id, None, None)
+                    db.session.add(ltc_upload)
+                ltc_upload.filename = updated_file.filename 
+                ltc_upload = filemanager.encodeFile(updated_file)
+                # filepath = filemanager.saveFile(updated_file, db_form.user_id)
+                # db_form.attachments = filepath
 
             flag_modified(db_form, "form")
             db.session.merge(db_form)
@@ -528,8 +547,11 @@ class LtcManager:
             user: Users = Users.query.get(form.user_id)
             if not approved_entry:
                 abort(400, error='Form not yet approved')
-            path = filemanager.saveFile(file, user.id)
-            print(path)
+            
+            filename = file.filename
+            office_order_enc = filemanager.encodeFile(file)
+            # path = filemanager.saveFile(file, user.id)
+            # print(path)
 
             advance_required = False
             # check if advance required!
@@ -545,7 +567,11 @@ class LtcManager:
             else:
                 form.stage = Stages.approved
                 approved_entry.approved_on = datetime.now()
-            approved_entry.office_order = path
+            
+            office_order_upload_entry:LTCOfficeOrders = LTCOfficeOrders(request_id, office_order_enc, filename)
+            approved_entry.office_order_created = True
+            db.session.add(office_order_upload_entry)
+            # approved_entry.office_order = path
 
             emailmanager.sendEmail(user,
                                    f'Office order generated for LTC Request ID {form.request_id}',
@@ -561,7 +587,7 @@ class LtcManager:
         def get(self):
             analyse()
             pending = db.session.query(LTCApproved, LTCRequests, Users).join(Users).join(
-                LTCApproved).filter(LTCApproved.office_order == None)
+                LTCApproved).filter(LTCApproved.office_order_created == False)
             result = []
             for pending_appl, form, applicant in pending:
                 result.append({
@@ -587,12 +613,16 @@ class LtcManager:
             if permission == Permissions.client:
                 if form.user_id != current_user.id:
                     return abort(403, status={'error': 'Forbidden resource'})
-            attachment_path = approved_form.office_order
-            if attachment_path == None or attachment_path == "":
+            office_order:LTCOfficeOrders = LTCOfficeOrders.query.get(request_id)
+            if office_order == None:
                 return abort(404, status={'error': 'Office order not yet generated'})
-            _, ext = os.path.splitext(attachment_path)
-            filename = f'ltc_{request_id}_office_order'+ext
-            return filemanager.sendFile(attachment_path, filename)
+            return filemanager.sendFile(office_order.file, office_order.filename)
+            # attachment_path = approved_form.office_order
+            # if attachment_path == None or attachment_path == "":
+            #     return abort(404, status={'error': 'Office order not yet generated'})
+            # _, ext = os.path.splitext(attachment_path)
+            # filename = f'ltc_{request_id}_office_order'+ext
+            # return filemanager.sendFile(attachment_path, filename)
 
     class GetPendingAdvancePaymentRequests(Resource):
         @role_required(role=Permissions.accounts)
@@ -625,9 +655,10 @@ class LtcManager:
             adv_req: AdvanceRequests = AdvanceRequests.query.filter_by(
                 request_id=request_id).first()
             adv_req.payment(amount, comments)
-            adv_req.payment_docs(current_user, payment_proof)
 
-            app_form: LTCApproved = LTCApproved.query.get(request_id)
+            adv_req.payment_proof_filename = payment_proof.filename
+            adv_req.payment_proof = filemanager.encodeFile(payment_proof)
+
             form: LTCRequests = LTCRequests.query.get(request_id)
             form.stage = Stages.approved
             db.session.commit()

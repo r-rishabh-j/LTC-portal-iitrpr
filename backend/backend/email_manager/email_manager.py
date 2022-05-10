@@ -3,6 +3,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import os
 
+
 class EmailManager():
     ltc_req_created_msg = """Hello %s,
 Your LTC Request, ID %s has been created.
@@ -62,11 +63,12 @@ Visit LTC Portal for more information.
         try:
             try:
                 rec = {
-                    'email':str(receiver.email),
-                    'pref':(receiver.email_pref)
+                    'email': str(receiver.email),
+                    'pref': (receiver.email_pref)
                 }
-                if self.task_queue!=None:
-                    self.task_queue.enqueue(self.__sendEmail, rec, subject, message_text)
+                if self.task_queue != None:
+                    self.task_queue.enqueue(
+                        self.__sendEmail, rec, subject, message_text)
                 else:
                     self.__sendEmail(rec, subject, message_text)
             except (smtplib.SMTPServerDisconnected, smtplib.SMTPConnectError, smtplib.SMTPSenderRefused) as e:
@@ -74,8 +76,9 @@ Visit LTC Portal for more information.
                 print(e)
                 try:
                     self.__connect()
-                    if self.task_queue!=None:
-                        self.task_queue.enqueue(self.__sendEmail, rec, subject, message_text)
+                    if self.task_queue != None:
+                        self.task_queue.enqueue(
+                            self.__sendEmail, rec, subject, message_text)
                     else:
                         self.__sendEmail(rec, subject, message_text)
                 except:

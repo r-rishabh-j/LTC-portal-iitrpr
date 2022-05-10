@@ -1,9 +1,9 @@
-from urllib import request
 from . import db
 from datetime import date, datetime
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm.attributes import flag_modified
+from sqlalchemy.dialects.postgresql import BYTEA
 from sqlalchemy import Text
 from sqlalchemy import Integer, Numeric
 from . import filemanager, emailmanager
@@ -107,11 +107,13 @@ class Users(db.Model):
         flag_modified(self, "notifications")
         db.session.merge(self)
 
+
 class StageUsers(db.Model):
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'users.id'), primary_key=True)
     designation = db.Column(db.String)
 
-    # TODO: Write all possible designations for stage users 
+    # TODO: Write all possible designations for stage users
     class Designations:
         deanfa = 'Dean FA'
         registrar = 'Registrar'
@@ -132,6 +134,7 @@ class StageUsers(db.Model):
     def __init__(self, user_id, designation) -> None:
         self.user_id = user_id
         self.designation = designation
+
 
 class Measurements(db.Model):
     __tablename__ = 'analytics'
@@ -290,7 +293,8 @@ class AdvanceRequests(db.Model):
     created_on = db.Column(db.DateTime)
     paid_on = db.Column(db.DateTime)
     amount_paid = db.Column(db.String)  # amount paid
-    payment_proof = db.Column(db.String)  # path to file, optional
+    payment_proof = db.Column(BYTEA)  # path to file, optional
+    payment_proof_filename = db.Column(db.String)
     comments = db.Column(db.String)  # may contain ref ID, etc
 
     class Status:
@@ -311,9 +315,13 @@ class AdvanceRequests(db.Model):
         self.comments = comments
         self.paid_on = datetime.now()
 
-    def payment_docs(self, user: Users, file):
-        path = filemanager.saveFile(file, user.id)
-        self.payment_proof = path
+    # def payment_docs(self, user: Users, file):
+    #     path = filemanager.saveFile(file, user.id)
+    #     self.payment_proof = path
+
+    # def payment_docs(self, user: Users, file, filename='a.pdf'):
+    #     path = filemanager.saveFile(file, user.id)
+    #     self.payment_proof = path
 
 
 class DeanLogs(db.Model):
@@ -424,7 +432,7 @@ class LTCRequests(db.Model):
     form: dict = db.Column(MutableDict.as_mutable(JSON))
     comments: dict = db.Column(MutableDict.as_mutable(JSON))
     # stores path to attachments
-    attachments: str = db.Column(db.String, nullable=True)
+    # attachments: str = db.Column(db.String, nullable=True)
 
     def __init__(self, user_id: int):
         self.user_id = user_id
@@ -462,7 +470,7 @@ class LTCRequests(db.Model):
             self.comments[user.department][-1]['review'] = True
         flag_modified(self, "comments")
         db.session.merge(self)
-    
+
     def removeLastComment(self, department):
         for user in self.comments[department][-1]['approved']:
             self.comments[department][-1]['approved'][user] = None
@@ -594,8 +602,8 @@ class LTCRequests(db.Model):
                 f'Your LTC request, ID {self.request_id} is now approved, pending office order generation.')
             emailmanager.sendEmail(
                 applicant, f'LTC request, ID {self.request_id} is now approved',
-                emailmanager.approval_msg%(applicant.name, self.request_id)
-                )
+                emailmanager.approval_msg % (applicant.name, self.request_id)
+            )
             # TODO: send notification to establishment section for office order generation!
 
             message = True, {'msg': 'LTC Approved'}
@@ -705,6 +713,19 @@ class LTCRequests(db.Model):
         pass
 
 
+class LTCProofUploads(db.Model):
+    __tablename__ = 'ltc_proof_uploads'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_requests.request_id'), primary_key=True)
+    file = db.Column(BYTEA)
+    filename = db.Column(db.String)
+
+    def __init__(self, request_id, file_as_bytea, filename) -> None:
+        self.request_id = request_id
+        self.file = file_as_bytea
+        self.filename = filename
+
+
 class LTCApproved(db.Model):
     """
     Stores all approved LTC requests and office order
@@ -716,9 +737,23 @@ class LTCApproved(db.Model):
     """
     relative path to office order document
     """
-    office_order = db.Column(db.String, nullable=True)  # path to office order
+    office_order_created = db.Column(
+        db.Boolean, nullable=True)  # path to office order
 
     def __init__(self, request_id):
         self.request_id = request_id
         self.approved_on = datetime.now()
-        self.office_order = None
+        self.office_order_created = False
+
+
+class LTCOfficeOrders(db.Model):
+    __tablename__ = 'ltc_office_orders'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_approved.request_id'), primary_key=True)
+    file = db.Column(BYTEA)
+    filename = db.Column(db.String)
+
+    def __init__(self, request_id, file_as_bytea, filename) -> None:
+        self.request_id = request_id
+        self.file = file_as_bytea
+        self.filename = filename

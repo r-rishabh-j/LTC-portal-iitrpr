@@ -3,6 +3,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import os
 
+
 class EmailManager():
     ltc_req_created_msg = """Hello %s,
 Your LTC Request, ID %s has been created.
@@ -21,7 +22,7 @@ Office order for LTC Request ID %s has been generated.
 Visit LTC Portal for more information.
 """
 
-    def __init__(self,  enabled=True, queue:dict=None) -> None:
+    def __init__(self,  enabled=True, queue: dict = None) -> None:
         self.sender_address = os.environ.get('EMAIL_ID')
         self.sender_pass = os.environ.get('EMAIL_APP_PASSWORD')
         self.enabled = enabled
@@ -62,13 +63,13 @@ Visit LTC Portal for more information.
                     # Create SMTP session for sending the mail
                     text = message.as_string()
                     print(text)
-                    session.sendmail(self.sender_address, receiver['email'], text)
+                    session.sendmail(self.sender_address,
+                                     receiver['email'], text)
                 else:
                     print('Email Disabled.')
             except:
                 if self.enabled:
                     print('Not able to create email session')
-            
 
     def sendEmail(self, receiver, subject, message_text):
         if not self.enabled:
@@ -80,11 +81,12 @@ Visit LTC Portal for more information.
                 #     'pref':(receiver.email_pref)
                 # }
                 rec = {
-                    'email':'2019csb1286@iitrpr.ac.in',
-                    'pref':True
+                    'email': '2019csb1286@iitrpr.ac.in',
+                    'pref': True
                 }
                 if self.queuing == True:
-                    self.task_queue.enqueue(self.__sendEmail, rec, 'subject', 'message_text')
+                    self.task_queue.enqueue(
+                        self.__sendEmail, rec, 'subject', 'message_text')
                 else:
                     self.__sendEmail(rec, subject, message_text)
             except (smtplib.SMTPServerDisconnected, smtplib.SMTPConnectError, smtplib.SMTPSenderRefused) as e:
@@ -93,7 +95,8 @@ Visit LTC Portal for more information.
                 try:
                     self.__connect()
                     if self.task_queue == True:
-                        self.task_queue.enqueue(self.__sendEmail, rec, subject, message_text)
+                        self.task_queue.enqueue(
+                            self.__sendEmail, rec, subject, message_text)
                     else:
                         self.__sendEmail(rec, subject, message_text)
                 except:
