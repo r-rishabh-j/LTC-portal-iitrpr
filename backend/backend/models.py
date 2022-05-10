@@ -315,15 +315,6 @@ class AdvanceRequests(db.Model):
         self.comments = comments
         self.paid_on = datetime.now()
 
-    # def payment_docs(self, user: Users, file):
-    #     path = filemanager.saveFile(file, user.id)
-    #     self.payment_proof = path
-
-    # def payment_docs(self, user: Users, file, filename='a.pdf'):
-    #     path = filemanager.saveFile(file, user.id)
-    #     self.payment_proof = path
-
-
 class DeanLogs(db.Model):
     __tablename__ = 'deanfa_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
@@ -638,7 +629,7 @@ class LTCRequests(db.Model):
             form.status = 'declined'
         applicant.addNotification(
             f'Your LTC request, ID {self.request_id} has been declined.', level='error')
-        # text = f"Your LTC request, ID {self.request_id} has been declined."+"Visit LTC Portal for more information."
+
         emailmanager.sendEmail(applicant, f'LTC Request ID {self.request_id} Declined', emailmanager.decline_msg % (
             applicant.name, self.request_id))
 

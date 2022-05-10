@@ -1,12 +1,8 @@
-# from email.mime import application
-#from math import perm
-import os
 import json
 from . import db
 from . import filemanager
 from .models import LTCOfficeOrders, LTCProofUploads, StageUsers, Stages
 from .analyse import analyse
-from markupsafe import escape
 from datetime import datetime
 from flask_jwt_extended import current_user
 from flask import jsonify, request, make_response
@@ -24,27 +20,19 @@ class LtcManager:
         Puts the request in LTCRequests, DepartmentLogs and Establishment Logs
         """
 
-        # def initialiseApplication(self, new_request: LTCRequests, current_user: Users):
-        #     """
-        #     Initialise a new application.
-        #     """
-        #     db.session.add(new_request)
-        #     db.session.commit()
-        #     db.session.refresh(new_request)
-        #     new_request.forward(current_user)
-
-        @role_required('client')
+        @role_required(Permissions.client)
         def post(self):
             analyse()
-            # gets file tagged with name attachments
             user: Users = current_user
+            # gets file tagged with name attachments
             file = request.files.get('attachments')
             # get form data
             form_data = json.loads(request.form.get('form'))
-            # save file at filepath
+
             print(form_data)
             # remove key attachments (which is redudant) from form json
             form_data.pop('attachments')
+            # section form fields
             form_data['establishment'] = {}
             form_data['accounts'] = {}
             # add LTC request to table
@@ -54,14 +42,15 @@ class LtcManager:
             db.session.add(new_request)
             db.session.commit()
 
+            # get request ID
             db.session.refresh(new_request)
             new_request.forward(current_user)
 
             if file != None:
-                # filepath = filemanager.saveFile(file, user.id)
                 filename = file.filename
                 file_encoding = filemanager.encodeFile(file)
-                ltc_upload = LTCProofUploads(new_request.request_id, file_encoding, filename)
+                ltc_upload = LTCProofUploads(
+                    new_request.request_id, file_encoding, filename)
                 db.session.add(ltc_upload)
             db.session.commit()
 
@@ -212,7 +201,7 @@ class LtcManager:
             if permission == Permissions.client:
                 if form.user_id != current_user.id:
                     return abort(403, status={'error': 'Forbidden resource'})
-            ltc_upload:LTCProofUploads = LTCProofUploads.query.get(request_id)
+            ltc_upload: LTCProofUploads = LTCProofUploads.query.get(request_id)
             if ltc_upload == None:
                 return abort(404, status={'error': 'No attachment'})
 
@@ -421,11 +410,12 @@ class LtcManager:
 
             # update attachments if any
             if updated_file != None:
-                ltc_upload:LTCProofUploads = LTCProofUploads.query.get(request_id)
+                ltc_upload: LTCProofUploads = LTCProofUploads.query.get(
+                    request_id)
                 if ltc_upload == None:
                     ltc_upload = LTCProofUploads(request_id, None, None)
                     db.session.add(ltc_upload)
-                ltc_upload.filename = updated_file.filename 
+                ltc_upload.filename = updated_file.filename
                 ltc_upload = filemanager.encodeFile(updated_file)
                 # filepath = filemanager.saveFile(updated_file, db_form.user_id)
                 # db_form.attachments = filepath
@@ -462,7 +452,8 @@ class LtcManager:
             db_form: LTCRequests = LTCRequests.query.get(request_id)
             applicant: Users = Users.query.get(db_form.request_id)
 
-            est_review: EstablishmentReview = EstablishmentReview.query.get(request_id)
+            est_review: EstablishmentReview = EstablishmentReview.query.get(
+                request_id)
             if action == 'send_to_user':
                 db_form.send_for_review(current_user, applicant, comment)
                 est_review.status = est_review.Status.sent_to_user
@@ -547,7 +538,7 @@ class LtcManager:
             user: Users = Users.query.get(form.user_id)
             if not approved_entry:
                 abort(400, error='Form not yet approved')
-            
+
             filename = file.filename
             office_order_enc = filemanager.encodeFile(file)
             # path = filemanager.saveFile(file, user.id)
@@ -567,8 +558,9 @@ class LtcManager:
             else:
                 form.stage = Stages.approved
                 approved_entry.approved_on = datetime.now()
-            
-            office_order_upload_entry:LTCOfficeOrders = LTCOfficeOrders(request_id, office_order_enc, filename)
+
+            office_order_upload_entry: LTCOfficeOrders = LTCOfficeOrders(
+                request_id, office_order_enc, filename)
             approved_entry.office_order_created = True
             db.session.add(office_order_upload_entry)
             # approved_entry.office_order = path
@@ -613,7 +605,8 @@ class LtcManager:
             if permission == Permissions.client:
                 if form.user_id != current_user.id:
                     return abort(403, status={'error': 'Forbidden resource'})
-            office_order:LTCOfficeOrders = LTCOfficeOrders.query.get(request_id)
+            office_order: LTCOfficeOrders = LTCOfficeOrders.query.get(
+                request_id)
             if office_order == None:
                 return abort(404, status={'error': 'Office order not yet generated'})
             return filemanager.sendFile(office_order.file, office_order.filename)
@@ -703,7 +696,7 @@ class LtcManager:
                     signatures = []
 
                     for user, stage_user in query:
-                        file = user.signature 
+                        file = user.signature
                         signatures.append({
                             stage_user.designation: file
                         })

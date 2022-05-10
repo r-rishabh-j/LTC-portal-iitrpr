@@ -39,7 +39,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=5)
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024
+    app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024 # 50 MB max request size
 
     app.config["flask_profiler"] = {
         "enabled": True,
