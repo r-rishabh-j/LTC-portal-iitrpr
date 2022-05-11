@@ -24,18 +24,6 @@ logger = logging.getLogger("flask-profiler")
 def _is_initialized(): return True if CONF else False
 
 
-# @auth.verify_password
-# def verify_password(username, password):
-#     if "basicAuth" not in CONF or not CONF["basicAuth"]["enabled"]:
-#         return True
-
-#     c = CONF["basicAuth"]
-#     if username == c["username"] and password == c["password"]:
-#         return True
-#     logging.warn("flask-profiler authentication failed")
-#     return False
-
-
 class Measurement(object):
     """represents an endpoint measurement"""
     DECIMAL_PLACES = 6
@@ -183,13 +171,11 @@ def registerInternalRouters(app):
 
     @fp.route("/".format(urlPath))
     @role_required(role='admin')
-    # @auth.login_required
     def index():
         return fp.send_static_file("index.html")
 
     @fp.route("/api/measurements/".format(urlPath))
     @role_required(role='admin')
-    # @auth.login_required
     def filterMeasurements():
         args = dict(request.args.items())
         measurements = collection.filter(args)
@@ -197,7 +183,6 @@ def registerInternalRouters(app):
 
     @fp.route("/api/measurements/grouped".format(urlPath))
     @role_required(role='admin')
-    # @auth.login_required
     def getMeasurementsSummary():
         args = dict(request.args.items())
         measurements = collection.getSummary(args)
@@ -205,20 +190,17 @@ def registerInternalRouters(app):
 
     @fp.route("/api/measurements/<measurementId>".format(urlPath))
     @role_required(role='admin')
-    # @auth.login_required
     def getContext(measurementId):
         return jsonify(collection.get(measurementId))
 
     @fp.route("/api/measurements/timeseries/".format(urlPath))
     @role_required(role='admin')
-    # @auth.login_required
     def getRequestsTimeseries():
         args = dict(request.args.items())
         return jsonify({"series": collection.getTimeseries(args)})
 
     @fp.route("/api/measurements/methodDistribution/".format(urlPath))
     @role_required(role='admin')
-    # @auth.login_required
     def getMethodDistribution():
         args = dict(request.args.items())
         return jsonify({
@@ -226,7 +208,6 @@ def registerInternalRouters(app):
 
     @fp.route("/db/dumpDatabase")
     @role_required(role='admin')
-    # @auth.login_required
     def dumpDatabase():
         response = jsonify({
             "summary": collection.getSummary()})
@@ -235,7 +216,6 @@ def registerInternalRouters(app):
 
     @fp.route("/db/deleteDatabase")
     @role_required(role='admin')
-    # @auth.login_required
     def deleteDatabase():
         response = jsonify({
             "status": collection.truncate()})
@@ -267,11 +247,6 @@ def init_app(app):
 
     wrapAppEndpoints(app)
     registerInternalRouters(app)
-
-    # basicAuth = CONF.get("basicAuth", None)
-    # if not basicAuth or not basicAuth["enabled"]:
-    #     logging.warn(
-    #         " * CAUTION: flask-profiler is working without basic auth!")
 
 
 class Profiler(object):

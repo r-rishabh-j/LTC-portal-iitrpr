@@ -17,11 +17,21 @@ from . import emailmanager
 class LtcManager:
     class ApplyForLTC(Resource):
         """
-        Puts the request in LTCRequests, DepartmentLogs and Establishment Logs
+        API for applying for LTC Application
         """
 
         @role_required(Permissions.client)
         def post(self):
+            """
+            Send post request
+            payload:
+            form: {
+                <Form Data as JSON>
+            }
+            files: {
+                attachments: <Proof upload files>, optional
+            }
+            """
             analyse()
             user: Users = current_user
             # gets file tagged with name attachments
@@ -64,7 +74,7 @@ class LtcManager:
 
     class FillStageForm(Resource):
         """
-        Fill forms for individual stages
+        Fill forms for individual stages(establishment section, accounts section)
         """
         allowed_roles = [
             Permissions.establishment,
@@ -95,6 +105,9 @@ class LtcManager:
             return jsonify({"msg": "updated!"})
 
     class CommentOnLTC(Resource):
+        """
+        Comment on LTC Application and forward it to next stage
+        """
         allowed_roles = [
             Permissions.deanfa,
             Permissions.registrar,
@@ -105,14 +118,19 @@ class LtcManager:
 
         @roles_required(roles=allowed_roles)
         def post(self, **kwargs):
+            """
+            Payload:
+            json:{
+                request_id: int
+                comment: string
+                approval: string (action-> approve, review, decline)
+            }
+            """
             analyse()
-
             # post request ID, comment, and approval of the user
             request_id = request.json['request_id']
             comment = request.json['comment']
-            print(comment)
             action = request.json.get('approval')
-            print(action)
 
             if not request_id or not comment or not action:
                 abort(404, msg='Incomplete args')
@@ -132,11 +150,15 @@ class LtcManager:
             applicant: Users = Users.query.get(form.user_id)
             form.addComment(current_user, comment,
                             True if action == 'approve' else False, is_review=True if action == 'review' else False)
-            if action == 'review':
+            if action == 'review': # application to be sent back for review
                 form.send_for_review(current_user, applicant, comment)
                 db.session.commit()
                 return {"status": 'sent for review'}, 200
             else:
+                """
+                Application is forwarded, or decline only when the stage head forwards or declines it.
+                For other users, only a recommendation is taken
+                """
                 if current_user.id == user_dept.dept_head:
                     if action == 'approve':
                         status, comment = form.forward(applicant)
@@ -156,8 +178,23 @@ class LtcManager:
         """
         @check_role()
         def post(self, **kwargs):
+            """
+            Send POST request to get form
+            payload:
+            @args: json:{
+                request_id: int
+            }
+            @return: {
+                'request_id'
+                'email'
+                'created_on'
+                'stage'
+                'is_active'
+                'form_data'
+                'comments'
+            }
+            """
             analyse()
-
             request_id = request.json['request_id']
             if not request_id:
                 abort(404, msg='Request ID not sent')
@@ -165,7 +202,7 @@ class LtcManager:
             if not form:
                 abort(404, msg='Form not found')
             user_email = None
-            if kwargs['permission'] == Permissions.client:
+            if kwargs['permission'] == Permissions.client: # if current user is client, check if form is theirs
                 if form.user_id != current_user.id:
                     return abort(403, status={'error': 'Forbidden resource'})
                 user_email = current_user.email
@@ -190,6 +227,14 @@ class LtcManager:
         """
         @check_role()
         def post(self, permission):
+            """
+            Send POST request to get form
+            payload:
+            @args: json:{
+                request_id: int
+            }
+            @return: file object
+            """
             analyse()
             request_id = request.json['request_id']
             print(request_id)
@@ -498,6 +543,7 @@ class LtcManager:
                     404, msg={'Error': 'user department not registered as stage dept'})
             new = None
             if kwargs['permission'] == Permissions.dept_head:
+                print(table_ref)
                 new = db.session.query(table_ref, LTCRequests, Users).join(Users).join(
                     table_ref).filter(table_ref.status == 'new', Users.department == user.department)
             else:

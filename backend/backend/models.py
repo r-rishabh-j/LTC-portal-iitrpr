@@ -494,6 +494,10 @@ class LTCRequests(db.Model):
                 # add dept comments
                 dept_log: DepartmentLogs = DepartmentLogs(
                     request_id=self.request_id, department=applicant.department)
+                hod:Users = Users.query.get(user_dept.dept_head)
+                self.comments['department'] = [
+                    self.generate_comments_template('department', [hod])
+                ]
                 db.session.add(dept_log)
             db.session.add(est_log)
             applicant.addNotification(

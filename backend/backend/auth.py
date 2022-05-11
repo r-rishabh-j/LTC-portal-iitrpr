@@ -24,9 +24,12 @@ class Auth:
             return response
 
     class IsLoggedIn(Resource):
+        """
+        Check whether user is logged in.
+        If logged in, send user metadata
+        """
         @jwt_required()
         def get(self):
-
             user: Users = current_user
             if not user:
                 return abort(401, msg='Login again')
@@ -70,6 +73,9 @@ class Auth:
             return response.json()
 
         def get(self):
+            """
+            Google OAuth
+            """
             code = request.args.to_dict().get('code', None)
             if not code:
                 return make_response(redirect(os.environ.get('FRONTEND_URL')))
@@ -89,6 +95,11 @@ class Auth:
             return response
 
         def post(self):
+            """
+            Only for development
+            """
+            if os.environ.get('FLASK_ENV') == None:
+                abort(404, error="No such route")
             args = json.loads(request.form.get('auth'))
             if not args['email'] or len(args['email']) < 4:
                 abort(409, 'invalid email')
@@ -104,8 +115,19 @@ class Auth:
             return response
 
     class UploadSignature(Resource):
+        """
+        Upload user signature
+        POST request
+        Only .png, .jpeg/.jpg files allowed.
+        """
         @check_role()
         def post(self, permission):
+            """
+            Payload:
+            {
+                'signature': <File>
+            }
+            """
             user: Users = current_user
             sign = request.files.get('signature', None)
             if (os.path.splitext(str(sign.filename).lower())[1] not in ['.png', '.jpeg', '.jpg']):
@@ -118,6 +140,9 @@ class Auth:
             return {'success': 'Signature Uploaded'}
 
     class GetSignature(Resource):
+        """
+        Fetch user signature as base64 encoded string
+        """
         @check_role()
         def post(self, permission):
             sign = current_user.signature
