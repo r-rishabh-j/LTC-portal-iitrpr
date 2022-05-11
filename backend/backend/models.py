@@ -398,7 +398,12 @@ class DepartmentLogs(db.Model):
 
 def get_stage_roles(stage) -> dict:
     # lookup STAGES dict to get the dept level, query table of the department and insert all stage representatives
-    stage_users = Users.query.filter_by(permission=stage)
+    # stage_users = Users.query.filter_by(permission=stage)
+    stage_users = []
+    query = db.session.query(Users, StageUsers).join(StageUsers).filter(Users.permission == stage)
+    print(query)
+    for user, designation in query:
+        stage_users.append(user)
     return stage_users
 
 
