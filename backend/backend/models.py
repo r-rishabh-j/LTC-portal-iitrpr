@@ -1,3 +1,4 @@
+from urllib import request
 from . import db
 from datetime import date, datetime, timedelta
 from sqlalchemy.dialects.postgresql import JSON
@@ -7,13 +8,6 @@ from sqlalchemy.dialects.postgresql import BYTEA
 from sqlalchemy import Text
 from sqlalchemy import Integer, Numeric
 from . import emailmanager
-
-
-# class Stage:
-#     def __init__(self, id, name, department):
-#         self.id = id
-#         self.name = name
-#         self.department = department
 
 
 class Stages:
@@ -28,8 +22,6 @@ class Stages:
     office_order_pending = 'office_order_pending'
     advance_pending = 'advance_pending'
     approved = 'approved'  # after advance or office order as per condition
-    ta_applied = 'ta_applied'
-    availed = 'availed'  # after TA
     review = 'review'
 
 
@@ -56,7 +48,8 @@ class Users(db.Model):
     employee_code = db.Column(db.Integer, unique=True)  # optional
     # name for higher level employees to be their designation
     name = db.Column(db.String(150), nullable=False)
-    department = db.Column(db.String(150), db.ForeignKey('departments.name'))
+    department = db.Column(db.String(150), db.ForeignKey(
+        'departments.name', ondelete='CASCADE'))
     # permission level. Defined in role_manager.
     permission = db.Column(db.String, nullable=False)
     designation = db.Column(db.String, nullable=False)  # designation. Custom
@@ -112,7 +105,7 @@ class Users(db.Model):
 
 class StageUsers(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(
-        'users.id'), primary_key=True)
+        'users.id', ondelete='CASCADE'), primary_key=True,)
     designation = db.Column(db.String)
 
     # TODO: Write all possible designations for stage users
@@ -131,7 +124,7 @@ class StageUsers(db.Model):
         accounts_junior_accountant = 'Junior Accountant'
         accounts_junior_accounts_officer = 'Junior Accounts Officer'
         accounts_assistant_registrar = 'Assistant Registrar'
-        accounts_deputy_registrar = 'Deputy Registrar'
+        # accounts_deputy_registrar = 'Deputy Registrar'
 
     def __init__(self, user_id, designation) -> None:
         self.user_id = user_id
@@ -141,9 +134,9 @@ class StageUsers(db.Model):
 class UserOTP(db.Model):
     __tablename__ = 'user_otp'
     email = db.Column(db.String, db.ForeignKey(
-        'users.email'), primary_key=True)
+        'users.email', ondelete='CASCADE'), primary_key=True,)
     otp = db.Column(db.String)
-    valid_till = db.Column(db.DateTime  )
+    valid_till = db.Column(db.DateTime)
 
     def __init__(self, email, otp) -> None:
         self.email = email
@@ -184,7 +177,7 @@ class EstablishmentLogs(db.Model):
     """
     __tablename__ = 'establishment_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
+        'ltc_requests.request_id', ondelete='CASCADE'), primary_key=True,)
     status = db.Column(db.String(50))
     """
     status: String
@@ -208,7 +201,8 @@ class EstablishmentReview(db.Model):
     __tablename__ = 'establishment_review'
     request_id = db.Column(db.Integer, db.ForeignKey(
         'ltc_requests.request_id'), primary_key=True)
-    received_from = db.Column(db.String, db.ForeignKey('departments.name'))
+    received_from = db.Column(db.String, db.ForeignKey(
+        'departments.name', ondelete='CASCADE'),)
     message = db.Column(db.String)
     status = db.Column(db.String(50))
     """
@@ -239,7 +233,7 @@ class AuditLogs(db.Model):
     """
     __tablename__ = 'audit_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
+        'ltc_requests.request_id', ondelete='CASCADE'), primary_key=True,)
     status = db.Column(db.String(50))
     """
     status: String
@@ -262,7 +256,7 @@ class AccountsLogs(db.Model):
     """
     __tablename__ = 'accounts_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
+        'ltc_requests.request_id', ondelete='CASCADE'), primary_key=True,)
     status = db.Column(db.String(50))
     """
     status: String
@@ -285,7 +279,7 @@ class RegistrarLogs(db.Model):
     """
     __tablename__ = 'registrar_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
+        'ltc_requests.request_id', ondelete='CASCADE'), primary_key=True,)
     status = db.Column(db.String(50))
     """
     status: String
@@ -309,7 +303,7 @@ class AdvanceRequests(db.Model):
     __tablename__ = 'advance_requests'
     advance_id = db.Column(db.Integer, primary_key=True)
     request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), unique=True)
+        'ltc_requests.request_id', ondelete='CASCADE'), unique=True,)
     status = db.Column(db.String(50))
     created_on = db.Column(db.DateTime)
     paid_on = db.Column(db.DateTime)
@@ -343,7 +337,7 @@ class DeanLogs(db.Model):
     """
     __tablename__ = 'deanfa_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True, )
+        'ltc_requests.request_id', ondelete='CASCADE'), primary_key=True, )
     status = db.Column(db.String(50))
     """
     status: String
@@ -402,7 +396,7 @@ class DepartmentLogs(db.Model):
     """
     __tablename__ = 'department_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
+        'ltc_requests.request_id', ondelete='CASCADE'), primary_key=True,)
     department = db.Column(db.String(20))
     status = db.Column(db.String(50))
     """
@@ -438,7 +432,8 @@ class LTCRequests(db.Model):
     """
     __tablename__ = 'ltc_requests'
     request_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'users.id', ondelete='CASCADE'),)
     created_on = db.Column(db.DateTime)
     stage = db.Column(db.String)
     """
@@ -510,6 +505,9 @@ class LTCRequests(db.Model):
             self.comments[user.department][-1]['review'] = True
         flag_modified(self, "comments")
         db.session.merge(self)
+
+    def getLatestCommentForStage(self, stage, key='approved'):
+        return self.comments[stage][-1][key]
 
     def removeLastComment(self, department):
         for user in self.comments[department][-1]['approved']:
@@ -763,7 +761,7 @@ class LTCProofUploads(db.Model):
     """
     __tablename__ = 'ltc_proof_uploads'
     request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
+        'ltc_requests.request_id', ondelete='CASCADE'), primary_key=True,)
     file = db.Column(BYTEA)
     filename = db.Column(db.String)
 
@@ -779,7 +777,7 @@ class LTCApproved(db.Model):
     """
     __tablename__ = 'ltc_approved'
     request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_requests.request_id'), primary_key=True)
+        'ltc_requests.request_id', ondelete='CASCADE'), primary_key=True,)
     approved_on = db.Column(db.DateTime)  # timestamp of approval
     """
     relative path to office order document
@@ -799,7 +797,7 @@ class LTCOfficeOrders(db.Model):
     """
     __tablename__ = 'ltc_office_orders'
     request_id = db.Column(db.Integer, db.ForeignKey(
-        'ltc_approved.request_id'), primary_key=True)
+        'ltc_approved.request_id', ondelete='CASCADE'), primary_key=True,)
     file = db.Column(BYTEA)
     filename = db.Column(db.String)
 
@@ -807,3 +805,328 @@ class LTCOfficeOrders(db.Model):
         self.request_id = request_id
         self.file = file_as_bytea
         self.filename = filename
+
+
+class TARequests(db.Model):
+    __tablename__ = 'ta_requests'
+    request_id = db.Column(db.Integer, primary_key=True)
+    ltc_id = db.Column(db.Integer, db.ForeignKey(
+        'ltc_approved.request_id', ondelete='CASCADE'),)
+    created_on = db.Column(db.DateTime)
+    stage = db.Column(db.String)
+    is_active = db.Column(db.Boolean)
+    form: dict = db.Column(MutableDict.as_mutable(JSON))
+    comments: dict = db.Column(MutableDict.as_mutable(JSON))
+
+    class Stages:
+        establishment = 'establishment'
+        accounts = 'accounts'
+        audit = 'audit'
+        registrar = 'registrar'
+        approved = 'approved'
+        declined = 'declined'
+        availed = 'availed'
+
+    def __init__(self, user_id: int):
+        self.user_id = user_id
+        self.created_on = datetime.now()
+        self.stage = ''
+        self.is_active = True
+        self.comments = {}  # nested JSON
+
+    def __repr__(self) -> str:
+        return f'TA ID:{self.request_id}, for LTC {self.ltc_id} by {self.user_id}, at {self.stage}'
+
+    def generate_comments_template(self, stage, roles):
+        comments = {
+            "approved": {str(role.email): None for role in roles},
+            "comments": {str(role.email): None for role in roles},
+        }
+
+        return comments
+
+    def addComment(self, user: Users, comment, approval):
+        self.comments[user.department][-1]['approved'][user.email] = approval
+        self.comments[user.department][-1]['comments'][user.email] = comment
+        flag_modified(self, "comments")
+        db.session.merge(self)
+
+    def getLatestCommentForStage(self, stage, key='approved'):
+        return self.comments[stage][-1][key]
+
+    def removeLastComment(self, department):
+        for user in self.comments[department][-1]['approved']:
+            self.comments[department][-1]['approved'][user] = None
+            self.comments[department][-1]['comments'][user] = None
+        flag_modified(self, "comments")
+        db.session.merge(self)
+
+    def forward(self, applicant: Users, ltc_id):
+        """
+        Forward form to next stage
+        """
+        current_stage = self.stage
+        message = None
+
+        if current_stage == '':
+            new_stage = TARequests.Stages.establishment
+            self.stage = new_stage
+            assert self.comments.get(new_stage, None) == None
+            self.comments[new_stage] = []
+            stage_roles = get_stage_roles(new_stage)
+            self.comments[new_stage].append(
+                self.generate_comments_template(new_stage, stage_roles)
+            )
+
+            est_ta_log: EstablishmentTALogs = EstablishmentTALogs(
+                self.request_id)
+            # user_dept: Departments = Departments.query.get(
+            #     applicant.department)
+            # if not user_dept.is_stage:
+            #     # Notify department head
+            #     dept_log: DepartmentLogs = DepartmentLogs(
+            #         request_id=self.request_id, department=applicant.department)
+            #     hod: Users = Users.query.get(user_dept.dept_head)
+            #     self.comments['department'] = [
+            #         self.generate_comments_template('department', [hod])
+            #     ]
+            #     db.session.add(dept_log)
+            db.session.add(est_ta_log)
+            applicant.addNotification(
+                f'Your TA request, ID {self.request_id} for LTC ID {ltc_id} has been forwarded to Establishment Section')
+            for role in stage_roles:
+                role.addNotification(
+                    f'TA request, ID {self.request_id} for LTC ID {ltc_id} has been sent for your approval.')
+            message = True, {'msg': 'Forwarded to Establishment Section'}
+        elif current_stage == TARequests.Stages.establishment:
+            new_stage = TARequests.Stages.accounts
+            est_log = EstablishmentTALogs.query.get(self.request_id)
+            est_log.status = 'forwarded'
+            est_log.updated_on = datetime.now()
+            self.stage = new_stage
+            assert self.comments.get(new_stage, None) == None
+            self.comments[new_stage] = []
+            stage_roles = get_stage_roles(new_stage)
+            self.comments[new_stage].append(
+                self.generate_comments_template(new_stage, stage_roles)
+            )
+            acc_log: AccountsTALogs = AccountsTALogs(
+                request_id=self.request_id)
+            db.session.add(acc_log)
+            applicant.addNotification(
+                f'Your TA request, ID {self.request_id} for LTC ID {ltc_id} has been forwarded to Accounts Section')
+            for role in stage_roles:
+                role.addNotification(
+                    f'TA request, ID {self.request_id} for LTC ID {ltc_id} has been sent for your approval.')
+            message = True, {'msg': 'Forwarded to Accounts Section'}
+        elif current_stage == TARequests.Stages.accounts:
+            new_stage = TARequests.Stages.audit
+            acc_log: AccountsTALogs = AccountsTALogs.query.get(self.request_id)
+            acc_log.status = 'forwarded'
+            acc_log.updated_on = datetime.now()
+            self.stage = new_stage
+            assert self.comments.get(new_stage, None) == None
+            self.comments[new_stage] = []
+            stage_roles = get_stage_roles(new_stage)
+            self.comments[new_stage].append(
+                self.generate_comments_template(new_stage, stage_roles)
+            )
+            log: AuditTALogs = AuditTALogs(request_id=self.request_id)
+            db.session.add(log)
+            applicant.addNotification(
+                f'Your TA request, ID {self.request_id} for LTC ID {ltc_id} has been forwarded to Audit Section')
+            for role in stage_roles:
+                role.addNotification(
+                    f'TA request, ID {self.request_id} for LTC ID {ltc_id} has been sent for your approval.')
+            message = True, {'msg': 'Forwarded to Accounts Section'}
+        elif current_stage == TARequests.Stages.audit:
+            new_stage = TARequests.Stages.registrar
+            au_log: AuditTALogs = AuditTALogs.query.get(self.request_id)
+            au_log.status = 'forwarded'
+            au_log.updated_on = datetime.now()
+            self.stage = new_stage
+            assert self.comments.get(new_stage, None) == None
+            self.comments[new_stage] = []
+            stage_roles = get_stage_roles(new_stage)
+            self.comments[new_stage].append(
+                self.generate_comments_template(new_stage, stage_roles)
+            )
+            log: RegistrarLogs = RegistrarLogs(request_id=self.request_id)
+            db.session.add(log)
+            applicant.addNotification(
+                f'Your TA request, ID {self.request_id} for LTC ID {ltc_id} has been forwarded to Audit Section')
+            for role in stage_roles:
+                role.addNotification(
+                    f'TA request, ID {self.request_id} for LTC ID {ltc_id} has been sent for your approval.')
+            message = True, {'msg': 'Forwarded to Registrar Section'}
+        elif current_stage == TARequests.Stages.registrar:
+            registrar_log: RegistrarLogs = RegistrarLogs.query.get(self.request_id)
+            registrar_log.status = 'forwarded'
+            registrar_log.updated_on = datetime.now()
+            self.stage = Stages.office_order_pending
+            log: TAApproved = TAApproved(request_id=self.request_id)
+            db.session.add(log)
+            applicant.addNotification(
+                f'Your TA request, ID {self.request_id} for LTC ID {ltc_id} is now approved, pending office order generation.')
+            emailmanager.sendEmail(
+                applicant, f'LTC request, ID {self.request_id} is now approved',
+                emailmanager.approval_msg % (applicant.name, self.request_id)
+            )
+            # TODO: send notification to establishment section for office order generation!
+            est_stage_roles = get_stage_roles(Stages.establishment)
+            applicant.addNotification(
+                f'TA request, ID {self.request_id} for LTC ID {ltc_id} has been sent for office order generation.')
+          
+            message = True, {'msg': 'TA Approved'}
+        elif current_stage == 'approved':
+            message = False, {'msg': 'Already Approved'}
+        else:
+            message = False, {
+                'error': 'Application in review. Cannot be forwarded'}
+        flag_modified(self, "comments")
+        db.session.merge(self)
+        return message
+
+    def decline(self, applicant: Users):
+        self.stage = 'declined'
+        stages = [
+            'department',
+            'establishment',
+            'audit',
+            'accounts',
+            'registrar',
+            'deanfa',
+        ]
+
+        for stage in stages:
+            table_ref = Departments.getDeptRequestTableByName(stage)
+            if not table_ref:
+                print('table not found')
+                break
+            form = table_ref.query.get(self.request_id)
+            if not form:
+                break
+            form.status = 'declined'
+        applicant.addNotification(
+            f'Your LTC request, ID {self.request_id} has been declined.', level='error')
+
+        emailmanager.sendEmail(applicant, f'LTC Request ID {self.request_id} Declined', emailmanager.decline_msg % (
+            applicant.name, self.request_id))
+
+
+class TAProofUploads(db.Model):
+    """
+    Stores LTC uploaded proofs
+    """
+    __tablename__ = 'ta_proof_uploads'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ta_requests.request_id', ondelete='CASCADE'), primary_key=True,)
+    file = db.Column(BYTEA)
+    filename = db.Column(db.String)
+
+    def __init__(self, request_id, file_as_bytea, filename) -> None:
+        self.request_id = request_id
+        self.file = file_as_bytea
+        self.filename = filename
+
+
+class TAApproved(db.Model):
+    """
+    Stores all approved LTC requests
+    """
+    __tablename__ = 'ta_approved'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ta_requests.request_id', ondelete='CASCADE'), primary_key=True,)
+    approved_on = db.Column(db.DateTime)  # timestamp of approval
+    """
+    relative path to office order document
+    """
+    office_order_created = db.Column(
+        db.Boolean, nullable=True)  # path to office order
+
+    def __init__(self, request_id):
+        self.request_id = request_id
+        self.approved_on = datetime.now()
+        self.office_order_created = False
+
+
+class TAOfficeOrders(db.Model):
+    """
+    Stores TA office orders for approved requests
+    """
+    __tablename__ = 'ta_office_orders'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ta_approved.request_id', ondelete='CASCADE'), primary_key=True, )
+    file = db.Column(BYTEA)
+    filename = db.Column(db.String)
+
+    def __init__(self, request_id, file_as_bytea, filename) -> None:
+        self.request_id = request_id
+        self.file = file_as_bytea
+        self.filename = filename
+
+
+class AuditTALogs(db.Model):
+    """
+    Audit section logs for TA
+    """
+    __tablename__ = 'audit_ta_logs'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ta_requests.request_id', ondelete='CASCADE'), primary_key=True,)
+    status = db.Column(db.String(50))
+    """
+    status: String
+    -> 'new': a new LTC request
+    -> 'forwarded': application forwarded
+    -> 'complete': application processed(approved or denied anywhere in the heirarchy)
+    """
+    updated_on = db.Column(db.DateTime)
+
+    def __init__(self, request_id):
+        self.request_id = request_id
+        self.status = ApplicationStatus.new
+        self.updated_on = datetime.now()
+
+
+class AccountsTALogs(db.Model):
+    """
+    Accounts section logs for TA
+    """
+    __tablename__ = 'accounts_ta_logs'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ta_requests.request_id', ondelete='CASCADE'), primary_key=True,)
+    status = db.Column(db.String(50))
+    """
+    status: String
+    -> 'new': a new LTC request
+    -> 'forwarded': application forwarded
+    -> 'complete': application processed(approved or denied anywhere in the heirarchy)
+    """
+    updated_on = db.Column(db.DateTime)
+
+    def __init__(self, request_id):
+        self.request_id = request_id
+        self.status = ApplicationStatus.new
+        self.updated_on = datetime.now()
+
+
+class EstablishmentTALogs(db.Model):
+    """
+    Establishment section logs for TA
+    """
+    __tablename__ = 'establishment_ta_logs'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ta_requests.request_id', ondelete='CASCADE'), primary_key=True,)
+    status = db.Column(db.String(50))
+    """
+    status: String
+    -> 'new': a new LTC request
+    -> 'forwarded': application forwarded
+    -> 'complete': application processed(approved or denied anywhere in the heirarchy)
+    """
+    updated_on = db.Column(db.DateTime)
+
+    def __init__(self, request_id):
+        self.request_id = request_id
+        self.status = ApplicationStatus.new
+        self.updated_on = datetime.now()

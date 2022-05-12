@@ -1,7 +1,8 @@
 from backend import create_app
-from backend.models import UserOTP
+from backend.models import TAOfficeOrders
 from backend.models import Departments, Users, LTCRequests, EstablishmentLogs, DeanLogs, DepartmentLogs, \
-    AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs, EstablishmentReview, AdvanceRequests, StageUsers, LTCOfficeOrders, LTCProofUploads
+    AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs, EstablishmentReview, AdvanceRequests, StageUsers,\
+    LTCOfficeOrders, LTCProofUploads, AccountsTALogs, AuditTALogs, EstablishmentTALogs, TAApproved, TARequests, UserOTP
 from backend.models import db
 from dotenv import load_dotenv
 import os
@@ -45,19 +46,20 @@ stage_users_list = [
                       dept='accounts', permission='accounts', designation='Accounts Section'),
         'designation': StageUsers.Designations.accounts_junior_accountant
     },
-    {
-        'user': Users(email='accounts2@email', name='Accounts Section 2',
-          dept='accounts', permission='accounts', designation='Accounts Section'),
-        'designation': StageUsers.Designations.accounts_deputy_registrar
-    },
+    # {
+    #     'user': Users(email='accounts2@email', name='Accounts Section 2',
+    #                   dept='accounts', permission='accounts', designation='Accounts Section'),
+    #     'designation': StageUsers.Designations.accounts_deputy_registrar
+    # },
     {
         'user': Users(email='audit@email', name='audit Section',
-          dept='audit', permission='audit', designation='Audit Section'),
+                      dept='audit', permission='audit', designation='Audit Section'),
         'designation': StageUsers.Designations.assistant_audit_officer
     },
 ]
 
-hod_cs = Users(email='hod_cse@email', name='HOD CSE',dept='cse', permission='dept_head')
+hod_cs = Users(email='hod_cse@email', name='HOD CSE',
+               dept='cse', permission='dept_head')
 hod_list = [
     {
         'user': Users(email='establishment_head@email', name='Establishment Section Head',
@@ -66,22 +68,22 @@ hod_list = [
     },
     {
         'user': Users(email='deanfa@email', name='Dean FA',
-                dept='deanfa', permission='deanfa', designation='Dean FA'),
+                      dept='deanfa', permission='deanfa', designation='Dean FA'),
         'designation': StageUsers.Designations.deanfa
     },
     {
         'user': Users(email='registrar@email', name='Registrar',
-          dept='registrar', permission='registrar', designation='Registrar'),
+                      dept='registrar', permission='registrar', designation='Registrar'),
         'designation': StageUsers.Designations.registrar
     },
     {
         'user': Users(email='accounts_head@email', name='Accounts Section',
-          dept='accounts', permission='accounts', designation='Accounts Section Head'),
+                      dept='accounts', permission='accounts', designation='Accounts Section Head'),
         'designation': StageUsers.Designations.accounts_assistant_registrar
     },
     {
         'user': Users(email='audit_head@email', name='Audit Section Head',
-          dept='audit', permission='audit', designation='Audit Section'),
+                      dept='audit', permission='audit', designation='Audit Section'),
         'designation': StageUsers.Designations.senior_audit_officer
     },
 ]
@@ -95,10 +97,16 @@ with app.app_context() as ctx:
     AccountsLogs.__table__.drop(db.engine)
     LTCProofUploads.__table__.drop(db.engine)
     LTCOfficeOrders.__table__.drop(db.engine)
-    LTCApproved.__table__.drop(db.engine)
     RegistrarLogs.__table__.drop(db.engine)
     EstablishmentReview.__table__.drop(db.engine)
     AdvanceRequests.__table__.drop(db.engine)
+    EstablishmentTALogs.__table__.drop(db.engine)
+    AuditTALogs.__table__.drop(db.engine)
+    AccountsTALogs.__table__.drop(db.engine)
+    TAOfficeOrders.__table__.drop(db.engine)
+    TAApproved.__table__.drop(db.engine)
+    TARequests.__table__.drop(db.engine)
+    LTCApproved.__table__.drop(db.engine)
     LTCRequests.__table__.drop(db.engine)
     StageUsers.__table__.drop(db.engine)
     UserOTP.__table__.drop(db.engine)
@@ -153,6 +161,5 @@ with app.app_context() as ctx:
         dept.dept_head = head['user'].id
         stage_user = StageUsers(head['user'].id, head['designation'])
         db.session.add(stage_user)
-
 
     db.session.commit()

@@ -491,7 +491,6 @@ class LtcManager:
 
         def resolveEstablishmentReview(self):
             # fetch updated establishment section form fields
-            # updated_form = json.loads(request.form.get('form'))
             request_id = request.json.get('request_id')
             comment = (request.json.get('comment'))
             action = (request.json.get('action'))
@@ -511,7 +510,6 @@ class LtcManager:
                 # add comment
                 # mark the application as new in the sender's table
                 db_form.removeLastComment(Stages.establishment)
-                # db_form.removeLastComment(est_review.)
                 db_form.addComment(current_user, comment, True, True)
                 sender_table_ref = Departments.getDeptRequestTableByName(
                     est_review.received_from)
@@ -591,8 +589,6 @@ class LtcManager:
 
             filename = file.filename
             office_order_enc = filemanager.encodeFile(file)
-            # path = filemanager.saveFile(file, user.id)
-            # print(path)
 
             advance_required = False
             # check if advance required!
@@ -737,7 +733,7 @@ class LtcManager:
 
             response['signatures']['user'] = applicant.signature
             # signatures
-            if form_data.stage in [Stages.approved, Stages.advance_pending, Stages.availed]:
+            if form_data.stage in [Stages.approved, Stages.advance_pending]:
                 stages = [
                     (Stages.establishment, Permissions.establishment),
                     (Stages.audit, Permissions.audit),
@@ -750,12 +746,16 @@ class LtcManager:
                     query = db.session.query(Users, StageUsers).join(
                         StageUsers).filter(Users.permission == permission)
                     signatures = []
-
+                    approvals = form_data.getLatestCommentForStage(stage)
                     for user, stage_user in query:
-                        file = user.signature
+                        if approvals[user] == True:
+                            file = user.signature
+                        else:
+                            file = None
                         signatures.append({
                             stage_user.designation: file
                         })
+                        
                     response['signatures'][stage] = signatures
 
             return {'data': response}
