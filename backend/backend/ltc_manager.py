@@ -1,13 +1,13 @@
 import json
 from . import db
 from . import filemanager
-from .models import LTCOfficeOrders, LTCProofUploads, StageUsers, Stages
 from .analyse import analyse
 from datetime import datetime
 from flask_jwt_extended import current_user
 from flask import jsonify, request, make_response
 from sqlalchemy.orm.attributes import flag_modified
 from flask_restful import Resource, abort, fields
+from .models import LTCOfficeOrders, LTCProofUploads, StageUsers, Stages
 from .role_manager import Permissions, role_required, roles_required, check_role
 from .models import ApplicationStatus, EstablishmentLogs, EstablishmentReview, LTCApproved,\
     Users, LTCRequests, Departments, AdvanceRequests
@@ -19,6 +19,9 @@ class LtcManager:
         """
         API for applying for LTC Application
         """
+
+        def validateForm(self, form: dict):
+            pass
 
         @role_required(Permissions.client)
         def post(self):
@@ -150,7 +153,7 @@ class LtcManager:
             applicant: Users = Users.query.get(form.user_id)
             form.addComment(current_user, comment,
                             True if action == 'approve' else False, is_review=True if action == 'review' else False)
-            if action == 'review': # application to be sent back for review
+            if action == 'review':  # application to be sent back for review
                 form.send_for_review(current_user, applicant, comment)
                 db.session.commit()
                 return {"status": 'sent for review'}, 200
@@ -202,7 +205,8 @@ class LtcManager:
             if not form:
                 abort(404, msg='Form not found')
             user_email = None
-            if kwargs['permission'] == Permissions.client: # if current user is client, check if form is theirs
+            # if current user is client, check if form is theirs
+            if kwargs['permission'] == Permissions.client:
                 if form.user_id != current_user.id:
                     return abort(403, status={'error': 'Forbidden resource'})
                 user_email = current_user.email
@@ -609,15 +613,21 @@ class LtcManager:
                 request_id, office_order_enc, filename)
             approved_entry.office_order_created = True
             db.session.add(office_order_upload_entry)
-            # approved_entry.office_order = path
-
-            emailmanager.sendEmail(user,
-                                   f'Office order generated for LTC Request ID {form.request_id}',
-                                   emailmanager.ltc_office_order_msg % (
-                                       user.name, request_id)
-                                   )
-
             db.session.commit()
+
+            # deanfa, hod, dr accounts,
+            dean_stage_user: StageUsers = StageUsers.query.filter(
+                StageUsers.designation == StageUsers.Designations.deanfa).one_or_none()
+            dean: Users = Users.query.get(dean_stage_user.user_id)
+            user_dept: Departments = Departments.query.get(user.department)
+            hod: Users = Users.query.get(user_dept.dept_head)
+
+            emailmanager.sendMailWithCC([user], [dean, hod],
+                f'Office order generated for LTC Request ID {form.request_id}',
+                emailmanager.ltc_office_order_msg % (
+                user.name, request_id), attachment=(filename, office_order_enc)
+            )
+
             return jsonify({'success': 'Office Order Uploaded!'})
 
     class GetPendingOfficeOrderRequests(Resource):

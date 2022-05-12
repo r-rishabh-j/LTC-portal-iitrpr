@@ -8,12 +8,12 @@ import axios from "axios";
 import GoogleButton from 'react-google-button';
 
 
-const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL, REACT_APP_DEVELOPMENT} = process.env;
+const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL, REACT_APP_DEVELOPMENT } = process.env;
 
 function GoogleLogin() {
     const classes = useStyles();
     const { handleSubmit, control } = useForm();
-    
+
     const onSubmit = (data) => {
         const formData = new FormData();
         formData.append('auth', JSON.stringify(data))
@@ -22,7 +22,7 @@ function GoogleLogin() {
             url: "/api/login",
             data: formData
         }).then((response) => {
-            window.location  = response.request.responseURL;
+            window.location = response.request.responseURL;
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response);
@@ -55,7 +55,7 @@ function GoogleLogin() {
     }, []);
 
     return (
-        <Grid style={{backgroundColor:"#cfd8dc", height: "100vh", display:"flex"}}>
+        <Grid style={{ backgroundColor: "#cfd8dc", height: "100vh", display: "flex" }}>
             <Paper elevation={10} className={classes.loginPage}>
                 <Grid align="center">
                     <h2>LTC PORTAL IIT ROPAR</h2>
@@ -65,62 +65,54 @@ function GoogleLogin() {
                     <h3>Sign In</h3>
 
                     {REACT_APP_DEVELOPMENT === "true" ?
-                    (<form onSubmit={handleSubmit(onSubmit)}>
-                        <Controller
-                            name="email"
-                            control={control}
-                            defaultValue=""
-                            render={({
-                                field: { onChange, value },
-                                fieldState: { error },
-                            }) => (
+                        (<form onSubmit={handleSubmit(onSubmit)}>
+                            <Controller
+                                name="email"
+                                control={control}
+                                defaultValue=""
+                                render={({
+                                    field: { onChange, value },
+                                    fieldState: { error },
+                                }) => (
+                                    <TextField
+                                        label="Username"
+                                        placeholder="Enter username"
+                                        value={value}
+                                        onChange={onChange}
+                                        error={!!error}
+                                        fullWidth
+                                        required
+                                        className={classes.textFieldLogin}
+                                    />
+                                )}
+                            />
+                            <Controller name="password" control={control} defaultValue="" render={({ field: { onChange, value }, fieldState: { error } }) => (
                                 <TextField
-                                    label="Username"
-                                    placeholder="Enter username"
+                                    label="Password"
                                     value={value}
                                     onChange={onChange}
                                     error={!!error}
+                                    placeholder="Enter password"
+                                    type="password"
                                     fullWidth
                                     required
-                                    className={classes.textFieldLogin}
+                                    className={classes.textFieldPass}
                                 />
                             )}
-                        />
-                        <Controller name="password" control={control} defaultValue="" render={({ field: { onChange, value }, fieldState: { error } }) => (
-                            <TextField
-                                label="Password"
-                                value={value}
-                                onChange={onChange}
-                                error={!!error}
-                                placeholder="Enter password"
-                                type="password"
-                                fullWidth
-                                required
-                                className={classes.textFieldPass}
                             />
-                        )}
-                        />
 
-                        <div>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                fullWidth
-                                className={classes.btn}
-                            >
-                                Sign In (testing)
-                            </Button>
-                        </div>
-                    </form>):(<></>)}
-                    {/* <Typography>
-                        {" "}
-                        New User?
-                        <Link to="/register"> Sign Up</Link>
-                    </Typography>
-
-                    {/* google login here */}
-                    {/* <h2 className={classes.btnHeader}>Login with Google</h2> */}
+                            <div>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    className={classes.btn}
+                                >
+                                    Sign In (demo)
+                                </Button>
+                            </div>
+                        </form>) : (<></>)}
                     <GoogleButton
                         onClick={openGoogleLoginPage}
                         label="Sign in with Google"

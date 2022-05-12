@@ -32,7 +32,6 @@ const AdvancePaymentDialogBox = ({ request_id }) => {
     const [editing, setEditing] = useState(false);
 
     function onClick(data) {
-        // e.preventDefault();
         if (file === undefined || file.length === 0) {
             alert('No file uploaded!');
             return;
@@ -71,8 +70,6 @@ const AdvancePaymentDialogBox = ({ request_id }) => {
                         required={true}
                         disabled={false}
                         adornment={true}
-                        // autofill={false}
-                        // defaultValue={''}
                     ></FormInputNumber>
                     <FormInputText
                         name={"comments"}
@@ -89,6 +86,7 @@ const AdvancePaymentDialogBox = ({ request_id }) => {
                     <DropzoneArea
                         filesLimit={1}
                         onChange={onUpload}
+                        acceptedFiles={['.pdf', '.zip']}
                     />
                     <Box display='flex' justifyContent='center' marginTop={'3vh'}>
                         <Button

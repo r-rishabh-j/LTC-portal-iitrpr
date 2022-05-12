@@ -5,6 +5,9 @@ from .models import Users
 
 
 class Permissions:
+    """
+    Permissions in the backend
+    """
     admin = 'admin'
     deanfa = 'deanfa'
     registrar = 'registrar'
@@ -35,6 +38,7 @@ Defines role of a user
 
 
 def role_required(role):
+    """Allow a specific role in the API"""
     def wrapper(fn):
         @wraps(fn)
         def decorator(*args, **kwargs):
@@ -50,6 +54,7 @@ def role_required(role):
 
 
 def roles_required(roles: list):
+    """Allow a list of roles to API"""
     def wrapper(fn):
         @wraps(fn)
         def decorator(*args, **kwargs):
@@ -65,6 +70,7 @@ def roles_required(roles: list):
 
 
 def check_role():
+    """Check if user is logged in, return permission in kwargs"""
     def wrapper(fn):
         @wraps(fn)
         def decorator(*args, **kwargs):

@@ -13,6 +13,7 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { DropzoneArea } from 'material-ui-dropzone';
+import "bootstrap/dist/css/bootstrap.min.css";
 import { useForm, Controller, useFieldArray, register } from "react-hook-form";
 
 
@@ -26,8 +27,8 @@ const UploadDialogBox = ({ request_id }) => {
     setFile(file[0]);
   }
 
-  function onClick(e) {
-    e.preventDefault();
+  async function onClick() {
+    // e.preventDefault();
     // console.log('f', file);
     if (file === undefined || file.length === 0) {
       alert('No file uploaded!');
@@ -38,7 +39,7 @@ const UploadDialogBox = ({ request_id }) => {
     formData.append('request_id', request_id);
     formData.append('office_order', file);
     console.log(formData);
-    axios({
+    return axios({
       method: 'POST',
       url: '/api/upload-office-order',
       data: formData,
@@ -56,14 +57,19 @@ const UploadDialogBox = ({ request_id }) => {
   }
   return (
     <>
-      <form onSubmit={onClick}>
+      <form onSubmit={handleSubmit(onClick)}>
         <DialogTitle>Upload Office Order</DialogTitle>
         <DialogContent><DropzoneArea
           filesLimit={1}
           onChange={onUpload}
+          acceptedFiles={['.pdf', '.zip']}
         />
           <Box display='flex' justifyContent='center' marginTop={'3vh'}>
-            <Button type="submit" variant='contained' color="primary">UPLOAD</Button>
+            <Button type="submit" variant='contained' color="primary" disabled={isSubmitting}>
+              {isSubmitting && (
+                <span className="spinner-grow spinner-grow-sm"></span>
+              )}
+              UPLOAD</Button>
           </Box>
         </DialogContent>
       </form>

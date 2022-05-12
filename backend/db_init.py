@@ -1,4 +1,5 @@
 from backend import create_app
+from backend.models import UserOTP
 from backend.models import Departments, Users, LTCRequests, EstablishmentLogs, DeanLogs, DepartmentLogs, \
     AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs, EstablishmentReview, AdvanceRequests, StageUsers, LTCOfficeOrders, LTCProofUploads
 from backend.models import db
@@ -100,6 +101,7 @@ with app.app_context() as ctx:
     AdvanceRequests.__table__.drop(db.engine)
     LTCRequests.__table__.drop(db.engine)
     StageUsers.__table__.drop(db.engine)
+    UserOTP.__table__.drop(db.engine)
     Users.__table__.drop(db.engine)
     Departments.__table__.drop(db.engine)
     db.create_all(app=app)

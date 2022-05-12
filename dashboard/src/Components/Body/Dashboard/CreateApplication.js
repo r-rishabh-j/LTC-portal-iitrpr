@@ -39,13 +39,15 @@ import { FieldArrayInput } from "../../Utilities/FieldArrayInput";
 // const csrf = getCookie('csrf_access_token');
 // console.log('csrf', csrf);
 
-export default function CreateApplication({profileInfo}) {
+export default function CreateApplication({ profileInfo }) {
   console.log(profileInfo);
   const classes = useStyles();
-  const { handleSubmit, control, register, reset, formState: { isSubmitting } } = useForm({defaultValues:{
-    dependents: [{dep_name: "", dep_age: "", dep_relationship: "", dep_travelling_from: ""}]
-  }});
-  const {fields, append, remove} = useFieldArray({
+  const { handleSubmit, control, register, reset, formState: { isSubmitting } } = useForm({
+    defaultValues: {
+      dependents: [{ dep_name: "", dep_age: "", dep_relationship: "", dep_travelling_from: "" }]
+    }
+  });
+  const { fields, append, remove } = useFieldArray({
     control, name: "dependents"
   })
   const [File, setFile] = useState(null);
@@ -91,13 +93,13 @@ export default function CreateApplication({profileInfo}) {
       })
       .catch((error) => {
         if (error.response) {
-          console.log('error is',error.response);
+          console.log('error is', error.response);
           console.log(error.response.status);
           console.log(error.response.headers);
-          if (error.response.status === 413){
+          if (error.response.status === 413) {
             alert('File size too large!');
           }
-          else{
+          else {
             alert('Error. Please try logging in again');
           }
         }
@@ -411,6 +413,7 @@ shortest route (proofs need to be attached)."
                           >
                             <input
                               type="file"
+                              accept=".pdf,.zip"
                               onChange={(e) => {
                                 field.onChange(e.target.files);
                                 if (!e.target.files[0]) {
@@ -735,7 +738,7 @@ shortest route (proofs need to be attached)."
             </form>
           </Grid>
         </Paper>
-          <Box minHeight={'2vh'}></Box>
+        <Box minHeight={'2vh'}></Box>
       </Grid>
     </>
   );

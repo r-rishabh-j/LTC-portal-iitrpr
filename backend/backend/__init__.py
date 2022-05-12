@@ -8,12 +8,12 @@ from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_acc
 import redis
 from rq import Queue
 from .file_manager.encoded_file_manager import EncodedFileManager
-from .email_manager.email_manager import EmailManager
+from .email_manager.background_email_manager import EmailManager
 from dotenv import load_dotenv
 
 load_dotenv()
 db = SQLAlchemy()
-UPLOAD_FOLDER = 'uploads'
+# UPLOAD_FOLDER = 'uploads'
 
 redis_conn = redis.Redis()
 task_queue = Queue(connection=redis_conn)
@@ -23,7 +23,7 @@ filemanager = EncodedFileManager()
 enable_email = False
 if os.environ.get("ENABLE_EMAIL") == 'true':
     enable_email = True
-emailmanager = EmailManager(enabled=enable_email, queue={'queue': task_queue})
+emailmanager = EmailManager(enabled=enable_email, queue={})
 
 
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
@@ -38,8 +38,9 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=5)
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024 # 50 MB max request size
+    # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config['MAX_CONTENT_LENGTH'] = 50 * \
+        1024 * 1024  # 50 MB max request size
 
     app.config["flask_profiler"] = {
         "enabled": True,
@@ -66,54 +67,72 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     from .ltc_manager import LtcManager
     from .notifications import ClearUserNotifications, GetUserNotifications, GetEmailPref, SetEmailPref
 
-    api.add_resource(Auth.Login, '/api/login')
-    api.add_resource(Auth.Logout, '/api/logout')
+    api.add_resource(Auth.Login, '/api/login')  # login route
+    api.add_resource(Auth.Logout, '/api/logout')  # logout route
+    api.add_resource(Auth.OTPLogin, '/api/otp-login')  # logout route
+    # check if logged in
     api.add_resource(Auth.IsLoggedIn, '/api/is-logged-in')
-    api.add_resource(LtcManager.ApplyForLTC, '/api/apply')
-    api.add_resource(Auth.RegisterUser, '/api/register')
-    api.add_resource(Auth.GetSignature, '/api/get-signature')
-    api.add_resource(Auth.UploadSignature, '/api/upload-signature')
-    api.add_resource(LtcManager.GetLtcFormData, '/api/getformdata')
+    api.add_resource(LtcManager.ApplyForLTC, '/api/apply')  # apply for ltc
+    api.add_resource(Auth.RegisterUser, '/api/register')  # register user
+    api.add_resource(Auth.GetSignature, '/api/get-signature')  # get signature
+    api.add_resource(Auth.UploadSignature,
+                     '/api/upload-signature')  # upload signature
+    api.add_resource(LtcManager.GetLtcFormData,
+                     '/api/getformdata')  # get form data
+    # get basic form data for display on tables
     api.add_resource(LtcManager.GetLtcFormMetaData, '/api/get-form-meta')
-    api.add_resource(LtcManager.GetLtcFormMetaDataForUser, '/api/getmyforms')
-    api.add_resource(LtcManager.GetLtcFormAttachments, '/api/getattachments')
+    api.add_resource(LtcManager.GetLtcFormMetaDataForUser,
+                     '/api/getmyforms')  # fetch all user forms
+    api.add_resource(LtcManager.GetLtcFormAttachments,
+                     '/api/getattachments')  # get form attachemnts
     api.add_resource(LtcManager.GetPendingApprovalRequests,
-                     '/api/getpendingltc')
-    api.add_resource(LtcManager.GetPastApprovalRequests, '/api/getpastltc')
-    api.add_resource(LtcManager.CommentOnLTC, '/api/comment')
-    api.add_resource(LtcManager.FillStageForm, '/api/fill-stage-form')
+                     '/api/getpendingltc')  # get pending approval requests for stage
+    api.add_resource(LtcManager.GetPastApprovalRequests,
+                     '/api/getpastltc')  # get past approval requests
+    api.add_resource(LtcManager.CommentOnLTC,
+                     '/api/comment')  # comment and forward
+    api.add_resource(LtcManager.FillStageForm,
+                     '/api/fill-stage-form')  # fill stage form
+    # get user dashboard notifications
     api.add_resource(GetUserNotifications, '/api/getnotifications')
+    # fetch user email notification preferences
     api.add_resource(GetEmailPref, '/api/get-email-pref')
+    # set user email notification preferences
     api.add_resource(SetEmailPref, '/api/set-email-pref')
+    # clear user dashboard notifications
     api.add_resource(ClearUserNotifications, '/api/clearnotifications')
     api.add_resource(LtcManager.GetEstablishmentReview,
-                     '/api/establishment-review')
-    api.add_resource(LtcManager.UploadOfficeOrder, '/api/upload-office-order')
+                     '/api/establishment-review')  # get establishment review requests
+    api.add_resource(LtcManager.UploadOfficeOrder,
+                     '/api/upload-office-order')  # upload LTC office order
+    # get office order for ltc
     api.add_resource(LtcManager.GetOfficeOrder, '/api/get-office-order')
     api.add_resource(LtcManager.GetPendingOfficeOrderRequests,
-                     '/api/get-pending-office-order-req')
+                     '/api/get-pending-office-order-req')  # get pending office order requests
     api.add_resource(LtcManager.GetPendingAdvancePaymentRequests,
-                     '/api/get-pending-advance-payments')
+                     '/api/get-pending-advance-payments')  # get pending advance payment  requests
     api.add_resource(LtcManager.UpdateAdvancePaymentDetails,
-                     '/api/update-advance-payment')
+                     '/api/update-advance-payment')  # upload advance payment details
     api.add_resource(LtcManager.ResolveReviewRequest,
-                     '/api/resolve-review')
+                     '/api/resolve-review')  # resolve review requests
     api.add_resource(LtcManager.EditStageForm,
-                     '/api/edit-stage-form')
+                     '/api/edit-stage-form')  # edit stage form(establishment, accounts)
     api.add_resource(LtcManager.PrintForm,
-                     '/api/print-form')
+                     '/api/print-form')  # return form data for printing to pdf.
 
     @jwt.user_identity_loader
+    # return email from user object to route
     def user_identity_loader(user: Users):
         return user.email
 
     @jwt.user_lookup_loader
+    # called to fetch user from database on api request
     def user_lookup_callback(_jwt_header, jwt_data):
         email = jwt_data.get('sub', None)
         return Users.query.filter_by(email=email).one_or_none()
 
     @app.after_request
-    def refresh_expiring_jwts(response):
+    def refresh_expiring_jwts(response):  # refresh auth token
         try:
             exp_timestamp = get_jwt()["exp"]
             now = datetime.now()
