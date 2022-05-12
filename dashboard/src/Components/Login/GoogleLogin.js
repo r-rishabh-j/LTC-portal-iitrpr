@@ -8,7 +8,7 @@ import axios from "axios";
 import GoogleButton from 'react-google-button';
 
 
-const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL, REACT_APP_DEVELOPMENT} = process.env;
+const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL, REACT_APP_DEVELOPMENT } = process.env;
 
 function GoogleLogin() {
     const classes = useStyles();
@@ -23,7 +23,7 @@ function GoogleLogin() {
             url: "/api/login",
             data: formData
         }).then((response) => {
-            window.location  = response.request.responseURL;
+            window.location = response.request.responseURL;
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response);

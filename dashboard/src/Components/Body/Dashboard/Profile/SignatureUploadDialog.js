@@ -69,6 +69,7 @@ const SignatureUploadDialog = ({ profile }) => {
           <DropzoneArea
             filesLimit={1}
             onChange={onUpload}
+            acceptedFiles={['.png', '.jpeg', '.jpg']}
           />
           <Box display='flex' justifyContent='center' marginTop={'3vh'}>
             <Button

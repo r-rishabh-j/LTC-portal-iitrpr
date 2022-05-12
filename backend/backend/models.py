@@ -1,22 +1,25 @@
 from . import db
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm.attributes import flag_modified
 from sqlalchemy.dialects.postgresql import BYTEA
 from sqlalchemy import Text
 from sqlalchemy import Integer, Numeric
-from . import filemanager, emailmanager
+from . import emailmanager
 
 
-class Stage:
-    def __init__(self, id, name, department):
-        self.id = id
-        self.name = name
-        self.department = department
+# class Stage:
+#     def __init__(self, id, name, department):
+#         self.id = id
+#         self.name = name
+#         self.department = department
 
 
 class Stages:
+    """
+    All LTC Application stages
+    """
     establishment = 'establishment'
     audit = 'audit'
     accounts = 'accounts'
@@ -28,7 +31,6 @@ class Stages:
     ta_applied = 'ta_applied'
     availed = 'availed'  # after TA
     review = 'review'
-    # ordered list of heirarchy
 
 
 class ApplicationStatus:
@@ -136,6 +138,19 @@ class StageUsers(db.Model):
         self.designation = designation
 
 
+class UserOTP(db.Model):
+    __tablename__ = 'user_otp'
+    email = db.Column(db.String, db.ForeignKey(
+        'users.email'), primary_key=True)
+    otp = db.Column(db.String)
+    valid_till = db.Column(db.DateTime  )
+
+    def __init__(self, email, otp) -> None:
+        self.email = email
+        self.otp = otp
+        self.valid_till = datetime.now()+timedelta(minutes=3)
+
+
 class Measurements(db.Model):
     __tablename__ = 'analytics'
 
@@ -165,7 +180,7 @@ class Measurements(db.Model):
 
 class EstablishmentLogs(db.Model):
     """
-    Establishment section logs
+    Establishment section logs for LTC
     """
     __tablename__ = 'establishment_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
@@ -220,7 +235,7 @@ class EstablishmentReview(db.Model):
 
 class AuditLogs(db.Model):
     """
-    Audit section logs
+    Audit section logs for LTC
     """
     __tablename__ = 'audit_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
@@ -243,7 +258,7 @@ class AuditLogs(db.Model):
 
 class AccountsLogs(db.Model):
     """
-    Accounts section logs
+    Accounts section logs for LTC
     """
     __tablename__ = 'accounts_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
@@ -265,6 +280,9 @@ class AccountsLogs(db.Model):
 
 
 class RegistrarLogs(db.Model):
+    """
+    Registrar logs for LTC
+    """
     __tablename__ = 'registrar_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
         'ltc_requests.request_id'), primary_key=True)
@@ -285,6 +303,9 @@ class RegistrarLogs(db.Model):
 
 
 class AdvanceRequests(db.Model):
+    """
+    Advance payment requests
+    """
     __tablename__ = 'advance_requests'
     advance_id = db.Column(db.Integer, primary_key=True)
     request_id = db.Column(db.Integer, db.ForeignKey(
@@ -315,7 +336,11 @@ class AdvanceRequests(db.Model):
         self.comments = comments
         self.paid_on = datetime.now()
 
+
 class DeanLogs(db.Model):
+    """
+    Dean logs for LTC
+    """
     __tablename__ = 'deanfa_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
         'ltc_requests.request_id'), primary_key=True, )
@@ -398,9 +423,9 @@ class DepartmentLogs(db.Model):
 
 def get_stage_roles(stage) -> dict:
     # lookup STAGES dict to get the dept level, query table of the department and insert all stage representatives
-    # stage_users = Users.query.filter_by(permission=stage)
     stage_users = []
-    query = db.session.query(Users, StageUsers).join(StageUsers).filter(Users.permission == stage)
+    query = db.session.query(Users, StageUsers).join(
+        StageUsers).filter(Users.permission == stage)
     print(query)
     for user, designation in query:
         stage_users.append(user)
@@ -408,6 +433,9 @@ def get_stage_roles(stage) -> dict:
 
 
 class LTCRequests(db.Model):
+    """
+    Stores LTC requests
+    """
     __tablename__ = 'ltc_requests'
     request_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -427,6 +455,22 @@ class LTCRequests(db.Model):
     is_active = db.Column(db.Boolean)
     form: dict = db.Column(MutableDict.as_mutable(JSON))
     comments: dict = db.Column(MutableDict.as_mutable(JSON))
+    """
+    comments:{
+        "department":[
+            {
+                "approved": {
+                    "u1": null,
+                    "u2": null
+                },
+                "comments": {
+                    "u1": null,
+                    "u2": null
+                }
+            }
+        ]
+    }
+    """
     # stores path to attachments
     # attachments: str = db.Column(db.String, nullable=True)
 
@@ -496,9 +540,13 @@ class LTCRequests(db.Model):
             user_dept: Departments = Departments.query.get(
                 applicant.department)
             if not user_dept.is_stage:
-                # add dept comments
+                # Notify department head
                 dept_log: DepartmentLogs = DepartmentLogs(
                     request_id=self.request_id, department=applicant.department)
+                hod: Users = Users.query.get(user_dept.dept_head)
+                self.comments['department'] = [
+                    self.generate_comments_template('department', [hod])
+                ]
                 db.session.add(dept_log)
             db.session.add(est_log)
             applicant.addNotification(
@@ -710,6 +758,9 @@ class LTCRequests(db.Model):
 
 
 class LTCProofUploads(db.Model):
+    """
+    Stores LTC uploaded proofs
+    """
     __tablename__ = 'ltc_proof_uploads'
     request_id = db.Column(db.Integer, db.ForeignKey(
         'ltc_requests.request_id'), primary_key=True)
@@ -724,7 +775,7 @@ class LTCProofUploads(db.Model):
 
 class LTCApproved(db.Model):
     """
-    Stores all approved LTC requests and office order
+    Stores all approved LTC requests
     """
     __tablename__ = 'ltc_approved'
     request_id = db.Column(db.Integer, db.ForeignKey(
@@ -743,6 +794,9 @@ class LTCApproved(db.Model):
 
 
 class LTCOfficeOrders(db.Model):
+    """
+    Stores LTC office orders for approved requests
+    """
     __tablename__ = 'ltc_office_orders'
     request_id = db.Column(db.Integer, db.ForeignKey(
         'ltc_approved.request_id'), primary_key=True)

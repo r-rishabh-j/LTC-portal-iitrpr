@@ -1,17 +1,42 @@
+from datetime import date, datetime
 import os
 import json
 import requests
 from . import db, filemanager
 from flask import jsonify, request, make_response, redirect
 from flask_restful import Resource, abort
-from .models import Departments, Users
+from .models import Departments, UserOTP, Users
 from flask_jwt_extended import create_access_token, jwt_required, \
     set_access_cookies, unset_jwt_cookies, current_user
 from .role_manager import check_role, role_required, Permissions
+from uuid import uuid4
+import urllib.parse
 
 
 class Auth:
     class RegisterUser(Resource):
+        @role_required(role=Permissions.admin)
+        def post(self):
+            """
+            Send post request to register user
+            """
+            name = request.form.get('name')
+            email = request.form.get('email')
+            department = request.form.get('department')
+            role = request.form.get('role')
+
+            if None in [name, email, department, role]:
+                abort(400, 'invalid request')
+
+            return {'error': 'Not implemented'}, 500
+
+    class EditUser(Resource):
+        @role_required(role=Permissions.admin)
+        def post(self):
+
+            return {'error': 'Not implemented'}, 500
+
+    class DropUser(Resource):
         @role_required(role=Permissions.admin)
         def post(self):
 
@@ -24,9 +49,12 @@ class Auth:
             return response
 
     class IsLoggedIn(Resource):
+        """
+        Check whether user is logged in.
+        If logged in, send user metadata
+        """
         @jwt_required()
         def get(self):
-
             user: Users = current_user
             if not user:
                 return abort(401, msg='Login again')
@@ -70,6 +98,9 @@ class Auth:
             return response.json()
 
         def get(self):
+            """
+            Google OAuth
+            """
             code = request.args.to_dict().get('code', None)
             if not code:
                 return make_response(redirect(os.environ.get('FRONTEND_URL')))
@@ -89,6 +120,11 @@ class Auth:
             return response
 
         def post(self):
+            """
+            Only for development
+            """
+            if os.environ.get('FLASK_ENV') == None:
+                abort(404, error="No such route")
             args = json.loads(request.form.get('auth'))
             if not args['email'] or len(args['email']) < 4:
                 abort(409, 'invalid email')
@@ -103,9 +139,78 @@ class Auth:
             set_access_cookies(response, access_tk)
             return response
 
+    class OTPLogin(Resource):
+        def post(self):
+            args = json.loads(request.form.get('auth'))
+            if not args['email'] or len(args['email']) < 4:
+                abort(409, 'invalid email')
+            user: Users = Users.query.filter_by(
+                email=str(args['email']).strip().lower()).one_or_none()
+            if not user:
+                abort(409, error="User not registered")
+
+            previous_otp_entry: UserOTP = UserOTP.query.get(user.email)
+            current_time = datetime.now()
+            if previous_otp_entry != None:
+                if previous_otp_entry.valid_till > current_time:
+                    abort(
+                        400, error='OTP already generated. Kindly Check your Email Account.')
+                else:
+                    db.session.drop(previous_otp_entry)
+
+            otp = uuid4()
+            login_otp: UserOTP = UserOTP(user.email, otp)
+            db.session.add(login_otp)
+            params = {
+                'user': user.email,
+                'otp': otp,
+            }
+            login_url = f"{os.environ.get('BACKEND_URL')}/?" + \
+                urllib.parse.urlencode(params)
+            print(login_url)
+
+            db.session.commit()
+            return {'success': 'login link sent on email!'}
+
+        def get(self):
+            email = str(request.args.get('user')).strip().lower()  # email
+            otp = request.args.get('otp')
+            if email == None or otp == None:
+                abort(400, error='unauthorized')
+            user: Users = Users.query.filter(
+                Users.email == email).one_or_none()
+            if not user:
+                abort(404, error='Invalid Email')
+            otp_entry: UserOTP = UserOTP.query.get(email)
+            if otp_entry == None:
+                abort(400, error='No OTP found for User')
+            if otp_entry.otp != otp:
+                abort(400, error='Invalid OTP!')
+            current_time = datetime.now()
+            valid_till = otp_entry.valid_till
+            db.session.drop(otp_entry)
+            db.session.commit()
+            if current_time > valid_till:
+                abort(400, error='OTP Expired! Login Again!')
+            access_tk = create_access_token(identity=user)
+            response = make_response(redirect(os.environ.get('FRONTEND_URL')))
+            set_access_cookies(response, access_tk)
+            return response
+
     class UploadSignature(Resource):
+        """
+        Upload user signature
+        POST request
+        Only .png, .jpeg/.jpg files allowed.
+        """
         @check_role()
         def post(self, permission):
+            """
+            Payload:
+            {
+                'signature': <File>
+            }
+            """
             user: Users = current_user
             sign = request.files.get('signature', None)
             if (os.path.splitext(str(sign.filename).lower())[1] not in ['.png', '.jpeg', '.jpg']):
@@ -118,6 +223,9 @@ class Auth:
             return {'success': 'Signature Uploaded'}
 
     class GetSignature(Resource):
+        """
+        Fetch user signature as base64 encoded string
+        """
         @check_role()
         def post(self, permission):
             sign = current_user.signature

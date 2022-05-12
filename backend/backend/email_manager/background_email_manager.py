@@ -1,7 +1,10 @@
+from cmath import rect
 import smtplib
 from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 import os
+from tokenize import Name
 
 
 class EmailManager():
@@ -28,31 +31,31 @@ Visit LTC Portal for more information.
         self.enabled = enabled
         self.queuing = True if 'queue' in queue.keys() else False
         self.task_queue = None if not self.queuing else queue['queue']
-        self.__connect()
 
     def __connect(self):
         try:
             if self.enabled:
-                self.session = smtplib.SMTP(
+                session = smtplib.SMTP(
                     'smtp.gmail.com', 587)  # use gmail with port
-                self.session.starttls()  # enable security
+                session.starttls()  # enable security
                 # login with mail_id and password
-                self.session.login(self.sender_address, self.sender_pass)
+                session.login(self.sender_address, self.sender_pass)
+                return session
             else:
                 print('Email Disabled.')
+                return None
         except:
             if self.enabled:
                 print('Not able to create email session')
+            return None
 
     def __sendEmail(self, receiver, subject, message_text):
         if receiver['pref'] == True:
             try:
                 if self.enabled:
-                    session = smtplib.SMTP(
-                        'smtp.gmail.com', 587)  # use gmail with port
-                    session.starttls()  # enable security
-                    # login with mail_id and password
-                    session.login(self.sender_address, self.sender_pass)
+                    session = self.__connect()
+                    if not session:
+                        raise Exception('Cannot connect to Mail service')
                     message = MIMEMultipart()
                     message['From'] = self.sender_address
                     message['To'] = receiver['email']
@@ -65,53 +68,109 @@ Visit LTC Portal for more information.
                     print(text)
                     session.sendmail(self.sender_address,
                                      receiver['email'], text)
+                    session.quit()
                 else:
                     print('Email Disabled.')
-            except:
+            except Exception as e:
                 if self.enabled:
-                    print('Not able to create email session')
+                    print('Not able to create email session', e)
 
     def sendEmail(self, receiver, subject, message_text):
         if not self.enabled:
             return
         try:
             try:
-                # rec = {
-                #     'email':str(receiver.email),
-                #     'pref':(receiver.email_pref)
-                # }
                 rec = {
-                    'email': '2019csb1286@iitrpr.ac.in',
-                    'pref': True
+                    'email': str(receiver.email),
+                    'pref': (receiver.email_pref)
                 }
+
                 if self.queuing == True:
                     self.task_queue.enqueue(
-                        self.__sendEmail, rec, 'subject', 'message_text')
+                        self.__sendEmail, rec, subject, message_text)
                 else:
                     self.__sendEmail(rec, subject, message_text)
             except (smtplib.SMTPServerDisconnected, smtplib.SMTPConnectError, smtplib.SMTPSenderRefused) as e:
-                print('here')
-                print(e)
-                try:
-                    self.__connect()
-                    if self.task_queue == True:
-                        self.task_queue.enqueue(
-                            self.__sendEmail, rec, subject, message_text)
-                    else:
-                        self.__sendEmail(rec, subject, message_text)
-                except:
+                # try:
+                #     self.__connect()
+                #     if self.task_queue == True:
+                #         self.task_queue.enqueue(
+                #             self.__sendEmail, rec, subject, message_text)
+                #     else:
+                #         self.__sendEmail(rec, subject, message_text)
+                # except:
                     print('Email Not Sent')
         except Exception as e:
             print('Error in sending mail', e)
 
-    def __del__(self):
+    def __sendEmailWithCC(self, receivers, cc, subject, message_text, attachment=None):
+        try:
+            if self.enabled:
+                message = MIMEMultipart()
+                message['From'] = self.sender_address
+                message['To'] = '' if len(
+                    receivers) == 0 else ', '.join(receivers)
+                message['Cc'] = '' if len(cc) == 0 else ', '.join(cc)
+                # The subject line
+                message['Subject'] = subject
+                # The body and the attachments for the mail
+                message.attach(MIMEText(message_text, 'plain'))
+                #   attachment
+                file = MIMEApplication(attachment[1], Name=attachment[0])
+                file['Content-Disposition'] = f'attachment; filename="{attachment[0]}"'
+                message.attach(file)
+                session = self.__connect()
+                if not session:
+                    raise Exception('Cannot connect to Mail service')
+                session.sendmail(self.sender_address,
+                                 (receivers+cc), message.as_string())
+                session.quit()
+            else:
+                print('Email Disabled.')
+        except Exception as e:
+            if self.enabled:
+                print(e)
+
+    def sendMailWithCC(self, receivers, cc, subject, message_text, attachment = None):
         if not self.enabled:
             return
         try:
-            self.session.quit()
-        except Exception as a:
-            print(a)
-            print('Cannot quit session')
+            try:
+                receive_list = []
+                cc_list = []
+                for receiver in receivers:
+                    if receiver.email_pref:
+                        receive_list.append(
+                            str(receiver.email)
+                        )
+                for receiver in cc:
+                    if receiver.email_pref:
+                        cc_list.append(
+                                str(receiver.email),
+                        )
+
+                if len(receive_list) == 0 and len(cc_list) == 0:
+                    return
+
+                if self.queuing == True:
+                    self.task_queue.enqueue(
+                        self.__sendEmailWithCC, receive_list, cc_list, subject, message_text, attachment)
+                else:
+                    self.__sendEmailWithCC(
+                        receive_list, cc_list, subject, message_text, attachment)
+            except (smtplib.SMTPServerDisconnected, smtplib.SMTPConnectError, smtplib.SMTPSenderRefused) as e:
+                # try:
+                #     self.__connect()
+                #     if self.queuing == True:
+                #         self.task_queue.enqueue(
+                #             self.__sendEmailWithCC, receive_list, cc_list, 'subject', 'message_text')
+                #     else:
+                #         self.__sendEmailWithCC(
+                #             receive_list, cc_list, subject, message_text)
+                # except:
+                    print('Email Not Sent')
+        except Exception as e:
+            print('Error in sending mail', e)
 
 # import base64
 # import logging

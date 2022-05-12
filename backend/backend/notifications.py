@@ -1,11 +1,11 @@
-from urllib import request, response
+import json
 from . import db
+from .models import Users
+from urllib import request
 from flask import jsonify, request, abort
 from flask_restful import Resource
-from .models import Users
 from flask_jwt_extended import current_user
 from .role_manager import check_role
-import json
 
 
 class GetUserNotifications(Resource):
