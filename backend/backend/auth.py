@@ -183,7 +183,7 @@ class Auth:
                 abort(404, error='Invalid Email')
             otp_entry: UserOTP = UserOTP.query.get(email)
             if otp_entry == None:
-                abort(400, error='No OTP found for User')
+                abort(400, error='Unauthorised')
             if otp_entry.otp != otp:
                 abort(400, error='Invalid OTP!')
             current_time = datetime.now()
