@@ -1112,6 +1112,64 @@ shortest route "
       <Box
         display="flex"
         justifyContent="space-between"
+        style={{ margin: "0 0 0 0" }}
+      >
+        {formInfo.signatures !== undefined &&
+        formInfo.signatures.user !== undefined &&
+        formInfo.signatures.user !== null ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+        {formInfo.signatures !== undefined &&
+        formInfo.signatures.user !== undefined &&
+        formInfo.signatures.user !== null ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+        {formInfo.signatures !== undefined &&
+        formInfo.signatures.user !== undefined &&
+        formInfo.signatures.user !== null ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+        {formInfo.signatures !== undefined &&
+        formInfo.signatures.user !== undefined &&
+        formInfo.signatures.user !== null ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="space-between"
         style={{ margin: "2vh 0 0 0" }}
       >
         {/* <Box></Box>
@@ -1325,6 +1383,64 @@ shortest route "
       <Box
         display="flex"
         justifyContent="space-between"
+        style={{ margin: "0 0 0 0" }}
+      >
+        {formInfo.signatures !== undefined &&
+        formInfo.signatures.accounts !== undefined &&
+        formInfo.signatures.accounts["Junior Accountant"] !== null ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+        {formInfo.signatures !== undefined &&
+        formInfo.signatures.user !== undefined &&
+        formInfo.signatures.user !== null ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+        {formInfo.signatures !== undefined &&
+        formInfo.signatures.user !== undefined &&
+        formInfo.signatures.user !== null ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+        {formInfo.signatures !== undefined &&
+        formInfo.signatures.user !== undefined &&
+        formInfo.signatures.user !== null ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+              2,
+              -1
+            )}`}
+            width="150px"
+          />
+        ) : (
+          <div />
+        )}
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="space-between"
         style={{ margin: "2vh 0 0 0" }}
       >
         {/* <Box></Box>
@@ -1344,6 +1460,7 @@ shortest route "
           Deputy Registrar
         </Typography>
       </Box>
+
       <Box
         display="flex"
         justifyContent="space-between"
@@ -1352,8 +1469,7 @@ shortest route "
         <Typography variant="body2">Recommended & Forwarded</Typography>
         <Typography variant="body2">Approved/Not Approved</Typography>
       </Box>
-      <Box display="flex" justifyContent="space-between"
-      >
+      <Box display="flex" justifyContent="space-between">
         <Typography variant="body2" style={{ fontWeight: "bold" }}>
           Registrar
         </Typography>

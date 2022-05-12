@@ -141,11 +141,12 @@ class Auth:
 
     class OTPLogin(Resource):
         def post(self):
-            args = json.loads(request.form.get('auth'))
-            if not args['email'] or len(args['email']) < 4:
+            email = str(request.json.get('email')).strip().lower()
+            print(email)
+            if not email or len(email) < 4:
                 abort(409, 'invalid email')
             user: Users = Users.query.filter_by(
-                email=str(args['email']).strip().lower()).one_or_none()
+                email=str(email).strip().lower()).one_or_none()
             if not user:
                 abort(409, error="User not registered")
 
@@ -156,7 +157,7 @@ class Auth:
                     abort(
                         400, error='OTP already generated. Kindly Check your Email Account.')
                 else:
-                    db.session.drop(previous_otp_entry)
+                    db.session.delete(previous_otp_entry)
 
             otp = uuid4()
             login_otp: UserOTP = UserOTP(user.email, otp)
@@ -165,7 +166,7 @@ class Auth:
                 'user': user.email,
                 'otp': otp,
             }
-            login_url = f"{os.environ.get('BACKEND_URL')}/?" + \
+            login_url = f"{os.environ.get('BACKEND_URL')}/api/otp-login?" + \
                 urllib.parse.urlencode(params)
             print(login_url)
 
@@ -188,7 +189,7 @@ class Auth:
                 abort(400, error='Invalid OTP!')
             current_time = datetime.now()
             valid_till = otp_entry.valid_till
-            db.session.drop(otp_entry)
+            db.session.delete(otp_entry)
             db.session.commit()
             if current_time > valid_till:
                 abort(400, error='OTP Expired! Login Again!')
