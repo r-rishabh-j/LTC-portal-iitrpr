@@ -1,4 +1,6 @@
 from backend import create_app
+from backend.models import AccountsTAPayments
+from backend.models import DepartmentTALogs
 from backend.models import TAOfficeOrders
 from backend.models import Departments, Users, LTCRequests, EstablishmentLogs, DeanLogs, DepartmentLogs, \
     AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs, EstablishmentReview, AdvanceRequests, StageUsers,\
@@ -106,6 +108,8 @@ with app.app_context() as ctx:
     TAOfficeOrders.__table__.drop(db.engine)
     TAApproved.__table__.drop(db.engine)
     TAProofUploads.__table__.drop(db.engine)
+    AccountsTAPayments.__table__.drop(db.engine)
+    DepartmentTALogs.__table__.drop(db.engine)
     TARequests.__table__.drop(db.engine)
     LTCApproved.__table__.drop(db.engine)
     LTCRequests.__table__.drop(db.engine)

@@ -420,7 +420,6 @@ def get_stage_roles(stage) -> dict:
     stage_users = []
     query = db.session.query(Users, StageUsers).join(
         StageUsers).filter(Users.permission == stage)
-    print(query)
     for user, designation in query:
         stage_users.append(user)
     return stage_users
@@ -828,8 +827,9 @@ class TARequests(db.Model):
         office_order_pending = 'office_order_pending'
         availed = 'availed'
 
-    def __init__(self, user_id: int):
+    def __init__(self, user_id: int, ltc_id):
         self.user_id = user_id
+        self.ltc_id = ltc_id
         self.created_on = datetime.now()
         self.stage = ''
         self.is_active = True
@@ -961,10 +961,11 @@ class TARequests(db.Model):
                     f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Registrar Section'}
         elif current_stage == TARequests.Stages.registrar:
-            registrar_log: RegistrarLogs = RegistrarLogs.query.get(self.request_id)
+            registrar_log: RegistrarLogs = RegistrarLogs.query.get(
+                self.request_id)
             registrar_log.status = 'forwarded'
             registrar_log.updated_on = datetime.now()
-            self.stage =TARequests.Stages.office_order_pending
+            self.stage = TARequests.Stages.office_order_pending
             log: TAApproved = TAApproved(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
@@ -977,7 +978,7 @@ class TARequests(db.Model):
             est_stage_roles = get_stage_roles(TARequests.Stages.establishment)
             applicant.addNotification(
                 f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for office order generation.')
-          
+
             message = True, {'msg': 'TA Approved'}
         elif current_stage == 'approved':
             message = False, {'msg': 'Already Approved'}
@@ -1105,6 +1106,7 @@ class AccountsTALogs(db.Model):
         self.status = ApplicationStatus.new
         self.updated_on = datetime.now()
 
+
 class AccountsTAPayments(db.Model):
     __tablename__ = 'accounts_ta_payments'
     ta_id = db.Column(db.Integer, db.ForeignKey(
@@ -1120,17 +1122,18 @@ class AccountsTAPayments(db.Model):
     class Status:
         pending = 'pending'
         paid = 'paid'
-    
+
     def __init__(self, ta_id) -> None:
         self.ta_id = ta_id
         self.status = AccountsTAPayments.Status.pending
         self.updated_on = datetime.now()
-    
+
     def payment(self, amount, comments):
         self.status = self.Status.paid
         self.amount_paid = amount
         self.comments = comments
         self.paid_on = datetime.now()
+
 
 class EstablishmentTALogs(db.Model):
     """
@@ -1152,6 +1155,7 @@ class EstablishmentTALogs(db.Model):
         self.request_id = request_id
         self.status = ApplicationStatus.new
         self.updated_on = datetime.now()
+
 
 class DepartmentTALogs(db.Model):
     """

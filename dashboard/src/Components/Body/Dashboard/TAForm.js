@@ -1,6 +1,6 @@
 import React from 'react'
 import { Grid, Paper, Button, Typography, Box, Fab } from "@material-ui/core";
-import { useForm, useFieldArray} from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useStyles } from "./FormStyles";
@@ -10,10 +10,10 @@ import { FormInputNumber } from "../../Utilities/FormInputNumber";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import { TAFieldArray } from "../../Utilities/TAFieldArray";
 import { ExpensesFieldArray } from "../../Utilities/ExpensesFieldArray";
-
+import Add from '@material-ui/icons/Add';
 
 const TAForm = ({ profileInfo }) => {
-    console.log("TA", profileInfo)
+  console.log("TA", profileInfo)
   const classes = useStyles();
   const {
     handleSubmit,
@@ -43,7 +43,7 @@ const TAForm = ({ profileInfo }) => {
           details: "",
           amount: "",
           receipt_details: "",
-          
+
         },
       ],
     },
@@ -64,7 +64,41 @@ const TAForm = ({ profileInfo }) => {
 
   const onSubmit = (data) => {
     console.log(data);
-    
+    console.log("Submitting", isSubmitting);
+    const formData = new FormData();
+    data.name = profileInfo.name;
+    //data.designation = profile.permission;
+    data.department = profileInfo.department;
+    data.emp_code = profileInfo.employee_code;
+    console.log('data: ', JSON.stringify(data));
+    formData.append('attachments', data.attachments[0]);
+    formData.append('ltc_id', 1);
+    formData.append('form', JSON.stringify(data));
+
+    console.log("onSubmit")
+    console.log(data);
+    return axios({
+      method: "POST",
+      url: "/api/ta/apply",
+      data: formData,
+    })
+      .then((response) => {
+        alert("Application submitted!")
+        window.location.reload()
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log('error is', error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          if (error.response.status === 413) {
+            alert('File size too large!');
+          }
+          else {
+            alert(error.response.data.error);
+          }
+        }
+      });
   };
 
   //options for radio input
@@ -222,6 +256,39 @@ const TAForm = ({ profileInfo }) => {
                 remove={removeExpense}
                 append={appendExpense}
               />
+              <Controller
+                name="attachments"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <Fab
+                      variant="extended"
+                      component="label"
+                      size="small"
+                      color="primary"
+                    >
+                      <input
+                        type="file"
+                        accept=".pdf,.zip"
+                        onChange={(e) => {
+                          field.onChange(e.target.files);
+                          if (!e.target.files[0]) {
+                            setFile("No file chosen");
+                          } else {
+                            setFile(e.target.files[0].name);
+                          }
+                        }}
+                        style={{ display: "none" }}
+                      />
+                      <Add />
+                      Upload Proofs
+                    </Fab>
+                  </>
+                )}
+              />
+
+              <Typography>{File}</Typography>
               <Box display="flex" justifyContent="center">
                 <Button
                   type="submit"

@@ -57,8 +57,9 @@ class TaManager():
             # section form fields
             form_data['establishment'] = {}
             form_data['accounts'] = {}
-            # add LTC request to table
-            new_request: TARequests = TARequests(user.id)
+            # add TA request to table
+            new_request: TARequests = TARequests(
+                user.id, ltc_application.request_id)
             new_request.form = form_data
             # initialise the application
             db.session.add(new_request)
@@ -169,7 +170,6 @@ class TaManager():
                     404, msg={'Error': 'user department not registered as stage dept'})
             new = None
             if kwargs['permission'] == Permissions.dept_head:
-                print(table_ref)
                 new = db.session.query(table_ref, TARequests, Users).join(Users).join(
                     table_ref).filter(table_ref.status == 'new', Users.department == user.department)
             else:
@@ -193,7 +193,6 @@ class TaManager():
                         })
 
             return jsonify({'pending': pending})
-
 
     class UploadTaOfficeOrder(Resource):
         @role_required(role=Permissions.establishment)
@@ -222,7 +221,8 @@ class TaManager():
                 request_id, office_order_enc, filename)
             approved_entry.office_order_created = True
             db.session.add(office_order_upload_entry)
-            payment_request:AccountsTAPayments = AccountsTAPayments(form.request_id)
+            payment_request: AccountsTAPayments = AccountsTAPayments(
+                form.request_id)
             db.session.add(payment_request)
             db.session.commit()
 
@@ -269,8 +269,9 @@ class TaManager():
             print(amount)
             if None in [request_id, amount, comments, payment_proof]:
                 abort(400)
-            ta_request:TARequests = TARequests.query.get(request_id)
-            payment_req: AccountsTAPayments = AccountsTAPayments.query.get(ta_request.request_id)
+            ta_request: TARequests = TARequests.query.get(request_id)
+            payment_req: AccountsTAPayments = AccountsTAPayments.query.get(
+                ta_request.request_id)
             payment_req.payment(amount, comments)
 
             payment_req.payment_proof_filename = payment_proof.filename
@@ -281,7 +282,7 @@ class TaManager():
             db.session.commit()
             return jsonify({"success": "uploaded proofs"})
 
-    class PrintForm(Resource):
+    class PrintTaForm(Resource):
         @check_role()
         def post(self, permission):
             analyse()
@@ -327,7 +328,7 @@ class TaManager():
                         signatures.append({
                             stage_user.designation: file
                         })
-                        
+
                     response['signatures'][stage] = signatures
 
             return {'data': response}

@@ -619,8 +619,8 @@ class LtcManager:
             hod: Users = Users.query.get(user_dept.dept_head)
 
             emailmanager.sendMailWithCC([user], [dean, hod],
-                f'Office order generated for LTC Request ID {form.request_id}',
-                emailmanager.ltc_office_order_msg % (
+                                        f'Office order generated for LTC Request ID {form.request_id}',
+                                        emailmanager.ltc_office_order_msg % (
                 user.name, request_id), attachment=(filename, office_order_enc)
             )
 
@@ -755,7 +755,7 @@ class LtcManager:
                         signatures.append({
                             stage_user.designation: file
                         })
-                        
+
                     response['signatures'][stage] = signatures
 
             return {'data': response}

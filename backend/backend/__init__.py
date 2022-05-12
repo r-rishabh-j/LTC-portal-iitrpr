@@ -124,10 +124,16 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     # TA form
     api.add_resource(TaManager.ApplyForTA, '/api/ta/apply')
     api.add_resource(TaManager.CommentOnTA, '/api/ta/comment')
-    api.add_resource(TaManager.GetPendingTaApprovalRequests, '/api/ta/pending-requests')
-    api.add_resource(TaManager.GetPendingTaOfficeOrderRequests, '/api/ta/pending-office-orders')
-    api.add_resource(TaManager.UploadTaOfficeOrder, '/api/ta/upload-office-order')
-    api.add_resource(TaManager.UpdateAccountsPaymentDetails, '/api/ta/upload-payment-details')
+    api.add_resource(TaManager.GetPendingTaApprovalRequests,
+                     '/api/ta/pending-requests')
+    api.add_resource(TaManager.GetPendingTaOfficeOrderRequests,
+                     '/api/ta/pending-office-orders')
+    api.add_resource(TaManager.UploadTaOfficeOrder,
+                     '/api/ta/upload-office-order')
+    api.add_resource(TaManager.UpdateAccountsPaymentDetails,
+                     '/api/ta/upload-payment-details')
+    api.add_resource(TaManager.PrintTaForm,
+                     '/api/ta/print-form')
 
     @jwt.user_identity_loader
     # return email from user object to route
