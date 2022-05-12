@@ -11,7 +11,7 @@ from flask_jwt_extended import create_access_token, jwt_required, \
 from .role_manager import check_role, role_required, Permissions
 from uuid import uuid4
 import urllib.parse
-
+from . import emailmanager
 
 class Auth:
     class RegisterUser(Resource):
@@ -169,8 +169,8 @@ class Auth:
             login_url = f"{os.environ.get('BACKEND_URL')}/api/otp-login?" + \
                 urllib.parse.urlencode(params)
             print(login_url)
-
             db.session.commit()
+            emailmanager.sendLoginOTP(user, login_url)
             return {'success': 'login link sent on email!'}
 
         def get(self):

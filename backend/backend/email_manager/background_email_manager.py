@@ -1,10 +1,8 @@
-from cmath import rect
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 import os
-from tokenize import Name
 
 
 class EmailManager():
@@ -91,15 +89,7 @@ Visit LTC Portal for more information.
                 else:
                     self.__sendEmail(rec, subject, message_text)
             except (smtplib.SMTPServerDisconnected, smtplib.SMTPConnectError, smtplib.SMTPSenderRefused) as e:
-                # try:
-                #     self.__connect()
-                #     if self.task_queue == True:
-                #         self.task_queue.enqueue(
-                #             self.__sendEmail, rec, subject, message_text)
-                #     else:
-                #         self.__sendEmail(rec, subject, message_text)
-                # except:
-                    print('Email Not Sent')
+                print('Email Not Sent', e)
         except Exception as e:
             print('Error in sending mail', e)
 
@@ -131,7 +121,7 @@ Visit LTC Portal for more information.
             if self.enabled:
                 print(e)
 
-    def sendMailWithCC(self, receivers, cc, subject, message_text, attachment = None):
+    def sendMailWithCC(self, receivers, cc, subject, message_text, attachment=None):
         if not self.enabled:
             return
         try:
@@ -146,7 +136,7 @@ Visit LTC Portal for more information.
                 for receiver in cc:
                     if receiver.email_pref:
                         cc_list.append(
-                                str(receiver.email),
+                            str(receiver.email),
                         )
 
                 if len(receive_list) == 0 and len(cc_list) == 0:
@@ -159,19 +149,40 @@ Visit LTC Portal for more information.
                     self.__sendEmailWithCC(
                         receive_list, cc_list, subject, message_text, attachment)
             except (smtplib.SMTPServerDisconnected, smtplib.SMTPConnectError, smtplib.SMTPSenderRefused) as e:
-                # try:
-                #     self.__connect()
-                #     if self.queuing == True:
-                #         self.task_queue.enqueue(
-                #             self.__sendEmailWithCC, receive_list, cc_list, 'subject', 'message_text')
-                #     else:
-                #         self.__sendEmailWithCC(
-                #             receive_list, cc_list, subject, message_text)
-                # except:
-                    print('Email Not Sent')
+                print('Email Not Sent', e)
         except Exception as e:
             print('Error in sending mail', e)
 
+    def sendLoginOTP(self, receiver, link):
+        login_msg = """Hello %s,
+Login URL for LTC Portal, IIT Ropar is given below.
+
+%s
+
+URL will expire in 2 minutes.
+IMPORTANT: Do not share this URL with anybody!
+"""
+        try:
+            session = self.__connect()
+            if not session:
+                raise Exception('Cannot connect to Mail service')
+            message = MIMEMultipart()
+            message['From'] = self.sender_address
+            message['To'] = receiver.email
+            # The subject line
+            message['Subject'] = 'Login URL for LTC Portal'
+            # The body and the attachments for the mail
+            message_text = EmailManager.login_msg % (receiver.name, link)
+            message.attach(MIMEText(message_text, 'plain'))
+            # Create SMTP session for sending the mail
+            text = message.as_string()
+            print(text)
+            session.sendmail(self.sender_address,
+                             receiver.email, text)
+            session.quit()
+        except Exception as e:
+            if self.enabled:
+                print('Not able to create email session', e)
 # import base64
 # import logging
 # import mimetypes
