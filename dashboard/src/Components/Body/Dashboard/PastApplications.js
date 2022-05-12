@@ -148,7 +148,7 @@ const PastApplications = ({ permission }) => {
   };
 
   function formatDate(date){
-    const d = moment(date).local().format("DD/MM/YYYY, h:mm A");
+    const d = moment(date).local().format("DD/MM/YYYY");
     return d;
   }
 

@@ -28,7 +28,14 @@ export default function MediaCard(props) {
         </Typography> */}
         </CardContent>
         <CardActions>
-          <Button size="medium" onClick={onClk}>{props.action}</Button>
+          <Button
+            size="medium"
+            onClick={
+              props.action === "View API analytics" ? onClk : props.setOpen
+            }
+          >
+            {props.action}
+          </Button>
           {/* <Button size="small">Learn More</Button> */}
         </CardActions>
       </center>

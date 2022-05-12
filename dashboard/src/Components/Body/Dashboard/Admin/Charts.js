@@ -1,20 +1,30 @@
 import React from 'react'
-import { Typography, Grid, Paper, Box } from '@material-ui/core'
+import { useState } from 'react';
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+  Typography,
+  Grid,
+  Paper,
+  Box,
+  Dialog,
+  DialogActions,
+  Button
+} from "@material-ui/core";
+
 import MediaCard from '../../../Utilities/MediaCard';
+import { useStyles } from "../DataGridStyles";
+import AddUser from './AddUser';
 
 const { REACT_APP_BASE_BACKEND_URL } = process.env;
 
 function Charts() {
+  const classes = useStyles();
+  const [openAddUser, setOpenAddUser] = useState(false);
+  const handleCloseAddUser = () => {
+    setOpenAddUser(false);
+  };
+
+  
+
 
     const data = [
       {
@@ -62,7 +72,9 @@ function Charts() {
     ];
   return (
     <>
-      <Box style={{ overflowX: "hidden", overflowY: 'hidden', minHeight:"91vh" }}>
+      <Box
+        style={{ overflowX: "hidden", overflowY: "hidden", minHeight: "91vh" }}
+      >
         {/* <Grid container>
           
 
@@ -112,7 +124,7 @@ function Charts() {
               image={require("./view_users.png")}
               alt="View API analytics"
               action="View API analytics"
-              url = {REACT_APP_BASE_BACKEND_URL+"/analytics"}
+              url={REACT_APP_BASE_BACKEND_URL + "/analytics"}
             />
           </Grid>
           <Grid item xs={3}>
@@ -127,8 +139,21 @@ function Charts() {
               image={require("./add_user.png")}
               alt="Add User"
               action="Add New User"
+              setOpen={setOpenAddUser}
             />
           </Grid>
+          <Dialog
+            open={openAddUser}
+            onClose={handleCloseAddUser}
+            classes={{ paper: classes.addUserDialogPaper }}
+          >
+            <AddUser/>
+            <DialogActions>
+              <Button onClick={handleCloseAddUser} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
           {/* <Grid item xs={2}>
             <MediaCard
               image={require("./edit_user.png")}

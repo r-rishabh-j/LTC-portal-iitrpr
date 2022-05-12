@@ -31,7 +31,7 @@ const PrintForm = forwardRef((props, ref) => {
       .then((response) => {
         console.log("print preview", response.data.data);
         setFormInfo(response.data.data);
-        console.log(response.data.data.signatures.user)
+        console.log(response.data.data.signatures.user);
       })
       .catch((error) => {
         if (error.response) {
@@ -60,13 +60,11 @@ const PrintForm = forwardRef((props, ref) => {
           </Box>
         </Box>
       </Box>
-
       <Box display="flex" justifyContent="center">
         <Typography style={{ fontWeight: "bold" }}>
           APPLICATION FOR LEAVE TRAVEL CONCESSION
         </Typography>
       </Box>
-
       <Box
         sx={{
           padding: "1vh 1vh 1vh 1vh",
@@ -612,21 +610,32 @@ shortest route "
               My spouse is not employed in Government service / my spouse is
               employed in government service and the concession has not been
               availed of by him/her separately of himself/herself or for any of
-              the family members for the
+              the family members for the &nbsp;
               {formInfo.form["establishment"] === undefined
                 ? ""
                 : formInfo.form["establishment"]["est_data_block_year"] ===
                   undefined
                 ? " "
                 : formInfo.form["establishment"]["est_data_block_year"]}
-              block year.
+              &nbsp; block year.
             </li>
           </Typography>
         </ol>
       </Box>
       <Box display="flex" justifyContent="right">
-        {formInfo.signatures !== undefined && (formInfo.signatures.user !== undefined && formInfo.signatures.user !== null)?
-        <img src={`data:image/jpeg;base64,${(formInfo.signatures["user"].slice(2, -1))}`} width="175px" />: <div/>}
+        {formInfo.signatures !== undefined &&
+        formInfo.signatures.user !== undefined &&
+        formInfo.signatures.user !== null ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
         {/* <img src=`data:image/png;base64,${formInfo.sig}` width="100px" /> */}
       </Box>
       <Box display="flex" justifyContent="right">
@@ -1093,6 +1102,264 @@ shortest route "
             />
           </Grid>
         </Grid>
+      </Box>
+      <Box style={{ margin: "1vh 0 0 0" }}>
+        <Typography variant="body2">
+          May consider and approve the above LTC (Home Town/Anywhere in India),
+          Leave and Encashment of Leave.
+        </Typography>
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        style={{ margin: "2vh 0 0 0" }}
+      >
+        {/* <Box></Box>
+        <Box></Box>
+        <Box></Box>
+        <Box></Box> */}
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Junior Assistant
+        </Typography>
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Junior Superintendent
+        </Typography>
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Assistant Registrar
+        </Typography>
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Deputy Registrar
+        </Typography>
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="center"
+        style={{ margin: "4vh 0 0 0" }}
+      >
+        <Typography style={{ fontWeight: "bold" }} variant="body1">
+          FOR USE OF ACCOUNTS SECTION
+        </Typography>
+      </Box>
+
+      <Box
+        style={{
+          padding: "1vh 1vh 1vh 1vh",
+        }}
+      >
+        {formInfo.form["accounts"] !== undefined &&
+        formInfo.form["accounts"]["entities"] !== undefined ? (
+          formInfo.form["accounts"]["entities"].map((item, index) => {
+            return (
+              <div key={index}>
+                <Grid container spacing={1}>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="From"
+                      value={item.from}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <TextField
+                      label="To"
+                      value={item.to}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="Mode of Travel"
+                      value={item.mode_of_travel}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="No. of Fares"
+                      value={item.num_fares}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      label="Single Fare"
+                      value={item.single_fare}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <TextField
+                      label="Amount"
+                      value={item.amount}
+                      fullWidth
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
+                </Grid>
+              </div>
+            );
+          })
+        ) : (
+          <div></div>
+        )}
+        <Grid container spacing={2} style={{ margin: "1vh 0 0 0" }}>
+          <Grid item xs={9} />
+          <Grid item xs={1}>
+            <Typography style={{ fontWeight: "bold" }}>Total</Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <TextField
+              name="total"
+              label="Total(₹)"
+              value={
+                formInfo.form["accounts"] === undefined
+                  ? ""
+                  : formInfo.form["accounts"]["total"] === undefined
+                  ? " "
+                  : formInfo.form["accounts"]["total"]
+              }
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography>Advance admissible (90% of above):</Typography>
+          <TextField
+            name="adv_admissible"
+            label="Advance Admissible(₹)"
+            value={
+              formInfo.form["accounts"] === undefined
+                ? ""
+                : formInfo.form["accounts"]["adv_admissible"] === undefined
+                ? " "
+                : formInfo.form["accounts"]["adv_admissible"]
+            }
+            fullWidth
+            InputProps={{
+              readOnly: true,
+            }}
+            InputLabelProps={{ shrink: true }}
+          />
+          <Typography>Passed for:</Typography>
+          <TextField
+            name="passed"
+            label="Passed(₹)"
+            value={
+              formInfo.form["accounts"] === undefined
+                ? ""
+                : formInfo.form["accounts"]["passed"] === undefined
+                ? " "
+                : formInfo.form["accounts"]["passed"]
+            }
+            fullWidth
+            InputProps={{
+              readOnly: true,
+            }}
+            InputLabelProps={{ shrink: true }}
+          />
+          <Typography> In Words:</Typography>
+          <TextField
+            name="in_words"
+            label="In Words(₹)"
+            value={
+              formInfo.form["accounts"] === undefined
+                ? ""
+                : formInfo.form["accounts"]["in_words"] === undefined
+                ? " "
+                : formInfo.form["accounts"]["in_words"]
+            }
+            fullWidth
+            InputProps={{
+              readOnly: true,
+            }}
+            InputLabelProps={{ shrink: true }}
+          />
+          <Typography>
+            Debitable to LTC advance Dr./Mr./Mrs./Ms.:
+            <TextField
+              name="debit_to"
+              label="Name"
+              value={
+                formInfo.form["accounts"] === undefined
+                  ? ""
+                  : formInfo.form["accounts"]["debit_to"] === undefined
+                  ? " "
+                  : formInfo.form["accounts"]["debit_to"]
+              }
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Typography>
+        </Grid>
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        style={{ margin: "2vh 0 0 0" }}
+      >
+        {/* <Box></Box>
+        <Box></Box>
+        <Box></Box>
+        <Box></Box> */}
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Junior Accountant
+        </Typography>
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Junior Accounts Officer
+        </Typography>
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Assistant Registrar
+        </Typography>
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Deputy Registrar
+        </Typography>
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        style={{ margin: "2vh 0 0 0" }}
+      >
+        <Typography variant="body2">Recommended & Forwarded</Typography>
+        <Typography variant="body2">Approved/Not Approved</Typography>
+      </Box>
+      <Box display="flex" justifyContent="space-between"
+      >
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Registrar
+        </Typography>
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Dean (FA&A)
+        </Typography>
       </Box>
     </div>
   );

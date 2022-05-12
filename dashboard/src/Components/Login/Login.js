@@ -35,8 +35,9 @@ function Login(props) {
   return (
     <Grid>
       <Paper elevation={10} className={classes.loginPage}>
-        <Grid align="center">
-          <h2>LTC PORTAL IIT ROPAR</h2>
+        <Grid container spacing = {2}>
+          {/* <Grid item xs={6}> */}
+          <h2>LTC PORTAL IIT ROPAR ok</h2>
           <Avatar className={classes.avatar}>
             <LockIcon />
           </Avatar>

@@ -5,6 +5,7 @@ import SideNav from './SideNav'
 import { Routes, Route, Navigate, BrowserRouter as Router } from 'react-router-dom';
 import Home from '../Body/Dashboard/Home';
 import CreateApplication from '../Body/Dashboard/CreateApplication';
+import TAForm from "../Body/Dashboard/TAForm";
 import PastApplications from '../Body/Dashboard/PastApplications';
 import Notifications from '../Body/Dashboard/Notifications';
 import { Box } from "@material-ui/core";
@@ -30,7 +31,10 @@ export default function HeaderComponent(props) {
 
   return (
     <div>
-      <Navbar handleDrawerToggle={handleDrawerToggle} profileInfo={props.profileInfo} />
+      <Navbar
+        handleDrawerToggle={handleDrawerToggle}
+        profileInfo={props.profileInfo}
+      />
       <SideNav
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
@@ -40,15 +44,29 @@ export default function HeaderComponent(props) {
       <Box className={classes.wrapper}>
         {/* <button onClick={getData}>Profile</button> */}
 
-
         <Routes>
-          <Route path="/home" element={<Home profileInfo={props.profileInfo} />}></Route>
+          <Route
+            path="/home"
+            element={<Home profileInfo={props.profileInfo} />}
+          ></Route>
           <Route
             path="/create"
-            element={<CreateApplication profileInfo={props.profileInfo}/>}
+            element={<CreateApplication profileInfo={props.profileInfo} />}
           ></Route>
-          <Route path="/past" element={<PastApplications permission = {props.profileInfo.permission}/>}></Route>
-          <Route path="/profile" element={<ProfilePage profile = {props.profileInfo}/>}></Route>
+          <Route
+            path="/past"
+            element={
+              <PastApplications permission={props.profileInfo.permission} />
+            }
+          ></Route>
+          <Route
+            path="/profile"
+            element={<ProfilePage profile={props.profileInfo} />}
+          ></Route>
+          <Route
+            path="/ta"
+            element={<TAForm profileInfo={props.profileInfo} />}
+          ></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>

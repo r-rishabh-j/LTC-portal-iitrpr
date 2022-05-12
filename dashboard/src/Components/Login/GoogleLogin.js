@@ -1,4 +1,4 @@
-import { Grid, Paper, Avatar, TextField, Button, Typography } from '@material-ui/core'
+import { Grid, Paper, Avatar, TextField, Button, Typography, Box } from '@material-ui/core'
 import React, { useCallback } from 'react'
 import { useStyles } from './LoginStyles';
 import LockIcon from "@material-ui/icons/Lock";
@@ -13,6 +13,7 @@ const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL, REACT_APP_DEVELO
 function GoogleLogin() {
     const classes = useStyles();
     const { handleSubmit, control } = useForm();
+    const { handleSubmit: handleSubmitEmail, control: controlEmail} = useForm();
     
     const onSubmit = (data) => {
         const formData = new FormData();
@@ -30,6 +31,10 @@ function GoogleLogin() {
                 console.log(error.response.headers);
             }
         });
+    }
+
+    const onSubmitEmail = (data) => {
+        console.log(data)
     }
     const openGoogleLoginPage = useCallback(() => {
         const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
@@ -55,80 +60,150 @@ function GoogleLogin() {
     }, []);
 
     return (
-        <Grid style={{backgroundColor:"#cfd8dc", height: "100vh", display:"flex"}}>
-            <Paper elevation={10} className={classes.loginPage}>
-                <Grid align="center">
-                    <h2>LTC PORTAL IIT ROPAR</h2>
-                    <Avatar className={classes.avatar}>
-                        <LockIcon />
-                    </Avatar>
-                    <h3>Sign In</h3>
+      <Grid
+        style={{ backgroundColor: "#cfd8dc", height: "100vh", display: "flex" }}
+      >
+        <Paper elevation={10} className={classes.loginPage}>
+          <Grid container>
+            <Grid item xs={6}>
+              <Box style={{ padding: "5vh" }}>
+                <center>
+                  <h2>LTC PORTAL IIT ROPAR</h2>
+                  <Avatar className={classes.avatar}>
+                    <LockIcon />
+                  </Avatar>
+                  <h3>Sign In</h3>
 
-                    {REACT_APP_DEVELOPMENT === "true" ?
-                    (<form onSubmit={handleSubmit(onSubmit)}>
-                        <Controller
-                            name="email"
-                            control={control}
-                            defaultValue=""
-                            render={({
-                                field: { onChange, value },
-                                fieldState: { error },
-                            }) => (
-                                <TextField
-                                    label="Username"
-                                    placeholder="Enter username"
-                                    value={value}
-                                    onChange={onChange}
-                                    error={!!error}
-                                    fullWidth
-                                    required
-                                    className={classes.textFieldLogin}
-                                />
-                            )}
-                        />
-                        <Controller name="password" control={control} defaultValue="" render={({ field: { onChange, value }, fieldState: { error } }) => (
-                            <TextField
-                                label="Password"
-                                value={value}
-                                onChange={onChange}
-                                error={!!error}
-                                placeholder="Enter password"
-                                type="password"
-                                fullWidth
-                                required
-                                className={classes.textFieldPass}
-                            />
+                  {REACT_APP_DEVELOPMENT === "true" ? (
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <Controller
+                        name="email"
+                        control={control}
+                        defaultValue=""
+                        render={({
+                          field: { onChange, value },
+                          fieldState: { error },
+                        }) => (
+                          <TextField
+                            label="Username"
+                            placeholder="Enter username"
+                            value={value}
+                            onChange={onChange}
+                            error={!!error}
+                            fullWidth
+                            required
+                            className={classes.textFieldLogin}
+                          />
                         )}
-                        />
+                      />
+                      <Controller
+                        name="password"
+                        control={control}
+                        defaultValue=""
+                        render={({
+                          field: { onChange, value },
+                          fieldState: { error },
+                        }) => (
+                          <TextField
+                            label="Password"
+                            value={value}
+                            onChange={onChange}
+                            error={!!error}
+                            placeholder="Enter password"
+                            type="password"
+                            fullWidth
+                            required
+                            className={classes.textFieldPass}
+                          />
+                        )}
+                      />
 
-                        <div>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                fullWidth
-                                className={classes.btn}
-                            >
-                                Sign In (testing)
-                            </Button>
-                        </div>
-                    </form>):(<></>)}
-                    {/* <Typography>
+                      <div>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                          fullWidth
+                          className={classes.btn}
+                        >
+                          Sign In (testing)
+                        </Button>
+                      </div>
+                    </form>
+                  ) : (
+                    <></>
+                  )}
+                  {/* <Typography>
                         {" "}
                         New User?
                         <Link to="/register"> Sign Up</Link>
                     </Typography>
 
                     {/* google login here */}
-                    {/* <h2 className={classes.btnHeader}>Login with Google</h2> */}
-                    <GoogleButton
-                        onClick={openGoogleLoginPage}
-                        label="Sign in with Google"
-                        disabled={!REACT_APP_GOOGLE_CLIENT_ID}
+                  {/* <h2 className={classes.btnHeader}>Login with Google</h2> */}
+                  <GoogleButton
+                    onClick={openGoogleLoginPage}
+                    label="Sign in with Google"
+                    disabled={!REACT_APP_GOOGLE_CLIENT_ID}
+                  />
+                </center>
+              </Box>
+            </Grid>
+
+            <Grid item xs={6} style={{ backgroundColor: "#263238" }}>
+              <Box
+                // display="flex"
+                // justifyContent="center"
+                style={{ margin: "10vh 0 0 0", padding: "5vh" }}
+              >
+                <center>
+                  <Typography variant="h5" style={{ color: "white" }}>
+                    Sign In through OTP
+                  </Typography>
+                  <form onSubmit={handleSubmitEmail(onSubmitEmail)}>
+                    <Controller
+                      name="email"
+                      control={controlEmail}
+                      defaultValue=""
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          label="Email"
+                          placeholder="Enter email"
+                          variant="outlined"
+                          value={value}
+                          onChange={onChange}
+                          error={!!error}
+                          fullWidth
+                          required
+                          className={classes.textFieldLogin}
+                          InputProps={{
+                            style: {backgroundColor: "white"}
+                          }}
+                        />
+                      )}
                     />
-                </Grid>
-            </Paper>
-        </Grid>
+
+                    <div>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        className={classes.btn}
+                      >
+                        Send OTP
+                      </Button>
+                    </div>
+                  </form>
+                </center>
+              </Box>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Grid>
     );
 }
 

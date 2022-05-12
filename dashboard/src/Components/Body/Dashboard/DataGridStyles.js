@@ -10,27 +10,33 @@ export const useStyles = makeStyles((theme) => ({
   dialogPaper: {
     minHeight: "80vh",
     maxHeight: "95vh",
-    minWidth: '80vw',
-    maxWidth: '95vw',
+    minWidth: "80vw",
+    maxWidth: "95vw",
     // backgroundColor: "#cfd8dc"
   },
   uploadDialogPaper: {
     minHeight: "50vh",
     maxHeight: "60vh",
-    minWidth: '50vw',
-    maxWidth: '55vw'
+    minWidth: "50vw",
+    maxWidth: "55vw",
   },
-  advPaymentDialogPaper:{
+  addUserDialogPaper: {
+    minHeight: "50vh",
+    maxHeight: "70vh",
+    minWidth: "50vw",
+    maxWidth: "55vw",
+  },
+  advPaymentDialogPaper: {
     minHeight: "50vh",
     maxHeight: "auto",
-    minWidth: '50vw',
-    maxWidth: '55vw'
+    minWidth: "50vw",
+    maxWidth: "55vw",
   },
-  signatureUploadDialogPaper:{
+  signatureUploadDialogPaper: {
     minHeight: "30vh",
     maxHeight: "auto",
-    minWidth: '30vw',
-    maxWidth: '55vw',
-    marginLeft:"18vw"
-  }
+    minWidth: "30vw",
+    maxWidth: "55vw",
+    marginLeft: "18vw",
+  },
 }));
