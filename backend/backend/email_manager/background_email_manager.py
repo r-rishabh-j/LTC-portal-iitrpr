@@ -14,12 +14,20 @@ Keep visiting LTC Portal for updates.
 Your LTC Request, ID %s has been declined.
 Visit LTC Portal for more information.
 """
+    ta_decline_msg = """Hello %s,
+Your TA Request, ID %s for LTC %s has been declined.
+Visit LTC Portal for more information.
+"""
     approval_msg = """Hello %s,
 Your LTC Request, ID %s has been approved and is pending office order generation.
 Visit LTC Portal for more information.
 """
     ltc_office_order_msg = """Hello %s,
 Office order for LTC Request ID %s has been generated.
+Visit LTC Portal for more information.
+"""
+    ta_office_order_msg = """Hello %s,
+Office order for TA Request ID %s has been generated.
 Visit LTC Portal for more information.
 """
 
@@ -172,7 +180,7 @@ IMPORTANT: Do not share this URL with anybody!
             # The subject line
             message['Subject'] = 'Login URL for LTC Portal'
             # The body and the attachments for the mail
-            message_text = EmailManager.login_msg % (receiver.name, link)
+            message_text = login_msg % (receiver.name, link)
             message.attach(MIMEText(message_text, 'plain'))
             # Create SMTP session for sending the mail
             text = message.as_string()
@@ -181,8 +189,7 @@ IMPORTANT: Do not share this URL with anybody!
                              receiver.email, text)
             session.quit()
         except Exception as e:
-            if self.enabled:
-                print('Not able to create email session', e)
+            print('Not able to create email session', e)
 # import base64
 # import logging
 # import mimetypes

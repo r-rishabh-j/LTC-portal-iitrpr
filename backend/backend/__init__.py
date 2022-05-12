@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
 import redis
 from rq import Queue
+
 from .file_manager.encoded_file_manager import EncodedFileManager
 from .email_manager.background_email_manager import EmailManager
 from dotenv import load_dotenv
@@ -65,6 +66,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
 
     from .auth import Auth
     from .ltc_manager import LtcManager
+    from .ta_manager import TaManager
     from .notifications import ClearUserNotifications, GetUserNotifications, GetEmailPref, SetEmailPref
 
     api.add_resource(Auth.Login, '/api/login')  # login route
@@ -119,6 +121,13 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/edit-stage-form')  # edit stage form(establishment, accounts)
     api.add_resource(LtcManager.PrintForm,
                      '/api/print-form')  # return form data for printing to pdf.
+    # TA form
+    api.add_resource(TaManager.ApplyForTA, '/api/ta/apply')
+    api.add_resource(TaManager.CommentOnTA, '/api/ta/comment')
+    api.add_resource(TaManager.GetPendingTaApprovalRequests, '/api/ta/pending-requests')
+    api.add_resource(TaManager.GetPendingTaOfficeOrderRequests, '/api/ta/pending-office-orders')
+    api.add_resource(TaManager.UploadTaOfficeOrder, '/api/ta/upload-office-order')
+    api.add_resource(TaManager.UpdateAccountsPaymentDetails, '/api/ta/upload-payment-details')
 
     @jwt.user_identity_loader
     # return email from user object to route

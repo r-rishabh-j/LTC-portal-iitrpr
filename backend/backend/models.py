@@ -825,6 +825,7 @@ class TARequests(db.Model):
         registrar = 'registrar'
         approved = 'approved'
         declined = 'declined'
+        office_order_pending = 'office_order_pending'
         availed = 'availed'
 
     def __init__(self, user_id: int):
@@ -861,7 +862,7 @@ class TARequests(db.Model):
         flag_modified(self, "comments")
         db.session.merge(self)
 
-    def forward(self, applicant: Users, ltc_id):
+    def forward(self, applicant: Users):
         """
         Forward form to next stage
         """
@@ -893,10 +894,10 @@ class TARequests(db.Model):
             #     db.session.add(dept_log)
             db.session.add(est_ta_log)
             applicant.addNotification(
-                f'Your TA request, ID {self.request_id} for LTC ID {ltc_id} has been forwarded to Establishment Section')
+                f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been forwarded to Establishment Section')
             for role in stage_roles:
                 role.addNotification(
-                    f'TA request, ID {self.request_id} for LTC ID {ltc_id} has been sent for your approval.')
+                    f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Establishment Section'}
         elif current_stage == TARequests.Stages.establishment:
             new_stage = TARequests.Stages.accounts
@@ -914,10 +915,10 @@ class TARequests(db.Model):
                 request_id=self.request_id)
             db.session.add(acc_log)
             applicant.addNotification(
-                f'Your TA request, ID {self.request_id} for LTC ID {ltc_id} has been forwarded to Accounts Section')
+                f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been forwarded to Accounts Section')
             for role in stage_roles:
                 role.addNotification(
-                    f'TA request, ID {self.request_id} for LTC ID {ltc_id} has been sent for your approval.')
+                    f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Accounts Section'}
         elif current_stage == TARequests.Stages.accounts:
             new_stage = TARequests.Stages.audit
@@ -934,10 +935,10 @@ class TARequests(db.Model):
             log: AuditTALogs = AuditTALogs(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
-                f'Your TA request, ID {self.request_id} for LTC ID {ltc_id} has been forwarded to Audit Section')
+                f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been forwarded to Audit Section')
             for role in stage_roles:
                 role.addNotification(
-                    f'TA request, ID {self.request_id} for LTC ID {ltc_id} has been sent for your approval.')
+                    f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Accounts Section'}
         elif current_stage == TARequests.Stages.audit:
             new_stage = TARequests.Stages.registrar
@@ -954,35 +955,32 @@ class TARequests(db.Model):
             log: RegistrarLogs = RegistrarLogs(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
-                f'Your TA request, ID {self.request_id} for LTC ID {ltc_id} has been forwarded to Audit Section')
+                f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been forwarded to Audit Section')
             for role in stage_roles:
                 role.addNotification(
-                    f'TA request, ID {self.request_id} for LTC ID {ltc_id} has been sent for your approval.')
+                    f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Registrar Section'}
         elif current_stage == TARequests.Stages.registrar:
             registrar_log: RegistrarLogs = RegistrarLogs.query.get(self.request_id)
             registrar_log.status = 'forwarded'
             registrar_log.updated_on = datetime.now()
-            self.stage = Stages.office_order_pending
+            self.stage =TARequests.Stages.office_order_pending
             log: TAApproved = TAApproved(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
-                f'Your TA request, ID {self.request_id} for LTC ID {ltc_id} is now approved, pending office order generation.')
+                f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} is now approved, pending office order generation.')
             emailmanager.sendEmail(
                 applicant, f'LTC request, ID {self.request_id} is now approved',
                 emailmanager.approval_msg % (applicant.name, self.request_id)
             )
             # TODO: send notification to establishment section for office order generation!
-            est_stage_roles = get_stage_roles(Stages.establishment)
+            est_stage_roles = get_stage_roles(TARequests.Stages.establishment)
             applicant.addNotification(
-                f'TA request, ID {self.request_id} for LTC ID {ltc_id} has been sent for office order generation.')
+                f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for office order generation.')
           
             message = True, {'msg': 'TA Approved'}
         elif current_stage == 'approved':
             message = False, {'msg': 'Already Approved'}
-        else:
-            message = False, {
-                'error': 'Application in review. Cannot be forwarded'}
         flag_modified(self, "comments")
         db.session.merge(self)
         return message
@@ -990,16 +988,14 @@ class TARequests(db.Model):
     def decline(self, applicant: Users):
         self.stage = 'declined'
         stages = [
-            'department',
             'establishment',
             'audit',
             'accounts',
             'registrar',
-            'deanfa',
         ]
 
         for stage in stages:
-            table_ref = Departments.getDeptRequestTableByName(stage)
+            table_ref = Departments.getDeptRequestTableByName(stage+'_ta')
             if not table_ref:
                 print('table not found')
                 break
@@ -1008,10 +1004,10 @@ class TARequests(db.Model):
                 break
             form.status = 'declined'
         applicant.addNotification(
-            f'Your LTC request, ID {self.request_id} has been declined.', level='error')
+            f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been declined.', level='error')
 
-        emailmanager.sendEmail(applicant, f'LTC Request ID {self.request_id} Declined', emailmanager.decline_msg % (
-            applicant.name, self.request_id))
+        emailmanager.sendEmail(applicant, f'TA Request ID {self.request_id} Declined', emailmanager.decline_msg % (
+            applicant.name, self.request_id, self.ltc_id))
 
 
 class TAProofUploads(db.Model):
@@ -1109,6 +1105,32 @@ class AccountsTALogs(db.Model):
         self.status = ApplicationStatus.new
         self.updated_on = datetime.now()
 
+class AccountsTAPayments(db.Model):
+    __tablename__ = 'accounts_ta_payments'
+    ta_id = db.Column(db.Integer, db.ForeignKey(
+        'ta_requests.request_id', ondelete='CASCADE'), primary_key=True)
+    status = db.Column(db.String(50))
+    updated_on = db.Column(db.DateTime)
+    amount_paid = db.Column(db.String)
+    comments = db.Column(db.String)
+    paid_on = db.Column(db.DateTime)
+    payment_proof = db.Column(BYTEA)  # path to file, optional
+    payment_proof_filename = db.Column(db.String)
+
+    class Status:
+        pending = 'pending'
+        paid = 'paid'
+    
+    def __init__(self, ta_id) -> None:
+        self.ta_id = ta_id
+        self.status = AccountsTAPayments.Status.pending
+        self.updated_on = datetime.now()
+    
+    def payment(self, amount, comments):
+        self.status = self.Status.paid
+        self.amount_paid = amount
+        self.comments = comments
+        self.paid_on = datetime.now()
 
 class EstablishmentTALogs(db.Model):
     """
@@ -1128,5 +1150,29 @@ class EstablishmentTALogs(db.Model):
 
     def __init__(self, request_id):
         self.request_id = request_id
+        self.status = ApplicationStatus.new
+        self.updated_on = datetime.now()
+
+class DepartmentTALogs(db.Model):
+    """
+    Stores HOD and department head logs
+    """
+    __tablename__ = 'department_ta_logs'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ta_requests.request_id', ondelete='CASCADE'), primary_key=True,)
+    department = db.Column(db.String(20))
+    status = db.Column(db.String(50))
+    """
+    status: String
+    -> 'new': a new LTC request
+    -> 'review': application sent back for review
+    -> 'forwarded': application forwarded
+    -> 'complete': application processed(approved or denied anywhere in the heirarchy)
+    """
+    updated_on = db.Column(db.DateTime)
+
+    def __init__(self, request_id, department):
+        self.request_id = request_id
+        self.department = department
         self.status = ApplicationStatus.new
         self.updated_on = datetime.now()
