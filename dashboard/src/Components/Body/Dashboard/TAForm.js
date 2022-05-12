@@ -8,7 +8,8 @@ import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputDate } from "../../Utilities/FormInputDate";
 import { FormInputNumber } from "../../Utilities/FormInputNumber";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
-import { FieldArrayInput } from "../../Utilities/FieldArrayInput";
+import { TAFieldArray } from "../../Utilities/TAFieldArray";
+import { ExpensesFieldArray } from "../../Utilities/ExpensesFieldArray";
 
 
 const TAForm = ({ profileInfo }) => {
@@ -22,24 +23,48 @@ const TAForm = ({ profileInfo }) => {
     formState: { isSubmitting },
   } = useForm({
     defaultValues: {
-      dependents: [
+      items: [
         {
-          dep_name: "",
-          dep_age: "",
-          dep_relationship: "",
-          dep_travelling_from: "",
+          dep_date: "",
+          dep_time: "",
+          dep_place: "",
+          arr_date: "",
+          arr_time: "",
+          arr_place: "",
+          mode: "",
+          km: "",
+          fare: "",
+          ticket: "",
+          remarks: "",
+        },
+      ],
+      expenses: [
+        {
+          details: "",
+          amount: "",
+          receipt_details: "",
+          
         },
       ],
     },
   });
-  const { fields, append, remove } = useFieldArray({
+  const { fields: itemFields, append: appendItem, remove: removeItem } = useFieldArray({
     control,
-    name: "dependents",
+    name: "items",
+  });
+  const {
+    fields: expenseFields,
+    append: appendExpense,
+    remove: removeExpense,
+  } = useFieldArray({
+    control,
+    name: "expenses",
   });
   const [File, setFile] = useState(null);
 
   const onSubmit = (data) => {
     console.log(data);
+    
   };
 
   //options for radio input
@@ -67,29 +92,29 @@ const TAForm = ({ profileInfo }) => {
                 </Typography>
               </Box>
               <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <FormInputText
-                  profileInfo={profileInfo}
-                  name={"name"}
-                  control={control}
-                  label={"Name"}
-                  required={true}
-                  autofill={true}
-                  disabled={true}
-                  defaultValue={"Name"}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <FormInputText
-                  profileInfo={profileInfo}
-                  name="emp_code"
-                  control={control}
-                  label="Employee Code"
-                  required={true}
-                  autofill={true}
-                  disabled={true}
-                />
-              </Grid>
+                <Grid item xs={6}>
+                  <FormInputText
+                    profileInfo={profileInfo}
+                    name={"name"}
+                    control={control}
+                    label={"Name"}
+                    required={true}
+                    autofill={true}
+                    disabled={true}
+                    defaultValue={"Name"}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <FormInputText
+                    profileInfo={profileInfo}
+                    name="emp_code"
+                    control={control}
+                    label="Employee Code"
+                    required={true}
+                    autofill={true}
+                    disabled={true}
+                  />
+                </Grid>
               </Grid>
 
               <Grid container spacing={2}>
@@ -115,11 +140,10 @@ const TAForm = ({ profileInfo }) => {
                   />
                 </Grid>
               </Grid>
-              
+
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <FormInputText
-                    profileInfo={profileInfo}
                     name="band_pay"
                     control={control}
                     label="Pay Level"
@@ -129,7 +153,6 @@ const TAForm = ({ profileInfo }) => {
                 </Grid>
                 <Grid item xs={6}>
                   <FormInputText
-                    profileInfo={profileInfo}
                     name="budget_head"
                     control={control}
                     label="Budget Head"
@@ -138,9 +161,83 @@ const TAForm = ({ profileInfo }) => {
                   />
                 </Grid>
               </Grid>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <FormInputText
+                    name="advance"
+                    control={control}
+                    label="Advance Drawn(₹)"
+                    required={true}
+                    defaultValue={""}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <FormInputDate
+                    name="date"
+                    control={control}
+                    label="Date"
+                    required={true}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <FormInputText
+                    name="acc_no"
+                    control={control}
+                    label="Account No. (SBI/Any other)"
+                    required={true}
+                    defaultValue={""}
+                  />
+                </Grid>
+              </Grid>
+
+              <TAFieldArray
+                name={"items"}
+                control={control}
+                fields={itemFields}
+                remove={removeItem}
+                append={appendItem}
+              />
+              <Typography>
+                Indicate period and number of days if any, for which the
+                claimant doesn’t want to claim DA (Leave or other reasons, In
+                case of foreign Travel):
+              </Typography>
+              <FormInputText
+                name="no_da"
+                control={control}
+                label="Response"
+                required={true}
+                defaultValue={""}
+              />
+              <Typography>
+                Any other expenses (Lodging, Boarding, Registration fee, Visa
+                fee, Insurance, etc.):
+              </Typography>
+              <ExpensesFieldArray
+                name={"expenses"}
+                control={control}
+                fields={expenseFields}
+                remove={removeExpense}
+                append={appendExpense}
+              />
+              <Box display="flex" justifyContent="center">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting && (
+                    <span className="spinner-grow spinner-grow-sm"></span>
+                  )}
+                  Submit
+                </Button>
+              </Box>
             </form>
           </Grid>
         </Paper>
+        <Box minHeight="2vh"></Box>
       </Grid>
     </>
   );
