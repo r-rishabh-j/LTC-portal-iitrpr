@@ -35,6 +35,22 @@ function GoogleLogin() {
 
     const onSubmitEmail = (data) => {
         console.log(data)
+         axios({
+           method: "POST",
+           url: "/api/otp-login",
+           data: data
+         })
+           .then((response) => {
+             alert(response.data.success)
+           })
+           .catch((error) => {
+             if (error.response) {
+               console.log(error.response);
+               console.log(error.response.status);
+               console.log(error.response.headers);
+             }
+           });
+
     }
     const openGoogleLoginPage = useCallback(() => {
         const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
