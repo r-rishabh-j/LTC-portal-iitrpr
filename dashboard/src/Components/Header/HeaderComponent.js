@@ -7,6 +7,7 @@ import Home from '../Body/Dashboard/Home';
 import CreateApplication from '../Body/Dashboard/CreateApplication';
 import TAForm from "../Body/Dashboard/TAForm";
 import PastApplications from '../Body/Dashboard/PastApplications';
+import PastTaApplications from "../Body/Dashboard/PastTaApplications";
 import Notifications from '../Body/Dashboard/Notifications';
 import { Box } from "@material-ui/core";
 import { useStyles } from './HeaderStyles';
@@ -66,6 +67,10 @@ export default function HeaderComponent(props) {
           <Route
             path="/ta"
             element={<TAForm profileInfo={props.profileInfo} />}
+          ></Route>
+          <Route
+            path="/past-ta"
+            element={<PastTaApplications profileInfo={props.profileInfo} />}
           ></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
