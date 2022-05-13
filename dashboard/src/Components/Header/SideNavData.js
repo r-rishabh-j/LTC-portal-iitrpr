@@ -251,6 +251,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
                 >
                   <ListItemIcon>{item.icon}</ListItemIcon>
                   <ListItemText>{item.label}</ListItemText>
+                  
                 </ListItem>
                 <Menu
                   id="simple-menu"
