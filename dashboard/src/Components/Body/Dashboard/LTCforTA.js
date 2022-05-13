@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { DataGrid } from "@mui/x-data-grid"
-import { Grid, Paper, Typography } from '@material-ui/core'
+import React, { useState, useEffect } from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import { Grid, Paper, Typography } from "@material-ui/core";
 import {
   Dialog,
   DialogTitle,
@@ -9,28 +9,29 @@ import {
   DialogContentText,
 } from "@material-ui/core";
 import { useStyles } from "./DataGridStyles";
-import { Button } from '@mui/material';
-import axios from 'axios';
-import GeneratePDF from '../../Utilities/GeneratePDF'
-import DialogBox from './DialogBox';
-import ReviewBox from './ReviewBox'
-import {Box} from '@material-ui/core';
-const moment = require('moment');
+import { Button } from "@mui/material";
+import axios from "axios";
+import GeneratePDF from "../../Utilities/GeneratePDF";
+import DialogBox from "./DialogBox";
+import ReviewBox from "./ReviewBox";
+import { Box } from "@material-ui/core";
+import TAForm from "./TAForm";
+const moment = require("moment");
 
-const PastApplications = ({ permission }) => {
+const LTCforTA = ({ profileInfo }) => {
   //console.log(permission)
   const classes = useStyles();
 
-  const [tableData, setTableData] = useState([])
+  const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
-    fetch("/api/getmyforms")
+    fetch("/api/ta/get-approved-ltc")
       .then((data) => data.json())
       .then((data) => {
         console.log(data.data);
-        setTableData(data.data)
-      })
-  }, [])
+        setTableData(data.data);
+      });
+  }, []);
 
   //rows = {tableData}
   const handleAttachmentClick = (event, cellValues) => {
@@ -38,7 +39,7 @@ const PastApplications = ({ permission }) => {
     const data = { request_id: cellValues.row.request_id };
     axios({
       method: "post",
-      url: "api/getattachments",
+      url: "api/ta/getattachments",
       data: JSON.stringify(data),
       headers: { "Content-type": "application/json" },
       responseType: "blob",
@@ -46,9 +47,9 @@ const PastApplications = ({ permission }) => {
       .then((response) => {
         var blob = new Blob([response.data], { type: response.data.type });
         var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
-        var anchor = document.createElement('a');
+        var anchor = document.createElement("a");
         anchor.href = url;
-        anchor.target = '_blank';
+        anchor.target = "_blank";
         anchor.click();
       })
       .catch((error) => {
@@ -93,14 +94,16 @@ const PastApplications = ({ permission }) => {
   const [open, setOpen] = useState(false);
   const [openReview, setOpenReview] = useState(false);
   const [id, setId] = useState(-1);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState("");
 
   const handleClickOpen = (event, cellValues) => {
     setOpen(true);
-    console.log('status', cellValues.row.stage);
+    console.log("status", cellValues.row.stage);
     setStatus(cellValues.row.stage);
     setId(cellValues.row.request_id);
   };
+
+ 
 
   const handleClose = () => {
     setOpen(false);
@@ -108,28 +111,36 @@ const PastApplications = ({ permission }) => {
 
   const handleCloseReview = () => {
     setOpenReview(false);
-  }
+  };
 
   const editForm = (event, cellValues) => {
     setOpenReview(true);
     setId(cellValues.row.request_id);
     console.log("Open a new dialog box");
-  }
+  };
 
   const stageElement = (cellValues) => {
-    return (
-      (cellValues.row.stage !== 'review') ?
-        <div
-          title={cellValues.formattedValue}
-          style={{
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {cellValues.formattedValue}
-        </div> : <Button style={{ backgroundColor: "orange" }} variant="contained" onClick={(event) => { editForm(event, cellValues) }}>
-          Review</Button>
+    return cellValues.row.stage !== "review" ? (
+      <div
+        title={cellValues.formattedValue}
+        style={{
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+        }}
+      >
+        {cellValues.formattedValue}
+      </div>
+    ) : (
+      <Button
+        style={{ backgroundColor: "orange" }}
+        variant="contained"
+        onClick={(event) => {
+          editForm(event, cellValues);
+        }}
+      >
+        Review
+      </Button>
     );
   };
   const cellElement = (cellValues) => {
@@ -147,20 +158,27 @@ const PastApplications = ({ permission }) => {
     );
   };
 
-  function formatDate(date){
+  function formatDate(date) {
     const d = String(moment(date).local().format("DD-MM-YYYY"));
     return d;
   }
 
   const timeElement = (cellValues) => {
     // console.log('cc',cellValues);
-    const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
+    const time = formatDate(cellValues.formattedValue.replace("GMT", ""));
     return (
-      <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+      <div
+        title={time}
+        style={{
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+        }}
+      >
         {time}
       </div>
     );
-  }
+  };
 
   const columns = [
     /*
@@ -173,25 +191,11 @@ const PastApplications = ({ permission }) => {
       renderCell: cellElement,
     },
     {
-      field: "created_on",
-      headerName: "Created on",
+      field: "approved_on",
+      headerName: "Approved on",
       minWidth: 250,
       flex: 1,
       renderCell: timeElement,
-    },
-    {
-      field: "stage",
-      headerName: "Stage",
-      minWidth: 200,
-      flex: 1,
-      renderCell: stageElement,
-    },
-    {
-      field: "is_active",
-      headerName: "Status",
-      minWidth: 150,
-      flex: 1,
-      renderCell: cellElement,
     },
 
     {
@@ -214,24 +218,54 @@ const PastApplications = ({ permission }) => {
         );
       },
     },
+    {
+      field: "fill_ta",
+      headerName: "TA Form",
+      minWidth: 150,
+      renderCell: (cellValues) => {
+        return (
+          <>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(event) => {
+                handleClickOpen(event, cellValues);
+              }}
+            >
+              Fill
+            </Button>
+          </>
+        );
+      },
+    },
   ];
 
   return (
     <>
       <Paper
         elevation={10}
-        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
+        style={{
+          display: "flex",
+          margin: "0 0.5vw 0 3vw",
+          backgroundColor: "#263238",
+        }}
       >
-          <Typography variant="body" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
-            Past LTC Applications
-          </Typography>
+        <Typography
+          variant="body"
+          style={{ margin: "auto", fontSize: "25px", color: "white" }}
+        >
+          Past Applications
+        </Typography>
       </Paper>
       <Paper
         elevation={10}
-        style={{ display: "flex", minHeight: "calc(98vh - 118px)", margin: "0 0.5vw 0 3vw" }}
+        style={{
+          display: "flex",
+          minHeight: "calc(98vh - 118px)",
+          margin: "0 0.5vw 0 3vw",
+        }}
       >
         <Grid container style={{ flexGrow: 1 }}>
-
           <DataGrid
             initialState={{
               sorting: { sortModel: [{ field: "request_id", sort: "desc" }] },
@@ -248,7 +282,12 @@ const PastApplications = ({ permission }) => {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} status={status} showCommentSection={false}/>
+          <DialogBox
+            request_id={id}
+            permission={profileInfo.permission}
+            status={status}
+            showCommentSection={false}
+          />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close
@@ -269,9 +308,9 @@ const PastApplications = ({ permission }) => {
           </DialogActions>
         </Dialog>
       </Paper>
-        <Box minHeight="2vh"></Box>
+      <Box minHeight="2vh"></Box>
     </>
   );
-}
+};
 
-export default PastApplications
+export default LTCforTA;

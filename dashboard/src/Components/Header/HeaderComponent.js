@@ -13,6 +13,7 @@ import { useStyles } from './HeaderStyles';
 import axios from "axios";
 import { ProfilePage } from '../Body/Dashboard/Profile/ProfilePage';
 import PastTaApplications from '../Body/Dashboard/PastTaApplications';
+import LTCforTA from '../Body/Dashboard/LTCforTA';
 
 export default function HeaderComponent(props) {
   const classes = useStyles();
@@ -66,7 +67,7 @@ export default function HeaderComponent(props) {
           ></Route>
           <Route
             path="/ta"
-            element={<TAForm profileInfo={props.profileInfo} />}
+            element={<LTCforTA profileInfo={props.profileInfo} />}
           ></Route>
           <Route
             path= "/past-ta"

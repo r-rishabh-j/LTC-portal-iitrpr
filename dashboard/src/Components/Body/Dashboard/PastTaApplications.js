@@ -71,7 +71,7 @@ const PastTaApplications = ({ permission }) => {
     })
       .then((response) => {
         console.log(response.data.data.form_data);
-        GeneratePDF(response.data.data.form_data);
+        //GeneratePDF(response.data.data.form_data);
       })
       .catch((error) => {
         if (error.response) {
