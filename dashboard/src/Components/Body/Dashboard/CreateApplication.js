@@ -96,12 +96,7 @@ export default function CreateApplication({ profileInfo }) {
           console.log('error is', error.response);
           console.log(error.response.status);
           console.log(error.response.headers);
-          if (error.response.status === 413) {
-            alert('File size too large!');
-          }
-          else {
-            alert('Error. Please try logging in again');
-          }
+          alert(error.response.data.error)
         }
       });
   };

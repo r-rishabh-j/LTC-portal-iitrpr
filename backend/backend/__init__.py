@@ -14,7 +14,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 db = SQLAlchemy()
-# UPLOAD_FOLDER = 'uploads'
 
 redis_conn = redis.Redis()
 task_queue = Queue(connection=redis_conn)
@@ -25,6 +24,7 @@ enable_email = False
 if os.environ.get("ENABLE_EMAIL") == 'true':
     enable_email = True
 emailmanager = EmailManager(enabled=enable_email, queue={})
+MAX_UPLOAD_SIZE = 50*1024*1024
 
 
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
@@ -39,9 +39,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=5)
-    # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    app.config['MAX_CONTENT_LENGTH'] = 50 * \
-        1024 * 1024  # 50 MB max request size
+    # app.config['MAX_CONTENT_LENGTH'] = 50 * \
+    #     1024 * 1024  # 50 MB max request size
 
     app.config["flask_profiler"] = {
         "enabled": True,

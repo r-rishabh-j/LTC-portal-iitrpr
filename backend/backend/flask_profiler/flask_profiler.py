@@ -55,8 +55,6 @@ class Measurement(object):
         return str(self.__json__())
 
     def start(self):
-        # we use default_timer to get the best clock available.
-        # see: http://stackoverflow.com/a/25823885/672798
         self.startedAt = time.time()
 
     def stop(self):
@@ -84,8 +82,7 @@ def measure(f, name, method, context=None):
         if 'sampling_function' in CONF and not callable(CONF['sampling_function']):
             raise Exception(
                 "if sampling_function is provided to flask-profiler via config, "
-                "it must be callable, refer to: "
-                "https://github.com/muatik/flask-profiler#sampling")
+                "it must be callable")
 
         if 'sampling_function' in CONF and not CONF['sampling_function']():
             return f(*args, **kwargs)
@@ -111,12 +108,14 @@ def measure(f, name, method, context=None):
 def wrapHttpEndpoint(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
+        header =  dict(request.headers.items())
+        header.pop('Cookie')
         context = {
             "url": request.base_url,
             "args": dict(request.args.items()),
-            "form": dict(request.form.items()),
+            # "form": dict(request.form.items()),
             "body": request.data.decode("utf-8", "strict"),
-            "headers": dict(request.headers.items()),
+            "headers": header,
             "func": request.endpoint,
             "ip": request.remote_addr
         }

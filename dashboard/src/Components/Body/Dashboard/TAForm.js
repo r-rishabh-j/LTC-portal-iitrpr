@@ -12,7 +12,7 @@ import { TAFieldArray } from "../../Utilities/TAFieldArray";
 import { ExpensesFieldArray } from "../../Utilities/ExpensesFieldArray";
 import Add from '@material-ui/icons/Add';
 
-const TAForm = ({ profileInfo }) => {
+const TAForm = ({ profileInfo, ltcId }) => {
   console.log("TA", profileInfo)
   const classes = useStyles();
   const {
@@ -67,12 +67,11 @@ const TAForm = ({ profileInfo }) => {
     console.log("Submitting", isSubmitting);
     const formData = new FormData();
     data.name = profileInfo.name;
-    //data.designation = profile.permission;
     data.department = profileInfo.department;
     data.emp_code = profileInfo.employee_code;
     console.log('data: ', JSON.stringify(data));
     formData.append('attachments', data.attachments[0]);
-    formData.append('ltc_id', 1);
+    formData.append('ltc_id', ltcId);
     formData.append('form', JSON.stringify(data));
 
     console.log("onSubmit")
@@ -122,7 +121,7 @@ const TAForm = ({ profileInfo }) => {
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
               <Box display="flex" justifyContent="center">
                 <Typography variant="h5" style={{ fontWeight: "bold" }}>
-                  Travelling Allowance Reimbursement/Settlement Form
+                  Travelling Allowance Reimbursement/Settlement Form for LTC ID #{ltcId}
                 </Typography>
               </Box>
               <Grid container spacing={2}>

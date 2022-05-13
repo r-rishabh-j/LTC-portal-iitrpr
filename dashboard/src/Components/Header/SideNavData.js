@@ -261,10 +261,10 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
                   onClose={handleClose}
                 >
                   <MenuItem onClick={handleClose} component={NavLink} to={tab.length===0?'':tab[0]}>
-                    LTC
+                    Leave Travel Concession
                   </MenuItem>
                   <MenuItem onClick={handleClose} component={NavLink} to={tab.length===0?'':tab[1]}>
-                    TA
+                    Travel Allowance Reimbursement
                   </MenuItem>
                 </Menu>
               </>

@@ -12,6 +12,7 @@ from .role_manager import Permissions, role_required, roles_required, check_role
 from .models import ApplicationStatus, EstablishmentLogs, EstablishmentReview, LTCApproved,\
     Users, LTCRequests, Departments, AdvanceRequests
 from . import emailmanager
+from . import MAX_UPLOAD_SIZE
 
 
 class LtcManager:
@@ -39,6 +40,13 @@ class LtcManager:
             user: Users = current_user
             # gets file tagged with name attachments
             file = request.files.get('attachments')
+            if file!=None:
+                filename = file.filename
+                if not filemanager.isCorrectFileType(filename, ['.pdf', '.zip']):
+                    abort(400, error='Invalid file type. Only .pdf, .zip files are permitted')
+                file_encoding = filemanager.encodeFile(file)
+                if len(file_encoding)>MAX_UPLOAD_SIZE:
+                    abort(413, error=f'File Size should be less than {MAX_UPLOAD_SIZE/(1024*1024)} MB!')
             # get form data
             form_data = json.loads(request.form.get('form'))
 
@@ -60,8 +68,6 @@ class LtcManager:
             new_request.forward(current_user)
 
             if file != None:
-                filename = file.filename
-                file_encoding = filemanager.encodeFile(file)
                 ltc_upload = LTCProofUploads(
                     new_request.request_id, file_encoding, filename)
                 db.session.add(ltc_upload)
@@ -445,6 +451,21 @@ class LtcManager:
             updated_form: dict = json.loads(request.form.get('form'))
             print(updated_form)
             updated_file = request.files.get('attachment', None)
+            # update attachments if any
+            if updated_file != None:
+                if not filemanager.isCorrectFileType(updated_file.filename, ['.pdf', '.zip']):
+                    abort(400, error='Invalid file type. Only .pdf, .zip files are permitted')
+                ltc_upload_enc = filemanager.encodeFile(updated_file)
+
+                if len(ltc_upload_enc)>MAX_UPLOAD_SIZE:
+                    abort(413, error=f'File Size should be less than {MAX_UPLOAD_SIZE/(1024*1024)} MB!')
+                ltc_upload: LTCProofUploads = LTCProofUploads.query.get(request_id)
+                if ltc_upload == None:
+                    ltc_upload = LTCProofUploads(request_id, None, None)
+                    db.session.add(ltc_upload)
+                ltc_upload.filename = updated_file.filename
+                ltc_upload.file = ltc_upload_enc
+                    
             if updated_form.get('attachments', False) != False:
                 updated_form.pop('attachments')
             db_form: LTCRequests = LTCRequests.query.get(request_id)
@@ -456,18 +477,6 @@ class LtcManager:
                     continue
                 if db_form.form.get(str(field), None) != None:
                     db_form.form[str(field)] = updated_form[field]
-
-            # update attachments if any
-            if updated_file != None:
-                ltc_upload: LTCProofUploads = LTCProofUploads.query.get(
-                    request_id)
-                if ltc_upload == None:
-                    ltc_upload = LTCProofUploads(request_id, None, None)
-                    db.session.add(ltc_upload)
-                ltc_upload.filename = updated_file.filename
-                ltc_upload = filemanager.encodeFile(updated_file)
-                # filepath = filemanager.saveFile(updated_file, db_form.user_id)
-                # db_form.attachments = filepath
 
             flag_modified(db_form, "form")
             db.session.merge(db_form)
@@ -588,7 +597,11 @@ class LtcManager:
                 abort(400, error='Form not yet approved')
 
             filename = file.filename
+            if not filemanager.isCorrectFileType(filename, ['.pdf', '.zip']):
+                    abort(400, error='Invalid file type. Only .pdf, .zip files are permitted')
             office_order_enc = filemanager.encodeFile(file)
+            if len(office_order_enc)>MAX_UPLOAD_SIZE:
+                    abort(413, error=f'File Size should be less than {MAX_UPLOAD_SIZE/(1024*1024)} MB!')
 
             advance_required = False
             # check if advance required!
@@ -702,6 +715,8 @@ class LtcManager:
             adv_req.payment(amount, comments)
 
             adv_req.payment_proof_filename = payment_proof.filename
+            if not filemanager.isCorrectFileType(adv_req.payment_proof_filename, ['.pdf', '.zip']):
+                    abort(400, error='Invalid file type. Only .pdf, .zip files are permitted')
             adv_req.payment_proof = filemanager.encodeFile(payment_proof)
 
             form: LTCRequests = LTCRequests.query.get(request_id)
@@ -714,8 +729,6 @@ class LtcManager:
         def post(self, permission):
             analyse()
             request_id = (request.json.get('request_id', None))
-            print(request_id)
-            request_id = 3
             if request_id == None:
                 abort(400, error='Invalid request ID')
             request_id = int(request_id)
@@ -734,7 +747,9 @@ class LtcManager:
 
             response['signatures']['user'] = applicant.signature
             # signatures
+            print(form_data.stage)
             if form_data.stage in [Stages.approved, Stages.advance_pending]:
+                print('sending')
                 stages = [
                     (Stages.establishment, Permissions.establishment),
                     (Stages.audit, Permissions.audit),

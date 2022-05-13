@@ -32,6 +32,7 @@ const PrintForm = forwardRef((props, ref) => {
         console.log("print preview", response.data.data);
         setFormInfo(response.data.data);
         console.log(response.data.data.signatures.user);
+        console.log('sign',response.data.data.signatures.establishment);
       })
       .catch((error) => {
         if (error.response) {

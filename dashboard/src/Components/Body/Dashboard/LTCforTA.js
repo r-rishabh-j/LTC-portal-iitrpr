@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Grid, Paper, Typography } from "@material-ui/core";
+import { Grid, Paper, TableCell, Typography } from "@material-ui/core";
 import {
   Dialog,
   DialogTitle,
@@ -23,6 +23,7 @@ const LTCforTA = ({ profileInfo }) => {
   const classes = useStyles();
 
   const [tableData, setTableData] = useState([]);
+  const [ltcId, setLtcId] = useState(null);
 
   useEffect(() => {
     fetch("/api/ta/get-approved-ltc")
@@ -102,6 +103,10 @@ const LTCforTA = ({ profileInfo }) => {
     setStatus(cellValues.row.stage);
     setId(cellValues.row.request_id);
   };
+
+  const handleTaFill = (event, cellValues) =>{
+    setLtcId(cellValues.row.request_id);
+  }
 
  
 
@@ -185,7 +190,7 @@ const LTCforTA = ({ profileInfo }) => {
   id, email, created on, is active, stage, view form, download(button)*/
     {
       field: "request_id",
-      headerName: "Application ID",
+      headerName: "LTC Application ID",
       minWidth: 150,
       flex: 1,
       renderCell: cellElement,
@@ -193,15 +198,16 @@ const LTCforTA = ({ profileInfo }) => {
     {
       field: "approved_on",
       headerName: "Approved on",
-      minWidth: 250,
+      minWidth: 150,
       flex: 1,
       renderCell: timeElement,
     },
 
     {
       field: "form",
-      headerName: "Form",
+      headerName: "View LTC Form",
       minWidth: 150,
+      flex: 1,
       renderCell: (cellValues) => {
         return (
           <>
@@ -220,8 +226,9 @@ const LTCforTA = ({ profileInfo }) => {
     },
     {
       field: "fill_ta",
-      headerName: "TA Form",
+      headerName: "Fill TA Form",
       minWidth: 150,
+      flex: 1,
       renderCell: (cellValues) => {
         return (
           <>
@@ -229,7 +236,7 @@ const LTCforTA = ({ profileInfo }) => {
               variant="contained"
               color="primary"
               onClick={(event) => {
-                handleClickOpen(event, cellValues);
+                handleTaFill(event, cellValues);
               }}
             >
               Fill
@@ -242,6 +249,8 @@ const LTCforTA = ({ profileInfo }) => {
 
   return (
     <>
+    {ltcId === null?
+      <>
       <Paper
         elevation={10}
         style={{
@@ -254,7 +263,7 @@ const LTCforTA = ({ profileInfo }) => {
           variant="body"
           style={{ margin: "auto", fontSize: "25px", color: "white" }}
         >
-          Past Applications
+          Pick an approved LTC application to continue....
         </Typography>
       </Paper>
       <Paper
@@ -308,8 +317,9 @@ const LTCforTA = ({ profileInfo }) => {
           </DialogActions>
         </Dialog>
       </Paper>
-      <Box minHeight="2vh"></Box>
-    </>
+      <Box minHeight="2vh"></Box></>
+         : <TAForm profileInfo={profileInfo} ltcId={ltcId}/> }
+        </>
   );
 };
 
