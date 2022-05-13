@@ -748,7 +748,7 @@ class LtcManager:
                     signatures = []
                     approvals = form_data.getLatestCommentForStage(stage)
                     for user, stage_user in query:
-                        if approvals[user] == True:
+                        if approvals[user.email] == True:
                             file = user.signature
                         else:
                             file = None

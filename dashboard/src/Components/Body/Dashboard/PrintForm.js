@@ -1116,7 +1116,7 @@ shortest route "
       >
         {formInfo.signatures !== undefined &&
         formInfo.signatures.establishment !== undefined &&
-        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Junior Assistant"] ? (
+        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Junior Assistant"]!==null && formInfo.signatures.establishment["Junior Assistant"]!==undefined ? (
           <img
             src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Junior Assistant"].slice(
               2,
@@ -1129,7 +1129,7 @@ shortest route "
         )}
         {formInfo.signatures !== undefined &&
         formInfo.signatures.establishment !== undefined &&
-        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Junior Superintendent"] !== null ? (
+        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Junior Superintendent"] !== null &&formInfo.signatures.establishment["Junior Superintendent"] !== undefined ? (
           <img
             src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Junior Superintendent"].slice(
               2,
@@ -1142,7 +1142,7 @@ shortest route "
         )}
         {formInfo.signatures !== undefined &&
         formInfo.signatures.establishment !== undefined &&
-        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Assistant Registrar"] ? (
+        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Assistant Registrar"]!==undefined!==null && formInfo.signatures.establishment["Assistant Registrar"]!==undefined ? (
           <img
             src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Assistant Registrar"].slice(
               2,
@@ -1155,7 +1155,7 @@ shortest route "
         )}
         {formInfo.signatures !== undefined &&
         formInfo.signatures.establishment !== undefined &&
-        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Deputy Registrar"] ? (
+        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Deputy Registrar"]!==null && formInfo.signatures.establishment["Deputy Registrar"]!==undefined ? (
           <img
             src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Deputy Registrar"].slice(
               2,
@@ -1387,7 +1387,7 @@ shortest route "
       >
         {formInfo.signatures !== undefined &&
         formInfo.signatures.accounts !== undefined &&
-        formInfo.signatures.accounts["Junior Accountant"] !== null ? (
+        formInfo.signatures.accounts["Junior Accountant"] !== null && formInfo.signatures.accounts["Junior Accountant"] !== undefined ? (
           <img
             src={`data:image/jpeg;base64,${formInfo.signatures.accounts["Junior Accountant"].slice(
               2,
@@ -1400,7 +1400,7 @@ shortest route "
         )}
         {formInfo.signatures !== undefined &&
         formInfo.signatures.accounts !== undefined &&
-        formInfo.signatures.accounts["Junior Accounts Officer"] !== null ? (
+        formInfo.signatures.accounts["Junior Accounts Officer"] !== null && formInfo.signatures.accounts["Junior Accounts Officer"] !== undefined ? (
           <img
             src={`data:image/jpeg;base64,${formInfo.signatures.accounts["Junior Accounts Officer"].slice(
               2,
@@ -1413,7 +1413,7 @@ shortest route "
         )}
         {formInfo.signatures !== undefined &&
         formInfo.signatures.accounts !== undefined &&
-        formInfo.signatures.accounts["Assistant Registrar"] !== null ? (
+        formInfo.signatures.accounts["Assistant Registrar"] !== null && formInfo.signatures.accounts["Assistant Registrar"] !== undefined ? (
           <img
             src={`data:image/jpeg;base64,${formInfo.signatures.accounts["Assistant Registrar"].slice(
               2,
