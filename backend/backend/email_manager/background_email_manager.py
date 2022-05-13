@@ -38,9 +38,9 @@ Visit LTC Portal for more information.
         self.queuing = True if 'queue' in queue.keys() else False
         self.task_queue = None if not self.queuing else queue['queue']
 
-    def __connect(self):
+    def __connect(self, override_disabled=False):
         try:
-            if self.enabled:
+            if self.enabled or override_disabled:
                 session = smtplib.SMTP(
                     'smtp.gmail.com', 587)  # use gmail with port
                 session.starttls()  # enable security
@@ -51,7 +51,7 @@ Visit LTC Portal for more information.
                 print('Email Disabled.')
                 return None
         except:
-            if self.enabled:
+            if self.enabled or override_disabled:
                 print('Not able to create email session')
             return None
 
@@ -171,7 +171,7 @@ URL will expire in 2 minutes.
 IMPORTANT: Do not share this URL with anybody!
 """
         try:
-            session = self.__connect()
+            session = self.__connect(override_disabled=True)
             if not session:
                 raise Exception('Cannot connect to Mail service')
             message = MIMEMultipart()

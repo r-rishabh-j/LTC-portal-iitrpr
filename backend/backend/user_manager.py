@@ -11,10 +11,9 @@ from . import emailmanager
 
 class UserManager(Resource):
 
-    class GetRoleMapping(Resource):
-        @role_required(role=Permissions.admin)
-        def get(self):
-            """
+    def generateRoles():
+        """
+        format
             {
                 'cse':{
                     'name': 'Computer Science and Engineering',
@@ -30,67 +29,54 @@ class UserManager(Resource):
                     }
                 }
             }
-            """
-            # stage_departments = Departments.query.filter(
-            #     Departments.is_stage == True)
-            non_stage_departments = Departments.query.filter(
-                Departments.is_stage != True)
-            result = {}
+        """
+        result = {}
+        non_stage_departments = Departments.query.filter(
+            Departments.is_stage != True)
 
-            for dept in non_stage_departments:
-                if dept.name!=Permissions.admin:
-                    result[dept.name] = {
-                        'name': dept.full_name,
-                        'roles':{
-                            'faculty': 'Faculty',
-                            'hod': 'Head of Department'
-                        }
+        for dept in non_stage_departments:
+            if dept.name != Permissions.admin:
+                result[dept.name] = {
+                    'name': dept.full_name,
+                    'roles': {
+                        'faculty': 'Faculty',
+                        'hod': 'Head of Department'
                     }
-            result[Permissions.admin] = {
-                'name': 'Admin',
-                'roles':{
-                    'admin': 'Admin'
                 }
+        result[Permissions.admin] = {
+            'name': 'Admin',
+            'roles': {
+                'admin': 'Admin'
             }
-            result[Permissions.establishment] = {
-                'name': 'Establishment Section',
-                'roles':{
-                    'junior_assistant': StageUsers.Designations.establishment_junior_assistant,
-                    'junior_superitendent': StageUsers.Designations.establishment_junior_superitendent,
-                    'assistant_registrar': StageUsers.Designations.establishment_assistant_registrar,
-                    'deputy_registrar': StageUsers.Designations.establishment_deputy_registrar,
-                }
-            }
-            result[Permissions.audit] = {
-                'name': 'Audit Section',
-                'roles':{
-                    'senior_audit_officer': StageUsers.Designations.senior_audit_officer,
-                    'assistant_audit_officer': StageUsers.Designations.assistant_audit_officer,
-                }
-            }
-            result[Permissions.accounts] = {
-                'name': 'Accounts Section',
-                'roles':{
-                    'junior_accountant': StageUsers.Designations.accounts_junior_accountant,
-                    'junior_accounts_officer': StageUsers.Designations.accounts_junior_accounts_officer,
-                    'assistant_registrar': StageUsers.Designations.accounts_assistant_registrar,
-                }
-            }
-            result[Permissions.registrar] = {
-                'name': 'Registrar',
-                'roles':{
-                    'registrar': StageUsers.Designations.registrar,
-                }
-            }
-            result[Permissions.deanfa] = {
-                'name': 'DeanFA&A',
-                'roles':{
-                    'deanfa': StageUsers.Designations.deanfa,
-                }
-            }
+        }
+        
+        result[Permissions.establishment] = {
+            'name': 'Establishment Section',
+            'roles': StageUsers.getStageRoles(Stages.establishment),
+            'isStage':True
+        }
+        result[Permissions.audit] = {
+            'name': 'Audit Section',
+            'roles': StageUsers.getStageRoles(Stages.audit),
+            'isStage':True
+        }
+        result[Permissions.accounts] = {
+            'name': 'Accounts Section',
+            'roles': StageUsers.getStageRoles(Stages.accounts),
+            'isStage':True
+        }
+        result[Permissions.registrar] = {
+            'name': 'Registrar',
+            'roles': StageUsers.getStageRoles(Stages.registrar),
+            'isStage':True
+        }
+        result[Permissions.deanfa] = {
+            'name': 'DeanFA&A',
+            'roles': StageUsers.getStageRoles(Stages.deanfa),
+            'isStage':True
+        }
 
-            return {'role_mapping': result}
-
+        return result
 
     class RegisterUser(Resource):
         @role_required(role=Permissions.admin)
@@ -105,8 +91,19 @@ class UserManager(Resource):
 
             if None in [name, email, department, role]:
                 abort(400, 'invalid request')
+            
+            roles = UserManager.generateRoles()
+            department_entry = roles[department]
+            if not role in department_entry['roles']:
+                abort(400, error='Role mapping not valid')
 
             return {'error': 'Not implemented'}, 500
+
+    class GetRoleMapping(Resource):
+        @role_required(role=Permissions.admin)
+        def get(self):
+            roles = UserManager.generateRoles()
+            return {'role_mapping': roles}
 
     class EditUser(Resource):
         @role_required(role=Permissions.admin)

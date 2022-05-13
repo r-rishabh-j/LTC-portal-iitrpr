@@ -109,7 +109,8 @@ def wrapHttpEndpoint(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         header =  dict(request.headers.items())
-        header.pop('Cookie')
+        if header.get('Cookie')!=None:
+            header.pop('Cookie')
         context = {
             "url": request.base_url,
             "args": dict(request.args.items()),

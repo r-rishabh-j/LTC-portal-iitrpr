@@ -266,7 +266,7 @@ const LTCforTA = ({ profileInfo }) => {
         }}
       >
         <Typography
-          variant="body"
+          variant="body1"
           style={{ margin: "auto", fontSize: "25px", color: "white" }}
         >
           Pick an approved LTC application to continue....

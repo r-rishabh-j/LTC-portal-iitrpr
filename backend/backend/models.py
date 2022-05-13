@@ -129,6 +129,32 @@ class StageUsers(db.Model):
         self.user_id = user_id
         self.designation = designation
 
+    def getStageRoles(stage):
+        mapping = {
+            Stages.establishment: {
+                'junior_assistant': StageUsers.Designations.establishment_junior_assistant,
+                'junior_superitendent': StageUsers.Designations.establishment_junior_superitendent,
+                'assistant_registrar': StageUsers.Designations.establishment_assistant_registrar,
+                'deputy_registrar': StageUsers.Designations.establishment_deputy_registrar,
+            },
+            Stages.audit: {
+                'senior_audit_officer': StageUsers.Designations.senior_audit_officer,
+                'assistant_audit_officer': StageUsers.Designations.assistant_audit_officer,
+            },
+            Stages.accounts: {
+                'junior_accountant': StageUsers.Designations.accounts_junior_accountant,
+                'junior_accounts_officer': StageUsers.Designations.accounts_junior_accounts_officer,
+                'assistant_registrar': StageUsers.Designations.accounts_assistant_registrar,
+            },
+            Stages.registrar: {
+                'registrar': StageUsers.Designations.registrar,
+            },
+            Stages.deanfa: {
+                'deanfa': StageUsers.Designations.deanfa,
+            }
+        }
+        return mapping[stage]
+
 
 class UserOTP(db.Model):
     __tablename__ = 'user_otp'

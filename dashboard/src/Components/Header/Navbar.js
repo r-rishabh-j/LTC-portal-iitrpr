@@ -17,17 +17,17 @@ export default function Navbar({ handleDrawerToggle, profileInfo }) {
   return (
     <AppBar position="sticky" style={{ background: '#263238' }}>
       <Toolbar>
+        <Hidden mdUp>
+          <IconButton onClick={handleDrawerToggle}>
+            <MenuIcon style={{color: "white"}}/>
+          </IconButton>
+        </Hidden>
         <Avatar src={image} />
         <Typography variant="h6" className={classes.title}>
           &nbsp; LTC Portal: {profileInfo.designation}
         </Typography>
         <Hidden smDown>
           <Profile picture={profileInfo.picture} />
-        </Hidden>
-        <Hidden mdUp>
-          <IconButton onClick={handleDrawerToggle}>
-            <MenuIcon style={{color: "white"}}/>
-          </IconButton>
         </Hidden>
       </Toolbar>
     </AppBar>
