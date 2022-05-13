@@ -8,11 +8,12 @@ import {
   Typography,
   Box
 } from "@material-ui/core";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import GeneratePDF from "../../../Utilities/GeneratePDF";
 import { useStyles } from "../DataGridStyles";
 import DialogBox from "../DialogBox";
+import DataGridToolbar from "../DataGridToolbar";
 const moment = require('moment');
 
 function Review({ permission }) {
@@ -115,7 +116,7 @@ function Review({ permission }) {
   };
 
   function formatDate(date){
-    const d = moment(date).format("DD/MM/YYYY, h:mm A");
+    const d = moment(date).format("DD/MM/YYYY");
     return d;
   }
 
@@ -156,6 +157,11 @@ function Review({ permission }) {
       minWidth: 150,
       flex: 1,
       renderCell: timeElement,
+      type:"date",
+      valueGetter: (cellValues) => {
+        const time = formatDate(cellValues.value.replace('GMT', ''));
+        return Date(moment(time).local().format("DD/MM/YYYY"));
+      }
     },
     // {
     //   field: "stage",
@@ -254,6 +260,7 @@ function Review({ permission }) {
             getRowId={(row) => row.request_id}
             onCellClick={handleCellClick}
             onRowClick={handleRowClick}
+            components={{ Toolbar: DataGridToolbar }}
           />
         </Grid>
         <Dialog

@@ -66,6 +66,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     from .auth import Auth
     from .ltc_manager import LtcManager
     from .ta_manager import TaManager
+    from .user_manager import UserManager
     from .notifications import ClearUserNotifications, GetUserNotifications, GetEmailPref, SetEmailPref
 
     api.add_resource(Auth.Login, '/api/login')  # login route
@@ -74,10 +75,12 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     # check if logged in
     api.add_resource(Auth.IsLoggedIn, '/api/is-logged-in')
     api.add_resource(LtcManager.ApplyForLTC, '/api/apply')  # apply for ltc
-    api.add_resource(Auth.RegisterUser, '/api/register')  # register user
+    # api.add_resource(Auth.RegisterUser, '/api/register')  # register user
     api.add_resource(Auth.GetSignature, '/api/get-signature')  # get signature
     api.add_resource(Auth.UploadSignature,
                      '/api/upload-signature')  # upload signature
+    api.add_resource(UserManager.GetRoleMapping,
+                     '/api/getroles')  # upload signature
     api.add_resource(LtcManager.GetLtcFormData,
                      '/api/getformdata')  # get form data
     # get basic form data for display on tables

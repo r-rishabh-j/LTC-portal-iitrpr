@@ -14,34 +14,6 @@ import urllib.parse
 from . import emailmanager
 
 class Auth:
-    class RegisterUser(Resource):
-        @role_required(role=Permissions.admin)
-        def post(self):
-            """
-            Send post request to register user
-            """
-            name = request.form.get('name')
-            email = request.form.get('email')
-            department = request.form.get('department')
-            role = request.form.get('role')
-
-            if None in [name, email, department, role]:
-                abort(400, 'invalid request')
-
-            return {'error': 'Not implemented'}, 500
-
-    class EditUser(Resource):
-        @role_required(role=Permissions.admin)
-        def post(self):
-
-            return {'error': 'Not implemented'}, 500
-
-    class DropUser(Resource):
-        @role_required(role=Permissions.admin)
-        def post(self):
-
-            return {'error': 'Not implemented'}, 500
-
     class Logout(Resource):
         def post(self):
             response = jsonify({"msg": "logout successful"})

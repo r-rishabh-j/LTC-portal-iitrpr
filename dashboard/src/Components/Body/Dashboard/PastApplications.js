@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DataGrid } from "@mui/x-data-grid"
+import { DataGrid, GridToolbar } from "@mui/x-data-grid"
 import { Grid, Paper, Typography } from '@material-ui/core'
 import {
   Dialog,
@@ -15,6 +15,7 @@ import GeneratePDF from '../../Utilities/GeneratePDF'
 import DialogBox from './DialogBox';
 import ReviewBox from './ReviewBox'
 import {Box} from '@material-ui/core';
+import DataGridToolbar from './DataGridToolbar';
 const moment = require('moment');
 
 const PastApplications = ({ permission }) => {
@@ -148,12 +149,11 @@ const PastApplications = ({ permission }) => {
   };
 
   function formatDate(date){
-    const d = String(moment(date).local().format("DD-MM-YYYY"));
+    const d = String(moment(date).local().format("DD/MM/YYYY"));
     return d;
   }
 
   const timeElement = (cellValues) => {
-    // console.log('cc',cellValues);
     const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
     return (
       <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
@@ -177,7 +177,12 @@ const PastApplications = ({ permission }) => {
       headerName: "Created on",
       minWidth: 250,
       flex: 1,
+      type:"date",
       renderCell: timeElement,
+      valueGetter: (cellValues) => {
+        const time = formatDate(cellValues.value.replace('GMT', ''));
+        return Date(moment(time).local().format("DD/MM/YYYY"));
+      }
     },
     {
       field: "stage",
@@ -241,6 +246,7 @@ const PastApplications = ({ permission }) => {
             getRowId={(row) => row.request_id}
             onCellClick={handleCellClick}
             onRowClick={handleRowClick}
+            components={{ Toolbar: DataGridToolbar }}
           />
         </Grid>
         <Dialog

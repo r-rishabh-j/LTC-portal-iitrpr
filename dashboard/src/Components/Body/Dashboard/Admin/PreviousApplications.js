@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Grid, Paper, Typography } from "@material-ui/core";
 import { Button, ClickAwayListener } from "@mui/material";
 import axios from "axios";
 import GeneratePDF from "../../../Utilities/GeneratePDF";
+import DataGridToolbar from "../DataGridToolbar";
 const moment = require('moment');
 
 const handleAttachmentClick = (event, cellValues) => {
@@ -25,13 +26,13 @@ const handleAttachmentClick = (event, cellValues) => {
       // document.body.appendChild(link);
       // link.click();
       var blob = new Blob([response.data], { type: response.data.type });
-        var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
+      var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
 
-        //window.open(url, '_blank', '');
-        var anchor = document.createElement('a');
-        anchor.href = url;
-        anchor.target = '_blank';
-        anchor.click();
+      //window.open(url, '_blank', '');
+      var anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.target = '_blank';
+      anchor.click();
     })
     .catch((error) => {
       if (error.response) {
@@ -77,8 +78,8 @@ const cellElement = (cellValues) => {
     </div>
   );
 }
-function formatDate(date){
-  const d = moment(date).format("DD/MM/YYYY, h:mm A");
+function formatDate(date) {
+  const d = moment(date).format("DD/MM/YYYY");
   return d;
 }
 
@@ -96,7 +97,13 @@ const columns = [
   { field: "request_id", headerName: "Application ID", minWidth: 100, flex: 1, renderCell: cellElement },
   { field: "user", headerName: "User Email", minWidth: 150, flex: 1, renderCell: cellElement },
   { field: "name", headerName: "Name", minWidth: 150, flex: 1, renderCell: cellElement },
-  { field: "created_on", headerName: "Created on", minWidth: 150, flex: 1, renderCell: timeElement },
+  {
+    field: "created_on", headerName: "Created on", minWidth: 150, flex: 1, renderCell: timeElement, type: "date",
+    valueGetter: (cellValues) => {
+      const time = formatDate(cellValues.value.replace('GMT', ''));
+      return Date(moment(time).local().format("DD/MM/YYYY"));
+    }
+  },
   { field: "stage", headerName: "Stage", flex: 1, minWidth: 150, renderCell: cellElement },
   { field: "is_active", headerName: "Status", minWidth: 150, flex: 1, renderCell: cellElement },
   {
@@ -199,11 +206,11 @@ function PreviousApplications() {
     <>
       <Paper
         elevation={10}
-        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
+        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor: '#263238' }}
       >
-          <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
-            Past Applications
-          </Typography>
+        <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
+          Past Applications
+        </Typography>
       </Paper>
       <Paper
         elevation={10}
@@ -219,6 +226,7 @@ function PreviousApplications() {
             getRowId={(row) => row.request_id}
             onCellClick={handleCellClick}
             onRowClick={handleRowClick}
+            components={{ Toolbar: DataGridToolbar }}
           />
         </Grid>
       </Paper>

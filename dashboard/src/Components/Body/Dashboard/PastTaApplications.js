@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DataGrid } from "@mui/x-data-grid"
+import { DataGrid, GridToolbar } from "@mui/x-data-grid"
 import { Grid, Paper, Typography } from '@material-ui/core'
 import {
   Dialog,
@@ -14,7 +14,8 @@ import axios from 'axios';
 import GeneratePDF from '../../Utilities/GeneratePDF'
 import DialogBox from './DialogBox';
 import ReviewBox from './ReviewBox'
-import {Box} from '@material-ui/core';
+import { Box } from '@material-ui/core';
+import DataGridToolbar from './DataGridToolbar';
 const moment = require('moment');
 
 const PastTaApplications = ({ permission }) => {
@@ -147,7 +148,7 @@ const PastTaApplications = ({ permission }) => {
     );
   };
 
-  function formatDate(date){
+  function formatDate(date) {
     const d = String(moment(date).local().format("DD-MM-YYYY"));
     return d;
   }
@@ -177,7 +178,12 @@ const PastTaApplications = ({ permission }) => {
       headerName: "Created on",
       minWidth: 250,
       flex: 1,
+      type: 'date',
       renderCell: timeElement,
+      valueGetter: (cellValues) => {
+        const time = formatDate(cellValues.value.replace('GMT', ''));
+        return Date(moment(time).local().format("DD/MM/YYYY"));
+      }
     },
     {
       field: "stage",
@@ -220,11 +226,11 @@ const PastTaApplications = ({ permission }) => {
     <>
       <Paper
         elevation={10}
-        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
+        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor: '#263238' }}
       >
-          <Typography variant="body" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
-            Past TA Applications
-          </Typography>
+        <Typography variant="body" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
+          Past TA Applications
+        </Typography>
       </Paper>
       <Paper
         elevation={10}
@@ -241,6 +247,7 @@ const PastTaApplications = ({ permission }) => {
             getRowId={(row) => row.request_id}
             onCellClick={handleCellClick}
             onRowClick={handleRowClick}
+            components={{ Toolbar: DataGridToolbar }}
           />
         </Grid>
         <Dialog
@@ -248,7 +255,7 @@ const PastTaApplications = ({ permission }) => {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} status={status} showCommentSection={false}/>
+          <DialogBox request_id={id} permission={permission} status={status} showCommentSection={false} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close
@@ -269,7 +276,7 @@ const PastTaApplications = ({ permission }) => {
           </DialogActions>
         </Dialog>
       </Paper>
-        <Box minHeight="2vh"></Box>
+      <Box minHeight="2vh"></Box>
     </>
   );
 }

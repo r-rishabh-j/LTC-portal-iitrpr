@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Grid, Paper, TableCell, Typography } from "@material-ui/core";
 import {
   Dialog,
@@ -16,6 +16,7 @@ import DialogBox from "./DialogBox";
 import ReviewBox from "./ReviewBox";
 import { Box } from "@material-ui/core";
 import TAForm from "./TAForm";
+import DataGridToolbar from "./DataGridToolbar";
 const moment = require("moment");
 
 const LTCforTA = ({ profileInfo }) => {
@@ -200,7 +201,12 @@ const LTCforTA = ({ profileInfo }) => {
       headerName: "Approved on",
       minWidth: 150,
       flex: 1,
+      type:"date",
       renderCell: timeElement,
+      valueGetter: (cellValues) => {
+        const time = formatDate(cellValues.value.replace('GMT', ''));
+        return Date(moment(time).local().format("DD/MM/YYYY"));
+      }
     },
 
     {
@@ -284,6 +290,7 @@ const LTCforTA = ({ profileInfo }) => {
             getRowId={(row) => row.request_id}
             onCellClick={handleCellClick}
             onRowClick={handleRowClick}
+            components={{ Toolbar: DataGridToolbar }}
           />
         </Grid>
         <Dialog
