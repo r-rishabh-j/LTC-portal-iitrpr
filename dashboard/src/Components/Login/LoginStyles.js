@@ -4,9 +4,10 @@ import { teal } from "@material-ui/core/colors";
 export const useStyles = makeStyles((theme) => ({
     loginPage: {
         // padding : "5vh",
-        height: "73vh",
+        height: "60%",
         width: 800,
-        margin: "20vh auto"
+        margin: "20vh auto",
+        backgroundColor: "white"
     },
     avatar: {
         backgroundColor: teal["500"]

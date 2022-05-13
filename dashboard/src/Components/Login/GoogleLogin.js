@@ -77,9 +77,9 @@ function GoogleLogin() {
 
     return (
       <Grid
-        style={{ backgroundColor: "#cfd8dc", height: "100vh", display: "flex" }}
+        style={{ backgroundColor: "#cfd8dc", minHeight: "100vh", display: "flex" }}
       >
-        <Paper elevation={10} className={classes.loginPage}>
+        <Box elevation={10} className={classes.loginPage} display="flex">
           <Grid container>
             <Grid item xs={6}>
               <Box style={{ padding: "5vh" }}>
@@ -170,7 +170,10 @@ function GoogleLogin() {
               <Box
                 // display="flex"
                 // justifyContent="center"
-                style={{ margin: "10vh 0 0 0", padding: "5vh" }}
+                style={{
+                  margin: "10vh 0 0 0",
+                  padding: "5vh",
+                }}
               >
                 <center>
                   <Typography variant="h5" style={{ color: "white" }}>
@@ -196,7 +199,7 @@ function GoogleLogin() {
                           required
                           className={classes.textFieldLogin}
                           InputProps={{
-                            style: {backgroundColor: "white"}
+                            style: { backgroundColor: "white" },
                           }}
                         />
                       )}
@@ -218,7 +221,7 @@ function GoogleLogin() {
               </Box>
             </Grid>
           </Grid>
-        </Paper>
+        </Box>
       </Grid>
     );
 }
