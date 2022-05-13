@@ -23,12 +23,11 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [tab, setTab] = React.useState("");
+  const [tab, setTab] = React.useState([]);
 
   const handleClick = (event, link) => {
     setAnchorEl(event.currentTarget);
     setTab(link)
-    
   };
 
   const handleClose = () => {
@@ -37,104 +36,104 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
   };
 
   const applicantList = [
-    { label: "Home", link: "/home", icon: <HomeIcon />, popup: false },
-    { label: "New Application", link: "/create", icon: <AddIcon /> , popup: true},
-    { label: "Past Applications", link: "/past", icon: <HistoryIcon />, popup: true },
+    { label: "Home", link: ["/home"], icon: <HomeIcon />, popup: false },
+    { label: "New Application", link: ["/create", "/ta"], icon: <AddIcon /> , popup: true},
+    { label: "Past Applications", link: ["/past", "/past-ta"], icon: <HistoryIcon />, popup: true },
 
     //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
   ];
 
   const adminList = [
-    { label: "Home", link: "/home", icon: <HomeIcon /> },
-    { label: "Users", link: "/users", icon: <AddIcon /> },
+    { label: "Home", link:[ "/home"], icon: <HomeIcon /> },
+    { label: "Users", link: ["/users"], icon: <AddIcon /> },
     {
       label: "Current Applications",
-      link: "/current",
+      link: ["/current"],
       icon: <NotificationsIcon />,
     },
     {
       label: "Past Applications",
-      link: "/previous",
+      link:[ "/previous"],
       icon: <HistoryIcon />,
     },
   ];
 
   const establishmentList = [
-    { label: "Home", link: "/home", icon: <HomeIcon /> },
-    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    { label: "Home", link:[ "/home"], icon: <HomeIcon /> },
+    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon /> },
     {
       label: "Past Applications",
-      link: "/past",
+      link: ["/past"],
       icon: <HistoryIcon />,
     },
     {
       label: "For Review",
-      link: "/review",
+      link: ["/review"],
       icon: <RateReviewIcon />,
     },
     {
       label: "Office Orders",
-      link: "/office_orders",
+      link:[ "/office_orders"],
       icon: <AttachFileIcon />,
     },
   ];
 
   const accountsList = [
-    { label: "Home", link: "/home", icon: <HomeIcon /> },
+    { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    { label: "New Applications", link:[ "/new"], icon: <NewReleasesIcon /> },
     {
       label: "Past Applications",
-      link: "/past",
+      link:[ "/past"],
       icon: <HistoryIcon />,
     },
     {
       label: "Advance Payments",
-      link: "/advance-payment",
+      link:[ "/advance-payment"],
       icon: <AccountBalanceIcon />,
     },
   ];
 
   const deanfaList = [
-    { label: "Home", link: "/home", icon: <HomeIcon /> },
+    { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon /> },
     {
       label: "Past Applications",
-      link: "/past",
+      link: ["/past"],
       icon: <HistoryIcon />,
     },
 
   ];
 
   const auditList = [
-    { label: "Home", link: "/home", icon: <HomeIcon /> },
+    { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon /> },
     {
       label: "Past Applications",
-      link: "/past",
+      link: ["/past"],
       icon: <HistoryIcon />,
     },
   ];
 
   const registrarList = [
-    { label: "Home", link: "/home", icon: <HomeIcon /> },
+    { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon /> },
     {
       label: "Past Applications",
-      link: "/past",
+      link: ["/past"],
       icon: <HistoryIcon />,
     },
   ];
   const hodList = [
-    { label: "Home", link: "/home", icon: <HomeIcon /> },
+    { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: "/new", icon: <NewReleasesIcon /> },
+    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon /> },
     {
       label: "Past Applications",
-      link: "/past",
+      link: ["/past"],
       icon: <HistoryIcon />,
     },
   ];
@@ -260,10 +259,10 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose} component={NavLink} to={tab}>
+                  <MenuItem onClick={handleClose} component={NavLink} to={tab.length===0?'':tab[0]}>
                     LTC
                   </MenuItem>
-                  <MenuItem onClick={handleClose} component={NavLink} to={tab}>
+                  <MenuItem onClick={handleClose} component={NavLink} to={tab.length===0?'':tab[1]}>
                     TA
                   </MenuItem>
                 </Menu>
@@ -271,7 +270,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
             ) : (
               <ListItem
                 component={NavLink}
-                to={item.link}
+                to={item.link[0]}
                 className={classes.navlinks}
                 // activeClassName={classes.activeNavlinks}
                 sx={{ width: "100%", textTransform: "capitalize" }}
