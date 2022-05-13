@@ -715,6 +715,7 @@ class LtcManager:
             analyse()
             request_id = (request.json.get('request_id', None))
             print(request_id)
+            request_id = 3
             if request_id == None:
                 abort(400, error='Invalid request ID')
             request_id = int(request_id)
@@ -745,16 +746,14 @@ class LtcManager:
                 for stage, permission in stages:
                     query = db.session.query(Users, StageUsers).join(
                         StageUsers).filter(Users.permission == permission)
-                    signatures = []
+                    signatures = {}
                     approvals = form_data.getLatestCommentForStage(stage)
                     for user, stage_user in query:
                         if approvals[user.email] == True:
                             file = user.signature
                         else:
                             file = None
-                        signatures.append({
-                            stage_user.designation: file
-                        })
+                        signatures[stage_user.designation] = file
 
                     response['signatures'][stage] = signatures
 
