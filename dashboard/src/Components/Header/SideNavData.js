@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { Button, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import HistoryIcon from "@material-ui/icons/History";
 import HomeIcon from "@material-ui/icons/Home";
 import AddIcon from "@material-ui/icons/Add";
@@ -22,11 +22,24 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
 
 
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [tab, setTab] = React.useState("");
+
+  const handleClick = (event, link) => {
+    setAnchorEl(event.currentTarget);
+    setTab(link)
+    
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    handleDrawerClose();
+  };
 
   const applicantList = [
-    { label: "Home", link: "/home", icon: <HomeIcon /> },
-    { label: "New Application", link: "/create", icon: <AddIcon /> },
-    { label: "Past Applications", link: "/past", icon: <HistoryIcon /> },
+    { label: "Home", link: "/home", icon: <HomeIcon />, popup: false },
+    { label: "New Application", link: "/create", icon: <AddIcon /> , popup: true},
+    { label: "Past Applications", link: "/past", icon: <HistoryIcon />, popup: true },
 
     //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
   ];
@@ -158,48 +171,62 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
 
   return (
     <>
-
-        <Box style={{ height: "auto", margin: "2vh 0 0 0", textDecoration: "none" }} component={NavLink}
-            className={classes.navlinks}
-            to={'/profile'} title="Profile Page" >
-          <center>
-            <img
-              src={(profileInfo.picture === null) ? require("./Navtabs/avatar.png") : profileInfo.picture}
-              alt={"Profile Image"}
-              style={{ width: "8vw", borderRadius: "50%" }}
-              referrerPolicy={"no-referrer"}
+      <Box
+        style={{ height: "auto", margin: "2vh 0 0 0", textDecoration: "none" }}
+        component={NavLink}
+        className={classes.navlinks}
+        to={"/profile"}
+        title="Profile Page"
+      >
+        <center>
+          <img
+            src={
+              profileInfo.picture === null
+                ? require("./Navtabs/avatar.png")
+                : profileInfo.picture
+            }
+            alt={"Profile Image"}
+            style={{ width: "8vw", borderRadius: "50%" }}
+            referrerPolicy={"no-referrer"}
+          ></img>
+          <Box style={{ margin: "2vh 0 0 0" }}>
+            <Typography
+              variant="body1"
+              style={{
+                fontWeight: "bold",
+                margin: "auto",
+                color: blueGrey["A700"],
+              }}
             >
-            </img>
-            <Box style={{ margin: "2vh 0 0 0" }}>
+              {" "}
+              {profileInfo.name}
+            </Typography>
+          </Box>
+          <Box>
+            <div style={{ margin: "2vh 0 0 0vw" }}>
               <Typography
                 variant="body1"
-                style={{ fontWeight: "bold", margin: "auto", color: blueGrey["A700"] }}
+                style={{ margin: "auto", color: blueGrey["A700"] }}
               >
                 {" "}
-                {profileInfo.name}
+                <DomainIcon />
+                &nbsp;
+                {profileInfo.department}
               </Typography>
-            </Box>
-            <Box>
-              <div style={{ margin: "2vh 0 0 0vw" }}>
-                <Typography variant="body1" style={{ margin: "auto", color: blueGrey["A700"] }}>
-                  {" "}
-                  <DomainIcon />
-                  &nbsp;
-                  {profileInfo.department}
-                </Typography>
-              </div>
+            </div>
 
-              <div>
-                <Typography variant="body1" style={{ margin: "auto", color: blueGrey["A700"] }}>
-                  <EmailIcon />
-                  {" "}
-                  &nbsp;
-                  {profileInfo.email}
-                </Typography>
-              </div>
-            </Box>
-          </center>
-        </Box>
+            <div>
+              <Typography
+                variant="body1"
+                style={{ margin: "auto", color: blueGrey["A700"] }}
+              >
+                <EmailIcon /> &nbsp;
+                {profileInfo.email}
+              </Typography>
+            </div>
+          </Box>
+        </center>
+      </Box>
       <Divider style={{ marginTop: "2vh" }} variant="middle" />
       <List style={{ margin: "0vh 0 0 0" }}>
         {listItemData.map((item, i) => (
@@ -207,22 +234,56 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
             key={i}
             size="small"
             className={classes.navButton}
-            onClick={handleDrawerClose}
+            // onClick={handleClick}
+            aria-controls="simple-menu"
+            aria-haspopup="true"
           >
-            <ListItem
-              component={NavLink}
-              to={item.link}
-              className={classes.navlinks}
-              // activeClassName={classes.activeNavlinks}
-              sx={{ width: "100%", textTransform: "capitalize" }}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText>{item.label}</ListItemText>
-            </ListItem>
+            {item.popup === true ? (
+              <>
+                <ListItem
+                  // component={NavLink}
+                  // to={item.link}
+                  onClick={(event) => {
+                    handleClick(event, item.link);
+                  }}
+                  className={classes.navlinks}
+                  // activeClassName={classes.activeNavlinks}
+                  sx={{ width: "100%", textTransform: "capitalize" }}
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText>{item.label}</ListItemText>
+                </ListItem>
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose} component={NavLink} to={tab}>
+                    LTC
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component={NavLink} to={tab}>
+                    TA
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <ListItem
+                component={NavLink}
+                to={item.link}
+                className={classes.navlinks}
+                // activeClassName={classes.activeNavlinks}
+                sx={{ width: "100%", textTransform: "capitalize" }}
+              >
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText>{item.label}</ListItemText>
+              </ListItem>
+            )}
           </Button>
         ))}
       </List>
-      <Link to='/' style={{ textDecoration: "none" }}>
+      <Link to="/" style={{ textDecoration: "none" }}>
         <Logout />
       </Link>
     </>
