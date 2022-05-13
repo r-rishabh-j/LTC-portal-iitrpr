@@ -136,18 +136,18 @@ class TaManager():
             return jsonify(response)
 
     class GetApprovedLTCForTA(Resource):
-        @roles_required(role=Permissions.client)
+        @role_required(role=Permissions.client)
         def get(self):
             analyse()
             user: Users = current_user
-            approved_forms = LTCApproved.query.filter(LTCApproved.office_order_created == True)
+            forms = db.session.query(LTCRequests, LTCApproved).join(LTCApproved).filter(
+                LTCRequests.user_id == user.id, LTCApproved.office_order_created == True)
+            print(forms)
             results = []
-            for form in forms:
+            for form, approved_form in forms:
                 results.append({
                     'request_id': form.request_id,
-                    'created_on': (form.created_on),
-                    'stage': form.stage,
-                    'is_active': "Active" if form.is_active else "Not Active",
+                    'approved_on': approved_form.approved_on,
                 })
             response = {'data': results}
 
