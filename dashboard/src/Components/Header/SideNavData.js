@@ -37,9 +37,9 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
   };
 
   const applicantList = [
-    { label: "Home", link: "/home", icon: <HomeIcon />, popup: false },
-    { label: "New Application", link: "/create", icon: <AddIcon /> , popup: true},
-    { label: "Past Applications", link: "/past", icon: <HistoryIcon />, popup: true },
+    { label: "Home", link: ["/home"], icon: <HomeIcon />, popup: false },
+    { label: "New Application", link: ["/create", "/ta"], icon: <AddIcon /> , popup: true},
+    { label: "Past Applications", link: ["/past", "/past"], icon: <HistoryIcon />, popup: true },
 
     //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
   ];
@@ -252,6 +252,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
                 >
                   <ListItemIcon>{item.icon}</ListItemIcon>
                   <ListItemText>{item.label}</ListItemText>
+                  
                 </ListItem>
                 <Menu
                   id="simple-menu"
@@ -260,11 +261,11 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose} component={NavLink} to={tab}>
-                    LTC
+                  <MenuItem onClick={handleClose} component={NavLink} to={tab[0]}>
+                    Leave Travel Concession
                   </MenuItem>
-                  <MenuItem onClick={handleClose} component={NavLink} to={tab}>
-                    TA
+                  <MenuItem onClick={handleClose} component={NavLink} to={tab[1]}>
+                    Travelling Allowance
                   </MenuItem>
                 </Menu>
               </>
