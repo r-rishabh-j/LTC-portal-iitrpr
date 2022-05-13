@@ -49,31 +49,31 @@ class UserManager(Resource):
                 'admin': 'Admin'
             }
         }
-        
+
         result[Permissions.establishment] = {
             'name': 'Establishment Section',
             'roles': StageUsers.getStageRoles(Stages.establishment),
-            'isStage':True
+            'isStage': True
         }
         result[Permissions.audit] = {
             'name': 'Audit Section',
             'roles': StageUsers.getStageRoles(Stages.audit),
-            'isStage':True
+            'isStage': True
         }
         result[Permissions.accounts] = {
             'name': 'Accounts Section',
             'roles': StageUsers.getStageRoles(Stages.accounts),
-            'isStage':True
+            'isStage': True
         }
         result[Permissions.registrar] = {
             'name': 'Registrar',
             'roles': StageUsers.getStageRoles(Stages.registrar),
-            'isStage':True
+            'isStage': True
         }
         result[Permissions.deanfa] = {
             'name': 'DeanFA&A',
             'roles': StageUsers.getStageRoles(Stages.deanfa),
-            'isStage':True
+            'isStage': True
         }
 
         return result
@@ -91,7 +91,7 @@ class UserManager(Resource):
 
             if None in [name, email, department, role]:
                 abort(400, 'invalid request')
-            
+
             roles = UserManager.generateRoles()
             department_entry = roles[department]
             if not role in department_entry['roles']:
@@ -116,3 +116,22 @@ class UserManager(Resource):
         def post(self):
 
             return {'error': 'Not implemented'}, 500
+
+    class GetUsers(Resource):
+        @role_required(role=Permissions.admin)
+        def get(self):
+            query = db.session.query(Users, Departments).join(Departments).all()
+            # users = Users.query.all()
+            result = []
+            for user, department in query:
+                user: Users
+                result.append({
+                    'user_id': user.id,
+                    'email': user.email,
+                    'name': user.name,
+                    'department': department.full_name,
+                    'employee_code':user.employee_code,
+                    'designation':user.designation
+                }
+                )
+            return {'users':result}

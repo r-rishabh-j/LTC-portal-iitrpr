@@ -836,6 +836,8 @@ class TARequests(db.Model):
     request_id = db.Column(db.Integer, primary_key=True)
     ltc_id = db.Column(db.Integer, db.ForeignKey(
         'ltc_approved.request_id', ondelete='CASCADE'),)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'users.id', ondelete='CASCADE'),)
     created_on = db.Column(db.DateTime)
     stage = db.Column(db.String)
     is_active = db.Column(db.Boolean)

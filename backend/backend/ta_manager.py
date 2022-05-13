@@ -197,11 +197,9 @@ class TaManager():
         def get(self):
             analyse()
             user: Users = current_user
-            forms = db.session.query(LTCRequests, LTCApproved, TARequests).join(LTCRequests).join(TARequests).filter(LTCRequests.user_id == user.id)
-            # forms = TARequests.query.filter_by(user_id=user.id)
-            print(forms)
+            forms = TARequests.query.filter_by(user_id=user.id)
             results = []
-            for ltc_form, ltc_approved, ta_form in forms:
+            for ta_form in forms:
                 results.append({
                     'request_id': ta_form.request_id,
                     'created_on': (ta_form.created_on),
@@ -230,14 +228,16 @@ class TaManager():
         def get(self, **kwargs):
             analyse()
             user: Users = current_user
-            forms = db.session.query(TARequests, Users).join(Users).all()
+            # forms = db.session.query(LTCRequests, LTCApproved, TARequests, Users).join(LTCRequests).join(TARequests).join(Users).all()
+            forms = db.session.query(TARequests, LTCApproved, Users).join(
+                LTCApproved).join(Users).all()
             results = []
-            for form, user in forms:
+            for form, ltc_appr, user in forms:
                 results.append({
                     'request_id': form.request_id,
+                    'ltc_id': ltc_appr.request_id,
                     'user': user.email,
                     'name': user.name,
-                    'user_id': form.user_id,
                     'created_on': form.created_on,
                     'stage': form.stage,
                     'is_active': "Active" if form.is_active else "Not Active",

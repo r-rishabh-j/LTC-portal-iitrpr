@@ -80,7 +80,9 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(Auth.UploadSignature,
                      '/api/upload-signature')  # upload signature
     api.add_resource(UserManager.GetRoleMapping,
-                     '/api/getroles')  # upload signature
+                     '/api/admin/getroles')  # upload signature
+    api.add_resource(UserManager.GetUsers,
+                     '/api/admin/getusers')  # upload signature
     api.add_resource(LtcManager.GetLtcFormData,
                      '/api/getformdata')  # get form data
     # get basic form data for display on tables

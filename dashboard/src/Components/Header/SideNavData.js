@@ -7,6 +7,7 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import NewReleasesIcon from "@material-ui/icons/NewReleases";
 import RateReviewIcon from "@material-ui/icons/RateReview";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
+import StorageIcon from '@mui/icons-material/Storage';
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import { NavLink, Link } from 'react-router-dom';
 import { useStyles } from './HeaderStyles';
@@ -46,15 +47,15 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
   const adminList = [
     { label: "Home", link:[ "/home"], icon: <HomeIcon /> },
     { label: "Users", link: ["/users"], icon: <AddIcon /> },
+    // {
+    //   label: "Current Applications",
+    //   link: ["/current"],
+    //   icon: <NotificationsIcon />,
+    // },
     {
-      label: "Current Applications",
-      link: ["/current"],
-      icon: <NotificationsIcon />,
-    },
-    {
-      label: "Past Applications",
+      label: "Database",
       link:[ "/previous"],
-      icon: <HistoryIcon />,
+      icon: <StorageIcon />,
     },
   ];
 

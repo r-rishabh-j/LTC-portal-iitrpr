@@ -7,8 +7,9 @@ import SideNav from '../../../Header/SideNav';
 import { useStyles } from "../../../Header/HeaderStyles"
 import Home from "../Home"
 import Charts from './Charts';
-import PreviousApplications from './PreviousApplications';
+import LTCApplications from './LTCApplications';
 import { ProfilePage } from '../Profile/ProfilePage';
+import Database from './Database'
 
 export default function AdminPage(props) {
 
@@ -44,7 +45,7 @@ export default function AdminPage(props) {
             path="/create"
             element={<CreateApplication token={token} setToken={setToken} />}
           ></Route> */}
-          <Route path="/previous" element={<PreviousApplications />}></Route>
+          <Route path="/previous" element={<Database />}></Route>
           {/* <Route
             path="/notifica"
             element={<Notifications token={token} setToken={setToken} />}

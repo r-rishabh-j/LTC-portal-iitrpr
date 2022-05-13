@@ -13,7 +13,7 @@ export default function Home() {
   const sizeRef = useRef();
 
   const [profileInfo, setProfileInfo] = useState({});
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState(null);
 
   useEffect(() => {
     axios({
@@ -40,28 +40,6 @@ export default function Home() {
       .then((response) => {
         console.log(response.data.notifications)
         setNotifications(response.data.notifications)
-        // const notif = [
-        //   { time: "100", content: "this is an extremely big big big big big bignotification message" },
-        //   { time: "100", content: "this is an extremely big notificationmessagehhhhhhhhhhdhdhdhdhhdhdhdhdhdhhdbakcbkhebehfbhfbhebfhbrfkrbfhkrbfhkrbf khbrkfbrkhfbrkhfbrhkbfhkrbfhkrbfhkrbfhkbrhkfbrhkfbrhkfbrkhbfhkrb" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        //   { time: "100", content: "this is an extremely big notification message" },
-        // ]
-        // setNotifications(notif)
-
       })
       .catch((error) => {
         if (error.response) {
@@ -119,38 +97,14 @@ export default function Home() {
             <Button
               title='Clear Notifications'
               variant="contained"
-              // color="primary"
               style={{ borderRadius: "35%", marginRight: "1vw" }}
               onClick={clearNotifications}
             >
               <ClearIcon />
             </Button>
           </Box>
-          {notifications.length !== 0 ? (
-            // <center>
-            <div style={{ listStyle: "none" }}>
-              {notifications.map((item, i) => (
-                <li key={i}>
-                  <Box display="flex" text-overflow="ellipsis" title={item.content}>
-                    <Alert severity={item.level === undefined ? "info" : item.level} style={{
-                      height: "auto",
-                      width: "100%",
-                      margin: "1vw",
-                      overflowX: "wrap",
-                    }}>
-                      <AlertTitle justifyContent="center">{formatDate(item.time)}</AlertTitle>
-                      <div style={{ textOverflow: "ellipsis" }}>
-                        <Typography variant="body1" style={{ padding: "0.5vh" }}>
-                          {item.content}
-                        </Typography>
-                      </div>
-                    </Alert>
-                  </Box>
-                </li>
-              ))}
-            </div>
-            // </center>
-          ) : (
+          {notifications === null ?
+           (
             <Box display="flex" justifyContent="center">
               <Paper
                 elevation={0}
@@ -164,13 +118,58 @@ export default function Home() {
                 <Box style={{ margin: "5vh" }}>
                   <NotificationsPausedIcon />
                   <Typography variant="h5" style={{ padding: "0.5vh" }}>
-                    No New Notifications!
+                    Loading......
                   </Typography>
-                  <Typography>Nothing to show...</Typography>
                 </Box>
               </Paper>
             </Box>
-          )}
+          )
+           :
+            (notifications.length !== 0 ? (
+              // <center>
+              <div style={{ listStyle: "none" }}>
+                {notifications.map((item, i) => (
+                  <li key={i}>
+                    <Box display="flex" text-overflow="ellipsis" title={item.content}>
+                      <Alert severity={item.level === undefined ? "info" : item.level} style={{
+                        height: "auto",
+                        width: "100%",
+                        margin: "1vw",
+                        overflowX: "wrap",
+                      }}>
+                        <AlertTitle justifyContent="center">{formatDate(item.time)}</AlertTitle>
+                        <div style={{ textOverflow: "ellipsis" }}>
+                          <Typography variant="body1" style={{ padding: "0.5vh" }}>
+                            {item.content}
+                          </Typography>
+                        </div>
+                      </Alert>
+                    </Box>
+                  </li>
+                ))}
+              </div>
+              // </center>
+            ) : (
+              <Box display="flex" justifyContent="center">
+                <Paper
+                  elevation={0}
+                  style={{
+                    height: "auto",
+                    width: "100%",
+                    margin: "1vw",
+                    textAlign: "center",
+                  }}
+                >
+                  <Box style={{ margin: "5vh" }}>
+                    <NotificationsPausedIcon />
+                    <Typography variant="h5" style={{ padding: "0.5vh" }}>
+                      No New Notifications!
+                    </Typography>
+                    <Typography>Nothing to show...</Typography>
+                  </Box>
+                </Paper>
+              </Box>
+            ))}
         </Box>
       </Box>
     </>
