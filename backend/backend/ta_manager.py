@@ -85,6 +85,165 @@ class TaManager():
             )
             return make_response(jsonify({'status': 'ok', 'msg': 'Applied for LTC'}), 200)
 
+    class GetTaFormData(Resource):
+        """
+        Get TA form data by request ID
+        """
+        @check_role()
+        def post(self, **kwargs):
+            """
+            Send POST request to get form
+            payload:
+            @args: json:{
+                request_id: int
+            }
+            @return: {
+                'request_id'
+                'email'
+                'created_on'
+                'stage'
+                'is_active'
+                'form_data'
+                'comments'
+            }
+            """
+            analyse()
+            request_id = request.json['request_id']
+            if not request_id:
+                abort(404, msg='Request ID not sent')
+            form: TARequests = TARequests.query.get(int(request_id))
+            if not form:
+                abort(404, msg='Form not found')
+            user_email = None
+            # if current user is client, check if form is theirs
+            if kwargs['permission'] == Permissions.client:
+                if form.user_id != current_user.id:
+                    return abort(403, status={'error': 'Forbidden resource'})
+                user_email = current_user.email
+            if not user_email:
+                user_email = Users.query.get(form.user_id).email
+            result = {
+                'request_id': form.request_id,
+                'email': user_email,
+                'created_on': form.created_on,
+                'stage': form.stage,
+                'is_active': form.is_active,
+                'form_data': form.form,
+                'comments': form.comments
+            }
+            response = {'data': result}
+
+            return jsonify(response)
+
+    class GetApprovedLTCForTA(Resource):
+        @role_required(role=Permissions.client)
+        def get(self):
+            analyse()
+            user: Users = current_user
+            forms = db.session.query(LTCRequests, LTCApproved).join(LTCApproved).filter(
+                LTCRequests.user_id == user.id, LTCApproved.office_order_created == True)
+            print(forms)
+            results = []
+            for form, approved_form in forms:
+                results.append({
+                    'request_id': form.request_id,
+                    'approved_on': approved_form.approved_on,
+                })
+            response = {'data': results}
+
+            return jsonify(response)
+
+    class GetTaFormAttachments(Resource):
+        """
+        Get LTC form attachments by request ID
+        """
+        @check_role()
+        def post(self, permission):
+            """
+            Send POST request to get form
+            payload:
+            @args: json:{
+                request_id: int
+            }
+            @return: file object
+            """
+            analyse()
+            request_id = request.json['request_id']
+            print(request_id)
+            if not request_id:
+                abort(404, msg='Request ID not sent')
+            form: TARequests = TARequests.query.get(request_id)
+            if not form:
+                abort(404, msg='Form not found')
+            if permission == Permissions.client:
+                if form.user_id != current_user.id:
+                    return abort(403, status={'error': 'Forbidden resource'})
+            ta_upload: TAProofUploads = TAProofUploads.query.get(request_id)
+            if ta_upload == None:
+                return abort(404, status={'error': 'No attachment'})
+
+            return filemanager.sendFile(ta_upload.file, ta_upload.filename)
+            # attachment_path = form.attachments
+            # if not attachment_path or attachment_path == "":
+            # _, ext = os.path.splitext(attachment_path)
+            # filename = f'ltc_{request_id}_proofs'+ext
+            # return filemanager.sendFile(attachment_path, filename)
+
+    class GetTaFormMetaDataForUser(Resource):
+        """
+        Get TA form data by user ID
+        """
+        @role_required(Permissions.client)
+        def get(self):
+            analyse()
+            user: Users = current_user
+            forms = TARequests.query.filter_by(user_id=user.id)
+            results = []
+            for form in forms:
+                results.append({
+                    'request_id': form.request_id,
+                    'created_on': (form.created_on),
+                    'stage': form.stage,
+                    'is_active': "Active" if form.is_active else "Not Active",
+                })
+            response = {'data': results}
+
+            return jsonify(response)
+
+    class GetTaFormMetaData(Resource):
+        """
+        Get LTC form metadata from LTC table
+        """
+        allowed_roles = [
+            Permissions.admin,
+            Permissions.deanfa,
+            Permissions.registrar,
+            Permissions.establishment,
+            Permissions.accounts,
+            Permissions.audit,
+            Permissions.dept_head,
+        ]
+
+        @roles_required(roles=allowed_roles)
+        def get(self, **kwargs):
+            analyse()
+            user: Users = current_user
+            forms = db.session.query(TARequests, Users).join(Users).all()
+            results = []
+            for form, user in forms:
+                results.append({
+                    'request_id': form.request_id,
+                    'user': user.email,
+                    'name': user.name,
+                    'user_id': form.user_id,
+                    'created_on': form.created_on,
+                    'stage': form.stage,
+                    'is_active': "Active" if form.is_active else "Not Active",
+                })
+            response = {'data': results}
+
+            return jsonify(response)
+
     class CommentOnTA(Resource):
         roles = [
             Permissions.establishment,

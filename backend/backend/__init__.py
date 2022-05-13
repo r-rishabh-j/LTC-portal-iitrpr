@@ -124,8 +124,14 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     # TA form
     api.add_resource(TaManager.ApplyForTA, '/api/ta/apply')
     api.add_resource(TaManager.CommentOnTA, '/api/ta/comment')
+    api.add_resource(TaManager.GetTaFormData, '/api/ta/getformdata')
+    api.add_resource(TaManager.GetTaFormAttachments, '/api/ta/getattachments')
+    api.add_resource(TaManager.GetTaFormMetaDataForUser, '/api/ta/getmyforms')
+    api.add_resource(TaManager.GetTaFormMetaData, '/api/ta/get-form-meta')
     api.add_resource(TaManager.GetPendingTaApprovalRequests,
                      '/api/ta/pending-requests')
+    api.add_resource(TaManager.GetApprovedLTCForTA,
+                     '/api/ta/get-approved-ltc')
     api.add_resource(TaManager.GetPendingTaOfficeOrderRequests,
                      '/api/ta/pending-office-orders')
     api.add_resource(TaManager.UploadTaOfficeOrder,
