@@ -1,4 +1,3 @@
-from urllib import request
 from . import db
 from datetime import date, datetime, timedelta
 from sqlalchemy.dialects.postgresql import JSON

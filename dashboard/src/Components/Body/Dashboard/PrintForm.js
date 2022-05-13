@@ -1115,10 +1115,10 @@ shortest route "
         style={{ margin: "0 0 0 0" }}
       >
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.user !== undefined &&
-        formInfo.signatures.user !== null ? (
+        formInfo.signatures.establishment !== undefined &&
+        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Junior Assistant"] ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Junior Assistant"].slice(
               2,
               -1
             )}`}
@@ -1128,10 +1128,10 @@ shortest route "
           <div />
         )}
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.user !== undefined &&
-        formInfo.signatures.user !== null ? (
+        formInfo.signatures.establishment !== undefined &&
+        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Junior Superintendent"] !== null ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Junior Superintendent"].slice(
               2,
               -1
             )}`}
@@ -1141,10 +1141,10 @@ shortest route "
           <div />
         )}
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.user !== undefined &&
-        formInfo.signatures.user !== null ? (
+        formInfo.signatures.establishment !== undefined &&
+        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Assistant Registrar"] ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Assistant Registrar"].slice(
               2,
               -1
             )}`}
@@ -1154,10 +1154,10 @@ shortest route "
           <div />
         )}
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.user !== undefined &&
-        formInfo.signatures.user !== null ? (
+        formInfo.signatures.establishment !== undefined &&
+        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Deputy Registrar"] ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Deputy Registrar"].slice(
               2,
               -1
             )}`}
@@ -1389,7 +1389,7 @@ shortest route "
         formInfo.signatures.accounts !== undefined &&
         formInfo.signatures.accounts["Junior Accountant"] !== null ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.accounts["Junior Accountant"].slice(
               2,
               -1
             )}`}
@@ -1399,10 +1399,10 @@ shortest route "
           <div />
         )}
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.user !== undefined &&
-        formInfo.signatures.user !== null ? (
+        formInfo.signatures.accounts !== undefined &&
+        formInfo.signatures.accounts["Junior Accounts Officer"] !== null ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.accounts["Junior Accounts Officer"].slice(
               2,
               -1
             )}`}
@@ -1412,10 +1412,10 @@ shortest route "
           <div />
         )}
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.user !== undefined &&
-        formInfo.signatures.user !== null ? (
+        formInfo.signatures.accounts !== undefined &&
+        formInfo.signatures.accounts["Assistant Registrar"] !== null ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.accounts["Assistant Registrar"].slice(
               2,
               -1
             )}`}
@@ -1424,7 +1424,7 @@ shortest route "
         ) : (
           <div />
         )}
-        {formInfo.signatures !== undefined &&
+        {/* {formInfo.signatures !== undefined &&
         formInfo.signatures.user !== undefined &&
         formInfo.signatures.user !== null ? (
           <img
@@ -1436,7 +1436,7 @@ shortest route "
           />
         ) : (
           <div />
-        )}
+        )} */}
       </Box>
       <Box
         display="flex"
