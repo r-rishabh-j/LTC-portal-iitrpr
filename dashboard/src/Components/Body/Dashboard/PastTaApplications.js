@@ -17,7 +17,7 @@ import ReviewBox from './ReviewBox'
 import {Box} from '@material-ui/core';
 const moment = require('moment');
 
-const PastApplications = ({ permission }) => {
+const PastTaApplications = ({ permission }) => {
   //console.log(permission)
   const classes = useStyles();
 
@@ -65,7 +65,7 @@ const PastApplications = ({ permission }) => {
     const data = { request_id: cellValues.row.request_id };
     axios({
       method: "post",
-      url: "api/getformdata",
+      url: "api/ta/getformdata",
       data: JSON.stringify(data),
       headers: { "Content-type": "application/json" },
     })
@@ -223,7 +223,7 @@ const PastApplications = ({ permission }) => {
         style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
       >
           <Typography variant="body" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
-            Past Applications
+            Past TA Applications
           </Typography>
       </Paper>
       <Paper
@@ -274,4 +274,4 @@ const PastApplications = ({ permission }) => {
   );
 }
 
-export default PastApplications
+export default PastTaApplications

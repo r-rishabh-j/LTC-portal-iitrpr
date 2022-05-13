@@ -7,12 +7,13 @@ import Home from '../Body/Dashboard/Home';
 import CreateApplication from '../Body/Dashboard/CreateApplication';
 import TAForm from "../Body/Dashboard/TAForm";
 import PastApplications from '../Body/Dashboard/PastApplications';
-import PastTaApplications from "../Body/Dashboard/PastTaApplications";
 import Notifications from '../Body/Dashboard/Notifications';
 import { Box } from "@material-ui/core";
 import { useStyles } from './HeaderStyles';
 import axios from "axios";
 import { ProfilePage } from '../Body/Dashboard/Profile/ProfilePage';
+import PastTaApplications from '../Body/Dashboard/PastTaApplications';
+import LTCforTA from '../Body/Dashboard/LTCforTA';
 
 export default function HeaderComponent(props) {
   const classes = useStyles();
@@ -66,12 +67,13 @@ export default function HeaderComponent(props) {
           ></Route>
           <Route
             path="/ta"
-            element={<TAForm profileInfo={props.profileInfo} />}
+            element={<LTCforTA profileInfo={props.profileInfo} />}
           ></Route>
           <Route
-            path="/past-ta"
-            element={<PastTaApplications profileInfo={props.profileInfo} />}
+            path= "/past-ta"
+            element={<PastTaApplications permission={props.profileInfo.permission} />}
           ></Route>
+
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>

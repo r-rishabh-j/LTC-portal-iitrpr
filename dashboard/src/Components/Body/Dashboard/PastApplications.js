@@ -223,7 +223,7 @@ const PastApplications = ({ permission }) => {
         style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
       >
           <Typography variant="body" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
-            Past Applications
+            Past LTC Applications
           </Typography>
       </Paper>
       <Paper

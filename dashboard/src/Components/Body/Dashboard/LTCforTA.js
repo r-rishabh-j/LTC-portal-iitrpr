@@ -15,16 +15,17 @@ import GeneratePDF from "../../Utilities/GeneratePDF";
 import DialogBox from "./DialogBox";
 import ReviewBox from "./ReviewBox";
 import { Box } from "@material-ui/core";
+import TAForm from "./TAForm";
 const moment = require("moment");
 
-const LTCforTA = ({ permission }) => {
+const LTCforTA = ({ profileInfo }) => {
   //console.log(permission)
   const classes = useStyles();
 
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
-    fetch("/api/ta/getmyforms")
+    fetch("/api/ta/get-approved-ltc")
       .then((data) => data.json())
       .then((data) => {
         console.log(data.data);
@@ -101,6 +102,8 @@ const LTCforTA = ({ permission }) => {
     setStatus(cellValues.row.stage);
     setId(cellValues.row.request_id);
   };
+
+ 
 
   const handleClose = () => {
     setOpen(false);
@@ -188,25 +191,11 @@ const LTCforTA = ({ permission }) => {
       renderCell: cellElement,
     },
     {
-      field: "created_on",
-      headerName: "Created on",
+      field: "approved_on",
+      headerName: "Approved on",
       minWidth: 250,
       flex: 1,
       renderCell: timeElement,
-    },
-    {
-      field: "stage",
-      headerName: "Stage",
-      minWidth: 200,
-      flex: 1,
-      renderCell: stageElement,
-    },
-    {
-      field: "is_active",
-      headerName: "Status",
-      minWidth: 150,
-      flex: 1,
-      renderCell: cellElement,
     },
 
     {
@@ -224,6 +213,26 @@ const LTCforTA = ({ permission }) => {
               }}
             >
               View
+            </Button>
+          </>
+        );
+      },
+    },
+    {
+      field: "fill_ta",
+      headerName: "TA Form",
+      minWidth: 150,
+      renderCell: (cellValues) => {
+        return (
+          <>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(event) => {
+                handleClickOpen(event, cellValues);
+              }}
+            >
+              Fill
             </Button>
           </>
         );
@@ -275,7 +284,7 @@ const LTCforTA = ({ permission }) => {
         >
           <DialogBox
             request_id={id}
-            permission={permission}
+            permission={profileInfo.permission}
             status={status}
             showCommentSection={false}
           />
