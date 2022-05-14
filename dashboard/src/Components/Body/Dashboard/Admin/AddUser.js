@@ -75,6 +75,7 @@ const AddUser = () => {
               label="Department"
               options={departments}
               disabled={false}
+              setDept = {setDept}
             />
           </Grid>
           <Grid item xs={12} style={{ margin: "1vh 0 0 0" }}>

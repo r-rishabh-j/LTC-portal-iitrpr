@@ -138,7 +138,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(TaManager.GetPendingTaApprovalRequests,
                      '/api/ta/pending-requests')
     api.add_resource(TaManager.GetPastTaApprovalRequests,
-                     '/api/ta/getpastltc')
+                     '/api/ta/getpastta')
     api.add_resource(TaManager.GetApprovedLTCForTA,
                      '/api/ta/get-approved-ltc')
     api.add_resource(TaManager.GetPendingTaOfficeOrderRequests,

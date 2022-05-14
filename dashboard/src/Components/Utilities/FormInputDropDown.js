@@ -3,7 +3,7 @@ import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import { useFormContext, Controller } from "react-hook-form";
 
 
-export const FormInputDropDown = ({name, control, label, options, disabled}) => {
+export const FormInputDropDown = ({name, control, label, options, disabled, setDept}) => {
     const generateSelectOptions = () => {
     return options.map((option) => {
       return (
@@ -21,10 +21,10 @@ export const FormInputDropDown = ({name, control, label, options, disabled}) => 
         <>
           <InputLabel>{label}</InputLabel>
           <Select
-            onChange={onChange}
+            onChange={ (event) => {onChange(event); setDept(value)}}
             value={value}
             fullWidth
-            defaultValue=""
+            defaultValue="Select"
             variant="outlined"
             // required={true}
             disabled={disabled}
