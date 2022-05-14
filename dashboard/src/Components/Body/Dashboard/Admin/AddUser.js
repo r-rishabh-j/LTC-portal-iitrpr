@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   DialogTitle,
   DialogContent,
@@ -8,36 +8,61 @@ import {
   Button,
   Box,
 } from "@material-ui/core";
-import {useState} from 'react'
-import { useForm} from "react-hook-form";
+import { useState } from 'react'
+import { useForm } from "react-hook-form";
 import { FormInputText } from '../../../Utilities/FormInputText';
 import { FormInputDropDown } from "../../../Utilities/FormInputDropDown";
 
 const AddUser = () => {
-    const { handleSubmit, control} = useForm()
-    const onSubmit = (data) => {
-        console.log(data)
-    }
-    const [dept, setDept] = useState("Select")
+  const { handleSubmit, control } = useForm();
 
-    //fetch from API
-    const departments = [
-      {
-        label: "Select",
-        value: "Select",
-      },
-      {
-        label: "Computer Science and Engineering",
-        value: "CSE",
-      },
-      {
-        label: "Electrical Engineering",
-        value: "EE",
-      },
-    ];
+  const [roleMapping, setRoleMapping] = useState(null);
+  const [departments, setDepartments] = useState(null);
+
+
+  function setDepartmentsFromMapping(role_mapping) {
+    var departments = Object.keys(role_mapping).map((prop, i) => {
+      return {
+        label: role_mapping[prop]['name'],
+        value: prop,
+      }
+    })
+
+    console.log('set', departments);
+    setDepartments(departments);
+  }
+
+  useEffect(() => {
+    fetch("/api/admin/getroles")
+      .then((data) => data.json())
+      .then((data) => {
+        setRoleMapping(data.role_mapping);
+        setDepartmentsFromMapping(data.role_mapping);
+      });
+  }, []);
+  const onSubmit = (data) => {
+    console.log(data)
+  }
+  const [dept, setDept] = useState("Select");
+
+  //fetch from API
+  // const departments = [
+  //   {
+  //     label: "Select",
+  //     value: "Select",
+  //   },
+  //   {
+  //     label: "Computer Science and Engineering",
+  //     value: "CSE",
+  //   },
+  //   {
+  //     label: "Electrical Engineering",
+  //     value: "EE",
+  //   },
+  // ];
 
   return (
-    <div>
+    <Box>
       <DialogTitle>Add New User</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -73,7 +98,7 @@ const AddUser = () => {
               name={"department"}
               control={control}
               label="Department"
-              options={departments}
+              options={departments===null?[]:departments}
               disabled={false}
             />
           </Grid>
@@ -82,19 +107,19 @@ const AddUser = () => {
               name={"designation"}
               control={control}
               label="User Role/Designation"
-              options={departments}
+              options={[]}
               disabled={false}
             />
           </Grid>
           <Box display="flex" justifyContent="center">
-          <Button type="submit"
-                  variant="contained"
-                  color="primary"
-                  style={{margin: "2vh 0 0 0"}}>Create</Button>
-            </Box>
+            <Button type="submit"
+              variant="contained"
+              color="primary"
+              style={{ margin: "2vh 0 0 0" }}>Create</Button>
+          </Box>
         </form>
       </DialogContent>
-    </div>
+    </Box>
   );
 }
 

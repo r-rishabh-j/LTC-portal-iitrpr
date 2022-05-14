@@ -154,13 +154,6 @@ function Pending({ permission }) {
         return Date(moment(time).local().format("DD/MM/YYYY"));
       }
     },
-    // {
-    //   field: "stage",
-    //   headerName: "Stage",
-    //   flex: 1,
-    //   minWidth: 150,
-    //   renderCell: cellElement,
-    // },
     {
       field: "is_active",
       headerName: "Status",
@@ -192,42 +185,6 @@ function Pending({ permission }) {
         );
       },
     },
-    // {
-    //   field: "pdf",
-    //   headerName: "PDF",
-    //   minWidth: 150,
-    //   renderCell: (cellValues) => {
-    //     return (
-    //       <Button
-    //         variant="contained"
-    //         color="primary"
-    //         onClick={(event) => {
-    //           handleFormClick(event, cellValues);
-    //         }}
-    //       >
-    //         Download
-    //       </Button>
-    //     );
-    //   },
-    // },
-    // {
-    //   field: "attachment",
-    //   headerName: "Attachment",
-    //   minWidth: 150,
-    //   renderCell: (cellValues) => {
-    //     return (
-    //       <Button
-    //         variant="contained"
-    //         color="primary"
-    //         onClick={(event) => {
-    //           handleAttachmentClick(event, cellValues);
-    //         }}
-    //       >
-    //         View
-    //       </Button>
-    //     );
-    //   },
-    // },
   ];
 
 
@@ -238,7 +195,7 @@ function Pending({ permission }) {
         style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor: '#263238' }}
       >
         <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
-          New Applications
+          New LTC Applications
         </Typography>
       </Paper>
       <Paper

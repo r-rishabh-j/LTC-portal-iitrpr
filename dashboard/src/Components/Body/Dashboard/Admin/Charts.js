@@ -73,7 +73,7 @@ function Charts() {
   return (
     <>
       <Box
-        style={{ overflowX: "hidden", overflowY: "hidden", minHeight: "91vh" }}
+        style={{ overflowX: "hidden", overflowY: "hidden", minHeight: "89vh" }}
       >
         {/* <Grid container>
           
@@ -146,6 +146,7 @@ function Charts() {
             open={openAddUser}
             onClose={handleCloseAddUser}
             classes={{ paper: classes.addUserDialogPaper }}
+            style={{minWidth:"80vw"}}
           >
             <AddUser/>
             <DialogActions>

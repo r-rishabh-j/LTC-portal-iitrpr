@@ -116,7 +116,7 @@ class UserManager(Resource):
             return {'error': 'Not implemented'}, 500
 
     class GetRoleMapping(Resource):
-        # @role_required(role=Permissions.admin)
+        @role_required(role=Permissions.admin)
         def get(self):
             roles = UserManager.generateRoles()
             return {'role_mapping': roles}
