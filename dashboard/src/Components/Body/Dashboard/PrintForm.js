@@ -1143,7 +1143,7 @@ shortest route "
         )}
         {formInfo.signatures !== undefined &&
         formInfo.signatures.establishment !== undefined &&
-        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Assistant Registrar"]!==undefined!==null && formInfo.signatures.establishment["Assistant Registrar"]!==undefined ? (
+        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Assistant Registrar"]!==null && formInfo.signatures.establishment["Assistant Registrar"]!==undefined ? (
           <img
             src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Assistant Registrar"].slice(
               2,
