@@ -68,7 +68,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
       icon: <HistoryIcon />, popup: true
     },
     {
-      label: "For Review",
+      label: "LTC Review",
       link: ["/review"],
       icon: <RateReviewIcon />,
       popup: false

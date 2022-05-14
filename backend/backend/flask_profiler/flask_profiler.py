@@ -115,7 +115,7 @@ def wrapHttpEndpoint(f):
             "url": request.base_url,
             "args": dict(request.args.items()),
             # "form": dict(request.form.items()),
-            "body": request.data.decode("utf-8", "strict"),
+            # "body": request.data.decode("utf-8", "strict"),
             "headers": header,
             "func": request.endpoint,
             "ip": request.remote_addr

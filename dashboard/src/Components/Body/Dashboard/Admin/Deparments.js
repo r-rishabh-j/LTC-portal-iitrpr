@@ -46,7 +46,7 @@ function Deparments() {
         { field: "dept_id", headerName: "Dept. ID", minWidth: 50, flex: 1, renderCell: cellElement },
         { field: "department_name", headerName: "Dept. Name", minWidth: 150, flex: 1, renderCell: cellElement },
         { field: "head_email", headerName: "Head Email", minWidth: 150, flex: 1, renderCell: cellElement },
-        { field: "is_stage", headerName: "Is Stage", flex: 1, minWidth: 180, renderCell: cellElement },
+        // { field: "is_stage", headerName: "Is Stage", flex: 1, minWidth: 180, renderCell: cellElement },
     ];
 
     return (

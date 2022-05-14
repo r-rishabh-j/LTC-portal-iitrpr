@@ -9,6 +9,8 @@ import Home from "../Home";
 import Pending from '../Establishment/Pending';
 import Past from '../Establishment/Past';
 import { ProfilePage } from '../Profile/ProfilePage';
+import PastTaApplications from '../Establishment/PastTaApplications';
+import PendingTAApplications from '../Establishment/PendingTAApplications';
 
 function RegistrarPage(props) {
     const classes = useStyles();
@@ -32,15 +34,16 @@ function RegistrarPage(props) {
         handleDrawerToggle={handleDrawerToggle}
         handleDrawerClose={handleDrawerClose}
         profileInfo={props.profileInfo}
-
         userType="registrar"
       />
       <Box className={classes.wrapper}>
         <Routes>
-          <Route path="/new" element={<Pending permission={"registrar"}  />}></Route>
-          <Route path="/past" element={<Past permission={"registrar"} />}></Route>
+          <Route path="/new" element={<Pending permission={props.profileInfo.permission}  />}></Route>
+          <Route path="/past" element={<Past permission={props.profileInfo.permission} />}></Route>
           <Route path="/profile" element={<ProfilePage profile = {props.profileInfo}/>}></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
+          <Route path="/past-ta" element={<PastTaApplications permission={props.profileInfo.permission} />}></Route>
+          <Route path="/new-ta" element={<PendingTAApplications permission={props.profileInfo.permission} />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
       </Box>

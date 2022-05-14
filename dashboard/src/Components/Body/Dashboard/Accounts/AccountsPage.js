@@ -10,6 +10,8 @@ import Pending from '../Establishment/Pending';
 import Past from '../Establishment/Past';
 import AdvancePayments from './AdvancePayment';
 import { ProfilePage } from '../Profile/ProfilePage';
+import PastTaApplications from '../Establishment/PastTaApplications';
+import PendingTAApplications from '../Establishment/PendingTAApplications';
 
 export default function AccountsPage(props){
     const classes = useStyles();
@@ -45,6 +47,8 @@ export default function AccountsPage(props){
           <Route path="/past" element={<Past />}></Route>
           <Route path="/advance-payment" element={<AdvancePayments />}></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
+          <Route path="/past-ta" element={<PastTaApplications permission={props.profileInfo.permission} />}></Route>
+          <Route path="/new-ta" element={<PendingTAApplications permission={props.profileInfo.permission} />}></Route>
           <Route
             path="/profile"
             element={<ProfilePage profile={props.profileInfo} />}

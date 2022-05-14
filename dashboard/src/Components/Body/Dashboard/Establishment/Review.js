@@ -163,13 +163,6 @@ function Review({ permission }) {
         return Date(moment(time).local().format("DD/MM/YYYY"));
       }
     },
-    // {
-    //   field: "stage",
-    //   headerName: "Stage",
-    //   flex: 1,
-    //   minWidth: 150,
-    //   renderCell: cellElement,
-    // },
     {
       field: "received_from",
       headerName: "Received From",
@@ -201,42 +194,6 @@ function Review({ permission }) {
         );
       },
     },
-    // {
-    //   field: "pdf",
-    //   headerName: "PDF",
-    //   minWidth: 150,
-    //   renderCell: (cellValues) => {
-    //     return (
-    //       <Button
-    //         variant="contained"
-    //         color="primary"
-    //         onClick={(event) => {
-    //           handleFormClick(event, cellValues);
-    //         }}
-    //       >
-    //         Download
-    //       </Button>
-    //     );
-    //   },
-    // },
-    // {
-    //   field: "attachment",
-    //   headerName: "Attachment",
-    //   minWidth: 150,
-    //   renderCell: (cellValues) => {
-    //     return (
-    //       <Button
-    //         variant="contained"
-    //         color="primary"
-    //         onClick={(event) => {
-    //           handleAttachmentClick(event, cellValues);
-    //         }}
-    //       >
-    //         View
-    //       </Button>
-    //     );
-    //   },
-    // },
   ];
 
   return (
@@ -246,7 +203,7 @@ function Review({ permission }) {
         style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor: '#263238' }}
       >
         <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
-          Applications For Review
+          LTC Applications For Review
         </Typography>
       </Paper>
       <Paper

@@ -323,8 +323,8 @@ class TaManager():
             user: Users = current_user
             department = user.department
             if kwargs['permission'] == Permissions.dept_head:
-                department = 'department_ta'
-            table_ref = Departments.getDeptRequestTableByName(department)
+                department = 'department'
+            table_ref = Departments.getDeptRequestTableByName(department+'_ta')
 
             if not table_ref:
                 abort(
@@ -346,6 +346,7 @@ class TaManager():
                         print(dept_log.status)
                         pending.append({
                             'request_id': form.request_id,
+                            'ltc_id':form.ltc_id,
                             'user': applicant.email,
                             'name': applicant.name,
                             'created_on': form.created_on,
@@ -484,6 +485,7 @@ class TaManager():
                             'stage': form.stage,
                             'is_active': "Active" if form.is_active else "Not Active",
                         })
+            print(previous)
             return jsonify({'previous': previous})
 
     class UpdateAccountsPaymentDetails(Resource):

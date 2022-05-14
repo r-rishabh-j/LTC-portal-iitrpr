@@ -9,6 +9,8 @@ import Home from "../Home";
 import Pending from '../Establishment/Pending';
 import Past from "../Establishment/Past";
 import { ProfilePage } from '../Profile/ProfilePage';
+import PastTaApplications from '../Establishment/PastTaApplications';
+import PendingTAApplications from '../Establishment/PendingTAApplications';
 
 
 function AuditPage(props) {
@@ -43,6 +45,8 @@ function AuditPage(props) {
           {/*<Route path="/payment" element={<Payment />}></Route> */}
           <Route path="/profile" element={<ProfilePage profile = {props.profileInfo}/>}></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
+          <Route path="/past-ta" element={<PastTaApplications permission={props.profileInfo.permission} />}></Route>
+          <Route path="/new-ta" element={<PendingTAApplications permission={props.profileInfo.permission} />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
       </Box>
