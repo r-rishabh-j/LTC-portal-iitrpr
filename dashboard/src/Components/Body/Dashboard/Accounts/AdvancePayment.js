@@ -133,6 +133,9 @@ function AdvancePayments() {
       field: "form",
       headerName: "Form",
       minWidth: 150,
+      disableExport: true,
+      sortable: false,
+      filterable: false,
       renderCell: (cellValues) => {
         return (
           <>

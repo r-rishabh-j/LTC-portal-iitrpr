@@ -11,196 +11,129 @@ import GoogleButton from 'react-google-button';
 const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL, REACT_APP_DEVELOPMENT } = process.env;
 
 function GoogleLogin() {
-    const classes = useStyles();
-    const { handleSubmit, control } = useForm();
-    const { handleSubmit: handleSubmitEmail, control: controlEmail} = useForm();
-    
-    const onSubmit = (data) => {
-        const formData = new FormData();
-        formData.append('auth', JSON.stringify(data))
-        axios({
-            method: "POST",
-            url: "/api/login",
-            data: formData
-        }).then((response) => {
-            window.location = response.request.responseURL;
-        }).catch((error) => {
-            if (error.response) {
-                console.log(error.response);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            }
-        });
-    }
+  const classes = useStyles();
+  const { handleSubmit, control } = useForm();
+  const { handleSubmit: handleSubmitEmail, control: controlEmail, formState: { isSubmitting } } = useForm();
 
-    const onSubmitEmail = (data) => {
-        console.log(data)
-         axios({
-           method: "POST",
-           url: "/api/otp-login",
-           data: data
-         })
-           .then((response) => {
-             alert(response.data.success)
-           })
-           .catch((error) => {
-             if (error.response) {
-               console.log(error.response);
-               console.log(error.response.status);
-               console.log(error.response.headers);
-             }
-           });
+  const onSubmit = (data) => {
+    const formData = new FormData();
+    formData.append('auth', JSON.stringify(data))
+    axios({
+      method: "POST",
+      url: "/api/login",
+      data: formData
+    }).then((response) => {
+      window.location = response.request.responseURL;
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    });
+  }
 
-    }
-    const openGoogleLoginPage = useCallback(() => {
-        const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
-        const redirectUri = 'api/login';
+  const onSubmitEmail = (data) => {
+    const form = new FormData();
+    form.append('email', data.email);
+    console.log(data);
+    return axios({
+      method: "POST",
+      url: "/api/otp-login",
+      data: data
+    })
+      .then((response) => {
+        alert(response.data.success);
+        window.location.reload();
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          alert(error.response.data.error);
+        }
+      });
 
-        const scope = [
-            'https://www.googleapis.com/auth/userinfo.email',
-            'https://www.googleapis.com/auth/userinfo.profile'
-        ].join(' ');
+  }
+  const openGoogleLoginPage = useCallback(() => {
+    const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
+    const redirectUri = 'api/login';
 
-        const params = {
-            response_type: 'code',
-            client_id: REACT_APP_GOOGLE_CLIENT_ID,
-            redirect_uri: `${REACT_APP_BASE_BACKEND_URL}/${redirectUri}`,
-            prompt: 'select_account',
-            access_type: 'offline',
-            scope
-        };
+    const scope = [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile'
+    ].join(' ');
 
-        const urlParams = new URLSearchParams(params).toString();
+    const params = {
+      response_type: 'code',
+      client_id: REACT_APP_GOOGLE_CLIENT_ID,
+      redirect_uri: `${REACT_APP_BASE_BACKEND_URL}/${redirectUri}`,
+      prompt: 'select_account',
+      access_type: 'offline',
+      scope
+    };
 
-        window.location = `${googleAuthUrl}?${urlParams}`;
-    }, []);
+    const urlParams = new URLSearchParams(params).toString();
 
-    return (
-      <Grid
-        style={{ backgroundColor: "#cfd8dc", minHeight: "100vh", display: "flex" }}
-      >
-        <Box elevation={10} className={classes.loginPage} display="flex">
-          <Grid container>
-            <Grid item xs={6}>
-              <Box style={{ padding: "5vh" }}>
-                <center>
-                  <h2>LTC PORTAL IIT ROPAR</h2>
-                  <Avatar className={classes.avatar}>
-                    <LockIcon />
-                  </Avatar>
-                  <h3>Sign In</h3>
+    window.location = `${googleAuthUrl}?${urlParams}`;
+  }, []);
 
-                  {REACT_APP_DEVELOPMENT === "true" ? (
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                      <Controller
-                        name="email"
-                        control={control}
-                        defaultValue=""
-                        render={({
-                          field: { onChange, value },
-                          fieldState: { error },
-                        }) => (
-                          <TextField
-                            label="Username"
-                            placeholder="Enter username"
-                            value={value}
-                            onChange={onChange}
-                            error={!!error}
-                            fullWidth
-                            required
-                            className={classes.textFieldLogin}
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="password"
-                        control={control}
-                        defaultValue=""
-                        render={({
-                          field: { onChange, value },
-                          fieldState: { error },
-                        }) => (
-                          <TextField
-                            label="Password"
-                            value={value}
-                            onChange={onChange}
-                            error={!!error}
-                            placeholder="Enter password"
-                            type="password"
-                            fullWidth
-                            required
-                            className={classes.textFieldPass}
-                          />
-                        )}
-                      />
+  return (
+    <Grid
+      style={{ backgroundColor: "#cfd8dc", minHeight: "100vh", display: "flex" }}
+    >
+      <Box elevation={10} className={classes.loginPage} display="flex">
+        <Grid container>
+          <Grid item xs={6}>
+            <Box style={{ padding: "5vh" }}>
+              <center>
+                <h2>LTC PORTAL IIT ROPAR</h2>
+                <Avatar className={classes.avatar}>
+                  <LockIcon />
+                </Avatar>
+                <h3>Sign In</h3>
 
-                      <div>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          color="primary"
-                          fullWidth
-                          className={classes.btn}
-                        >
-                          Sign In (testing)
-                        </Button>
-                      </div>
-                    </form>
-                  ) : (
-                    <></>
-                  )}
-                  {/* <Typography>
-                        {" "}
-                        New User?
-                        <Link to="/register"> Sign Up</Link>
-                    </Typography>
-
-                    {/* google login here */}
-                  {/* <h2 className={classes.btnHeader}>Login with Google</h2> */}
-                  <GoogleButton
-                    onClick={openGoogleLoginPage}
-                    label="Sign in with Google"
-                    disabled={!REACT_APP_GOOGLE_CLIENT_ID}
-                  />
-                </center>
-              </Box>
-            </Grid>
-
-            <Grid item xs={6} style={{ backgroundColor: "#263238" }}>
-              <Box
-                // display="flex"
-                // justifyContent="center"
-                style={{
-                  margin: "10vh 0 0 0",
-                  padding: "5vh",
-                }}
-              >
-                <center>
-                  <Typography variant="h5" style={{ color: "white" }}>
-                    Sign In through OTP
-                  </Typography>
-                  <form onSubmit={handleSubmitEmail(onSubmitEmail)}>
+                {REACT_APP_DEVELOPMENT === "true" ? (
+                  <form onSubmit={handleSubmit(onSubmit)}>
                     <Controller
                       name="email"
-                      control={controlEmail}
+                      control={control}
                       defaultValue=""
                       render={({
                         field: { onChange, value },
                         fieldState: { error },
                       }) => (
                         <TextField
-                          label="Email"
-                          placeholder="Enter email"
-                          variant="outlined"
+                          label="Username"
+                          placeholder="Enter username"
                           value={value}
                           onChange={onChange}
                           error={!!error}
                           fullWidth
                           required
                           className={classes.textFieldLogin}
-                          InputProps={{
-                            style: { backgroundColor: "white" },
-                          }}
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="password"
+                      control={control}
+                      defaultValue=""
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          label="Password"
+                          value={value}
+                          onChange={onChange}
+                          error={!!error}
+                          placeholder="Enter password"
+                          type="password"
+                          fullWidth
+                          required
+                          className={classes.textFieldPass}
                         />
                       )}
                     />
@@ -213,17 +146,92 @@ function GoogleLogin() {
                         fullWidth
                         className={classes.btn}
                       >
-                        Send OTP
+                        Sign In (demo)
                       </Button>
                     </div>
                   </form>
-                </center>
-              </Box>
-            </Grid>
+                ) : (
+                  <Box minHeight={"8vh"}></Box>
+                )}
+                {/* <Typography>
+                        {" "}
+                        New User?
+                        <Link to="/register"> Sign Up</Link>
+                    </Typography>
+
+                    {/* google login here */}
+                {/* <h2 className={classes.btnHeader}>Login with Google</h2> */}
+                <GoogleButton
+                  onClick={openGoogleLoginPage}
+                  label="Sign in with Google"
+                  disabled={!REACT_APP_GOOGLE_CLIENT_ID}
+                />
+              </center>
+            </Box>
           </Grid>
-        </Box>
-      </Grid>
-    );
+
+          <Grid item xs={6} style={{ backgroundColor: "#263238" }}>
+            <Box
+              // display="flex"
+              // justifyContent="center"
+              style={{
+                margin: "10vh 0 0 0",
+                padding: "5vh",
+              }}
+            >
+              <center>
+                <Typography variant="h5" style={{ color: "white" }}>
+                  Sign In through OTP
+                </Typography>
+                <form onSubmit={handleSubmitEmail(onSubmitEmail)}>
+                  <Controller
+                    name="email"
+                    control={controlEmail}
+                    defaultValue=""
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        label="Email"
+                        placeholder="Enter email"
+                        variant="outlined"
+                        value={value}
+                        onChange={onChange}
+                        error={!!error}
+                        fullWidth
+                        required
+                        className={classes.textFieldLogin}
+                        InputProps={{
+                          style: { backgroundColor: "white" },
+                        }}
+                      />
+                    )}
+                  />
+
+                  <div>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      className={classes.btn}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting && (
+                        <span className="spinner-grow spinner-grow-sm"></span>
+                      )}
+                      Send OTP
+                    </Button>
+                  </div>
+                </form>
+              </center>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+    </Grid>
+  );
 }
 
 export default GoogleLogin

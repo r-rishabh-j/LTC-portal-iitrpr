@@ -93,7 +93,7 @@ const UploadOfficeOrder = ({ permission }) => {
     );
   };
 
-  function formatDate(date){
+  function formatDate(date) {
     const d = moment(date).format("DD/MM/YYYY");
     return d;
   }
@@ -135,7 +135,7 @@ const UploadOfficeOrder = ({ permission }) => {
       minWidth: 150,
       flex: 1,
       renderCell: timeElement,
-      type:"date",
+      type: "date",
       valueGetter: (cellValues) => {
         const time = formatDate(cellValues.value.replace('GMT', ''));
         return Date(moment(time).local().format("DD/MM/YYYY"));
@@ -146,6 +146,10 @@ const UploadOfficeOrder = ({ permission }) => {
       headerName: "Form",
       minWidth: 80,
       flex: 1,
+      disableExport: true,
+      filterable: false,
+      sortable: false,
+
       renderCell: (cellValues) => {
         return (
           <>
@@ -237,7 +241,7 @@ const UploadOfficeOrder = ({ permission }) => {
           onClose={handleformClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} showCommentSection={false}/>
+          <DialogBox request_id={id} showCommentSection={false} />
           <DialogActions>
             <Button onClick={handleformClose} color="primary">
               Close

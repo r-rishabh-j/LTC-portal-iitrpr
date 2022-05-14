@@ -30,60 +30,60 @@ const LTCforTA = ({ profileInfo }) => {
     fetch("/api/ta/get-approved-ltc")
       .then((data) => data.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         setTableData(data.data);
       });
   }, []);
 
   //rows = {tableData}
-  const handleAttachmentClick = (event, cellValues) => {
-    console.log(cellValues.row.request_id);
-    const data = { request_id: cellValues.row.request_id };
-    axios({
-      method: "post",
-      url: "api/ta/getattachments",
-      data: JSON.stringify(data),
-      headers: { "Content-type": "application/json" },
-      responseType: "blob",
-    })
-      .then((response) => {
-        var blob = new Blob([response.data], { type: response.data.type });
-        var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
-        var anchor = document.createElement("a");
-        anchor.href = url;
-        anchor.target = "_blank";
-        anchor.click();
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response);
-          console.log(error.response.status);
-          alert("No attachments");
-        }
-      });
-  };
+  // const handleAttachmentClick = (event, cellValues) => {
+  //   // console.log(cellValues.row.request_id);
+  //   const data = { request_id: cellValues.row.request_id };
+  //   axios({
+  //     method: "post",
+  //     url: "api/ta/getattachments",
+  //     data: JSON.stringify(data),
+  //     headers: { "Content-type": "application/json" },
+  //     responseType: "blob",
+  //   })
+  //     .then((response) => {
+  //       var blob = new Blob([response.data], { type: response.data.type });
+  //       var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
+  //       var anchor = document.createElement("a");
+  //       anchor.href = url;
+  //       anchor.target = "_blank";
+  //       anchor.click();
+  //     })
+  //     .catch((error) => {
+  //       if (error.response) {
+  //         console.log(error.response);
+  //         console.log(error.response.status);
+  //         alert("No attachments");
+  //       }
+  //     });
+  // };
 
-  const handleFormClick = (event, cellValues) => {
-    console.log(cellValues.row.request_id);
-    const data = { request_id: cellValues.row.request_id };
-    axios({
-      method: "post",
-      url: "api/getformdata",
-      data: JSON.stringify(data),
-      headers: { "Content-type": "application/json" },
-    })
-      .then((response) => {
-        console.log(response.data.data.form_data);
-        GeneratePDF(response.data.data.form_data);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response);
-          console.log(error.response.status);
-          alert("Form not found");
-        }
-      });
-  };
+  // const handleFormClick = (event, cellValues) => {
+  //   // console.log(cellValues.row.request_id);
+  //   const data = { request_id: cellValues.row.request_id };
+  //   axios({
+  //     method: "post",
+  //     url: "api/getformdata",
+  //     data: JSON.stringify(data),
+  //     headers: { "Content-type": "application/json" },
+  //   })
+  //     .then((response) => {
+  //       console.log(response.data.data.form_data);
+  //       GeneratePDF(response.data.data.form_data);
+  //     })
+  //     .catch((error) => {
+  //       if (error.response) {
+  //         console.log(error.response);
+  //         console.log(error.response.status);
+  //         alert("Form not found");
+  //       }
+  //     });
+  // };
 
   const handleCellClick = (param, event) => {
     event.stopPropagation();
@@ -100,16 +100,16 @@ const LTCforTA = ({ profileInfo }) => {
 
   const handleClickOpen = (event, cellValues) => {
     setOpen(true);
-    console.log("status", cellValues.row.stage);
+    // console.log("status", cellValues.row.stage);
     setStatus(cellValues.row.stage);
     setId(cellValues.row.request_id);
   };
 
-  const handleTaFill = (event, cellValues) =>{
+  const handleTaFill = (event, cellValues) => {
     setLtcId(cellValues.row.request_id);
   }
 
- 
+
 
   const handleClose = () => {
     setOpen(false);
@@ -122,7 +122,7 @@ const LTCforTA = ({ profileInfo }) => {
   const editForm = (event, cellValues) => {
     setOpenReview(true);
     setId(cellValues.row.request_id);
-    console.log("Open a new dialog box");
+    // console.log("Open a new dialog box");
   };
 
   const stageElement = (cellValues) => {
@@ -201,7 +201,7 @@ const LTCforTA = ({ profileInfo }) => {
       headerName: "Approved on",
       minWidth: 150,
       flex: 1,
-      type:"date",
+      type: "date",
       renderCell: timeElement,
       valueGetter: (cellValues) => {
         const time = formatDate(cellValues.value.replace('GMT', ''));
@@ -214,6 +214,9 @@ const LTCforTA = ({ profileInfo }) => {
       headerName: "View LTC Form",
       minWidth: 150,
       flex: 1,
+      disableExport: true,
+      filterable: false,
+      sortable: false,
       renderCell: (cellValues) => {
         return (
           <>
@@ -235,6 +238,10 @@ const LTCforTA = ({ profileInfo }) => {
       headerName: "Fill TA Form",
       minWidth: 150,
       flex: 1,
+      disableExport: true,
+      filterable: false,
+      sortable: false,
+
       renderCell: (cellValues) => {
         return (
           <>
@@ -255,78 +262,78 @@ const LTCforTA = ({ profileInfo }) => {
 
   return (
     <>
-    {ltcId === null?
-      <>
-      <Paper
-        elevation={10}
-        style={{
-          display: "flex",
-          margin: "0 0.5vw 0 3vw",
-          backgroundColor: "#263238",
-        }}
-      >
-        <Typography
-          variant="body"
-          style={{ margin: "auto", fontSize: "25px", color: "white" }}
-        >
-          Pick an approved LTC application to continue....
-        </Typography>
-      </Paper>
-      <Paper
-        elevation={10}
-        style={{
-          display: "flex",
-          minHeight: "calc(98vh - 118px)",
-          margin: "0 0.5vw 0 3vw",
-        }}
-      >
-        <Grid container style={{ flexGrow: 1 }}>
-          <DataGrid
-            initialState={{
-              sorting: { sortModel: [{ field: "request_id", sort: "desc" }] },
+      {ltcId === null ?
+        <>
+          <Paper
+            elevation={10}
+            style={{
+              display: "flex",
+              margin: "0 0.5vw 0 3vw",
+              backgroundColor: "#263238",
             }}
-            columns={columns}
-            rows={tableData}
-            getRowId={(row) => row.request_id}
-            onCellClick={handleCellClick}
-            onRowClick={handleRowClick}
-            components={{ Toolbar: DataGridToolbar }}
-          />
-        </Grid>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          classes={{ paper: classes.dialogPaper }}
-        >
-          <DialogBox
-            request_id={id}
-            permission={profileInfo.permission}
-            status={status}
-            showCommentSection={false}
-          />
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
+          >
+            <Typography
+              variant="body1"
+              style={{ margin: "auto", fontSize: "25px", color: "white" }}
+            >
+              Pick an approved LTC application to continue....
+            </Typography>
+          </Paper>
+          <Paper
+            elevation={10}
+            style={{
+              display: "flex",
+              minHeight: "calc(98vh - 118px)",
+              margin: "0 0.5vw 0 3vw",
+            }}
+          >
+            <Grid container style={{ flexGrow: 1 }}>
+              <DataGrid
+                initialState={{
+                  sorting: { sortModel: [{ field: "request_id", sort: "desc" }] },
+                }}
+                columns={columns}
+                rows={tableData}
+                getRowId={(row) => row.request_id}
+                onCellClick={handleCellClick}
+                onRowClick={handleRowClick}
+                components={{ Toolbar: DataGridToolbar }}
+              />
+            </Grid>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              classes={{ paper: classes.dialogPaper }}
+            >
+              <DialogBox
+                request_id={id}
+                permission={profileInfo.permission}
+                status={status}
+                showCommentSection={false}
+              />
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
 
-        <Dialog
-          open={openReview}
-          onClose={handleCloseReview}
-          classes={{ paper: classes.dialogPaper }}
-        >
-          <ReviewBox request_id={id} />
-          <DialogActions>
-            <Button onClick={handleCloseReview} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Paper>
-      <Box minHeight="2vh"></Box></>
-         : <TAForm profileInfo={profileInfo} ltcId={ltcId}/> }
-        </>
+            <Dialog
+              open={openReview}
+              onClose={handleCloseReview}
+              classes={{ paper: classes.dialogPaper }}
+            >
+              <ReviewBox request_id={id} />
+              <DialogActions>
+                <Button onClick={handleCloseReview} color="primary">
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Paper>
+          <Box minHeight="2vh"></Box></>
+        : <TAForm profileInfo={profileInfo} ltcId={ltcId} />}
+    </>
   );
 };
 

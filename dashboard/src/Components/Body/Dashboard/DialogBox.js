@@ -29,7 +29,7 @@ import PrintForm from "./PrintForm";
 const moment = require('moment');
 
 const DialogBox = ({ request_id, permission, process, status, email, showCommentSection, showReviewCommentSection }) => {
-  console.log('permission', permission, "process", process);
+  // console.log('permission', permission, "process", process);
   const [formInfo, setFormInfo] = useState({
     created_on: "",
     request_id: "",
@@ -90,7 +90,7 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
       responseType: "blob",
     })
       .then((response) => {
-        console.log('ee', response)
+        // console.log('ee', response)
         var blob = new Blob([response.data], { type: response.data.type });
         var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
         var anchor = document.createElement('a');
@@ -203,7 +203,7 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
       headers: { "Content-type": "application/json" },
     })
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setFormInfo(response.data.data);
 
         var commentObject;
@@ -214,12 +214,12 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
           commentObject = response.data.data.comments;
           setCommentObj(commentObject)
         }
-        console.log(commentObject);
+        // console.log(commentObject);
 
         for (var dept in commentObject) {
           if (commentObject.hasOwnProperty(dept)) {
             var dept_comments = commentObject[dept];
-            console.log(dept_comments[0]);
+            // console.log(dept_comments[0]);
             // array.push((dept_comments[0].comments) ?? {});
             array.push(getVal(dept_comments[0].comments, {}));
           }
@@ -236,7 +236,7 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
   }, []);
 
   const onSubmit = (data) => {
-    console.log(data);
+    // console.log(data);
     if(edit){
       alert("Section Data was edited but not saved. Kindly save before submitting.")
       return
@@ -253,7 +253,7 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
       data: req_data,
     })
       .then((response) => {
-        console.log("s", response.status);
+        // console.log("s", response.status);
         alert("Comment added!");
         window.location.reload();
       })
@@ -269,7 +269,7 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
   };
 
   const onSubmitReview = (data) => {
-    console.log(data);
+    // console.log(data);
     if (edit) {
       alert(
         "Section Data was edited but not saved. Kindly save before submitting."
@@ -304,7 +304,7 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
   };
 
   const onSubmitEstData = (data) => {
-    console.log(data);
+    // console.log(data);
     setEdit(false);
     const req_data = { request_id: request_id, stage_form: data };
     return axios({

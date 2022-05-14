@@ -95,7 +95,7 @@ class Auth:
             """
             Only for development
             """
-            if os.environ.get('FLASK_ENV') == None:
+            if os.environ.get('FLASK_ENV') != 'development':
                 abort(404, error="No such route")
             args = json.loads(request.form.get('auth'))
             if not args['email'] or len(args['email']) < 4:
@@ -116,7 +116,7 @@ class Auth:
             email = str(request.json.get('email')).strip().lower()
             print(email)
             if not email or len(email) < 4:
-                abort(409, 'invalid email')
+                abort(409, error='invalid email')
             user: Users = Users.query.filter_by(
                 email=str(email).strip().lower()).one_or_none()
             if not user:

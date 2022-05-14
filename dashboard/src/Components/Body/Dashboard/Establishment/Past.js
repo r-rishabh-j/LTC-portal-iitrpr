@@ -17,7 +17,7 @@ import DialogBox from "../DialogBox";
 import DataGridToolbar from "../DataGridToolbar";
 const moment = require('moment');
 
-function Past({ permission }){
+function Past({ permission }) {
   console.log("PAST", permission);
   const classes = useStyles();
 
@@ -119,7 +119,7 @@ function Past({ permission }){
     );
   };
 
-  function formatDate(date){
+  function formatDate(date) {
     const d = moment(date).format("DD/MM/YYYY");
     return d;
   }
@@ -161,7 +161,7 @@ function Past({ permission }){
       minWidth: 150,
       flex: 1,
       renderCell: timeElement,
-      type:"date",
+      type: "date",
       valueGetter: (cellValues) => {
         const time = formatDate(cellValues.value.replace('GMT', ''));
         return Date(moment(time).local().format("DD/MM/YYYY"));
@@ -186,6 +186,9 @@ function Past({ permission }){
       field: "form",
       headerName: "Form",
       minWidth: 150,
+      disableExport: true,
+      sortable: false,
+      filterable: false,
       renderCell: (cellValues) => {
         return (
           <>
@@ -249,11 +252,11 @@ function Past({ permission }){
       </div> */}
       <Paper
         elevation={10}
-        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
+        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor: '#263238' }}
       >
-          <Typography variant="body" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
-            Past Applications
-          </Typography>
+        <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
+          Past Applications
+        </Typography>
       </Paper>
       <Paper
         elevation={10}
@@ -277,7 +280,7 @@ function Past({ permission }){
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} status={status} process={"past"} showCommentSection={true}/>
+          <DialogBox request_id={id} permission={permission} status={status} process={"past"} showCommentSection={true} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close

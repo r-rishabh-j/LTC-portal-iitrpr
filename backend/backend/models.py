@@ -13,6 +13,7 @@ class Stages:
     """
     All LTC Application stages
     """
+    department = 'department'
     establishment = 'establishment'
     audit = 'audit'
     accounts = 'accounts'
@@ -128,6 +129,37 @@ class StageUsers(db.Model):
     def __init__(self, user_id, designation) -> None:
         self.user_id = user_id
         self.designation = designation
+
+    def getStageRoles(stage):
+        mapping = {
+            Stages.establishment: {
+                'junior_assistant': {'name': StageUsers.Designations.establishment_junior_assistant, 'isStageRole': True},
+                'junior_superitendent': {'name': StageUsers.Designations.establishment_junior_superitendent, 'isStageRole': True},
+                'assistant_registrar': {'name': StageUsers.Designations.establishment_assistant_registrar, 'isStageRole': True},
+                'deputy_registrar': {'name': StageUsers.Designations.establishment_deputy_registrar, 'isStageRole': True},
+                'staff': {'name': 'General Staff'},
+            },
+            Stages.audit: {
+                'senior_audit_officer': {'name': StageUsers.Designations.senior_audit_officer, 'isStageRole': True},
+                'assistant_audit_officer': {'name': StageUsers.Designations.assistant_audit_officer, 'isStageRole': True},
+                'staff': {'name': 'General Staff'},
+            },
+            Stages.accounts: {
+                'junior_accountant': {'name': StageUsers.Designations.accounts_junior_accountant, 'isStageRole': True},
+                'junior_accounts_officer': {'name': StageUsers.Designations.accounts_junior_accounts_officer, 'isStageRole': True},
+                'assistant_registrar': {'name': StageUsers.Designations.accounts_assistant_registrar, 'isStageRole': True},
+                'staff': {'name': 'General Staff'},
+            },
+            Stages.registrar: {
+                'registrar': {'name': StageUsers.Designations.registrar, 'isStageRole': True},
+                'staff': {'name': 'General Staff'},
+            },
+            Stages.deanfa: {
+                'deanfa': {'name': StageUsers.Designations.deanfa, 'isStageRole': True},
+                'staff': {'name': 'General Staff'},
+            }
+        }
+        return mapping[stage]
 
 
 class UserOTP(db.Model):
@@ -503,6 +535,12 @@ class LTCRequests(db.Model):
             self.comments[user.department][-1]['review'] = True
         flag_modified(self, "comments")
         db.session.merge(self)
+    
+    def addDeptComment(self, user: Users, comment, approval):
+        self.comments['department'][-1]['approved'][user.email] = approval
+        self.comments['department'][-1]['comments'][user.email] = comment
+        flag_modified(self, "comments")
+        db.session.merge(self)
 
     def getLatestCommentForStage(self, stage, key='approved'):
         return self.comments[stage][-1][key]
@@ -522,6 +560,43 @@ class LTCRequests(db.Model):
         message = None
 
         if current_stage == '':
+            user_dept: Departments = Departments.query.get(
+                applicant.department)
+            if not user_dept.is_stage:
+                # Notify department head
+                new_stage = Stages.department
+                self.stage = new_stage
+                dept_log: DepartmentLogs = DepartmentLogs(
+                    request_id=self.request_id, department=applicant.department)
+                hod: Users = Users.query.get(user_dept.dept_head)
+                self.comments['department'] = [
+                    self.generate_comments_template('department', [hod])
+                ]
+                db.session.add(dept_log)
+                applicant.addNotification(
+                    f'Your LTC request, ID {self.request_id} has been forwarded to HOD {str(applicant.department).upper()}')
+                hod.addNotification(
+                    f'LTC request, ID {self.request_id} has been sent for your approval.')
+            else:
+                new_stage = Stages.establishment
+                self.stage = new_stage
+                assert self.comments.get(new_stage, None) == None
+                self.comments[new_stage] = []
+                stage_roles = get_stage_roles(new_stage)
+                self.comments[new_stage].append(
+                    self.generate_comments_template(new_stage, stage_roles)
+                )
+
+                est_log: EstablishmentLogs = EstablishmentLogs(
+                    request_id=self.request_id)
+                db.session.add(est_log)
+                applicant.addNotification(
+                    f'Your LTC request, ID {self.request_id} has been forwarded to Establishment Section')
+                for role in stage_roles:
+                    role.addNotification(
+                        f'LTC request, ID {self.request_id} has been sent for your approval.')
+            message = True, {'msg': 'Forwarded to HOD'}
+        if current_stage == Stages.department:
             new_stage = Stages.establishment
             self.stage = new_stage
             assert self.comments.get(new_stage, None) == None
@@ -533,17 +608,6 @@ class LTCRequests(db.Model):
 
             est_log: EstablishmentLogs = EstablishmentLogs(
                 request_id=self.request_id)
-            user_dept: Departments = Departments.query.get(
-                applicant.department)
-            if not user_dept.is_stage:
-                # Notify department head
-                dept_log: DepartmentLogs = DepartmentLogs(
-                    request_id=self.request_id, department=applicant.department)
-                hod: Users = Users.query.get(user_dept.dept_head)
-                self.comments['department'] = [
-                    self.generate_comments_template('department', [hod])
-                ]
-                db.session.add(dept_log)
             db.session.add(est_log)
             applicant.addNotification(
                 f'Your LTC request, ID {self.request_id} has been forwarded to Establishment Section')
@@ -810,6 +874,8 @@ class TARequests(db.Model):
     request_id = db.Column(db.Integer, primary_key=True)
     ltc_id = db.Column(db.Integer, db.ForeignKey(
         'ltc_approved.request_id', ondelete='CASCADE'),)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'users.id', ondelete='CASCADE'),)
     created_on = db.Column(db.DateTime)
     stage = db.Column(db.String)
     is_active = db.Column(db.Boolean)
@@ -848,6 +914,12 @@ class TARequests(db.Model):
     def addComment(self, user: Users, comment, approval):
         self.comments[user.department][-1]['approved'][user.email] = approval
         self.comments[user.department][-1]['comments'][user.email] = comment
+        flag_modified(self, "comments")
+        db.session.merge(self)
+
+    def addDeptComment(self, user: Users, comment, approval):
+        self.comments['department'][-1]['approved'][user.email] = approval
+        self.comments['department'][-1]['comments'][user.email] = comment
         flag_modified(self, "comments")
         db.session.merge(self)
 

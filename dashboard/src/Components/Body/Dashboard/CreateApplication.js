@@ -40,7 +40,7 @@ import { FieldArrayInput } from "../../Utilities/FieldArrayInput";
 // console.log('csrf', csrf);
 
 export default function CreateApplication({ profileInfo }) {
-  console.log(profileInfo);
+  // console.log(profileInfo);
   const classes = useStyles();
   const { handleSubmit, control, register, reset, formState: { isSubmitting } } = useForm({
     defaultValues: {
@@ -67,7 +67,7 @@ export default function CreateApplication({ profileInfo }) {
   ];
 
   const onSubmit = (data) => {
-    console.log("Submitting", isSubmitting);
+    // console.log("Submitting", isSubmitting);
     const formData = new FormData();
 
     data.name = profileInfo.name;
@@ -76,12 +76,12 @@ export default function CreateApplication({ profileInfo }) {
     data.emp_code = profileInfo.employee_code;
 
 
-    console.log('data: ', JSON.stringify(data));
+    // console.log('data: ', JSON.stringify(data));
     formData.append('attachments', data.attachments[0]);
     formData.append('form', JSON.stringify(data));
 
-    console.log("onSubmit")
-    console.log(data);
+    // console.log("onSubmit")
+    // console.log(data);
     return axios({
       method: "POST",
       url: "/api/apply",

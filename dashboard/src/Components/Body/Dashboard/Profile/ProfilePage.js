@@ -9,7 +9,7 @@ import { useStyles } from '../DataGridStyles';
 
 export const ProfilePage = ({ profile }) => {
     const classes = useStyles();
-    const [signature, setSignature] = useState(null);
+    const [signature, setSignature] = useState('default');
     const [dialogOpen, setDialogOpen] = useState(false);
 
     function handleDialogClose() {
@@ -112,8 +112,11 @@ export const ProfilePage = ({ profile }) => {
                             </Box>
                             <Box margin={"0 0 0 0vh"}>
                                 {/* <img src={signature} width="300px" height="300px" alt='No Signature' style={{ borderWidth: "1px", borderColor: "black", borderStyle: "solid", marginTop: "2vh" }}></img> */}
-                                {signature !== null && signature !== undefined ?
-                                    <img src={`data:image/jpeg;base64,${(signature.slice(2, -1))}`} height="150vh" style={{ borderWidth: "1px", borderColor: "black", borderStyle: "solid", marginTop: "2vh" }} /> : <div><h5><br></br>No signature!</h5></div>}
+                                {signature!=='default'?
+                                signature !== null && signature !== undefined ?
+                                    <img src={`data:image/jpeg;base64,${(signature.slice(2, -1))}`} height="150vh" 
+                                    style={{ borderWidth: "1px", borderColor: "black", borderStyle: "solid", marginTop: "2vh" }} /> : 
+                                    <div><h5><br></br>No signature!</h5></div>:<div><h5><br></br>Loading.....</h5></div>}
                             </Box>
                             <Button style={{ margin: "2vh 0 0 0vw" }} color="primary" variant="contained" onClick={handleDialogOpen}>
                                 Upload Signature

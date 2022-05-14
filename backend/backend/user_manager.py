@@ -11,86 +11,88 @@ from . import emailmanager
 
 class UserManager(Resource):
 
-    class GetRoleMapping(Resource):
-        @role_required(role=Permissions.admin)
-        def get(self):
-            """
+    def generateRoles():
+        """
+        format
             {
                 'cse':{
                     'name': 'Computer Science and Engineering',
                     'roles':{
-                        'faculty':'Faculty',
-                        'hod': 'Head of Department'
+                        'faculty': {
+                            'name': 'Faculty',
+                        },
+                        'hod': {
+                            'name': 'Head of Department',
+                        },
                     }
                 }
                 'establishment':{
                     'name':'Establishment Section',
                     'roles':{
-                        'assistant_registrar':'Assistant Registrar',
+                        'assistant_registrar':{
+                            'name':'Assistant Registrar',
+                            'isStageRole':True,
+                        },
                     }
                 }
             }
-            """
-            # stage_departments = Departments.query.filter(
-            #     Departments.is_stage == True)
-            non_stage_departments = Departments.query.filter(
-                Departments.is_stage != True)
-            result = {}
+        """
+        result = {}
+        non_stage_departments = Departments.query.filter(
+            Departments.is_stage != True)
 
-            for dept in non_stage_departments:
-                if dept.name!=Permissions.admin:
-                    result[dept.name] = {
-                        'name': dept.full_name,
-                        'roles':{
-                            'faculty': 'Faculty',
-                            'hod': 'Head of Department'
+        for dept in non_stage_departments:
+            if dept.name != Permissions.admin:
+                result[dept.name] = {
+                    'name': dept.full_name,
+                    'roles': {
+                        'faculty': {
+                            'name': 'Faculty',
+                        },
+                        'hod': {
+                            'name': 'Head of Department',
+                        },
+                        'staff': {
+                            'name': 'General Staff'
                         }
                     }
-            result[Permissions.admin] = {
-                'name': 'Admin',
-                'roles':{
-                    'admin': 'Admin'
+                }
+        result[Permissions.admin] = {
+            'name': 'Admin',
+            'roles': {
+                'admin': {
+                    'name': 'Admin'
                 }
             }
-            result[Permissions.establishment] = {
-                'name': 'Establishment Section',
-                'roles':{
-                    'junior_assistant': StageUsers.Designations.establishment_junior_assistant,
-                    'junior_superitendent': StageUsers.Designations.establishment_junior_superitendent,
-                    'assistant_registrar': StageUsers.Designations.establishment_assistant_registrar,
-                    'deputy_registrar': StageUsers.Designations.establishment_deputy_registrar,
-                }
-            }
-            result[Permissions.audit] = {
-                'name': 'Audit Section',
-                'roles':{
-                    'senior_audit_officer': StageUsers.Designations.senior_audit_officer,
-                    'assistant_audit_officer': StageUsers.Designations.assistant_audit_officer,
-                }
-            }
-            result[Permissions.accounts] = {
-                'name': 'Accounts Section',
-                'roles':{
-                    'junior_accountant': StageUsers.Designations.accounts_junior_accountant,
-                    'junior_accounts_officer': StageUsers.Designations.accounts_junior_accounts_officer,
-                    'assistant_registrar': StageUsers.Designations.accounts_assistant_registrar,
-                }
-            }
-            result[Permissions.registrar] = {
-                'name': 'Registrar',
-                'roles':{
-                    'registrar': StageUsers.Designations.registrar,
-                }
-            }
-            result[Permissions.deanfa] = {
-                'name': 'DeanFA&A',
-                'roles':{
-                    'deanfa': StageUsers.Designations.deanfa,
-                }
-            }
+        }
 
-            return {'role_mapping': result}
+        result[Permissions.establishment] = {
+            'name': 'Establishment Section',
+            'roles': StageUsers.getStageRoles(Stages.establishment),
+            'isStage': True
+        }
+        result[Permissions.audit] = {
+            'name': 'Audit Section',
+            'roles': StageUsers.getStageRoles(Stages.audit),
+            'isStage': True
+        }
+        result[Permissions.accounts] = {
+            'name': 'Accounts Section',
+            'roles': StageUsers.getStageRoles(Stages.accounts),
+            'isStage': True
+        }
+        result[Permissions.registrar] = {
+            'name': 'Registrar',
+            'roles': StageUsers.getStageRoles(Stages.registrar),
+            'isStage': True
+        }
+        result[Permissions.deanfa] = {
+            'name': 'DeanFA&A',
+            'roles': StageUsers.getStageRoles(Stages.deanfa),
+            'isStage': True
+        }
 
+        return result
 
     class RegisterUser(Resource):
         @role_required(role=Permissions.admin)
@@ -106,7 +108,18 @@ class UserManager(Resource):
             if None in [name, email, department, role]:
                 abort(400, 'invalid request')
 
+            roles = UserManager.generateRoles()
+            department_entry = roles[department]
+            if not role in department_entry['roles']:
+                abort(400, error='Role mapping not valid')
+
             return {'error': 'Not implemented'}, 500
+
+    class GetRoleMapping(Resource):
+        # @role_required(role=Permissions.admin)
+        def get(self):
+            roles = UserManager.generateRoles()
+            return {'role_mapping': roles}
 
     class EditUser(Resource):
         @role_required(role=Permissions.admin)
@@ -119,3 +132,48 @@ class UserManager(Resource):
         def post(self):
 
             return {'error': 'Not implemented'}, 500
+
+    class GetUsers(Resource):
+        @role_required(role=Permissions.admin)
+        def get(self):
+            # query = db.session.query(Users, Departments).join(Departments).all()
+            query = db.session.query(Users, Departments).filter(
+                Users.department == Departments.name)
+            # users = Users.query.all()
+            result = []
+            for user, department in query:
+                user: Users
+                result.append({
+                    'user_id': user.id,
+                    'email': user.email,
+                    'name': user.name,
+                    'department': department.full_name,
+                    'employee_code': user.employee_code,
+                    'designation': user.designation
+                }
+                )
+            return {'users': result}
+
+    class GetDepartments(Resource):
+
+        def get(self):
+            query1 = db.session.query(Departments, Users).filter(
+                Departments.dept_head == Users.id)
+            query2 = Departments.query.filter(Departments.dept_head == None)
+            result = []
+            for department, user in query1:
+                result.append({
+                    'dept_id': department.name,
+                    'department_name': department.full_name,
+                    'head_email': user.email,
+                    'is_stage': department.is_stage
+                })
+
+            for department in query2:
+                result.append({
+                    'dept_id': department.name,
+                    'department_name': department.full_name,
+                    'head_email': 'None',
+                    'is_stage': department.is_stage
+                })
+            return {'departments': result}

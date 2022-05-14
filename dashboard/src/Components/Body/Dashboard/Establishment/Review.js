@@ -115,7 +115,7 @@ function Review({ permission }) {
     );
   };
 
-  function formatDate(date){
+  function formatDate(date) {
     const d = moment(date).format("DD/MM/YYYY");
     return d;
   }
@@ -157,7 +157,7 @@ function Review({ permission }) {
       minWidth: 150,
       flex: 1,
       renderCell: timeElement,
-      type:"date",
+      type: "date",
       valueGetter: (cellValues) => {
         const time = formatDate(cellValues.value.replace('GMT', ''));
         return Date(moment(time).local().format("DD/MM/YYYY"));
@@ -182,6 +182,9 @@ function Review({ permission }) {
       field: "form",
       headerName: "Form",
       minWidth: 150,
+      disableExport: true,
+      sortable: false,
+      filterable: false,
       renderCell: (cellValues) => {
         return (
           <>
@@ -240,11 +243,11 @@ function Review({ permission }) {
     <>
       <Paper
         elevation={10}
-        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
+        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor: '#263238' }}
       >
-          <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
-            Applications For Review
-          </Typography>
+        <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
+          Applications For Review
+        </Typography>
       </Paper>
       <Paper
         elevation={10}
@@ -268,7 +271,7 @@ function Review({ permission }) {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} process="review" showReviewCommentSection={true}/>
+          <DialogBox request_id={id} permission={permission} process="review" showReviewCommentSection={true} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close

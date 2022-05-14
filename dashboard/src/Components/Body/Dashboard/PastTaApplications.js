@@ -29,7 +29,7 @@ const PastTaApplications = ({ permission }) => {
     fetch("/api/ta/getmyforms")
       .then((data) => data.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         setTableData(data.data)
       })
   }, [])
@@ -100,7 +100,7 @@ const PastTaApplications = ({ permission }) => {
 
   const handleClickOpen = (event, cellValues) => {
     setOpen(true);
-    console.log('status', cellValues.row.stage);
+    // console.log('status', cellValues.row.stage);
     setStatus(cellValues.row.stage);
     setId(cellValues.row.request_id);
   };
@@ -127,7 +127,7 @@ const PastTaApplications = ({ permission }) => {
   const editForm = (event, cellValues) => {
     setOpenReview(true);
     setId(cellValues.row.request_id);
-    console.log("Open a new dialog box");
+    // console.log("Open a new dialog box");
   }
 
   const stageElement = (cellValues) => {
@@ -217,7 +217,9 @@ const PastTaApplications = ({ permission }) => {
       field: "ltc",
       headerName: "LTC Application",
       minWidth: 150,
-      flex: 1,
+      disableExport: true,
+      sortable: false,
+      filterable: false,
       renderCell: (cellValues) => {
         return (
           <>
@@ -267,10 +269,7 @@ const PastTaApplications = ({ permission }) => {
           backgroundColor: "#263238",
         }}
       >
-        <Typography
-          variant="body"
-          style={{ margin: "auto", fontSize: "25px", color: "white" }}
-        >
+        <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
           Past TA Applications
         </Typography>
       </Paper>
