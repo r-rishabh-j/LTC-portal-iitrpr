@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from "react";
 import {
   DialogTitle,
   DialogContent,
@@ -8,9 +8,9 @@ import {
   Button,
   Box,
 } from "@material-ui/core";
-import { useState } from 'react'
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FormInputText } from '../../../Utilities/FormInputText';
+import { FormInputText } from "../../../Utilities/FormInputText";
 import { FormInputDropDown } from "../../../Utilities/FormInputDropDown";
 
 const AddUser = () => {
@@ -18,20 +18,20 @@ const AddUser = () => {
 
   const [roleMapping, setRoleMapping] = useState(null);
   const [departments, setDepartments] = useState(null);
-
+  const [designations, setDesignations] = useState(null);
 
   function setDepartmentsFromMapping(role_mapping) {
     var departments = Object.keys(role_mapping).map((prop, i) => {
       return {
-        label: role_mapping[prop]['name'],
+        label: role_mapping[prop]["name"],
         value: prop,
-      }
+      };
     });
     departments.unshift({
       label: "Select",
       value: "Select",
     });
-    console.log('set', departments);
+    console.log("set", departments);
     setDepartments(departments);
   }
 
@@ -44,25 +44,49 @@ const AddUser = () => {
       });
   }, []);
   const onSubmit = (data) => {
-    console.log(data)
-  }
+    console.log(data);
+  };
   const [dept, setDept] = useState("Select");
+  console.log("dept", dept);
 
-  //fetch from API
-  // const departments = [
-  //   {
-  //     label: "Select",
-  //     value: "Select",
-  //   },
-  //   {
-  //     label: "Computer Science and Engineering",
-  //     value: "CSE",
-  //   },
-  //   {
-  //     label: "Electrical Engineering",
-  //     value: "EE",
-  //   },
-  // ];
+  // const getRoles = () => {
+  //   if(roleMapping !== null){
+  //     Object.keys(roleMapping).map((dept_value, i) => {
+  //
+  //     })
+  //   }
+  // }
+
+  //   const getRoles = (role_mapping) => {
+  //     if(role_mapping !== null){
+  //     var roles = Object.keys(role_mapping).map((dept_value, i) => {
+  //       Object.keys(role_mapping[dept_value]["roles"]).map((role_value, idx) => {
+  //         return {
+  //           label: role_mapping[dept_value]["roles"][role_value]["name"],
+  //           value: role_value,
+  //         };
+  //       });
+  //     });
+  //     setDesignations(roles)
+  //     console.log(roles)
+  //   }
+  // }
+
+    const getRoles = (dept_value) => {
+    var roles = [];
+    if (roleMapping !== null && dept_value !== "Select") {
+      roles = Object.keys(roleMapping[dept_value]["roles"]).map((role_value, idx) => {
+        return {
+          label: roleMapping[dept_value]["roles"][role_value]["name"],
+          value: role_value,
+        };
+      });
+
+      setDesignations(roles);
+      console.log(roles);
+    }
+  }
+ 
 
   return (
     <Box>
@@ -103,6 +127,10 @@ const AddUser = () => {
               label="Department"
               options={departments === null ? [] : departments}
               disabled={false}
+              setDept={(dep) => {
+                setDept(dep); getRoles(dep);
+              }}
+              
             />
           </Grid>
           <Grid item xs={12} style={{ margin: "1vh 0 0 0" }}>
@@ -110,20 +138,24 @@ const AddUser = () => {
               name={"designation"}
               control={control}
               label="User Role/Designation"
-              options={[]}
+              options={designations === null ? [] : designations}
               disabled={false}
             />
           </Grid>
           <Box display="flex" justifyContent="center">
-            <Button type="submit"
+            <Button
+              type="submit"
               variant="contained"
               color="primary"
-              style={{ margin: "2vh 0 0 0" }}>Create</Button>
+              style={{ margin: "2vh 0 0 0" }}
+            >
+              Create
+            </Button>
           </Box>
         </form>
       </DialogContent>
     </Box>
   );
-}
+};
 
-export default AddUser
+export default AddUser;

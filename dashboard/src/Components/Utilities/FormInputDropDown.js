@@ -1,9 +1,10 @@
 import React from 'react'
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import { useFormContext, Controller } from "react-hook-form";
+import { selectedIdsLookupSelector } from '@mui/x-data-grid';
 
 
-export const FormInputDropDown = ({name, control, label, options, disabled}) => {
+export const FormInputDropDown = ({name, control, label, options, disabled, setDept}) => {
     const generateSelectOptions = () => {
     return options.map((option) => {
       return (
@@ -21,10 +22,10 @@ export const FormInputDropDown = ({name, control, label, options, disabled}) => 
         <>
           <InputLabel>{label}</InputLabel>
           <Select
-            onChange={onChange}
+            onChange={(name === "department" ? ((value) => {onChange(value); setDept(value.target.value)}):((value) => onChange(value)))}
             value={value}
             fullWidth
-            defaultValue=""
+            defaultValue="Select"
             variant="outlined"
             // required={true}
             disabled={disabled}
