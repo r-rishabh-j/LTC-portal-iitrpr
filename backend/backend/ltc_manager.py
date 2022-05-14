@@ -40,13 +40,15 @@ class LtcManager:
             user: Users = current_user
             # gets file tagged with name attachments
             file = request.files.get('attachments')
-            if file!=None:
+            if file != None:
                 filename = file.filename
                 if not filemanager.isCorrectFileType(filename, ['.pdf', '.zip']):
-                    abort(400, error='Invalid file type. Only .pdf, .zip files are permitted')
+                    abort(
+                        400, error='Invalid file type. Only .pdf, .zip files are permitted')
                 file_encoding = filemanager.encodeFile(file)
-                if len(file_encoding)>MAX_UPLOAD_SIZE:
-                    abort(413, error=f'File Size should be less than {MAX_UPLOAD_SIZE/(1024*1024)} MB!')
+                if len(file_encoding) > MAX_UPLOAD_SIZE:
+                    abort(
+                        413, error=f'File Size should be less than {MAX_UPLOAD_SIZE/(1024*1024)} MB!')
             # get form data
             form_data = json.loads(request.form.get('form'))
 
@@ -160,7 +162,7 @@ class LtcManager:
             applicant: Users = Users.query.get(form.user_id)
             if kwargs['permission'] == Permissions.dept_head:
                 form.addDeptComment(current_user, comment,
-                                True if action == 'approve' else False)
+                                    True if action == 'approve' else False)
             else:
                 form.addComment(current_user, comment,
                                 True if action == 'approve' else False, is_review=True if action == 'review' else False)
@@ -459,18 +461,21 @@ class LtcManager:
             # update attachments if any
             if updated_file != None:
                 if not filemanager.isCorrectFileType(updated_file.filename, ['.pdf', '.zip']):
-                    abort(400, error='Invalid file type. Only .pdf, .zip files are permitted')
+                    abort(
+                        400, error='Invalid file type. Only .pdf, .zip files are permitted')
                 ltc_upload_enc = filemanager.encodeFile(updated_file)
 
-                if len(ltc_upload_enc)>MAX_UPLOAD_SIZE:
-                    abort(413, error=f'File Size should be less than {MAX_UPLOAD_SIZE/(1024*1024)} MB!')
-                ltc_upload: LTCProofUploads = LTCProofUploads.query.get(request_id)
+                if len(ltc_upload_enc) > MAX_UPLOAD_SIZE:
+                    abort(
+                        413, error=f'File Size should be less than {MAX_UPLOAD_SIZE/(1024*1024)} MB!')
+                ltc_upload: LTCProofUploads = LTCProofUploads.query.get(
+                    request_id)
                 if ltc_upload == None:
                     ltc_upload = LTCProofUploads(request_id, None, None)
                     db.session.add(ltc_upload)
                 ltc_upload.filename = updated_file.filename
                 ltc_upload.file = ltc_upload_enc
-                    
+
             if updated_form.get('attachments', False) != False:
                 updated_form.pop('attachments')
             db_form: LTCRequests = LTCRequests.query.get(request_id)
@@ -603,10 +608,12 @@ class LtcManager:
 
             filename = file.filename
             if not filemanager.isCorrectFileType(filename, ['.pdf', '.zip']):
-                    abort(400, error='Invalid file type. Only .pdf, .zip files are permitted')
+                abort(
+                    400, error='Invalid file type. Only .pdf, .zip files are permitted')
             office_order_enc = filemanager.encodeFile(file)
-            if len(office_order_enc)>MAX_UPLOAD_SIZE:
-                    abort(413, error=f'File Size should be less than {MAX_UPLOAD_SIZE/(1024*1024)} MB!')
+            if len(office_order_enc) > MAX_UPLOAD_SIZE:
+                abort(
+                    413, error=f'File Size should be less than {MAX_UPLOAD_SIZE/(1024*1024)} MB!')
 
             advance_required = False
             # check if advance required!
@@ -721,7 +728,8 @@ class LtcManager:
 
             adv_req.payment_proof_filename = payment_proof.filename
             if not filemanager.isCorrectFileType(adv_req.payment_proof_filename, ['.pdf', '.zip']):
-                    abort(400, error='Invalid file type. Only .pdf, .zip files are permitted')
+                abort(
+                    400, error='Invalid file type. Only .pdf, .zip files are permitted')
             adv_req.payment_proof = filemanager.encodeFile(payment_proof)
 
             form: LTCRequests = LTCRequests.query.get(request_id)

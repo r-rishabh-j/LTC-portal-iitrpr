@@ -13,6 +13,7 @@ from uuid import uuid4
 import urllib.parse
 from . import emailmanager
 
+
 class Auth:
     class Logout(Resource):
         def post(self):

@@ -906,6 +906,7 @@ class TARequests(db.Model):
         establishment = 'establishment'
         accounts = 'accounts'
         audit = 'audit'
+        department = 'department'
         registrar = 'registrar'
         approved = 'approved'
         declined = 'declined'
@@ -961,6 +962,43 @@ class TARequests(db.Model):
         message = None
 
         if current_stage == '':
+            user_dept: Departments = Departments.query.get(
+                applicant.department)
+            if not user_dept.is_stage:
+                new_stage = TARequests.Stages.department
+                self.stage = new_stage
+                dept_log: DepartmentTALogs = DepartmentTALogs(
+                    request_id=self.request_id, department=applicant.department)
+                hod: Users = Users.query.get(user_dept.dept_head)
+                self.comments['department'] = [
+                    self.generate_comments_template('department', [hod])
+                ]
+                db.session.add(dept_log)
+                applicant.addNotification(
+                    f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been forwarded to HOD {str(applicant.department).upper()}')
+                hod.addNotification(
+                    f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for your approval.')
+                message = True, {'msg': 'Forwarded to HOD'}
+            else:
+                new_stage = TARequests.Stages.establishment
+                self.stage = new_stage
+                assert self.comments.get(new_stage, None) == None
+                self.comments[new_stage] = []
+                stage_roles = get_stage_roles(new_stage)
+                self.comments[new_stage].append(
+                    self.generate_comments_template(new_stage, stage_roles)
+                )
+
+                est_ta_log: EstablishmentTALogs = EstablishmentTALogs(
+                    self.request_id)
+                db.session.add(est_ta_log)
+                applicant.addNotification(
+                    f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been forwarded to Establishment Section')
+                for role in stage_roles:
+                    role.addNotification(
+                        f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for your approval.')
+                message = True, {'msg': 'Forwarded to Establishment Section'}
+        if current_stage == TARequests.Stages.department:
             new_stage = TARequests.Stages.establishment
             self.stage = new_stage
             assert self.comments.get(new_stage, None) == None
@@ -972,17 +1010,6 @@ class TARequests(db.Model):
 
             est_ta_log: EstablishmentTALogs = EstablishmentTALogs(
                 self.request_id)
-            # user_dept: Departments = Departments.query.get(
-            #     applicant.department)
-            # if not user_dept.is_stage:
-            #     # Notify department head
-            #     dept_log: DepartmentLogs = DepartmentLogs(
-            #         request_id=self.request_id, department=applicant.department)
-            #     hod: Users = Users.query.get(user_dept.dept_head)
-            #     self.comments['department'] = [
-            #         self.generate_comments_template('department', [hod])
-            #     ]
-            #     db.session.add(dept_log)
             db.session.add(est_ta_log)
             applicant.addNotification(
                 f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been forwarded to Establishment Section')

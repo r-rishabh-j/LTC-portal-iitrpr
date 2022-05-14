@@ -17,6 +17,9 @@ from .models import ApplicationStatus,  LTCApproved,\
 
 class TaManager():
     class ApplyForTA(Resource):
+        """
+        API for filling TA form
+        """
         @role_required(role=Permissions.client)
         def post(self):
             """
@@ -136,6 +139,9 @@ class TaManager():
             return jsonify(response)
 
     class GetApprovedLTCForTA(Resource):
+        """
+        API for fetching approved LTC applications eligible for TA
+        """
         @role_required(role=Permissions.client)
         def get(self):
             analyse()
@@ -183,11 +189,6 @@ class TaManager():
                 return abort(404, status={'error': 'No attachment'})
 
             return filemanager.sendFile(ta_upload.file, ta_upload.filename)
-            # attachment_path = form.attachments
-            # if not attachment_path or attachment_path == "":
-            # _, ext = os.path.splitext(attachment_path)
-            # filename = f'ltc_{request_id}_proofs'+ext
-            # return filemanager.sendFile(attachment_path, filename)
 
     class GetTaFormMetaDataForUser(Resource):
         """
@@ -247,6 +248,9 @@ class TaManager():
             return jsonify(response)
 
     class CommentOnTA(Resource):
+        """
+        API for commenting and forwarding TA form
+        """
         roles = [
             Permissions.establishment,
             Permissions.audit,
@@ -309,6 +313,9 @@ class TaManager():
                 return {"status": 'Comment added'}, 200
 
     class GetPendingTaApprovalRequests(Resource):
+        """
+        Fetch pending TA approval requests
+        """
         allowed_roles = [
             Permissions.registrar,
             Permissions.establishment,
@@ -346,7 +353,7 @@ class TaManager():
                         print(dept_log.status)
                         pending.append({
                             'request_id': form.request_id,
-                            'ltc_id':form.ltc_id,
+                            'ltc_id': form.ltc_id,
                             'user': applicant.email,
                             'name': applicant.name,
                             'created_on': form.created_on,
@@ -357,6 +364,9 @@ class TaManager():
             return jsonify({'pending': pending})
 
     class UploadTaOfficeOrder(Resource):
+        """
+        API for uploading TA office order
+        """
         @role_required(role=Permissions.establishment)
         def post(self, **kwargs):
             analyse()
@@ -404,6 +414,9 @@ class TaManager():
             return jsonify({'success': 'Office Order Uploaded!'})
 
     class GetPendingTaOfficeOrderRequests(Resource):
+        """
+        Fetch pending TA office order requests
+        """
         @role_required(role=Permissions.establishment)
         def get(self):
             analyse()
@@ -420,6 +433,9 @@ class TaManager():
             return jsonify({'pending': result})
 
     class GetPastTaApprovalRequests(Resource):
+        """
+        Get TA applications approved in the past by stage
+        """
         allowed_roles = [
             Permissions.registrar,
             Permissions.establishment,
@@ -489,6 +505,9 @@ class TaManager():
             return jsonify({'previous': previous})
 
     class UpdateAccountsPaymentDetails(Resource):
+        """
+        Update payment details
+        """
         @role_required(role=Permissions.accounts)
         def post(self):
             analyse()
@@ -514,6 +533,9 @@ class TaManager():
             return jsonify({"success": "uploaded proofs"})
 
     class PrintTaForm(Resource):
+        """
+        Print TA form
+        """
         @check_role()
         def post(self, permission):
             analyse()

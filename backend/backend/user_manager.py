@@ -142,7 +142,6 @@ class UserManager(Resource):
             db.session.refresh(new_user)
 
             if department_entry['roles'][designation].get('isStageRole') == True:
-                print('yes 111')
                 print(department_entry['roles'][designation]['name'])
                 stage_user: StageUsers = StageUsers.query.filter(
                     StageUsers.designation == department_entry['roles'][designation]['name']).one_or_none()
@@ -155,7 +154,6 @@ class UserManager(Resource):
                     stage_user.user_id = new_user.id
 
             if department_entry['roles'][designation].get('isHead') == True:
-                print('yes 222')
                 dept_entry.dept_head = new_user.id
 
             db.session.commit()
