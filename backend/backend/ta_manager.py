@@ -418,6 +418,74 @@ class TaManager():
                 })
             return jsonify({'pending': result})
 
+    class GetPastTaApprovalRequests(Resource):
+        allowed_roles = [
+            Permissions.registrar,
+            Permissions.establishment,
+            Permissions.accounts,
+            Permissions.audit,
+            Permissions.dept_head
+        ]
+
+        @roles_required(roles=allowed_roles)
+        def get(self, **kwargs):
+            analyse()
+
+            user: Users = current_user
+            department = user.department
+            if kwargs['permission'] == Permissions.dept_head:
+                department = 'department'
+            table_ref = Departments.getDeptRequestTableByName(department+'_ta')
+
+            if not table_ref:
+                abort(
+                    404, msg={'Error': 'user department not registered as stage dept'})
+            previous = []
+
+            past = None
+            new = None
+            """
+            Fetch requests, both with status!=new, and also those on which
+            the user has commented already
+            """
+            if kwargs['permission'] == Permissions.dept_head:
+                past = db.session.query(table_ref, TARequests, Users).join(Users).join(
+                    table_ref).filter(table_ref.status != 'new', table_ref.department == user.department)
+                new = db.session.query(table_ref, TARequests, Users).join(Users).join(
+                    table_ref).filter_by(status='new', department=user.department)
+            else:
+                past = db.session.query(table_ref, TARequests, Users).join(
+                    Users).join(table_ref).filter(table_ref.status != 'new')
+                new = db.session.query(table_ref, TARequests, Users).join(
+                    Users).join(table_ref).filter_by(status='new')
+
+            for dept_log, form, applicant in past:
+                previous.append({
+                    'request_id': form.request_id,
+                    'ltc_id': form.ltc_id,
+                    'user': applicant.email,
+                    'name': applicant.name,
+                    'created_on': form.created_on,
+                    'stage': form.stage,
+                    'is_active': "Active" if form.is_active else "Not Active",
+                })
+
+            for dept_log, form, applicant in new:
+                if form.comments.get(department, None) != None:
+                    if len(form.comments[department]) == 0:
+                        abort(400, 'Not allowed to add comment at this stage')
+                    if form.comments[department][-1]['approved'].get(user.email, True) != None:
+                        previous.append({
+                            'request_id': form.request_id,
+                            'ltc_id': form.ltc_id,
+                            'user': applicant.email,
+                            'name': applicant.name,
+                            'created_on': form.created_on,
+                            'stage': form.stage,
+                            'is_active': "Active" if form.is_active else "Not Active",
+                        })
+            return jsonify({'previous': previous})
+
     class UpdateAccountsPaymentDetails(Resource):
         @role_required(role=Permissions.accounts)
         def post(self):
