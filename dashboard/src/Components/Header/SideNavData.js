@@ -60,33 +60,35 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
   ];
 
   const establishmentList = [
-    { label: "Home", link:[ "/home"], icon: <HomeIcon /> },
-    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon /> },
+    { label: "Home", link:[ "/home"], icon: <HomeIcon />, popup: false },
+    { label: "New Applications", link: ["/new", "/new-ta"], icon: <NewReleasesIcon />, popup: true },
     {
       label: "Past Applications",
-      link: ["/past"],
-      icon: <HistoryIcon />,
+      link: ["/past", "/past-ta"],
+      icon: <HistoryIcon />, popup: true
     },
     {
       label: "For Review",
       link: ["/review"],
       icon: <RateReviewIcon />,
+      popup: false
     },
     {
       label: "Office Orders",
-      link:[ "/office_orders"],
+      link:[ "/office_orders", "/office_orders-ta"],
       icon: <AttachFileIcon />,
+      popup: true
     },
   ];
 
   const accountsList = [
     { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link:[ "/new"], icon: <NewReleasesIcon /> },
+    { label: "New Applications", link:[ "/new", "/new-ta"], icon: <NewReleasesIcon />, popup: true },
     {
       label: "Past Applications",
-      link:[ "/past"],
-      icon: <HistoryIcon />,
+      link:[ "/past", "/past-ta"],
+      icon: <HistoryIcon />, popup: true
     },
     {
       label: "Advance Payments",
@@ -98,11 +100,11 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
   const deanfaList = [
     { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon /> },
+    { label: "New Applications", link: ["/new", "/new-ta"], icon: <NewReleasesIcon />, popup: true },
     {
       label: "Past Applications",
-      link: ["/past"],
-      icon: <HistoryIcon />,
+      link: ["/past", "/past-ta"],
+      icon: <HistoryIcon />, popup: true
     },
 
   ];
@@ -110,32 +112,44 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
   const auditList = [
     { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon /> },
+    { label: "New Applications", link: ["/new", "new-ta"], icon: <NewReleasesIcon />, popup: true },
     {
       label: "Past Applications",
-      link: ["/past"],
-      icon: <HistoryIcon />,
+      link: ["/past", "/past-ta"],
+      icon: <HistoryIcon />, popup: true
     },
   ];
 
   const registrarList = [
     { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon /> },
+    {
+      label: "New Applications",
+      link: ["/new", "new-ta"],
+      icon: <NewReleasesIcon />,
+      popup: true,
+    },
     {
       label: "Past Applications",
-      link: ["/past"],
+      link: ["/past", "/past-ta"],
       icon: <HistoryIcon />,
+      popup: true
     },
   ];
   const hodList = [
     { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon /> },
+    {
+      label: "New Applications",
+      link: ["/new", "new-ta"],
+      icon: <NewReleasesIcon />,
+      popup: true,
+    },
     {
       label: "Past Applications",
-      link: ["/past"],
+      link: ["/past", "past-ta"],
       icon: <HistoryIcon />,
+      popup: true,
     },
   ];
 

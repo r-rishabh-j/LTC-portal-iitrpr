@@ -54,6 +54,7 @@ export default function EstablishmentPage(props){
             element={<ProfilePage profile={props.profileInfo} />}
           ></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
+          <Route path="/past-ta" element={<UploadOfficeOrder />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
       </Box>
