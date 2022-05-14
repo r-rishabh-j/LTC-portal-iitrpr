@@ -7,7 +7,6 @@ import SideNav from '../../../Header/SideNav';
 import { useStyles } from "../../../Header/HeaderStyles"
 import Home from "../Home"
 import Charts from './Charts';
-import LTCApplications from './LTCApplications';
 import { ProfilePage } from '../Profile/ProfilePage';
 import Database from './Database'
 
@@ -37,19 +36,9 @@ export default function AdminPage(props) {
         userType="admin"
       />
       <Box className={classes.wrapper}>
-        {/* <button onClick={getData}>Profile</button> */}
-
         <Routes>
           <Route path="/users" element={<Charts />}></Route>
-          {/* <Route
-            path="/create"
-            element={<CreateApplication token={token} setToken={setToken} />}
-          ></Route> */}
           <Route path="/previous" element={<Database />}></Route>
-          {/* <Route
-            path="/notifica"
-            element={<Notifications token={token} setToken={setToken} />}
-          ></Route> */}
           <Route path="/logout" element={<Navigate to="/#/" />}></Route>
           <Route path="/profile" element={<ProfilePage profile = {props.profileInfo}/>}></Route>
           <Route path="*" element={<Home />}></Route>

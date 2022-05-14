@@ -7,7 +7,7 @@ from flask_restful import Resource, abort
 from .models import Departments, StageUsers, Users, Stages
 from .role_manager import check_role, role_required, Permissions
 from . import emailmanager
-
+from .analyse import analyse
 
 class UserManager(Resource):
 
@@ -97,6 +97,7 @@ class UserManager(Resource):
     class RegisterUser(Resource):
         @role_required(role=Permissions.admin)
         def post(self):
+            analyse()
             """
             Send post request to register user
             """
@@ -118,24 +119,26 @@ class UserManager(Resource):
     class GetRoleMapping(Resource):
         @role_required(role=Permissions.admin)
         def get(self):
+            analyse()
             roles = UserManager.generateRoles()
             return {'role_mapping': roles}
 
     class EditUser(Resource):
         @role_required(role=Permissions.admin)
         def post(self):
-
+            analyse()
             return {'error': 'Not implemented'}, 500
 
     class DropUser(Resource):
         @role_required(role=Permissions.admin)
         def post(self):
-
+            analyse()
             return {'error': 'Not implemented'}, 500
 
     class GetUsers(Resource):
         @role_required(role=Permissions.admin)
         def get(self):
+            analyse()
             # query = db.session.query(Users, Departments).join(Departments).all()
             query = db.session.query(Users, Departments).filter(
                 Users.department == Departments.name)
@@ -157,6 +160,7 @@ class UserManager(Resource):
     class GetDepartments(Resource):
 
         def get(self):
+            analyse()
             query1 = db.session.query(Departments, Users).filter(
                 Departments.dept_head == Users.id)
             query2 = Departments.query.filter(Departments.dept_head == None)

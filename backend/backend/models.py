@@ -535,7 +535,7 @@ class LTCRequests(db.Model):
             self.comments[user.department][-1]['review'] = True
         flag_modified(self, "comments")
         db.session.merge(self)
-    
+
     def addDeptComment(self, user: Users, comment, approval):
         self.comments['department'][-1]['approved'][user.email] = approval
         self.comments['department'][-1]['comments'][user.email] = comment

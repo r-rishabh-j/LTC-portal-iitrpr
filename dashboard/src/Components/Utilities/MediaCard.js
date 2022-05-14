@@ -31,7 +31,7 @@ export default function MediaCard(props) {
           <Button
             size="medium"
             onClick={
-              props.action === "View API analytics" ? onClk : props.setOpen
+              props.action === "View API analytics" ? onClk : ()=>{props.setOpen(true)}
             }
           >
             {props.action}

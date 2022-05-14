@@ -14,11 +14,10 @@ import axios from 'axios';
 import DialogBox from '../DialogBox';
 import { Box } from '@material-ui/core';
 import DataGridToolbar from '../DataGridToolbar';
-// import TADialogBox from '../TADialogBox';
+import TADialogBox from '../TADialogBox';
 const moment = require('moment');
 
 const PastTaApplications = ({ permission }) => {
-  //console.log(permission)
   const classes = useStyles();
 
   const [tableData, setTableData] = useState([]);
@@ -48,55 +47,6 @@ const PastTaApplications = ({ permission }) => {
     //   })
   }, [])
 
-  //rows = {tableData}
-  // const handleAttachmentClick = (event, cellValues) => {
-  //   console.log(cellValues.row.request_id);
-  //   const data = { request_id: cellValues.row.request_id };
-  //   axios({
-  //     method: "post",
-  //     url: "api/ta/getattachments",
-  //     data: JSON.stringify(data),
-  //     headers: { "Content-type": "application/json" },
-  //     responseType: "blob",
-  //   })
-  //     .then((response) => {
-  //       var blob = new Blob([response.data], { type: response.data.type });
-  //       var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
-  //       var anchor = document.createElement('a');
-  //       anchor.href = url;
-  //       anchor.target = '_blank';
-  //       anchor.click();
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.log(error.response);
-  //         console.log(error.response.status);
-  //         alert("No attachments");
-  //       }
-  //     });
-  // };
-
-  // const handleFormClick = (event, cellValues) => {
-  //   console.log(cellValues.row.request_id);
-  //   const data = { request_id: cellValues.row.request_id };
-  //   axios({
-  //     method: "post",
-  //     url: "api/ta/getformdata",
-  //     data: JSON.stringify(data),
-  //     headers: { "Content-type": "application/json" },
-  //   })
-  //     .then((response) => {
-  //       console.log(response.data.data.form_data);
-  //       //GeneratePDF(response.data.data.form_data);
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.log(error.response);
-  //         console.log(error.response.status);
-  //         alert("Form not found");
-  //       }
-  //     });
-  // };
 
   const handleCellClick = (param, event) => {
     event.stopPropagation();
@@ -181,7 +131,6 @@ const PastTaApplications = ({ permission }) => {
   }
 
   const timeElement = (cellValues) => {
-    // console.log('cc',cellValues);
     const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
     return (
       <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>

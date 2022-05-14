@@ -23,13 +23,10 @@ const UploadDialogBox = ({ request_id }) => {
   const { handleSubmit, control, register, formState: { isSubmitting } } = useForm();
 
   function onUpload(file) {
-    // console.log('o', file);
     setFile(file[0]);
   }
 
   async function onClick() {
-    // e.preventDefault();
-    // console.log('f', file);
     if (file === undefined || file.length === 0) {
       alert('No file uploaded!');
       return;

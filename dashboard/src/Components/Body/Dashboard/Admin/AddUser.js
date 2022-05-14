@@ -26,8 +26,11 @@ const AddUser = () => {
         label: role_mapping[prop]['name'],
         value: prop,
       }
-    })
-
+    });
+    departments.unshift({
+      label: "Select",
+      value: "Select",
+    });
     console.log('set', departments);
     setDepartments(departments);
   }
@@ -98,7 +101,7 @@ const AddUser = () => {
               name={"department"}
               control={control}
               label="Department"
-              options={departments===null?[]:departments}
+              options={departments === null ? [] : departments}
               disabled={false}
             />
           </Grid>

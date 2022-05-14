@@ -125,6 +125,7 @@ function Charts() {
               alt="View API analytics"
               action="View API analytics"
               url={REACT_APP_BASE_BACKEND_URL + "/analytics"}
+              setOpen={()=>{}}
             />
           </Grid>
           <Grid item xs={3}>
@@ -132,6 +133,7 @@ function Charts() {
               image={require("./edit_user.png")}
               alt="Edit User"
               action="Edit User"
+              setOpen={()=>{}}
             />
           </Grid>
           <Grid item xs={3}>
@@ -155,13 +157,6 @@ function Charts() {
               </Button>
             </DialogActions>
           </Dialog>
-          {/* <Grid item xs={2}>
-            <MediaCard
-              image={require("./edit_user.png")}
-              alt="Edit User"
-              action="Edit User"
-            />
-          </Grid> */}
         </Grid>
       </Box>
     </>
