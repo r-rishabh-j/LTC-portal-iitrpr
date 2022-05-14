@@ -8,7 +8,6 @@ import Hidden from "@material-ui/core/Hidden";
 import MenuIcon from "@material-ui/icons/Menu";
 import { Avatar, IconButton } from '@material-ui/core';
 import { useStyles } from './HeaderStyles';
-import {Box} from '@material-ui/core';
 
 import image from './cover.jpg';
 

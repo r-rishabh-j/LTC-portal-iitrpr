@@ -14,7 +14,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 export default function Logout(props) {
   const classes = useStyles();
   const logout = () => {
-    console.log("Logout");
+    // console.log("Logout");
     window.location.reload();
   }
   function logOut() {

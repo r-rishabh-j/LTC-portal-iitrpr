@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react'
-import {Grid, Paper, Button, Dialog, DialogActions, Typography, Box} from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
+import { Grid, Paper, Button, Dialog, DialogActions, Typography, Box } from '@material-ui/core'
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import GeneratePDF from "../../../Utilities/GeneratePDF";
-import {useStyles} from '../DataGridStyles'
+import { useStyles } from '../DataGridStyles'
 import DialogBox from '../DialogBox';
 import DataGridToolbar from '../DataGridToolbar';
 const moment = require('moment');
 
-function Pending({permission}) {
+function Pending({ permission }) {
   const classes = useStyles();
 
   const [tableData, setTableData] = useState([]);
@@ -106,7 +106,7 @@ function Pending({permission}) {
     );
   };
 
-  function formatDate(date){
+  function formatDate(date) {
     const d = moment(date).format("DD/MM/YYYY");
     return d;
   }
@@ -148,7 +148,7 @@ function Pending({permission}) {
       minWidth: 150,
       flex: 1,
       renderCell: timeElement,
-      type:"date",
+      type: "date",
       valueGetter: (cellValues) => {
         const time = formatDate(cellValues.value.replace('GMT', ''));
         return Date(moment(time).local().format("DD/MM/YYYY"));
@@ -173,6 +173,9 @@ function Pending({permission}) {
       field: "form",
       headerName: "Form",
       minWidth: 150,
+      disableExport: true,
+      sortable: false,
+      filterable: false,
       renderCell: (cellValues) => {
         return (
           <>
@@ -227,16 +230,16 @@ function Pending({permission}) {
     // },
   ];
 
- 
+
   return (
     <>
       <Paper
         elevation={10}
-        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor:'#263238' }}
+        style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor: '#263238' }}
       >
-          <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color:"white" }}>
-            New Applications
-          </Typography>
+        <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
+          New Applications
+        </Typography>
       </Paper>
       <Paper
         elevation={10}
@@ -260,7 +263,7 @@ function Pending({permission}) {
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} process="new" showCommentSection={true}/>
+          <DialogBox request_id={id} permission={permission} process="new" showCommentSection={true} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close

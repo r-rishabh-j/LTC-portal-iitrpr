@@ -75,10 +75,11 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     # check if logged in
     api.add_resource(Auth.IsLoggedIn, '/api/is-logged-in')
     api.add_resource(LtcManager.ApplyForLTC, '/api/apply')  # apply for ltc
-    # api.add_resource(Auth.RegisterUser, '/api/register')  # register user
     api.add_resource(Auth.GetSignature, '/api/get-signature')  # get signature
     api.add_resource(Auth.UploadSignature,
                      '/api/upload-signature')  # upload signature
+    api.add_resource(UserManager.RegisterUser,
+                     '/api/admin/register')  # register user
     api.add_resource(UserManager.GetRoleMapping,
                      '/api/admin/getroles')  # upload signature
     api.add_resource(UserManager.GetUsers,
@@ -163,7 +164,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
         try:
             exp_timestamp = get_jwt()["exp"]
             now = datetime.now()
-            target_timestamp = datetime.timestamp(now + timedelta(minutes=10))
+            target_timestamp = datetime.timestamp(now + timedelta(hours=2))
             if target_timestamp > exp_timestamp:
                 access_token = create_access_token(identity=current_user)
                 set_access_cookies(make_response(response), access_token)

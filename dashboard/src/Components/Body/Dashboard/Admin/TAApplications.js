@@ -17,7 +17,7 @@ import {
 const moment = require('moment');
 
 
-function TAApplications({permission}) {
+function TAApplications({ permission }) {
   const classes = useStyles();
 
   const [tableData, setTableData] = useState([]);
@@ -68,7 +68,7 @@ function TAApplications({permission}) {
     );
   };
 
-  function formatDate(date){
+  function formatDate(date) {
     const d = moment(date).format("DD/MM/YYYY");
     return d;
   }
@@ -83,38 +83,41 @@ function TAApplications({permission}) {
   }
 
   const columns = [
-  { field: "request_id", headerName: "Application ID", minWidth: 50, flex: 1, renderCell: cellElement },
-  { field: "ltc_id", headerName: "LTC ID", minWidth: 50, flex: 1, renderCell: cellElement },
-  { field: "user", headerName: "User Email", minWidth: 150, flex: 1, renderCell: cellElement },
-  { field: "name", headerName: "Name", minWidth: 150, flex: 1, renderCell: cellElement },
-  {
-    field: "created_on", headerName: "Created on", minWidth: 150, flex: 1, renderCell: timeElement, type: "date",
-    valueGetter: (cellValues) => {
-      const time = formatDate(cellValues.value.replace('GMT', ''));
-      return Date(moment(time).local().format("DD/MM/YYYY"));
-    }
-  },
-  { field: "stage", headerName: "Stage", flex: 1, minWidth: 150, renderCell: cellElement },
-  {
-    field: "form",
-    headerName: "Form",
-    flex: 1,
-    minWidth: 150,
-    renderCell: (cellValues) => {
-      return (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={(event) => {
-            handleClickOpen(event, cellValues);
-          }}
-        >
-          View
-        </Button>
-      );
+    { field: "request_id", headerName: "Application ID", minWidth: 50, flex: 1, renderCell: cellElement },
+    { field: "ltc_id", headerName: "LTC ID", minWidth: 50, flex: 1, renderCell: cellElement },
+    { field: "user", headerName: "User Email", minWidth: 150, flex: 1, renderCell: cellElement },
+    { field: "name", headerName: "Name", minWidth: 150, flex: 1, renderCell: cellElement },
+    {
+      field: "created_on", headerName: "Created on", minWidth: 150, flex: 1, renderCell: timeElement, type: "date",
+      valueGetter: (cellValues) => {
+        const time = formatDate(cellValues.value.replace('GMT', ''));
+        return Date(moment(time).local().format("DD/MM/YYYY"));
+      }
     },
-  },
-];
+    { field: "stage", headerName: "Stage", flex: 1, minWidth: 150, renderCell: cellElement },
+    {
+      field: "form",
+      headerName: "Form",
+      flex: 1,
+      minWidth: 150,
+      disableExport: true,
+      sortable: false,
+      filterable: false,
+      renderCell: (cellValues) => {
+        return (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={(event) => {
+              handleClickOpen(event, cellValues);
+            }}
+          >
+            View
+          </Button>
+        );
+      },
+    },
+  ];
 
   return (
     <>

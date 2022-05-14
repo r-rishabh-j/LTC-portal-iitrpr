@@ -38,7 +38,7 @@ export default function Home() {
       data: {}
     })
       .then((response) => {
-        console.log(response.data.notifications)
+        // console.log(response.data.notifications)
         setNotifications(response.data.notifications)
       })
       .catch((error) => {

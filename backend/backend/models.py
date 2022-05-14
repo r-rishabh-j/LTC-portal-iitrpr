@@ -132,25 +132,30 @@ class StageUsers(db.Model):
     def getStageRoles(stage):
         mapping = {
             Stages.establishment: {
-                'junior_assistant': StageUsers.Designations.establishment_junior_assistant,
-                'junior_superitendent': StageUsers.Designations.establishment_junior_superitendent,
-                'assistant_registrar': StageUsers.Designations.establishment_assistant_registrar,
-                'deputy_registrar': StageUsers.Designations.establishment_deputy_registrar,
+                'junior_assistant': {'name': StageUsers.Designations.establishment_junior_assistant, 'isStageRole':True},
+                'junior_superitendent': {'name': StageUsers.Designations.establishment_junior_superitendent, 'isStageRole':True},
+                'assistant_registrar': {'name': StageUsers.Designations.establishment_assistant_registrar, 'isStageRole':True},
+                'deputy_registrar': {'name': StageUsers.Designations.establishment_deputy_registrar, 'isStageRole':True},
+                'staff': {'name': 'General Staff'},
             },
             Stages.audit: {
-                'senior_audit_officer': StageUsers.Designations.senior_audit_officer,
-                'assistant_audit_officer': StageUsers.Designations.assistant_audit_officer,
+                'senior_audit_officer': {'name': StageUsers.Designations.senior_audit_officer, 'isStageRole':True},
+                'assistant_audit_officer': {'name': StageUsers.Designations.assistant_audit_officer, 'isStageRole':True},
+                'staff': {'name': 'General Staff'},
             },
             Stages.accounts: {
-                'junior_accountant': StageUsers.Designations.accounts_junior_accountant,
-                'junior_accounts_officer': StageUsers.Designations.accounts_junior_accounts_officer,
-                'assistant_registrar': StageUsers.Designations.accounts_assistant_registrar,
+                'junior_accountant': {'name': StageUsers.Designations.accounts_junior_accountant, 'isStageRole':True},
+                'junior_accounts_officer': {'name': StageUsers.Designations.accounts_junior_accounts_officer, 'isStageRole':True},
+                'assistant_registrar': {'name': StageUsers.Designations.accounts_assistant_registrar, 'isStageRole':True},
+                'staff': {'name': 'General Staff'},
             },
             Stages.registrar: {
-                'registrar': StageUsers.Designations.registrar,
+                'registrar': {'name': StageUsers.Designations.registrar, 'isStageRole':True},
+                'staff': {'name': 'General Staff'},
             },
             Stages.deanfa: {
-                'deanfa': StageUsers.Designations.deanfa,
+                'deanfa': {'name': StageUsers.Designations.deanfa, 'isStageRole':True},
+                'staff': {'name': 'General Staff'},
             }
         }
         return mapping[stage]
@@ -385,7 +390,8 @@ class Departments(db.Model):
     """
     __tablename__ = 'departments'
     name = db.Column(db.String(20), primary_key=True)
-    dept_head = db.Column(db.Integer, db.ForeignKey('users.id'))  # userID of the department head
+    dept_head = db.Column(db.Integer, db.ForeignKey(
+        'users.id'))  # userID of the department head
     # whether the dept belongs to a stage in the heirarchy
     is_stage = db.Column(db.Boolean)
     full_name = db.Column(db.String)

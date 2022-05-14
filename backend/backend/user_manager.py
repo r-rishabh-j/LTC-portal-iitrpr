@@ -18,14 +18,21 @@ class UserManager(Resource):
                 'cse':{
                     'name': 'Computer Science and Engineering',
                     'roles':{
-                        'faculty':'Faculty',
-                        'hod': 'Head of Department'
+                        'faculty': {
+                            'name': 'Faculty',
+                        },
+                        'hod': {
+                            'name': 'Head of Department',
+                        },
                     }
                 }
                 'establishment':{
                     'name':'Establishment Section',
                     'roles':{
-                        'assistant_registrar':'Assistant Registrar',
+                        'assistant_registrar':{
+                            'name':'Assistant Registrar',
+                            'isStageRole':True,
+                        },
                     }
                 }
             }
@@ -39,14 +46,23 @@ class UserManager(Resource):
                 result[dept.name] = {
                     'name': dept.full_name,
                     'roles': {
-                        'faculty': 'Faculty',
-                        'hod': 'Head of Department'
+                        'faculty': {
+                            'name': 'Faculty',
+                        },
+                        'hod': {
+                            'name': 'Head of Department',
+                        },
+                        'staff': {
+                            'name': 'General Staff'
+                        }
                     }
                 }
         result[Permissions.admin] = {
             'name': 'Admin',
             'roles': {
-                'admin': 'Admin'
+                'admin': {
+                    'name': 'Admin'
+                }
             }
         }
 
@@ -100,7 +116,7 @@ class UserManager(Resource):
             return {'error': 'Not implemented'}, 500
 
     class GetRoleMapping(Resource):
-        @role_required(role=Permissions.admin)
+        # @role_required(role=Permissions.admin)
         def get(self):
             roles = UserManager.generateRoles()
             return {'role_mapping': roles}
@@ -121,7 +137,8 @@ class UserManager(Resource):
         @role_required(role=Permissions.admin)
         def get(self):
             # query = db.session.query(Users, Departments).join(Departments).all()
-            query = db.session.query(Users, Departments).filter(Users.department == Departments.name)
+            query = db.session.query(Users, Departments).filter(
+                Users.department == Departments.name)
             # users = Users.query.all()
             result = []
             for user, department in query:

@@ -28,60 +28,60 @@ const PastTaApplications = ({ permission }) => {
     fetch("/api/ta/getmyforms")
       .then((data) => data.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         setTableData(data.data)
       })
   }, [])
 
   //rows = {tableData}
-  const handleAttachmentClick = (event, cellValues) => {
-    console.log(cellValues.row.request_id);
-    const data = { request_id: cellValues.row.request_id };
-    axios({
-      method: "post",
-      url: "api/ta/getattachments",
-      data: JSON.stringify(data),
-      headers: { "Content-type": "application/json" },
-      responseType: "blob",
-    })
-      .then((response) => {
-        var blob = new Blob([response.data], { type: response.data.type });
-        var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
-        var anchor = document.createElement('a');
-        anchor.href = url;
-        anchor.target = '_blank';
-        anchor.click();
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response);
-          console.log(error.response.status);
-          alert("No attachments");
-        }
-      });
-  };
+  // const handleAttachmentClick = (event, cellValues) => {
+  //   console.log(cellValues.row.request_id);
+  //   const data = { request_id: cellValues.row.request_id };
+  //   axios({
+  //     method: "post",
+  //     url: "api/ta/getattachments",
+  //     data: JSON.stringify(data),
+  //     headers: { "Content-type": "application/json" },
+  //     responseType: "blob",
+  //   })
+  //     .then((response) => {
+  //       var blob = new Blob([response.data], { type: response.data.type });
+  //       var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
+  //       var anchor = document.createElement('a');
+  //       anchor.href = url;
+  //       anchor.target = '_blank';
+  //       anchor.click();
+  //     })
+  //     .catch((error) => {
+  //       if (error.response) {
+  //         console.log(error.response);
+  //         console.log(error.response.status);
+  //         alert("No attachments");
+  //       }
+  //     });
+  // };
 
-  const handleFormClick = (event, cellValues) => {
-    console.log(cellValues.row.request_id);
-    const data = { request_id: cellValues.row.request_id };
-    axios({
-      method: "post",
-      url: "api/ta/getformdata",
-      data: JSON.stringify(data),
-      headers: { "Content-type": "application/json" },
-    })
-      .then((response) => {
-        console.log(response.data.data.form_data);
-        //GeneratePDF(response.data.data.form_data);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response);
-          console.log(error.response.status);
-          alert("Form not found");
-        }
-      });
-  };
+  // const handleFormClick = (event, cellValues) => {
+  //   console.log(cellValues.row.request_id);
+  //   const data = { request_id: cellValues.row.request_id };
+  //   axios({
+  //     method: "post",
+  //     url: "api/ta/getformdata",
+  //     data: JSON.stringify(data),
+  //     headers: { "Content-type": "application/json" },
+  //   })
+  //     .then((response) => {
+  //       console.log(response.data.data.form_data);
+  //       //GeneratePDF(response.data.data.form_data);
+  //     })
+  //     .catch((error) => {
+  //       if (error.response) {
+  //         console.log(error.response);
+  //         console.log(error.response.status);
+  //         alert("Form not found");
+  //       }
+  //     });
+  // };
 
   const handleCellClick = (param, event) => {
     event.stopPropagation();
@@ -98,7 +98,7 @@ const PastTaApplications = ({ permission }) => {
 
   const handleClickOpen = (event, cellValues) => {
     setOpen(true);
-    console.log('status', cellValues.row.stage);
+    // console.log('status', cellValues.row.stage);
     setStatus(cellValues.row.stage);
     setId(cellValues.row.request_id);
   };
@@ -114,7 +114,7 @@ const PastTaApplications = ({ permission }) => {
   const editForm = (event, cellValues) => {
     setOpenReview(true);
     setId(cellValues.row.request_id);
-    console.log("Open a new dialog box");
+    // console.log("Open a new dialog box");
   }
 
   const stageElement = (cellValues) => {
@@ -204,6 +204,9 @@ const PastTaApplications = ({ permission }) => {
       field: "form",
       headerName: "Form",
       minWidth: 150,
+      disableExport: true,
+      sortable: false,
+      filterable: false,
       renderCell: (cellValues) => {
         return (
           <>
