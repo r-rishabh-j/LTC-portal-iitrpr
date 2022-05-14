@@ -385,7 +385,7 @@ class Departments(db.Model):
     """
     __tablename__ = 'departments'
     name = db.Column(db.String(20), primary_key=True)
-    dept_head = db.Column(db.Integer)  # userID of the department head
+    dept_head = db.Column(db.Integer, db.ForeignKey('users.id'))  # userID of the department head
     # whether the dept belongs to a stage in the heirarchy
     is_stage = db.Column(db.Boolean)
     full_name = db.Column(db.String)

@@ -8,6 +8,7 @@ import Hidden from "@material-ui/core/Hidden";
 import MenuIcon from "@material-ui/icons/Menu";
 import { Avatar, IconButton } from '@material-ui/core';
 import { useStyles } from './HeaderStyles';
+import {Box} from '@material-ui/core';
 
 import image from './cover.jpg';
 
@@ -22,7 +23,7 @@ export default function Navbar({ handleDrawerToggle, profileInfo }) {
             <MenuIcon style={{color: "white"}}/>
           </IconButton>
         </Hidden>
-        <Avatar src={image} />
+        <Avatar src={image}/>
         <Typography variant="h6" className={classes.title}>
           &nbsp; LTC Portal: {profileInfo.designation}
         </Typography>

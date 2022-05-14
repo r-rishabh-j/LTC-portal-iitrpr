@@ -120,7 +120,8 @@ class UserManager(Resource):
     class GetUsers(Resource):
         @role_required(role=Permissions.admin)
         def get(self):
-            query = db.session.query(Users, Departments).join(Departments).all()
+            # query = db.session.query(Users, Departments).join(Departments).all()
+            query = db.session.query(Users, Departments).filter(Users.department == Departments.name)
             # users = Users.query.all()
             result = []
             for user, department in query:
@@ -130,8 +131,32 @@ class UserManager(Resource):
                     'email': user.email,
                     'name': user.name,
                     'department': department.full_name,
-                    'employee_code':user.employee_code,
-                    'designation':user.designation
+                    'employee_code': user.employee_code,
+                    'designation': user.designation
                 }
                 )
-            return {'users':result}
+            return {'users': result}
+
+    class GetDepartments(Resource):
+
+        def get(self):
+            query1 = db.session.query(Departments, Users).filter(
+                Departments.dept_head == Users.id)
+            query2 = Departments.query.filter(Departments.dept_head == None)
+            result = []
+            for department, user in query1:
+                result.append({
+                    'dept_id': department.name,
+                    'department_name': department.full_name,
+                    'head_email': user.email,
+                    'is_stage': department.is_stage
+                })
+
+            for department in query2:
+                result.append({
+                    'dept_id': department.name,
+                    'department_name': department.full_name,
+                    'head_email': 'None',
+                    'is_stage': department.is_stage
+                })
+            return {'departments': result}
