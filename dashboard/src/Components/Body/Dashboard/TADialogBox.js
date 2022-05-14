@@ -15,6 +15,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@material-ui/core";
+import PersonIcon from "@material-ui/icons/Person";
 const moment = require("moment");
 
 const TADialogBox = ({request_id}) => {
@@ -495,6 +496,55 @@ const TADialogBox = ({request_id}) => {
             <div></div>
           )}
         </Box>
+        {commentObj["establishment"] !== undefined ? (
+          // commentObj["establishment"][0]["review"] === true ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Establishment Section Comments
+            </Typography>
+            <List>
+              {commentObj.establishment.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </DialogContent>
     </>
   );
