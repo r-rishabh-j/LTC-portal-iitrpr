@@ -112,7 +112,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
   const auditList = [
     { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: ["/new", "new-ta"], icon: <NewReleasesIcon />, popup: true },
+    { label: "New Applications", link: ["/new", "/new-ta"], icon: <NewReleasesIcon />, popup: true },
     {
       label: "Past Applications",
       link: ["/past", "/past-ta"],
@@ -125,7 +125,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
 
     {
       label: "New Applications",
-      link: ["/new", "new-ta"],
+      link: ["/new", "/new-ta"],
       icon: <NewReleasesIcon />,
       popup: true,
     },
@@ -141,13 +141,13 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
 
     {
       label: "New Applications",
-      link: ["/new", "new-ta"],
+      link: ["/new", "/new-ta"],
       icon: <NewReleasesIcon />,
       popup: true,
     },
     {
       label: "Past Applications",
-      link: ["/past", "past-ta"],
+      link: ["/past", "/past-ta"],
       icon: <HistoryIcon />,
       popup: true,
     },
