@@ -12,6 +12,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormInputText } from "../../../Utilities/FormInputText";
 import { FormInputDropDown } from "../../../Utilities/FormInputDropDown";
+import axios from "axios";
 
 const AddUser = () => {
   const { handleSubmit, control } = useForm();
@@ -45,6 +46,24 @@ const AddUser = () => {
   }, []);
   const onSubmit = (data) => {
     console.log(data);
+    const formData = new FormData();
+    formData.append('user', JSON.stringify(data));
+    axios({
+      method: "POST",
+      url: "/api/admin/register",
+      data: formData,
+    })
+      .then((response) => {
+        alert('User added!')
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          alert(error.response.data.error);
+        }
+      });
   };
   const [dept, setDept] = useState("Select");
   console.log("dept", dept);
@@ -85,6 +104,12 @@ const AddUser = () => {
       setDesignations(roles);
       console.log(roles);
     }
+    else{
+      setDesignations([{
+        label:"Select",
+        value:"Select",
+      }]);
+    }
   }
  
 
@@ -116,10 +141,19 @@ const AddUser = () => {
               name={"emp_code"}
               control={control}
               label={"Employee Code"}
-              required={true}
+              required={false}
               defaultValue={""}
             />
           </Grid>
+          {/* <Grid item xs={12}>
+            <FormInputText
+              name={"designation"}
+              control={control}
+              label={"Designation"}
+              required={true}
+              defaultValue={""}
+            />
+          </Grid> */}
           <Grid item xs={12} style={{ margin: "1vh 0 0 0" }}>
             <FormInputDropDown
               name={"department"}

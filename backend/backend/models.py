@@ -106,57 +106,77 @@ class Users(db.Model):
 class StageUsers(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(
         'users.id', ondelete='CASCADE'), primary_key=True,)
-    designation = db.Column(db.String)
+    designation = db.Column(db.String, unique=True)
 
     # TODO: Write all possible designations for stage users
     class Designations:
         deanfa = 'Dean FA'
         registrar = 'Registrar'
 
-        establishment_junior_assistant = 'Junior Assistant'
-        establishment_junior_superitendent = 'Junior Superintendent'
-        establishment_assistant_registrar = 'Assistant Registrar'
-        establishment_deputy_registrar = 'Deputy Registrar'
+        establishment_junior_assistant = 'Establishment Junior Assistant'
+        establishment_junior_superitendent = 'Establishment Junior Superintendent'
+        establishment_assistant_registrar = 'Establishment Assistant Registrar'
+        establishment_deputy_registrar = 'Establishment Deputy Registrar'
 
         senior_audit_officer = 'Senior Audit Officer'
         assistant_audit_officer = 'Assistant Audit Officer'
 
         accounts_junior_accountant = 'Junior Accountant'
         accounts_junior_accounts_officer = 'Junior Accounts Officer'
-        accounts_assistant_registrar = 'Assistant Registrar'
-        # accounts_deputy_registrar = 'Deputy Registrar'
+        accounts_assistant_registrar = 'Accounts Assistant Registrar'
+        # accounts_deputy_registrar = 'Accounts Deputy Registrar'
 
     def __init__(self, user_id, designation) -> None:
         self.user_id = user_id
         self.designation = designation
 
     def getStageRoles(stage):
+        from .role_manager import Permissions
         mapping = {
             Stages.establishment: {
-                'junior_assistant': {'name': StageUsers.Designations.establishment_junior_assistant, 'isStageRole': True},
-                'junior_superitendent': {'name': StageUsers.Designations.establishment_junior_superitendent, 'isStageRole': True},
-                'assistant_registrar': {'name': StageUsers.Designations.establishment_assistant_registrar, 'isStageRole': True},
-                'deputy_registrar': {'name': StageUsers.Designations.establishment_deputy_registrar, 'isStageRole': True},
-                'staff': {'name': 'General Staff'},
+                'junior_assistant': {
+                    'name': StageUsers.Designations.establishment_junior_assistant,
+                    'isStageRole': True,
+                    'permission': Permissions.establishment
+                },
+                'junior_superitendent': {
+                    'name': StageUsers.Designations.establishment_junior_superitendent,
+                    'isStageRole': True,
+                    'permission': Permissions.establishment
+                },
+                'assistant_registrar': {
+                    'name': StageUsers.Designations.establishment_assistant_registrar,
+                    'isStageRole': True,
+                    'permission': Permissions.establishment,
+                    'isHead': True
+                },
+                'deputy_registrar': {
+                    'name': StageUsers.Designations.establishment_deputy_registrar,
+                    'isStageRole': True, 'permission': Permissions.establishment
+                },
+                'staff': {
+                    'name': 'General Staff',
+                    'permission': Permissions.client
+                },
             },
             Stages.audit: {
-                'senior_audit_officer': {'name': StageUsers.Designations.senior_audit_officer, 'isStageRole': True},
-                'assistant_audit_officer': {'name': StageUsers.Designations.assistant_audit_officer, 'isStageRole': True},
-                'staff': {'name': 'General Staff'},
+                'senior_audit_officer': {'name': StageUsers.Designations.senior_audit_officer, 'isStageRole': True, 'permission': Permissions.audit, 'isHead': True},
+                'assistant_audit_officer': {'name': StageUsers.Designations.assistant_audit_officer, 'isStageRole': True, 'permission': Permissions.audit},
+                'staff': {'name': 'General Staff', 'permission': Permissions.client},
             },
             Stages.accounts: {
-                'junior_accountant': {'name': StageUsers.Designations.accounts_junior_accountant, 'isStageRole': True},
-                'junior_accounts_officer': {'name': StageUsers.Designations.accounts_junior_accounts_officer, 'isStageRole': True},
-                'assistant_registrar': {'name': StageUsers.Designations.accounts_assistant_registrar, 'isStageRole': True},
-                'staff': {'name': 'General Staff'},
+                'junior_accountant': {'name': StageUsers.Designations.accounts_junior_accountant, 'isStageRole': True, 'permission': Permissions.accounts},
+                'junior_accounts_officer': {'name': StageUsers.Designations.accounts_junior_accounts_officer, 'isStageRole': True, 'permission': Permissions.accounts},
+                'assistant_registrar': {'name': StageUsers.Designations.accounts_assistant_registrar, 'isStageRole': True, 'permission': Permissions.accounts, 'isHead': True},
+                'staff': {'name': 'General Staff', 'permission': Permissions.client},
             },
             Stages.registrar: {
-                'registrar': {'name': StageUsers.Designations.registrar, 'isStageRole': True},
-                'staff': {'name': 'General Staff'},
+                'registrar': {'name': StageUsers.Designations.registrar, 'isStageRole': True, 'permission': Permissions.registrar, 'isHead': True},
+                'staff': {'name': 'General Staff', 'permission': Permissions.client},
             },
             Stages.deanfa: {
-                'deanfa': {'name': StageUsers.Designations.deanfa, 'isStageRole': True},
-                'staff': {'name': 'General Staff'},
+                'deanfa': {'name': StageUsers.Designations.deanfa, 'isStageRole': True, 'permission': Permissions.deanfa, 'isHead': True},
+                'staff': {'name': 'General Staff', 'permission': Permissions.client},
             }
         }
         return mapping[stage]

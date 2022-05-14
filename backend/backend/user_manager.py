@@ -9,6 +9,7 @@ from .role_manager import check_role, role_required, Permissions
 from . import emailmanager
 from .analyse import analyse
 
+
 class UserManager(Resource):
 
     def generateRoles():
@@ -48,12 +49,16 @@ class UserManager(Resource):
                     'roles': {
                         'faculty': {
                             'name': 'Faculty',
+                            'permission': Permissions.client
                         },
                         'hod': {
                             'name': 'Head of Department',
+                            'permission': Permissions.dept_head,
+                            'isHead': True
                         },
                         'staff': {
-                            'name': 'General Staff'
+                            'name': 'General Staff',
+                            'permission': Permissions.client
                         }
                     }
                 }
@@ -61,7 +66,8 @@ class UserManager(Resource):
             'name': 'Admin',
             'roles': {
                 'admin': {
-                    'name': 'Admin'
+                    'name': 'Admin',
+                    'permission': Permissions.admin
                 }
             }
         }
@@ -101,20 +107,60 @@ class UserManager(Resource):
             """
             Send post request to register user
             """
-            name = request.form.get('name')
-            email = request.form.get('email')
-            department = request.form.get('department')
-            role = request.form.get('role')
+            user_creds = json.loads(request.form.get('user'))
+            print('a', user_creds)
+            name = user_creds.get('name')
+            email = user_creds.get('email')
+            department = user_creds.get('department')
+            designation = user_creds.get('designation')
+            emp_code = user_creds.get('emp_code')
 
-            if None in [name, email, department, role]:
-                abort(400, 'invalid request')
+            if emp_code.isspace() or emp_code == '':
+                emp_code = None
+
+            if None in [name, email, department, designation]:
+                abort(400, error='invalid request')
 
             roles = UserManager.generateRoles()
+            dept_entry: Departments = Departments.query.get(department)
+            if department == None:
+                abort(400, error='Invalid Department')
             department_entry = roles[department]
-            if not role in department_entry['roles']:
+            if not (designation in department_entry['roles']):
                 abort(400, error='Role mapping not valid')
+            if Users.query.filter_by(email=email).one_or_none() != None:
+                abort(400, error='Email Already Exists!')
 
-            return {'error': 'Not implemented'}, 500
+            if (emp_code != None and not emp_code.isspace() and not emp_code == '') and Users.query.filter_by(employee_code=emp_code).one_or_none() != None:
+                abort(400, error='Employee code exists!')
+
+            new_user: Users = Users(email=email, name=name, dept=department, permission=department_entry['roles'][designation]['permission'],
+                                    designation=department_entry['roles'][designation]['name'], email_pref=False, employee_code=emp_code)
+
+            db.session.add(new_user)
+            db.session.commit()
+            db.session.refresh(new_user)
+
+            if department_entry['roles'][designation].get('isStageRole') == True:
+                print('yes 111')
+                print(department_entry['roles'][designation]['name'])
+                stage_user: StageUsers = StageUsers.query.filter(
+                    StageUsers.designation == department_entry['roles'][designation]['name']).one_or_none()
+                if stage_user == None:
+                    stage_user = StageUsers(
+                        new_user.id, department_entry['roles'][designation]['name'])
+                    db.session.add(stage_user)
+                else:
+                    stage_user.designation = department_entry['roles'][designation]['name']
+                    stage_user.user_id = new_user.id
+
+            if department_entry['roles'][designation].get('isHead') == True:
+                print('yes 222')
+                dept_entry.dept_head = new_user.id
+
+            db.session.commit()
+
+            return {'success': 'User added'}, 200
 
     class GetRoleMapping(Resource):
         @role_required(role=Permissions.admin)
