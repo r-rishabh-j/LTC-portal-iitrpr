@@ -126,7 +126,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/resolve-review')  # resolve review requests
     api.add_resource(LtcManager.EditStageForm,
                      '/api/edit-stage-form')  # edit stage form(establishment, accounts)
-    api.add_resource(LtcManager.PrintForm,
+    api.add_resource(LtcManager.PrintForm, 
                      '/api/print-form')  # return form data for printing to pdf.
     # TA form
     api.add_resource(TaManager.ApplyForTA, '/api/ta/apply')
@@ -137,6 +137,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(TaManager.GetTaFormMetaData, '/api/ta/get-form-meta')
     api.add_resource(TaManager.GetPendingTaApprovalRequests,
                      '/api/ta/pending-requests')
+    api.add_resource(TaManager.GetPastTaApprovalRequests,
+                     '/api/ta/getpastltc')
     api.add_resource(TaManager.GetApprovedLTCForTA,
                      '/api/ta/get-approved-ltc')
     api.add_resource(TaManager.GetPendingTaOfficeOrderRequests,

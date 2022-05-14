@@ -1704,6 +1704,55 @@ shortest route "
             </Box>
           </div>
         )}
+        {commentObj["department"] !== undefined ? (
+          // commentObj["establishment"][0]["review"] === true ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              HOD Comments
+            </Typography>
+            <List>
+              {commentObj.department.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
         {commentObj["establishment"] !== undefined ? (
           // commentObj["establishment"][0]["review"] === true ? (
           <div>
@@ -1958,8 +2007,9 @@ shortest route "
                 name="comment"
                 control={control}
                 label="Add new comment"
-                defaultValue=" "
+                defaultValue=""
                 multiline={true}
+                required={true}
                 rows={4}
               />
               <Box display="flex" justifyContent="start">
