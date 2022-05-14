@@ -123,6 +123,7 @@ class LtcManager:
             Permissions.establishment,
             Permissions.accounts,
             Permissions.audit,
+            Permissions.dept_head
         ]
 
         @roles_required(roles=allowed_roles)
@@ -153,12 +154,16 @@ class LtcManager:
 
             user_dept: Departments = Departments.query.get(
                 current_user.department)
-            if not user_dept.is_stage:
-                abort(401, msg='Only stage users allowed')
+            # if not user_dept.is_stage:
+            #     abort(401, msg='Only stage users allowed')
 
             applicant: Users = Users.query.get(form.user_id)
-            form.addComment(current_user, comment,
-                            True if action == 'approve' else False, is_review=True if action == 'review' else False)
+            if kwargs['permission'] == Permissions.dept_head:
+                form.addDeptComment(current_user, comment,
+                                True if action == 'approve' else False)
+            else:
+                form.addComment(current_user, comment,
+                                True if action == 'approve' else False, is_review=True if action == 'review' else False)
             if action == 'review':  # application to be sent back for review
                 form.send_for_review(current_user, applicant, comment)
                 db.session.commit()

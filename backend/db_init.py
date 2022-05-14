@@ -25,27 +25,27 @@ user_list = [
 stage_users_list = [
     {
         'user': Users(email='establishment@email', name='Establishment Section',
-                      dept='establishment', permission='establishment', designation='Establishment Section'),
+                      dept='establishment', permission='establishment', designation=StageUsers.Designations.establishment_junior_superitendent),
         'designation': StageUsers.Designations.establishment_junior_superitendent
     },
     {
         'user': Users(email='establishment1@email', name='Establishment Section 1',
-                      dept='establishment', permission='establishment', designation='Establishment Section'),
+                      dept='establishment', permission='establishment', designation=StageUsers.Designations.establishment_junior_assistant),
         'designation': StageUsers.Designations.establishment_junior_assistant
     },
     {
         'user': Users(email='establishment2@email', name='Establishment Section 2',
-                      dept='establishment', permission='establishment', designation='Establishment Section'),
+                      dept='establishment', permission='establishment', designation=StageUsers.Designations.establishment_deputy_registrar),
         'designation': StageUsers.Designations.establishment_deputy_registrar
     },
     {
         'user': Users(email='accounts@email', name='Accounts Section',
-                      dept='accounts', permission='accounts', designation='Accounts Section'),
+                      dept='accounts', permission='accounts', designation=StageUsers.Designations.accounts_junior_accounts_officer),
         'designation': StageUsers.Designations.accounts_junior_accounts_officer
     },
     {
         'user': Users(email='accounts1@email', name='Accounts Section 1',
-                      dept='accounts', permission='accounts', designation='Accounts Section'),
+                      dept='accounts', permission='accounts', designation=StageUsers.Designations.accounts_junior_accountant),
         'designation': StageUsers.Designations.accounts_junior_accountant
     },
     # {
@@ -55,37 +55,37 @@ stage_users_list = [
     # },
     {
         'user': Users(email='audit@email', name='audit Section',
-                      dept='audit', permission='audit', designation='Audit Section'),
+                      dept='audit', permission='audit', designation=StageUsers.Designations.assistant_audit_officer),
         'designation': StageUsers.Designations.assistant_audit_officer
     },
 ]
 
 hod_cs = Users(email='hod_cse@email', name='HOD CSE',
-               dept='cse', permission='dept_head')
+               dept='cse', permission='dept_head', designation='HOD CSE')
 hod_list = [
     {
         'user': Users(email='establishment_head@email', name='Establishment Section Head',
-                      dept='establishment', permission='establishment', designation='Establishment Section'),
+                      dept='establishment', permission='establishment', designation=StageUsers.Designations.establishment_assistant_registrar),
         'designation': StageUsers.Designations.establishment_assistant_registrar
     },
     {
         'user': Users(email='deanfa@email', name='Dean FA',
-                      dept='deanfa', permission='deanfa', designation='Dean FA'),
+                      dept='deanfa', permission='deanfa', designation=StageUsers.Designations.deanfa),
         'designation': StageUsers.Designations.deanfa
     },
     {
         'user': Users(email='registrar@email', name='Registrar',
-                      dept='registrar', permission='registrar', designation='Registrar'),
+                      dept='registrar', permission='registrar', designation=StageUsers.Designations.registrar),
         'designation': StageUsers.Designations.registrar
     },
     {
         'user': Users(email='accounts_head@email', name='Accounts Section',
-                      dept='accounts', permission='accounts', designation='Accounts Section Head'),
+                      dept='accounts', permission='accounts', designation=StageUsers.Designations.accounts_assistant_registrar),
         'designation': StageUsers.Designations.accounts_assistant_registrar
     },
     {
         'user': Users(email='audit_head@email', name='Audit Section Head',
-                      dept='audit', permission='audit', designation='Audit Section'),
+                      dept='audit', permission='audit', designation=StageUsers.Designations.senior_audit_officer),
         'designation': StageUsers.Designations.senior_audit_officer
     },
 ]

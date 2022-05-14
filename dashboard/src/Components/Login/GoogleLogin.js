@@ -43,14 +43,15 @@ function GoogleLogin() {
       data: data
     })
       .then((response) => {
-        alert(response.data.success)
+        alert(response.data.success);
+        window.location.reload();
       })
       .catch((error) => {
         if (error.response) {
           console.log(error.response);
           console.log(error.response.status);
           console.log(error.response.headers);
-          alert(error.response.data.error)
+          alert(error.response.data.error);
         }
       });
 

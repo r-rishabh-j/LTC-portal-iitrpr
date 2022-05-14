@@ -177,6 +177,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
         className={classes.navlinks}
         to={"/profile"}
         title="Profile Page"
+        onClick={handleClose}
       >
         <center>
           <img
@@ -274,6 +275,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
                 component={NavLink}
                 to={item.link[0]}
                 className={classes.navlinks}
+                onClick={handleClose}
                 // activeClassName={classes.activeNavlinks}
                 sx={{ width: "100%", textTransform: "capitalize" }}
               >

@@ -45,9 +45,9 @@ function Users() {
     const columns = [
         /*
         id, email, created on, is active, stage, view form, download(button)*/
-        { field: "user_id", headerName: "User ID", minWidth: 100, flex: 1, renderCell: cellElement },
+        { field: "user_id", headerName: "User ID", minWidth: 70, flex: 1, renderCell: cellElement },
         { field: "name", headerName: "Name", minWidth: 150, flex: 1, renderCell: cellElement },
-        { field: "email", headerName: "User Email", minWidth: 150, flex: 1, renderCell: cellElement },
+        { field: "email", headerName: "User Email", minWidth: 200, flex: 1, renderCell: cellElement },
         { field: "department", headerName: "Department", flex: 1, minWidth: 180, renderCell: cellElement },
         { field: "designation", headerName: "Designation", flex: 1, minWidth: 150, renderCell: cellElement },
         { field: "employee_code", headerName: "Emp. Code", flex: 1, minWidth: 70, renderCell: cellElement },
