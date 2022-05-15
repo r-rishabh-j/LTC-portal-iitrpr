@@ -128,25 +128,40 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/edit-stage-form')  # edit stage form(establishment, accounts)
     api.add_resource(LtcManager.PrintForm, 
                      '/api/print-form')  # return form data for printing to pdf.
-    # TA form
+    """
+    TA form
+    """
+    # apply for TA
     api.add_resource(TaManager.ApplyForTA, '/api/ta/apply')
+    # comment and forward
     api.add_resource(TaManager.CommentOnTA, '/api/ta/comment')
+    # fetch form data
     api.add_resource(TaManager.GetTaFormData, '/api/ta/getformdata')
+    # fetch attachments
     api.add_resource(TaManager.GetTaFormAttachments, '/api/ta/getattachments')
+    # fetch forms for user
     api.add_resource(TaManager.GetTaFormMetaDataForUser, '/api/ta/getmyforms')
+    # fetch form meta data
     api.add_resource(TaManager.GetTaFormMetaData, '/api/ta/get-form-meta')
+    # fetch pending approval requests
     api.add_resource(TaManager.GetPendingTaApprovalRequests,
                      '/api/ta/pending-requests')
+    # fetch past approved applications
     api.add_resource(TaManager.GetPastTaApprovalRequests,
                      '/api/ta/getpastta')
+    # fetch approved ltc applications eligible for TA
     api.add_resource(TaManager.GetApprovedLTCForTA,
                      '/api/ta/get-approved-ltc')
+    # fetch pending office orders
     api.add_resource(TaManager.GetPendingTaOfficeOrderRequests,
                      '/api/ta/pending-office-orders')
+    # upload office order
     api.add_resource(TaManager.UploadTaOfficeOrder,
                      '/api/ta/upload-office-order')
+    # update TA payment details
     api.add_resource(TaManager.UpdateAccountsPaymentDetails,
                      '/api/ta/upload-payment-details')
+    # print TA form
     api.add_resource(TaManager.PrintTaForm,
                      '/api/ta/print-form')
 

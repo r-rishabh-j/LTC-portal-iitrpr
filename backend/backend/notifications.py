@@ -10,6 +10,7 @@ import time
 
 
 class GetUserNotifications(Resource):
+    """Fetch dashboard notifications"""
     @check_role()
     def get(self, **kwargs):
         user: Users = current_user
@@ -17,6 +18,7 @@ class GetUserNotifications(Resource):
 
 
 class ClearUserNotifications(Resource):
+    """Clear dashboard notifications"""
     @check_role()
     def get(self, **kwargs):
         user: Users = current_user
@@ -28,12 +30,22 @@ class ClearUserNotifications(Resource):
 class GetEmailPref(Resource):
     @check_role()
     def get(self, **kwargs):
+        """
+        @return json:{
+            'pref': <bool>
+        }
+        """
         return {'pref': current_user.email_pref}
 
 
 class SetEmailPref(Resource):
     @check_role()
     def post(self, **kwargs):
+        """
+        @params: data:{
+            'pref': <bool>
+        }
+        """
         setting = json.loads(request.data)
         pref = setting.get('pref')
         if pref not in [True, False]:
