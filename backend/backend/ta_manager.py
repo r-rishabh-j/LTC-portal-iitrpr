@@ -441,7 +441,7 @@ class TaManager():
             filename = file.filename
             office_order_enc = filemanager.encodeFile(file)
 
-            form.stage = TARequests.Stages.approved
+            form.stage = TARequests.Stages.payment_pending
             approved_entry.approved_on = datetime.now()
 
             office_order_upload_entry: TAOfficeOrders = TAOfficeOrders(

@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Grid, Paper, Typography } from "@material-ui/core";
-import { Button, ClickAwayListener } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { Grid, Paper } from "@material-ui/core";
+import { Button } from "@mui/material";
 import axios from "axios";
-import GeneratePDF from "../../../Utilities/GeneratePDF";
 import DataGridToolbar from "../DataGridToolbar";
 import { useStyles } from "../DataGridStyles";
-import DialogBox from '../DialogBox';
 import {
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
-  DialogContentText,
 } from "@material-ui/core";
+import TADialogBox from "../TADialogBox";
 const moment = require('moment');
 
 
@@ -91,8 +87,6 @@ function TAApplications({ permission }) {
       field: "created_on", headerName: "Created on", minWidth: 150, flex: 1, renderCell: timeElement, type: "date",
       valueGetter: (cellValues) => {
         return cellValues.value+"+530";
-        // const time = formatDate(cellValues.value.replace('GMT', ''));
-        // return Date(moment(time).local().format("DD/MM/YYYY"));
       }
     },
     { field: "stage", headerName: "Stage", flex: 1, minWidth: 150, renderCell: cellElement },
@@ -122,14 +116,6 @@ function TAApplications({ permission }) {
 
   return (
     <>
-      {/* <Paper
-        elevation={10}
-        style={{ display: "flex", backgroundColor: '#263238',margin: "0 0 0 2vw"  }}
-      >
-        <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
-          TA Applications
-        </Typography>
-      </Paper> */}
       <Paper
         elevation={10}
         style={{ display: "flex", height: "calc(100vh - 177px)", margin: "0 0 0 2vw" }}
@@ -147,18 +133,18 @@ function TAApplications({ permission }) {
             components={{ Toolbar: DataGridToolbar }}
           />
         </Grid>
-        {/* <Dialog
+        <Dialog
           open={open}
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} permission={permission} status={status} showCommentSection={false}/>
+          <TADialogBox request_id={id} showCommentSection={true} permission={permission} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close
             </Button>
           </DialogActions>
-        </Dialog> */}
+        </Dialog>
       </Paper>
     </>
   );

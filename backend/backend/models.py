@@ -911,6 +911,7 @@ class TARequests(db.Model):
         approved = 'approved'
         declined = 'declined'
         office_order_pending = 'office_order_pending'
+        payment_pending = "payment_pending"
         availed = 'availed'
 
     def __init__(self, user_id: int, ltc_id):

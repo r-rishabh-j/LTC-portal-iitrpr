@@ -102,11 +102,11 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
   const deanfaList = [
     { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: ["/new", "/new-ta"], icon: <NewReleasesIcon />, popup: true },
+    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon />, popup: false },
     {
       label: "Past Applications",
-      link: ["/past", "/past-ta"],
-      icon: <HistoryIcon />, popup: true
+      link: ["/past"],
+      icon: <HistoryIcon />, popup: false
     },
 
   ];
