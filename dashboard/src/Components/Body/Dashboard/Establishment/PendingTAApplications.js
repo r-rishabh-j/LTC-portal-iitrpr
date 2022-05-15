@@ -12,6 +12,7 @@ import { useStyles } from "../DataGridStyles";
 import { Button } from '@mui/material';
 import axios from 'axios';
 import DialogBox from '../DialogBox';
+import TADialogBox from '../TADialogBox';
 import { Box } from '@material-ui/core';
 import DataGridToolbar from '../DataGridToolbar';
 // import TADialogBox from '../TADialogBox';
@@ -315,7 +316,7 @@ const PendingTAApplications = ({ permission }) => {
             components={{ Toolbar: DataGridToolbar }}
           />
         </Grid>
-        {/* <Dialog
+        <Dialog
           open={open}
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
@@ -331,7 +332,7 @@ const PendingTAApplications = ({ permission }) => {
               Close
             </Button>
           </DialogActions>
-        </Dialog> */}
+        </Dialog>
 
         {/* <Dialog
           open={openReview}
@@ -345,24 +346,24 @@ const PendingTAApplications = ({ permission }) => {
             </Button>
           </DialogActions>
         </Dialog> */}
-        {/* <Dialog
+        <Dialog
           open={openTA}
           onClose={handleCloseTA}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox
+          {/* <DialogBox
             request_id={id}
             permission={permission}
             status={status}
             showCommentSection={false}
-          />
-          <TADialogBox request_id = {id}/>
+          /> */}
+          <TADialogBox request_id = {id} showCommentSection={true}/>
           <DialogActions>
             <Button onClick={handleCloseTA} color="primary">
               Close
             </Button>
           </DialogActions>
-        </Dialog> */}
+        </Dialog>
 
         
       </Paper>

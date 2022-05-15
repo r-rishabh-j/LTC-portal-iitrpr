@@ -16,9 +16,12 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
+import { useForm } from "react-hook-form";
+import { FormInputText } from "../../Utilities/FormInputText";
+import { FormInputRadio } from "../../Utilities/FormInputRadio";
 const moment = require("moment");
 
-const TADialogBox = ({request_id}) => {
+const TADialogBox = ({request_id, showCommentSection, permission}) => {
     const [formInfo, setFormInfo] = useState({
       created_on: "",
       request_id: "",
@@ -28,6 +31,11 @@ const TADialogBox = ({request_id}) => {
     const [comments, setComments] = useState([]);
     const [commentObj, setCommentObj] = useState({});
     let array = [];
+    const {
+      handleSubmit,
+      control,
+      formState: { isSubmitting },
+    } = useForm({});
 
     function getVal(val, default_val) {
       if (val === undefined) {
@@ -41,6 +49,86 @@ const TADialogBox = ({request_id}) => {
       const d = moment(date).format("DD-MM-YYYY");
       return d;
     }
+
+    const options_no_review = [
+      {
+        index: 1,
+        label: "Approve",
+        value: "approve",
+      },
+      {
+        index: 2,
+        label: "Decline",
+        value: "decline",
+      },
+    ];
+
+    const options_hod = [
+      {
+        index: 1,
+        label: "Recommend",
+        value: "approve",
+      },
+      {
+        index: 2,
+        label: "Decline",
+        value: "decline",
+      },
+    ];
+
+    const options = [
+      {
+        index: 1,
+        label: "Recommend",
+        value: "approve",
+      },
+      {
+        index: 2,
+        label: "Send back for review",
+        value: "review",
+      },
+      {
+        index: 3,
+        label: "Decline",
+        value: "decline",
+      },
+    ];
+
+
+    const onSubmit = (data) => {
+      console.log(data);
+      // if (edit) {
+      //   alert(
+      //     "Section Data was edited but not saved. Kindly save before submitting."
+      //   );
+      //   return;
+      // }
+
+      const req_data = {
+        request_id: request_id,
+        comment: data.comment,
+        approval: data.approval,
+      };
+      return axios({
+        method: "POST",
+        url: "/api/ta/comment",
+        data: req_data,
+      })
+        .then((response) => {
+          // console.log("s", response.status);
+          alert("Comment added!");
+          window.location.reload();
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log("e", error.response);
+            console.log(error.response);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+            alert(error.response.data.error);
+          }
+        });
+    };
 
     useEffect(() => {
       const data = { request_id: request_id };
@@ -544,6 +632,64 @@ const TADialogBox = ({request_id}) => {
           </div>
         ) : (
           <div></div>
+        )}
+
+        {showCommentSection === true ? (
+          <div>
+            <br />
+            <Typography style={{ fontWeight: "bold" }}>Comments</Typography>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormInputText
+                name="comment"
+                control={control}
+                label="Add new comment"
+                defaultValue=""
+                multiline={true}
+                required={true}
+                rows={4}
+              />
+              <Box display="flex" justifyContent="start">
+                <Typography style={{ fontWeight: "bold" }}>Approve</Typography>
+                {/* <Tooltip
+                  title={
+                    <div style={{ fontSize: "1.5em" }}>
+                      Section Heads must ensure that the section specific
+                      information is filled before sending the form forward
+                    </div>
+                  }
+                >
+                  <InfoIcon />
+                </Tooltip> */}
+              </Box>
+              <FormInputRadio
+                name="approval"
+                control={control}
+                label="Approve"
+                options={
+                  permission === "deanfa" || permission === "registrar"
+                    ? options_no_review
+                    : permission === "dept_head"
+                    ? options_hod
+                    : options
+                }
+              />
+              <Box display="flex" justifyContent="center">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting && (
+                    <span className="spinner-grow spinner-grow-sm"></span>
+                  )}
+                  Send
+                </Button>
+              </Box>
+            </form>
+          </div>
+        ) : (
+          <div />
         )}
       </DialogContent>
     </>

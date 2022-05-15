@@ -9,6 +9,8 @@ import Home from "../Home";
 import Pending from "../Establishment/Pending";
 import Past from "../Establishment/Past";
 import { ProfilePage } from "../Profile/ProfilePage";
+import PastTaApplications from "../Establishment/PastTaApplications";
+import PendingTAApplications from "../Establishment/PendingTAApplications";
 
 function SectionHeadPage(props) {
   
@@ -33,15 +35,37 @@ function SectionHeadPage(props) {
         handleDrawerToggle={handleDrawerToggle}
         handleDrawerClose={handleDrawerClose}
         profileInfo={props.profileInfo}
-
         userType="dept_head"
       />
       <Box className={classes.wrapper}>
         <Routes>
-          <Route path="/new" element={<Pending permission={"dept_head"}  />}></Route>
-          <Route path="/past" element={<Past permission={"dept_head"} />}></Route>
+          <Route
+            path="/new"
+            element={<Pending permission={"dept_head"} />}
+          ></Route>
+          <Route
+            path="/past"
+            element={<Past permission={"dept_head"} />}
+          ></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
-          <Route path="/profile" element={<ProfilePage profile = {props.profileInfo}/>}></Route>
+          <Route
+            path="/profile"
+            element={<ProfilePage profile={props.profileInfo} />}
+          ></Route>
+          <Route
+            path="/past-ta"
+            element={
+              <PastTaApplications permission={props.profileInfo.permission} />
+            }
+          ></Route>
+          <Route
+            path="/new-ta"
+            element={
+              <PendingTAApplications
+                permission={props.profileInfo.permission}
+              />
+            }
+          ></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
       </Box>

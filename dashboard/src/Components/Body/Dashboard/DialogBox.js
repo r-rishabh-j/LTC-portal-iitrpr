@@ -162,6 +162,19 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
     },
   ];
 
+  const options_hod = [
+    {
+      index: 1,
+      label: "Recommend",
+      value: "approve",
+    },
+    {
+      index: 2,
+      label: "Decline",
+      value: "decline",
+    },
+  ];
+
   const options = [
     {
       index: 1,
@@ -2032,7 +2045,7 @@ shortest route "
                 options={
                   permission === "deanfa" || permission === "registrar"
                     ? options_no_review
-                    : options
+                    : (permission === "dept_head" ? options_hod : options)
                 }
               />
               <Box display="flex" justifyContent="center">

@@ -29,11 +29,13 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
   const handleClick = (event, link) => {
     setAnchorEl(event.currentTarget);
     setTab(link)
+    
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    handleDrawerClose();
+    //handleDrawerClose();
+    
   };
 
   const applicantList = [
@@ -256,6 +258,8 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
             {item.popup === true ? (
               <>
                 <ListItem
+                  aria-controls="simple-menu"
+                  aria-haspopup="true"
                   // component={NavLink}
                   // to={item.link}
                   onClick={(event) => {
@@ -267,7 +271,6 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
                 >
                   <ListItemIcon>{item.icon}</ListItemIcon>
                   <ListItemText>{item.label}</ListItemText>
-                  
                 </ListItem>
                 <Menu
                   id="simple-menu"
@@ -276,10 +279,18 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose} component={NavLink} to={tab.length===0?'':tab[0]}>
+                  <MenuItem
+                    onClick={handleClose}
+                    component={NavLink}
+                    to={tab.length === 0 ? "" : tab[0]}
+                  >
                     Leave Travel Concession
                   </MenuItem>
-                  <MenuItem onClick={handleClose} component={NavLink} to={tab.length===0?'':tab[1]}>
+                  <MenuItem
+                    onClick={handleClose}
+                    component={NavLink}
+                    to={tab.length === 0 ? "" : tab[1]}
+                  >
                     Travel Allowance Reimbursement
                   </MenuItem>
                 </Menu>
