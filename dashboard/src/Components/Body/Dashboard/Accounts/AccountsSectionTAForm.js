@@ -17,24 +17,24 @@ const AccountsSectionTAForm = ({acc_data, request_id, setEditState}) => {
     setEdit(false);
     setEditState(false);
     const req_data = { request_id: request_id, stage_form: data };
-    // axios({
-    //   method: "POST",
-    //   url: "/api/fill-stage-form",
-    //   data: req_data,
-    // })
-    //   .then((response) => {
-    //     console.log("s", response.status);
-    //     alert("Data added!");
-    //   })
-    //   .catch((error) => {
-    //     if (error.response) {
-    //       console.log("e", error.response);
-    //       console.log(error.response);
-    //       console.log(error.response.status);
-    //       console.log(error.response.headers);
-    //       alert(error.response.data.error);
-    //     }
-    //   });
+    axios({
+      method: "POST",
+      url: "/api/ta/fill-stage-form",
+      data: req_data,
+    })
+      .then((response) => {
+        console.log("s", response.status);
+        alert("Data added!");
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log("e", error.response);
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          alert(error.response.data.error);
+        }
+      });
   }
 
   return (
