@@ -6,6 +6,7 @@ from datetime import datetime
 from flask_jwt_extended import current_user
 from flask import jsonify, request, make_response
 from sqlalchemy.orm.attributes import flag_modified
+from sqlalchemy import desc
 from flask_restful import Resource, abort, fields
 from .models import LTCOfficeOrders, LTCProofUploads, StageUsers, Stages
 from .role_manager import Permissions, role_required, roles_required, check_role
@@ -57,6 +58,24 @@ class LtcManager:
             form_data.pop('attachments')
             # section form fields
             form_data['establishment'] = {}
+            last_avalied: LTCRequests = LTCRequests.query.filter(
+                LTCRequests.user_id == current_user.id).order_by(desc(LTCRequests.created_on)).first()
+            if last_avalied != None:
+                last_est_form = last_avalied.form['establishment']
+                form_data['establishment'] = {
+                    # "est_data_joining_date": "2022-05-02T11:02:00.000Z",
+                    # "est_data_block_year": "1",
+                    "est_data_nature_last": last_est_form.get("est_data_nature_current",''),
+                    "est_data_period_last_from": last_est_form.get('est_data_period_current_from',''),
+                    "est_data_period_last_to": last_est_form.get('est_data_period_current_to',''),
+                    "est_data_last_ltc_for": last_est_form.get('est_data_current_ltc_for',''),
+                    "est_data_last_ltc_days": last_est_form.get('est_data_current_ltc_days',''),
+                    "est_data_last_earned_leave_on": last_est_form.get('est_data_current_earned_leave_on',''),
+                    "est_data_last_balance": last_est_form.get("est_data_current_balance",''),
+                    "est_data_last_encashment_adm": last_est_form.get("est_data_current_encashment_adm",''),
+                    "est_data_last_nature": last_est_form.get('est_data_current_nature',''),
+                }
+
             form_data['accounts'] = {}
             # add LTC request to table
             new_request: LTCRequests = LTCRequests(user_id=user.id)
@@ -182,6 +201,7 @@ class LtcManager:
                         return {"Status": comment['msg']}, 200
                     elif action == 'decline':
                         form.decline(applicant)
+                        form.is_active = False
                         db.session.commit()
                         return {'status': 'declined'}
                 else:
@@ -292,7 +312,7 @@ class LtcManager:
                     'request_id': form.request_id,
                     'created_on': (form.created_on),
                     'stage': form.stage,
-                    'is_active': "Active" if form.is_active else "Not Active",
+                    'is_active': "In Progress" if form.is_active else "Completed",
                 })
             response = {'data': results}
 
@@ -329,7 +349,7 @@ class LtcManager:
                     'user_id': form.user_id,
                     'created_on': form.created_on,
                     'stage': form.stage,
-                    'is_active': "Active" if form.is_active else "Not Active",
+                    'is_active': "In Progress" if form.is_active else "Completed",
                 })
             response = {'data': results}
 
@@ -384,7 +404,7 @@ class LtcManager:
                     'name': applicant.name,
                     'created_on': form.created_on,
                     'stage': form.stage,
-                    'is_active': "Active" if form.is_active else "Not Active",
+                    'is_active': "In Progress" if form.is_active else "Completed",
                 })
 
             for dept_log, form, applicant in new:
@@ -398,7 +418,7 @@ class LtcManager:
                             'name': applicant.name,
                             'created_on': form.created_on,
                             'stage': form.stage,
-                            'is_active': "Active" if form.is_active else "Not Active",
+                            'is_active': "In Progress" if form.is_active else "Completed",
                         })
             return jsonify({'previous': previous})
 
@@ -584,7 +604,7 @@ class LtcManager:
                             'name': applicant.name,
                             'created_on': form.created_on,
                             'stage': form.stage,
-                            'is_active': "Active" if form.is_active else "Not Active",
+                            'is_active': "In Progress" if form.is_active else "Completed",
                         })
 
             return jsonify({'pending': pending})
@@ -628,6 +648,7 @@ class LtcManager:
                 db.session.add(advance_req)
             else:
                 form.stage = Stages.approved
+                form.is_active = False
                 approved_entry.approved_on = datetime.now()
 
             office_order_upload_entry: LTCOfficeOrders = LTCOfficeOrders(
@@ -734,6 +755,7 @@ class LtcManager:
 
             form: LTCRequests = LTCRequests.query.get(request_id)
             form.stage = Stages.approved
+            form.is_active = False
             db.session.commit()
             return jsonify({"success": "uploaded proofs"})
 
@@ -759,10 +781,14 @@ class LtcManager:
             response['signatures'] = {}
 
             response['signatures']['user'] = applicant.signature
+
             # signatures
-            print(form_data.stage)
             if form_data.stage in [Stages.approved, Stages.advance_pending]:
-                print('sending')
+                department = db.session.query(Departments, Users).filter(
+                    Departments.name == applicant.department, Departments.dept_head == Users.id).one_or_none()
+                if department != None:
+                    dept, dept_head = department
+                    response['signatures']['section_head'] = dept_head.signature
                 stages = [
                     (Stages.establishment, Permissions.establishment),
                     (Stages.audit, Permissions.audit),

@@ -1,0 +1,74 @@
+{
+    "department": [
+        {
+            "approved": {
+                "hod_cse@email": true
+            },
+            "comments": {
+                "hod_cse@email": "e"
+            }
+        }
+    ],
+    "establishment": [
+        {
+            "approved": {
+                "establishment@email": null,
+                "establishment1@email": null,
+                "establishment2@email": null,
+                "establishment_head@email": true
+            },
+            "comments": {
+                "establishment@email": null,
+                "establishment1@email": null,
+                "establishment2@email": null,
+                "establishment_head@email": "e"
+            }
+        }
+    ],
+    "audit": [
+        {
+            "approved": {
+                "audit@email": null,
+                "audit_head@email": true
+            },
+            "comments": {
+                "audit@email": null,
+                "audit_head@email": "e"
+            }
+        }
+    ],
+    "accounts": [
+        {
+            "approved": {
+                "accounts@email": null,
+                "accounts1@email": null,
+                "accounts_head@email": true
+            },
+            "comments": {
+                "accounts@email": null,
+                "accounts1@email": null,
+                "accounts_head@email": "e"
+            }
+        }
+    ],
+    "registrar": [
+        {
+            "approved": {
+                "registrar@email": true
+            },
+            "comments": {
+                "registrar@email": "e"
+            }
+        }
+    ],
+    "deanfa": [
+        {
+            "approved": {
+                "deanfa@email": true
+            },
+            "comments": {
+                "deanfa@email": "d"
+            }
+        }
+    ]
+}

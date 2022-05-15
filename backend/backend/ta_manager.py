@@ -58,7 +58,6 @@ class TaManager():
             # remove key attachments (which is redudant) from form json
             form_data.pop('attachments')
             # section form fields
-            form_data['establishment'] = {}
             form_data['accounts'] = {}
             # add TA request to table
             new_request: TARequests = TARequests(
@@ -203,6 +202,7 @@ class TaManager():
             for ta_form in forms:
                 results.append({
                     'request_id': ta_form.request_id,
+                    'ltc_id': ta_form.ltc_id,
                     'created_on': (ta_form.created_on),
                     'stage': ta_form.stage,
                     'is_active': "Active" if ta_form.is_active else "Not Active",
@@ -241,7 +241,7 @@ class TaManager():
                     'name': user.name,
                     'created_on': form.created_on,
                     'stage': form.stage,
-                    'is_active': "Active" if form.is_active else "Not Active",
+                    'is_active': "In Progress" if form.is_active else "Completed",
                 })
             response = {'data': results}
 
@@ -288,11 +288,15 @@ class TaManager():
 
             user_dept: Departments = Departments.query.get(
                 current_user.department)
-            if not user_dept.is_stage:
-                abort(401, msg='Only stage users allowed')
+            # if not user_dept.is_stage:
+            #     abort(401, msg='Only stage users allowed')
 
             applicant: Users = Users.query.get(form.user_id)
-            form.addComment(current_user, comment,
+            if kwargs['permission'] == Permissions.dept_head:
+                form.addDeptComment(current_user, comment,
+                                    True if action == 'approve' else False)
+            else:
+                form.addComment(current_user, comment,
                             True if action == 'approve' else False)
 
             """
@@ -311,6 +315,36 @@ class TaManager():
             else:
                 db.session.commit()
                 return {"status": 'Comment added'}, 200
+    class FillTaStageForm(Resource):
+        """
+        Fill forms for individual stages(establishment section, accounts section)
+        """
+        allowed_roles = [
+            Permissions.accounts,
+        ]
+
+        @roles_required(roles=allowed_roles)
+        def post(self, permission):
+            analyse()
+
+            request_id = request.json['request_id']
+            if not request_id:
+                abort(404, msg='Request ID not sent')
+
+            content = request.json.get('stage_form', None)
+            if not content:
+                abort(404, msg='No form content sent!')
+
+            form: TARequests = TARequests.query.get(int(request_id))
+
+            if not form:
+                abort(404, msg="Invalid Request ID")
+
+            form.form[permission] = content
+            flag_modified(form, "form")
+            db.session.merge(form)
+            db.session.commit()
+            return jsonify({"msg": "updated!"})
 
     class GetPendingTaApprovalRequests(Resource):
         """
@@ -358,7 +392,7 @@ class TaManager():
                             'name': applicant.name,
                             'created_on': form.created_on,
                             'stage': form.stage,
-                            'is_active': "Active" if form.is_active else "Not Active",
+                            'is_active': "In Progress" if form.is_active else "Completed",
                         })
 
             return jsonify({'pending': pending})
@@ -484,7 +518,7 @@ class TaManager():
                     'name': applicant.name,
                     'created_on': form.created_on,
                     'stage': form.stage,
-                    'is_active': "Active" if form.is_active else "Not Active",
+                    'is_active': "In Progress" if form.is_active else "Completed",
                 })
 
             for dept_log, form, applicant in new:
@@ -499,7 +533,7 @@ class TaManager():
                             'name': applicant.name,
                             'created_on': form.created_on,
                             'stage': form.stage,
-                            'is_active': "Active" if form.is_active else "Not Active",
+                            'is_active': "In Progress" if form.is_active else "Completed",
                         })
             print(previous)
             return jsonify({'previous': previous})

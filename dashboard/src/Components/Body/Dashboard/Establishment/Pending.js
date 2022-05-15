@@ -112,7 +112,7 @@ function Pending({ permission }) {
   }
 
   const timeElement = (cellValues) => {
-    const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
+    const time = formatDate(cellValues.formattedValue);
     return (
       <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
         {time}
@@ -150,8 +150,9 @@ function Pending({ permission }) {
       renderCell: timeElement,
       type: "date",
       valueGetter: (cellValues) => {
-        const time = formatDate(cellValues.value.replace('GMT', ''));
-        return Date(moment(time).local().format("DD/MM/YYYY"));
+        return cellValues.value+"+530";
+        // const time = formatDate(cellValues.value.replace('GMT', ''));
+        // return Date(moment(time).local().format("DD/MM/YYYY"));
       }
     },
     {

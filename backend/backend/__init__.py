@@ -152,6 +152,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     # fetch approved ltc applications eligible for TA
     api.add_resource(TaManager.GetApprovedLTCForTA,
                      '/api/ta/get-approved-ltc')
+    api.add_resource(TaManager.FillTaStageForm,
+                     '/api/ta/fill-stage-form')
     # fetch pending office orders
     api.add_resource(TaManager.GetPendingTaOfficeOrderRequests,
                      '/api/ta/pending-office-orders')

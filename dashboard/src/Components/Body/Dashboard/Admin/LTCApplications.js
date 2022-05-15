@@ -74,7 +74,7 @@ function LTCApplications({ permission }) {
   }
 
   const timeElement = (cellValues) => {
-    const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
+    const time = formatDate(cellValues.formattedValue);
     return (
       <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
         {time}
@@ -91,8 +91,9 @@ function LTCApplications({ permission }) {
     {
       field: "created_on", headerName: "Created on", minWidth: 150, flex: 1, renderCell: timeElement, type: "date",
       valueGetter: (cellValues) => {
-        const time = formatDate(cellValues.value.replace('GMT', ''));
-        return Date(moment(time).local().format("DD/MM/YYYY"));
+        return cellValues.value+"+530";
+        // const time = formatDate(cellValues.value.replace('GMT', ''));
+        // return Date(moment(time).local().format("DD/MM/YYYY"));
       }
     },
     { field: "stage", headerName: "Stage", flex: 1, minWidth: 150, renderCell: cellElement },

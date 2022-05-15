@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText, Typography } from "@material-ui/core";
 import { Box } from "@mui/system";
 import React from "react";
 import { useState, useEffect, forwardRef } from "react";
@@ -32,7 +32,7 @@ const PrintForm = forwardRef((props, ref) => {
         console.log("print preview", response.data.data);
         setFormInfo(response.data.data);
         console.log(response.data.data.signatures.user);
-        console.log('sign',response.data.data.signatures.establishment);
+        console.log('sign', response.data.data.signatures.establishment);
       })
       .catch((error) => {
         if (error.response) {
@@ -616,17 +616,37 @@ shortest route "
                 ? ""
                 : formInfo.form["establishment"]["est_data_block_year"] ===
                   undefined
-                ? " "
-                : formInfo.form["establishment"]["est_data_block_year"]}
+                  ? " "
+                  : formInfo.form["establishment"]["est_data_block_year"]}
               &nbsp; block year.
             </li>
           </Typography>
         </ol>
       </Box>
-      <Box display="flex" justifyContent="right">
+      <Box
+        // display="flex" justifyContent="right"
+        display="flex"
+        justifyContent="space-between"
+        style={{ margin: "0 0 0 0" }}
+
+      >
+        {/* <img src=`data:image/png;base64,${formInfo.sig}` width="100px" /> */}
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.user !== undefined &&
-        formInfo.signatures.user !== null ? (
+          formInfo.signatures.section_head !== undefined &&
+          formInfo.signatures.section_head !== null ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures["section_head"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+        {formInfo.signatures !== undefined &&
+          formInfo.signatures.user !== undefined &&
+          formInfo.signatures.user !== null ? (
           <img
             src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
               2,
@@ -637,16 +657,20 @@ shortest route "
         ) : (
           <div />
         )}
-        {/* <img src=`data:image/png;base64,${formInfo.sig}` width="100px" /> */}
+      </Box>
+      <Box display="flex" justifyContent="left">
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Section Head
+        </Typography>
+      </Box>
+      <Box style={{ margin: "0 0 0 0" }}>
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Forwarded please.
+        </Typography>
       </Box>
       <Box display="flex" justifyContent="right">
         <Typography variant="body2" style={{ fontWeight: "bold" }}>
-          Signature of the Applicant with date
-        </Typography>
-      </Box>
-      <Box style={{ margin: "2vh 0 0 0" }}>
-        <Typography variant="body2" style={{ fontWeight: "bold" }}>
-          Forwarded please.
+          Signature of the Applicant
         </Typography>
       </Box>
       <Box
@@ -676,8 +700,8 @@ shortest route "
                   ? ""
                   : formInfo.form["establishment"]["est_data_joining_date"] ===
                     undefined
-                  ? " "
-                  : formatDate(
+                    ? " "
+                    : formatDate(
                       formInfo.form["establishment"]["est_data_joining_date"]
                     )
               }
@@ -697,8 +721,8 @@ shortest route "
                   ? ""
                   : formInfo.form["establishment"]["est_data_block_year"] ===
                     undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_block_year"]
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_block_year"]
               }
               fullWidth
               InputProps={{
@@ -722,8 +746,8 @@ shortest route "
                   ? ""
                   : formInfo.form["establishment"]["est_data_nature_last"] ===
                     undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_nature_last"]
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_nature_last"]
               }
               fullWidth
               InputProps={{
@@ -740,10 +764,10 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_nature_current"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_nature_current"]
+                    "est_data_nature_current"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_nature_current"]
               }
               fullWidth
               InputProps={{
@@ -763,10 +787,10 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_period_last_from"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_period_last_from"]
+                    "est_data_period_last_from"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_period_last_from"]
               }
               fullWidth
               InputProps={{
@@ -783,10 +807,10 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_period_last_to"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_period_last_to"]
+                    "est_data_period_last_to"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_period_last_to"]
               }
               fullWidth
               InputProps={{
@@ -803,11 +827,11 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_period_current_from"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"][
-                      "est_data_period_current_from"
+                    "est_data_period_current_from"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"][
+                    "est_data_period_current_from"
                     ]
               }
               fullWidth
@@ -826,10 +850,10 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_period_current_to"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_period_current_to"]
+                    "est_data_period_current_to"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_period_current_to"]
               }
               fullWidth
               InputProps={{
@@ -850,8 +874,8 @@ shortest route "
                   ? ""
                   : formInfo.form["establishment"]["est_data_last_ltc_for"] ===
                     undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_last_ltc_for"]
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_last_ltc_for"]
               }
               fullWidth
               InputProps={{
@@ -868,10 +892,10 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_current_ltc_for"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_current_ltc_for"]
+                    "est_data_current_ltc_for"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_current_ltc_for"]
               }
               fullWidth
               InputProps={{
@@ -892,8 +916,8 @@ shortest route "
                   ? ""
                   : formInfo.form["establishment"]["est_data_last_ltc_days"] ===
                     undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_last_ltc_days"]
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_last_ltc_days"]
               }
               fullWidth
               InputProps={{
@@ -910,10 +934,10 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_current_ltc_days"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_current_ltc_days"]
+                    "est_data_current_ltc_days"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_current_ltc_days"]
               }
               fullWidth
               InputProps={{
@@ -933,11 +957,11 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_last_earned_leave_on"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"][
-                      "est_data_last_earned_leave_on"
+                    "est_data_last_earned_leave_on"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"][
+                    "est_data_last_earned_leave_on"
                     ]
               }
               fullWidth
@@ -955,11 +979,11 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_current_earned_leave_on"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"][
-                      "est_data_current_earned_leave_on"
+                    "est_data_current_earned_leave_on"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"][
+                    "est_data_current_earned_leave_on"
                     ]
               }
               fullWidth
@@ -981,8 +1005,8 @@ shortest route "
                   ? ""
                   : formInfo.form["establishment"]["est_data_last_balance"] ===
                     undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_last_balance"]
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_last_balance"]
               }
               fullWidth
               InputProps={{
@@ -999,10 +1023,10 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_current_balance"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_current_balance"]
+                    "est_data_current_balance"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_current_balance"]
               }
               fullWidth
               InputProps={{
@@ -1022,11 +1046,11 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_last_encashment_adm"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"][
-                      "est_data_last_encashment_adm"
+                    "est_data_last_encashment_adm"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"][
+                    "est_data_last_encashment_adm"
                     ]
               }
               fullWidth
@@ -1044,11 +1068,11 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_current_encashment_adm"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"][
-                      "est_data_current_encashment_adm"
+                    "est_data_current_encashment_adm"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"][
+                    "est_data_current_encashment_adm"
                     ]
               }
               fullWidth
@@ -1072,8 +1096,8 @@ shortest route "
                   ? ""
                   : formInfo.form["establishment"]["est_data_last_nature"] ===
                     undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_last_nature"]
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_last_nature"]
               }
               fullWidth
               InputProps={{
@@ -1090,10 +1114,10 @@ shortest route "
                 formInfo.form["establishment"] === undefined
                   ? ""
                   : formInfo.form["establishment"][
-                      "est_data_current_nature"
-                    ] === undefined
-                  ? " "
-                  : formInfo.form["establishment"]["est_data_current_nature"]
+                    "est_data_current_nature"
+                  ] === undefined
+                    ? " "
+                    : formInfo.form["establishment"]["est_data_current_nature"]
               }
               fullWidth
               InputProps={{
@@ -1116,10 +1140,10 @@ shortest route "
         style={{ margin: "0 0 0 0" }}
       >
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.establishment !== undefined &&
-        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Junior Assistant"]!==null && formInfo.signatures.establishment["Junior Assistant"]!==undefined ? (
+          formInfo.signatures.establishment !== undefined &&
+          formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Establishment Junior Assistant"] !== null && formInfo.signatures.establishment["Establishment Junior Assistant"] !== undefined ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Junior Assistant"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Establishment Junior Assistant"].slice(
               2,
               -1
             )}`}
@@ -1129,10 +1153,10 @@ shortest route "
           <div />
         )}
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.establishment !== undefined &&
-        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Junior Superintendent"] !== null &&formInfo.signatures.establishment["Junior Superintendent"] !== undefined ? (
+          formInfo.signatures.establishment !== undefined &&
+          formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Establishment Junior Superintendent"] !== null && formInfo.signatures.establishment["Establishment Junior Superintendent"] !== undefined ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Junior Superintendent"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Establishment Junior Superintendent"].slice(
               2,
               -1
             )}`}
@@ -1142,10 +1166,10 @@ shortest route "
           <div />
         )}
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.establishment !== undefined &&
-        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Assistant Registrar"]!==null && formInfo.signatures.establishment["Assistant Registrar"]!==undefined ? (
+          formInfo.signatures.establishment !== undefined &&
+          formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Establishment Assistant Registrar"] !== null && formInfo.signatures.establishment["Establishment Assistant Registrar"] !== undefined ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Assistant Registrar"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Establishment Assistant Registrar"].slice(
               2,
               -1
             )}`}
@@ -1155,10 +1179,10 @@ shortest route "
           <div />
         )}
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.establishment !== undefined &&
-        formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Deputy Registrar"]!==null && formInfo.signatures.establishment["Deputy Registrar"]!==undefined ? (
+          formInfo.signatures.establishment !== undefined &&
+          formInfo.signatures.establishment !== null && formInfo.signatures.establishment["Establishment Deputy Registrar"] !== null && formInfo.signatures.establishment["Establishment Deputy Registrar"] !== undefined ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Deputy Registrar"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.establishment["Establishment Deputy Registrar"].slice(
               2,
               -1
             )}`}
@@ -1196,6 +1220,82 @@ shortest route "
         style={{ margin: "4vh 0 0 0" }}
       >
         <Typography style={{ fontWeight: "bold" }} variant="body1">
+          FOR USE OF AUDIT SECTION
+        </Typography>
+      </Box>
+      <Box
+        style={{
+          padding: "0vh 1vh 1vh 0vh",
+        }}
+        sx={{ border: 1 }}
+      >
+        {
+          formInfo.comments !== undefined && formInfo.comments !== null &&
+            formInfo.comments.audit !== undefined && formInfo.comments.audit !== null
+            ?
+            (<List>
+              {
+                Object.keys(formInfo.comments.audit[formInfo.comments.audit.length - 1]['comments']).map((prop, i) => {
+                  return formInfo.comments.audit[formInfo.comments.audit.length - 1]['approved'][prop] !== null ? (<ListItem key={i}>
+                    <ListItemText
+                      primary={formInfo.comments.audit[formInfo.comments.audit.length - 1]['comments'][prop]}>
+                    </ListItemText>
+                  </ListItem>) : <div key={i}></div>
+                })}
+            </List>)
+            : <div></div>
+        }
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        style={{ margin: "0 0 0 0" }}
+      >
+        {formInfo.signatures !== undefined &&
+          formInfo.signatures.audit !== undefined &&
+          formInfo.signatures.audit !== null && formInfo.signatures.audit["Assistant Audit Officer"] !== null && formInfo.signatures.audit["Assistant Audit Officer"] !== undefined ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures.audit["Assistant Audit Officer"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+        {formInfo.signatures !== undefined &&
+          formInfo.signatures.audit !== undefined &&
+          formInfo.signatures.audit !== null && formInfo.signatures.audit["Senior Audit Officer"] !== null && formInfo.signatures.audit["Senior Audit Officer"] !== undefined ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures.audit["Senior Audit Officer"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        style={{ margin: "2vh 0 0 0" }}
+      >
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Assistant Audit Officer
+        </Typography>
+        <Typography variant="body2" style={{ fontWeight: "bold" }}>
+          Senior Audit Officer
+        </Typography>
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="center"
+        style={{ margin: "4vh 0 0 0" }}
+      >
+        <Typography style={{ fontWeight: "bold" }} variant="body1">
           FOR USE OF ACCOUNTS SECTION
         </Typography>
       </Box>
@@ -1206,7 +1306,7 @@ shortest route "
         }}
       >
         {formInfo.form["accounts"] !== undefined &&
-        formInfo.form["accounts"]["entities"] !== undefined ? (
+          formInfo.form["accounts"]["entities"] !== undefined ? (
           formInfo.form["accounts"]["entities"].map((item, index) => {
             return (
               <div key={index}>
@@ -1297,8 +1397,8 @@ shortest route "
                 formInfo.form["accounts"] === undefined
                   ? ""
                   : formInfo.form["accounts"]["total"] === undefined
-                  ? " "
-                  : formInfo.form["accounts"]["total"]
+                    ? " "
+                    : formInfo.form["accounts"]["total"]
               }
               fullWidth
               InputProps={{
@@ -1317,8 +1417,8 @@ shortest route "
               formInfo.form["accounts"] === undefined
                 ? ""
                 : formInfo.form["accounts"]["adv_admissible"] === undefined
-                ? " "
-                : formInfo.form["accounts"]["adv_admissible"]
+                  ? " "
+                  : formInfo.form["accounts"]["adv_admissible"]
             }
             fullWidth
             InputProps={{
@@ -1334,8 +1434,8 @@ shortest route "
               formInfo.form["accounts"] === undefined
                 ? ""
                 : formInfo.form["accounts"]["passed"] === undefined
-                ? " "
-                : formInfo.form["accounts"]["passed"]
+                  ? " "
+                  : formInfo.form["accounts"]["passed"]
             }
             fullWidth
             InputProps={{
@@ -1351,8 +1451,8 @@ shortest route "
               formInfo.form["accounts"] === undefined
                 ? ""
                 : formInfo.form["accounts"]["in_words"] === undefined
-                ? " "
-                : formInfo.form["accounts"]["in_words"]
+                  ? " "
+                  : formInfo.form["accounts"]["in_words"]
             }
             fullWidth
             InputProps={{
@@ -1369,8 +1469,8 @@ shortest route "
                 formInfo.form["accounts"] === undefined
                   ? ""
                   : formInfo.form["accounts"]["debit_to"] === undefined
-                  ? " "
-                  : formInfo.form["accounts"]["debit_to"]
+                    ? " "
+                    : formInfo.form["accounts"]["debit_to"]
               }
               fullWidth
               InputProps={{
@@ -1387,8 +1487,8 @@ shortest route "
         style={{ margin: "0 0 0 0" }}
       >
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.accounts !== undefined &&
-        formInfo.signatures.accounts["Junior Accountant"] !== null && formInfo.signatures.accounts["Junior Accountant"] !== undefined ? (
+          formInfo.signatures.accounts !== undefined &&
+          formInfo.signatures.accounts["Junior Accountant"] !== null && formInfo.signatures.accounts["Junior Accountant"] !== undefined ? (
           <img
             src={`data:image/jpeg;base64,${formInfo.signatures.accounts["Junior Accountant"].slice(
               2,
@@ -1400,8 +1500,8 @@ shortest route "
           <div />
         )}
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.accounts !== undefined &&
-        formInfo.signatures.accounts["Junior Accounts Officer"] !== null && formInfo.signatures.accounts["Junior Accounts Officer"] !== undefined ? (
+          formInfo.signatures.accounts !== undefined &&
+          formInfo.signatures.accounts["Junior Accounts Officer"] !== null && formInfo.signatures.accounts["Junior Accounts Officer"] !== undefined ? (
           <img
             src={`data:image/jpeg;base64,${formInfo.signatures.accounts["Junior Accounts Officer"].slice(
               2,
@@ -1413,10 +1513,10 @@ shortest route "
           <div />
         )}
         {formInfo.signatures !== undefined &&
-        formInfo.signatures.accounts !== undefined &&
-        formInfo.signatures.accounts["Assistant Registrar"] !== null && formInfo.signatures.accounts["Assistant Registrar"] !== undefined ? (
+          formInfo.signatures.accounts !== undefined &&
+          formInfo.signatures.accounts["Accounts Assistant Registrar"] !== null && formInfo.signatures.accounts["Accounts Assistant Registrar"] !== undefined ? (
           <img
-            src={`data:image/jpeg;base64,${formInfo.signatures.accounts["Assistant Registrar"].slice(
+            src={`data:image/jpeg;base64,${formInfo.signatures.accounts["Accounts Assistant Registrar"].slice(
               2,
               -1
             )}`}
@@ -1425,19 +1525,6 @@ shortest route "
         ) : (
           <div />
         )}
-        {/* {formInfo.signatures !== undefined &&
-        formInfo.signatures.user !== undefined &&
-        formInfo.signatures.user !== null ? (
-          <img
-            src={`data:image/jpeg;base64,${formInfo.signatures["user"].slice(
-              2,
-              -1
-            )}`}
-            width="150px"
-          />
-        ) : (
-          <div />
-        )} */}
       </Box>
       <Box
         display="flex"
@@ -1461,7 +1548,38 @@ shortest route "
           Deputy Registrar
         </Typography>
       </Box>
-
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        style={{ margin: "0 0 0 0" }}
+      >
+        {formInfo.signatures !== undefined &&
+          formInfo.signatures.registrar !== undefined &&
+          formInfo.signatures.registrar !== null && formInfo.signatures.registrar["Registrar"] !== null && formInfo.signatures.registrar["Registrar"] !== undefined ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures.registrar["Registrar"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+        {formInfo.signatures !== undefined &&
+          formInfo.signatures.deanfa !== undefined &&
+          formInfo.signatures.deanfa !== null && formInfo.signatures.deanfa["Dean FA"] !== null && formInfo.signatures.deanfa["Dean FA"] !== undefined ? (
+          <img
+            src={`data:image/jpeg;base64,${formInfo.signatures.deanfa["Dean FA"].slice(
+              2,
+              -1
+            )}`}
+            width="175px"
+          />
+        ) : (
+          <div />
+        )}
+      </Box>
       <Box
         display="flex"
         justifyContent="space-between"

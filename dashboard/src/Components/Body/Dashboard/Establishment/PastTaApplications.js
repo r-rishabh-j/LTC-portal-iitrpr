@@ -131,7 +131,7 @@ const PastTaApplications = ({ permission }) => {
   }
 
   const timeElement = (cellValues) => {
-    const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
+    const time = formatDate(cellValues.formattedValue);
     return (
       <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
         {time}
@@ -185,8 +185,9 @@ const PastTaApplications = ({ permission }) => {
       type: "date",
       renderCell: timeElement,
       valueGetter: (cellValues) => {
-        const time = formatDate(cellValues.value.replace("GMT", ""));
-        return Date(moment(time).local().format("DD/MM/YYYY"));
+        return cellValues.value+"+530";
+        // const time = formatDate(cellValues.value.replace("GMT", ""));
+        // return Date(moment(time).local().format("DD/MM/YYYY"));
       },
     },
 

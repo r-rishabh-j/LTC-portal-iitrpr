@@ -5,10 +5,11 @@ import requests
 from . import db, filemanager
 from flask import jsonify, request, make_response, redirect
 from flask_restful import Resource, abort
-from .models import Departments, UserOTP, Users
+from .models import Departments, LTCRequests, UserOTP, Users
 from flask_jwt_extended import create_access_token, jwt_required, \
     set_access_cookies, unset_jwt_cookies, current_user
 from .role_manager import check_role, role_required, Permissions
+from sqlalchemy import desc
 from uuid import uuid4
 import urllib.parse
 from . import emailmanager
@@ -96,11 +97,14 @@ class Auth:
             """
             Only for development
             """
-            if os.environ.get('FLASK_ENV') != 'development':
+            if os.environ.get('DEMO_LOGIN') != 'True':
                 abort(404, error="No such route")
             args = json.loads(request.form.get('auth'))
             if not args['email'] or len(args['email']) < 4:
                 abort(409, 'invalid email')
+            if os.environ.get('GCP_PASS') == 'True':
+                if args['password']!='yyaa66':
+                    abort(401, error='unauthorised')
             user = Users.query.filter_by(
                 email=str(args['email']).strip().lower()).one_or_none()
 
