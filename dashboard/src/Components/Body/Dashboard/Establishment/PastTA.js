@@ -207,8 +207,9 @@ const PastTA = ({ permission }) => {
       type: "date",
       renderCell: timeElement,
       valueGetter: (cellValues) => {
-        const time = formatDate(cellValues.value.replace("GMT", ""));
-        return Date(moment(time).local().format("DD/MM/YYYY"));
+        return cellValues.value+"+530";
+        // const time = formatDate(cellValues.value.replace("GMT", ""));
+        // return Date(moment(time).local().format("DD/MM/YYYY"));
       },
     },
     {
