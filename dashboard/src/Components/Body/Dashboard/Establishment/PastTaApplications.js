@@ -312,7 +312,7 @@ const PastTaApplications = ({ permission }) => {
             status={status}
             showCommentSection={false}
           /> */}
-          <TADialogBox request_id = {id}/>
+          <TADialogBox request_id = {id} permission = {permission}/>
           <DialogActions>
             <Button onClick={handleCloseTA} color="primary">
               Close

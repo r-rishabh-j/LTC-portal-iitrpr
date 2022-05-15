@@ -16,12 +16,15 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
+import InfoIcon from "@material-ui/icons/Info";
 import { useForm } from "react-hook-form";
 import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
+import AccountsSectionTAForm from './Accounts/AccountsSectionTAForm';
 const moment = require("moment");
 
 const TADialogBox = ({request_id, showCommentSection, permission}) => {
+  console.log("TA dialog permission", permission)
     const [formInfo, setFormInfo] = useState({
       created_on: "",
       request_id: "",
@@ -36,6 +39,11 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
       control,
       formState: { isSubmitting },
     } = useForm({});
+
+     const [edit, setEdit] = useState(false);
+     const setEditState = (state) => {
+       setEdit(state);
+     };
 
     function getVal(val, default_val) {
       if (val === undefined) {
@@ -136,7 +144,7 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
         method: "post",
         url: "api/ta/getformdata",
         data: JSON.stringify(data),
-        headers: { "Content-type": "application/json" },
+        // headers: { "Content-type": "application/json" },
       })
         .then((response) => {
           console.log(response.data.data);
@@ -584,6 +592,68 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
             <div></div>
           )}
         </Box>
+
+        {permission === "accounts"  ? (
+          <>
+            <Box
+              display="flex"
+              justifyContent="start"
+              style={{ margin: "5vh 0 0 0" }}
+            >
+              <Typography style={{ fontWeight: "bold" }}>
+                Accounts Section Data
+              </Typography>
+              <Tooltip
+                title={
+                  <div style={{ fontSize: "1.5em" }}>
+                    Remember to click save after editing the data
+                  </div>
+                }
+              >
+                <InfoIcon />
+              </Tooltip>
+            </Box>
+            <Box
+              style={{
+                // backgroundColor: "#eeeeee",
+                padding: "1vh 1vh 1vh 1vh",
+                borderRadius: "10px",
+              }}
+            >
+              <AccountsSectionTAForm
+               
+                acc_data={
+                  formInfo.form_data["accounts"] === undefined
+                    ? {}
+                    : formInfo.form_data["accounts"]
+                }
+                request_id={request_id}
+                setEditState={setEditState}
+              />
+            </Box>
+          </>
+        ) : (
+          //est data for non establishment stages
+          <div>
+            <Box
+              display="flex"
+              justifyContent="start"
+              style={{ margin: "5vh 0 1vh 0" }}
+            >
+              <Typography style={{ fontWeight: "bold" }}>
+                Accounts Section
+              </Typography>
+            </Box>
+            <Box
+              style={{
+                // backgroundColor: "#eeeeee",
+                padding: "1vh 1vh 1vh 1vh",
+                borderRadius: "10px",
+              }}
+            >
+            </Box>
+            </div>)}
+
         {commentObj["establishment"] !== undefined ? (
           // commentObj["establishment"][0]["review"] === true ? (
           <div>
@@ -668,9 +738,7 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
                 options={
                   permission === "deanfa" || permission === "registrar"
                     ? options_no_review
-                    : permission === "dept_head"
-                    ? options_hod
-                    : options
+                    : options_hod
                 }
               />
               <Box display="flex" justifyContent="center">
