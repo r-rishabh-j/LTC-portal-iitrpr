@@ -23,7 +23,7 @@ import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import AccountsSectionTAForm from './Accounts/AccountsSectionTAForm';
 const moment = require("moment");
 
-const TADialogBox = ({request_id, showCommentSection, permission}) => {
+const TADialogBox = ({request_id, showCommentSection, permission, status}) => {
   console.log("TA dialog permission", request_id)
     const [formInfo, setFormInfo] = useState({
       created_on: "",
@@ -103,6 +103,63 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
       },
     ];
 
+    const handleAttachmentClick = () => {
+      // console.log(cellValues.row.request_id);
+      const data = { request_id: request_id };
+      axios({
+        method: "post",
+        url: "api/ta/getattachments",
+        data: JSON.stringify(data),
+        headers: { "Content-type": "application/json" },
+        responseType: "blob",
+      })
+        .then((response) => {
+          // console.log('ee', response)
+          var blob = new Blob([response.data], { type: response.data.type });
+          var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
+          var anchor = document.createElement("a");
+          anchor.href = url;
+          anchor.target = "_blank";
+          anchor.click();
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response);
+            console.log(error.response.status);
+            alert("No attachments");
+          }
+        });
+    };
+
+    const handleOfficeOrderClick = () => {
+      // console.log(cellValues.row.request_id);
+
+      const data = { request_id: request_id };
+      axios({
+        method: "post",
+        url: "api/ta/get-office-order",
+        data: JSON.stringify(data),
+        headers: { "Content-type": "application/json" },
+        responseType: "blob",
+      })
+        .then((response) => {
+          var blob = new Blob([response.data], { type: response.data.type });
+          var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
+          var anchor = document.createElement("a");
+          anchor.href = url;
+          anchor.target = "_blank";
+          anchor.click();
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response);
+            console.log(error.response.status);
+            alert("Office Order not yet generated");
+          }
+        });
+    };
+
+
     useEffect(() => {
       const data = { request_id: request_id };
       axios({
@@ -146,12 +203,12 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
 
     const onSubmit = (data) => {
       console.log(data);
-      // if (edit) {
-      //   alert(
-      //     "Section Data was edited but not saved. Kindly save before submitting."
-      //   );
-      //   return;
-      // }
+      if (edit) {
+        alert(
+          "Section Data was edited but not saved. Kindly save before submitting."
+        );
+        return;
+      }
 
       const req_data = {
         request_id: request_id,
@@ -179,7 +236,7 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
         });
     };
 
-    
+const printComponentRef = useRef();
 
   return (
     <>
@@ -211,12 +268,12 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
           <Button
             variant="contained"
             color="primary"
-            //onClick={handleAttachmentClick}
+            onClick={handleAttachmentClick}
           >
             Attachment
           </Button>
           &nbsp;
-          {/* {status === "advance_pending" || status === "approved" ? (
+          {status === "payment_pending" || status === "availed" ? (
             <Button
               variant="contained"
               color="primary"
@@ -226,10 +283,10 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
             </Button>
           ) : (
             <></>
-          )} */}
-          <Button variant="contained" color="primary">
+          )}
+          {/* <Button variant="contained" color="primary">
             Office Order
-          </Button>
+          </Button> */}
         </Box>
       </Box>
       <DialogContent>
@@ -240,7 +297,7 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
         {/* <TextField label="Field" name = "Field" value = {formInfo.created_on}/> */}
         <Box
           sx={{
-            // backgroundColor: "#eeeeee",
+            backgroundColor: "#eeeeee",
             padding: "1vh 1vh 1vh 1vh",
             borderRadius: "10px",
           }}
@@ -617,7 +674,7 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
             </Box>
             <Box
               style={{
-                // backgroundColor: "#eeeeee",
+                backgroundColor: "#eeeeee",
                 padding: "1vh 1vh 1vh 1vh",
                 borderRadius: "10px",
               }}
@@ -634,7 +691,7 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
             </Box>
           </>
         ) : (
-          //est data for non establishment stages
+          //acc data for non accounts stages
           <div>
             <Box
               display="flex"
@@ -1038,6 +1095,56 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
           </div>
         )}
 
+        {commentObj["department"] !== undefined ? (
+          // commentObj["establishment"][0]["review"] === true ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              HOD Comments
+            </Typography>
+            <List>
+              {commentObj.department.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
         {commentObj["establishment"] !== undefined ? (
           // commentObj["establishment"][0]["review"] === true ? (
           <div>
@@ -1046,6 +1153,202 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
             </Typography>
             <List>
               {commentObj.establishment.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        {commentObj["audit"] !== undefined ? (
+          // commentObj["establishment"][0]["review"] === true ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Audit Section Comments
+            </Typography>
+            <List>
+              {commentObj.audit.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        {commentObj["accounts"] !== undefined ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Accounts Section Comments
+            </Typography>
+            <List>
+              {commentObj.accounts.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        {commentObj["registrar"] !== undefined ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Registrar Comments
+            </Typography>
+            <List>
+              {commentObj.registrar.map((comment, j) => {
+                return (
+                  <Box
+                    style={{
+                      backgroundColor: "#eeeeee",
+                      margin: "1vh 0 1vh 0",
+                      borderRadius: "10px",
+                    }}
+                    key={j}
+                  >
+                    {Object.keys(comment["comments"]).map((prop, i) => {
+                      return comment["comments"][prop] === undefined ||
+                        comment["comments"][prop] === null ||
+                        String(comment["comments"][prop]).trim().length ===
+                          0 ? (
+                        <div key={i}></div>
+                      ) : (
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={prop}
+                            secondary={
+                              (comment["approved"][prop] === true
+                                ? "Recommended"
+                                : "Not Recommended") +
+                              ": " +
+                              comment["comments"][prop]
+                            }
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </List>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {commentObj["deanfa"] !== undefined ? (
+          <div>
+            <Typography style={{ fontWeight: "bold", margin: "2vh 0 0 0" }}>
+              Dean Comments
+            </Typography>
+            <List>
+              {commentObj.deanfa.map((comment, j) => {
                 return (
                   <Box
                     style={{
@@ -1104,7 +1407,7 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
               />
               <Box display="flex" justifyContent="start">
                 <Typography style={{ fontWeight: "bold" }}>Approve</Typography>
-                {/* <Tooltip
+                <Tooltip
                   title={
                     <div style={{ fontSize: "1.5em" }}>
                       Section Heads must ensure that the section specific
@@ -1113,7 +1416,7 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
                   }
                 >
                   <InfoIcon />
-                </Tooltip> */}
+                </Tooltip>
               </Box>
               <FormInputRadio
                 name="approval"

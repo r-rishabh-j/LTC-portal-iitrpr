@@ -162,6 +162,9 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     # upload office order
     api.add_resource(TaManager.UploadTaOfficeOrder,
                      '/api/ta/upload-office-order')
+    # get office order for ta
+    api.add_resource(TaManager.GetTaOfficeOrder,
+                     '/api/ta/get-office-order')
     # update TA payment details
     api.add_resource(TaManager.UpdateAccountsPaymentDetails,
                      '/api/ta/upload-payment-details')

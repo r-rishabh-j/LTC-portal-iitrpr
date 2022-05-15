@@ -397,7 +397,7 @@ class TaManager():
 
             return jsonify({'pending': pending})
 
-    class GetOfficeOrder(Resource):
+    class GetTaOfficeOrder(Resource):
         @check_role()
         def post(self, permission):
             analyse()
