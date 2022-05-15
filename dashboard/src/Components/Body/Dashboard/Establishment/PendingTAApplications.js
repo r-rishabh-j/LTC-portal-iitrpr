@@ -321,7 +321,7 @@ const PendingTAApplications = ({ permission }) => {
           <DialogBox
             request_id={ltcId}
             permission={permission}
-            status={status}
+            status={"approved"}
             showCommentSection={false}
           />
           <DialogActions>
@@ -348,19 +348,19 @@ const PendingTAApplications = ({ permission }) => {
           onClose={handleCloseTA}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox
+          {/* <DialogBox
             request_id={id}
             permission={permission}
             status={status}
             showCommentSection={false}
-          />
-          <TADialogBox request_id = {id}/>
+          /> */}
+          <TADialogBox request_id = {id} showCommentSection={true} permission={permission}/>
           <DialogActions>
             <Button onClick={handleCloseTA} color="primary">
               Close
             </Button>
           </DialogActions>
-        </Dialog>
+        </Dialog>        
       </Paper>
       <Box minHeight="2vh"></Box>
     </>

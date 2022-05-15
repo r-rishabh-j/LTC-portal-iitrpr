@@ -297,7 +297,7 @@ class TaManager():
                                     True if action == 'approve' else False)
             else:
                 form.addComment(current_user, comment,
-                            True if action == 'recommend' else False)
+                            True if action == 'approve' else False)
 
             """
                 Application is forwarded, or decline only when the stage head forwards or declines it.

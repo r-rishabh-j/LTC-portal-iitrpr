@@ -24,21 +24,21 @@ const PastTaApplications = ({ permission }) => {
 
   useEffect(() => {
     axios({
-        method: "GET",
-        url: "/api/ta/getpastta",
-        data: {},
+      method: "GET",
+      url: "/api/ta/getpastta",
+      data: {},
+    })
+      .then((response) => {
+        console.log('aaa', response.data.previous);
+        setTableData(response.data.previous);
       })
-        .then((response) => {
-            console.log('aaa', response.data.previous);
-            setTableData(response.data.previous);
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log(error.response);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          }
-        });
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
     // return fetch("/api/ta/getpastta")
     //   .then((data) =>{ data.json()})
     //   .then((data) => {
@@ -59,6 +59,7 @@ const PastTaApplications = ({ permission }) => {
   const [open, setOpen] = useState(false);
   const [openTA, setOpenTA] = useState(false);
   const [openReview, setOpenReview] = useState(false);
+  const [ltcId, setLtcId] = useState(-1);
   const [id, setId] = useState(-1);
   const [status, setStatus] = useState('');
 
@@ -66,9 +67,9 @@ const PastTaApplications = ({ permission }) => {
     setOpen(true);
     // console.log('status', cellValues.row.stage);
     setStatus(cellValues.row.stage);
-    setId(cellValues.row.request_id);
+    setLtcId(cellValues.row.ltc_id);
   };
-
+  
   const handleCloseTA = () => {
     setOpenTA(false);
   };
@@ -185,7 +186,7 @@ const PastTaApplications = ({ permission }) => {
       type: "date",
       renderCell: timeElement,
       valueGetter: (cellValues) => {
-        return cellValues.value+"+530";
+        return cellValues.value + "+530";
         // const time = formatDate(cellValues.value.replace("GMT", ""));
         // return Date(moment(time).local().format("DD/MM/YYYY"));
       },
@@ -272,15 +273,15 @@ const PastTaApplications = ({ permission }) => {
             components={{ Toolbar: DataGridToolbar }}
           />
         </Grid>
-        {/* <Dialog
+        <Dialog
           open={open}
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
           <DialogBox
-            request_id={id}
+            request_id={ltcId}
             permission={permission}
-            status={status}
+            status={"approved"}
             showCommentSection={false}
           />
           <DialogActions>
@@ -288,7 +289,7 @@ const PastTaApplications = ({ permission }) => {
               Close
             </Button>
           </DialogActions>
-        </Dialog> */}
+        </Dialog>
 
         {/* <Dialog
           open={openReview}
@@ -302,26 +303,26 @@ const PastTaApplications = ({ permission }) => {
             </Button>
           </DialogActions>
         </Dialog> */}
-        {/* <Dialog
+        <Dialog
           open={openTA}
           onClose={handleCloseTA}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox
+          {/* <DialogBox
             request_id={id}
             permission={permission}
             status={status}
             showCommentSection={false}
-          />
-          <TADialogBox request_id = {id}/>
+          /> */}
+          <TADialogBox request_id={id} permission={permission} />
           <DialogActions>
             <Button onClick={handleCloseTA} color="primary">
               Close
             </Button>
           </DialogActions>
-        </Dialog> */}
+        </Dialog>
 
-        
+
       </Paper>
       <Box minHeight="2vh"></Box>
     </>
