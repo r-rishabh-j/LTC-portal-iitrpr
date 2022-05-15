@@ -24,7 +24,7 @@ import AccountsSectionTAForm from './Accounts/AccountsSectionTAForm';
 const moment = require("moment");
 
 const TADialogBox = ({request_id, showCommentSection, permission}) => {
-  console.log("TA dialog permission", permission)
+  console.log("TA dialog permission", request_id)
     const [formInfo, setFormInfo] = useState({
       created_on: "",
       request_id: "",
