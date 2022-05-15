@@ -28,11 +28,12 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
     const [formInfo, setFormInfo] = useState({
       created_on: "",
       request_id: "",
-      form_data: { establishment: {} },
+      form_data: { accounts: {} },
       comments: {},
     });
     const [comments, setComments] = useState([]);
     const [commentObj, setCommentObj] = useState({});
+    
     let array = [];
     const {
       handleSubmit,
@@ -102,6 +103,46 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
       },
     ];
 
+    useEffect(() => {
+      const data = { request_id: request_id };
+      axios({
+        method: "post",
+        url: "api/ta/getformdata",
+        data: JSON.stringify(data),
+        headers: { "Content-type": "application/json" },
+      })
+        .then((response) => {
+          console.log(response.data.data);
+          setFormInfo(response.data.data);
+
+          var commentObject;
+          // var commentObject = response.data.data.comments ?? [];
+          if (response.data.data.comments === undefined) {
+            commentObject = [];
+          } else {
+            commentObject = response.data.data.comments;
+            setCommentObj(commentObject);
+          }
+          console.log(commentObject);
+
+          for (var dept in commentObject) {
+            if (commentObject.hasOwnProperty(dept)) {
+              var dept_comments = commentObject[dept];
+              console.log(dept_comments[0]);
+              // array.push((dept_comments[0].comments) ?? {});
+              array.push(getVal(dept_comments[0].comments, {}));
+            }
+          }
+          setComments(array);
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response);
+            console.log(error.response.status);
+            alert("Form not found");
+          }
+        });
+    }, []);
 
     const onSubmit = (data) => {
       console.log(data);
@@ -138,46 +179,7 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
         });
     };
 
-    useEffect(() => {
-      const data = { request_id: request_id };
-      axios({
-        method: "post",
-        url: "api/ta/getformdata",
-        data: JSON.stringify(data),
-        // headers: { "Content-type": "application/json" },
-      })
-        .then((response) => {
-          console.log(response.data.data);
-          setFormInfo(response.data.data);
-
-          var commentObject;
-          // var commentObject = response.data.data.comments ?? [];
-          if (response.data.data.comments === undefined) {
-            commentObject = [];
-          } else {
-            commentObject = response.data.data.comments;
-            setCommentObj(commentObject);
-          }
-          console.log(commentObject);
-
-          for (var dept in commentObject) {
-            if (commentObject.hasOwnProperty(dept)) {
-              var dept_comments = commentObject[dept];
-              console.log(dept_comments[0]);
-              // array.push((dept_comments[0].comments) ?? {});
-              array.push(getVal(dept_comments[0].comments, {}));
-            }
-          }
-          setComments(array);
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log(error.response);
-            console.log(error.response.status);
-            alert("Form not found");
-          }
-        });
-    }, []);
+    
 
   return (
     <>
@@ -593,7 +595,7 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
           )}
         </Box>
 
-        {permission === "accounts"  ? (
+        {permission === "accounts" ? (
           <>
             <Box
               display="flex"
@@ -621,7 +623,6 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
               }}
             >
               <AccountsSectionTAForm
-               
                 acc_data={
                   formInfo.form_data["accounts"] === undefined
                     ? {}
@@ -651,8 +652,391 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
                 borderRadius: "10px",
               }}
             >
+              <Typography>A-1: Actual fares(A/T/R(etc.))</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="actual_fares_rate"
+                    label="Rate"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"][
+                            "actual_fares_rate"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["actual_fares_rate"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="actual_fares_amount"
+                    label="Amount"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"][
+                            "actual_fares_amount"
+                          ] === undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["actual_fares_amount"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+              </Grid>
+
+              <Typography>A-2: Road Mileage</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="mileage_rate"
+                    label="Rate"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"]["mileage_rate"] ===
+                          undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["mileage_rate"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="mileage_amount"
+                    label="Amount"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"]["mileage_amount"] ===
+                          undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["mileage_amount"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+              </Grid>
+              <Typography>A-3: D.A</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="da_rate"
+                    label="Rate"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"]["da_rate"] ===
+                          undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["da_rate"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="da_amount"
+                    label="Amount"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"]["da_amount"] ===
+                          undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["da_amount"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+              </Grid>
+              <Typography>A-4: Food expenses and hotel charges</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="food_rate"
+                    label="Rate"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"]["food_rate"] ===
+                          undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["food_rate"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="food_amount"
+                    label="Amount"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"]["food_amount"] ===
+                          undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["food_amount"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+              </Grid>
+              <Typography>B: Other Expenses</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    name="other_rate"
+                    label="Rate"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"]["other_rate"] ===
+                          undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["other_rate"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="other_amount"
+                    label="Amount"
+                    value={
+                      formInfo.form_data["accounts"] === undefined
+                        ? ""
+                        : formInfo.form_data["accounts"]["other_amount"] ===
+                          undefined
+                        ? " "
+                        : formInfo.form_data["accounts"]["other_amount"]
+                    }
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+              </Grid>
+              <Typography>C: Total Amount</Typography>
+              <Grid item xs={8}>
+                <TextField
+                  name="total_amount"
+                  label="Amount"
+                  value={
+                    formInfo.form_data["accounts"] === undefined
+                      ? ""
+                      : formInfo.form_data["accounts"]["total_amount"] ===
+                        undefined
+                      ? " "
+                      : formInfo.form_data["accounts"]["total_amount"]
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Typography>D: Advance if any to be deducted</Typography>
+              <Grid item xs={8}>
+                <TextField
+                  name="advance_deducted"
+                  label="Amount"
+                  value={
+                    formInfo.form_data["accounts"] === undefined
+                      ? ""
+                      : formInfo.form_data["accounts"]["advance_deducted"] ===
+                        undefined
+                      ? " "
+                      : formInfo.form_data["accounts"]["advance_deducted"]
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Typography>E: Net amount to be reimbursed (C-D)</Typography>
+              <Grid item xs={8}>
+                <TextField
+                  name="net_amount"
+                  label="Amount"
+                  value={
+                    formInfo.form_data["accounts"] === undefined
+                      ? ""
+                      : formInfo.form_data["accounts"]["net_amount"] ===
+                        undefined
+                      ? " "
+                      : formInfo.form_data["accounts"]["net_amount"]
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Typography>
+                E-1: To be reimbursed to the travel agent (if any)
+              </Typography>
+              <Grid item xs={8}>
+                <TextField
+                  name="agent_amount"
+                  label="Amount"
+                  value={
+                    formInfo.form_data["accounts"] === undefined
+                      ? ""
+                      : formInfo.form_data["accounts"]["agent_amount"] ===
+                        undefined
+                      ? " "
+                      : formInfo.form_data["accounts"]["agent_amount"]
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Typography>E-2: To the claimant</Typography>
+              <Grid item xs={8}>
+                <TextField
+                  name="claimant_amount"
+                  label="Amount"
+                  value={
+                    formInfo.form_data["accounts"] === undefined
+                      ? ""
+                      : formInfo.form_data["accounts"]["claimant_amount"] ===
+                        undefined
+                      ? " "
+                      : formInfo.form_data["accounts"]["claimant_amount"]
+                  }
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Typography>Passed for payment of:</Typography>
+
+              <TextField
+                name="passed_amount"
+                label="Amount"
+                value={
+                  formInfo.form_data["accounts"] === undefined
+                    ? ""
+                    : formInfo.form_data["accounts"]["passed_amount"] ===
+                      undefined
+                    ? " "
+                    : formInfo.form_data["accounts"]["passed_amount"]
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+
+              <Typography>Debitable to:</Typography>
+
+              <TextField
+                name="debit_to"
+                label="Name"
+                value={
+                  formInfo.form_data["accounts"] === undefined
+                    ? ""
+                    : formInfo.form_data["accounts"]["debit_to"] === undefined
+                    ? " "
+                    : formInfo.form_data["accounts"]["debit_to"]
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+
+              <TextField
+                name="budget_head"
+                label="Budget Head"
+                value={
+                  formInfo.form_data["accounts"] === undefined
+                    ? ""
+                    : formInfo.form_data["accounts"]["budget_head"] ===
+                      undefined
+                    ? " "
+                    : formInfo.form_data["accounts"]["budget_head"]
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
+              <TextField
+                name="project"
+                label="Project/ Institute/ Any other"
+                value={
+                  formInfo.form_data["accounts"] === undefined
+                    ? ""
+                    : formInfo.form_data["accounts"]["project"] === undefined
+                    ? " "
+                    : formInfo.form_data["accounts"]["project"]
+                }
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+                InputLabelProps={{ shrink: true }}
+              />
             </Box>
-            </div>)}
+          </div>
+        )}
 
         {commentObj["establishment"] !== undefined ? (
           // commentObj["establishment"][0]["review"] === true ? (
