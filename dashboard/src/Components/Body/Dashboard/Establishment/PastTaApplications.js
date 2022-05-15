@@ -66,7 +66,7 @@ const PastTaApplications = ({ permission }) => {
   const handleClickOpen = (event, cellValues) => {
     setOpen(true);
     // console.log('status', cellValues.row.stage);
-    setStatus(cellValues.row.stage);
+    // setStatus(cellValues.row.stage);
     setLtcId(cellValues.row.ltc_id);
   };
 
@@ -295,7 +295,7 @@ const PastTaApplications = ({ permission }) => {
           onClose={handleCloseTA}
           classes={{ paper: classes.dialogPaper }}
         >
-          <TADialogBox request_id={id} permission={permission} />
+          <TADialogBox request_id={id} permission={permission} status={status}/>
           <DialogActions>
             <Button onClick={handleCloseTA} color="primary">
               Close

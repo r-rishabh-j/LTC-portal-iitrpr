@@ -249,7 +249,7 @@ const PastTaApplications = ({ permission }) => {
           <DialogBox
             request_id={ltcId}
             permission={permission}
-            status={status}
+            status={"approved"}
             showCommentSection={false}
             showOfficeOrderButton={true}
           />

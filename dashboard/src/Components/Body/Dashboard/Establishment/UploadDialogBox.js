@@ -17,7 +17,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useForm, Controller, useFieldArray, register } from "react-hook-form";
 
 
-const UploadDialogBox = ({ request_id }) => {
+const UploadDialogBox = ({ request_id, api }) => {
   const [file, setFile] = useState(null);
 
   const { handleSubmit, control, register, formState: { isSubmitting } } = useForm();
@@ -38,7 +38,7 @@ const UploadDialogBox = ({ request_id }) => {
     console.log(formData);
     return axios({
       method: 'POST',
-      url: '/api/upload-office-order',
+      url: api,
       data: formData,
     }).then((response) => {
       alert('Office Order Uploaded!');

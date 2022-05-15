@@ -19,7 +19,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { FormInputNumber } from "../../../Utilities/FormInputNumber";
 
 
-const AdvancePaymentDialogBox = ({ request_id }) => {
+const AdvancePaymentDialogBox = ({ request_id, api }) => {
     const [file, setFile] = useState(null);
 
     const { handleSubmit, control, register, formState: { isSubmitting } } = useForm();
@@ -44,7 +44,7 @@ const AdvancePaymentDialogBox = ({ request_id }) => {
         console.log(formData);
         return axios({
             method: 'POST',
-            url: '/api/update-advance-payment',
+            url: api,
             data: formData,
         }).then((response) => {
             alert('Updated!');

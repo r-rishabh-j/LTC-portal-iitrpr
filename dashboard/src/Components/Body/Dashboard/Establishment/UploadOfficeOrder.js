@@ -254,7 +254,7 @@ const UploadOfficeOrder = ({ permission }) => {
           onClose={handleClose}
           classes={{ paper: classes.uploadDialogPaper }}
         >
-          <UploadDialogBox request_id={id} />
+          <UploadDialogBox request_id={id} api={"/api/upload-office-order"} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close

@@ -58,6 +58,7 @@ class Users(db.Model):
     # stores user notifications
     notifications = db.Column(MutableDict.as_mutable(JSON))
     email_pref = db.Column(db.Boolean)
+    deleted = db.Column(db.Boolean)
     """
     'notifications': {
         [
@@ -80,6 +81,7 @@ class Users(db.Model):
         self.employee_code = employee_code
         self.notifications = {'notifications': []}
         self.email_pref = email_pref
+        self.deleted = False
 
     def __repr__(self) -> str:
         return f'ID:{self.id}, {self.email}, {self.name}'

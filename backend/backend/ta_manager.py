@@ -157,6 +157,23 @@ class TaManager():
             response = {'data': results}
 
             return jsonify(response)
+    
+    class GetPendingTaPaymentRequests(Resource):
+        @role_required(role=Permissions.accounts)
+        def get(self):
+            analyse()
+            pending = db.session.query(AccountsTAPayments, TARequests, Users).join(Users).join(
+                AccountsTAPayments).filter(AccountsTAPayments.status == AccountsTAPayments.Status.pending)
+            result = []
+            for pay_req, ta_form, applicant in pending:
+                result.append({
+                    'request_id': ta_form.request_id,
+                    'ltc_id': ta_form.ltc_id,
+                    'user': applicant.email,
+                    'name': applicant.name,
+                    'created_on': ta_form.created_on,
+                })
+            return jsonify({'pending': result})
 
     class GetTaFormAttachments(Resource):
         """

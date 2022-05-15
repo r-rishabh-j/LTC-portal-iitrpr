@@ -88,6 +88,10 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/admin/getdepartments')  # upload signature
     api.add_resource(UserManager.RegisterUserFromCSV,
                      '/api/admin/register-from-csv')
+    api.add_resource(UserManager.EditUser,
+                     '/api/admin/edit-user')
+    api.add_resource(UserManager.FetchUserByEmail,
+                     '/api/admin/fetch-user')
     api.add_resource(LtcManager.GetLtcFormData,
                      '/api/getformdata')  # get form data
     # get basic form data for display on tables
@@ -159,6 +163,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     # fetch pending office orders
     api.add_resource(TaManager.GetPendingTaOfficeOrderRequests,
                      '/api/ta/pending-office-orders')
+    api.add_resource(TaManager.GetPendingTaPaymentRequests,
+                     '/api/ta/pending-payment-requests')
     # upload office order
     api.add_resource(TaManager.UploadTaOfficeOrder,
                      '/api/ta/upload-office-order')

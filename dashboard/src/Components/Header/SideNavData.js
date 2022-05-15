@@ -17,6 +17,7 @@ import DomainIcon from '@material-ui/icons/Domain';
 import { blueGrey, blue } from "@material-ui/core/colors";
 import EmailIcon from '@material-ui/icons/Email';
 import Divider from '@mui/material/Divider';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 
 export default function SideNavData({ handleDrawerClose, userType, profileInfo }) {
@@ -42,6 +43,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
     { label: "Home", link: ["/home"], icon: <HomeIcon />, popup: false },
     { label: "New Application", link: ["/create", "/ta"], icon: <AddIcon /> , popup: true},
     { label: "Past Applications", link: ["/past", "/past-ta"], icon: <HistoryIcon />, popup: true },
+    { label: "Help", link: ["/how-to"], icon: <HelpOutlineIcon />, popup: false },
 
     //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
   ];
@@ -95,6 +97,11 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
     {
       label: "Advance Payments",
       link:[ "/advance-payment"],
+      icon: <AccountBalanceIcon />,
+    },
+    {
+      label: "TA Payments",
+      link:[ "/ta-payments"],
       icon: <AccountBalanceIcon />,
     },
   ];
