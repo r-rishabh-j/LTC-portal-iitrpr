@@ -14,6 +14,7 @@ import axios from 'axios';
 import DialogBox from '../DialogBox';
 import { Box } from '@material-ui/core';
 import DataGridToolbar from '../DataGridToolbar';
+import TADialogBox from '../TADialogBox';
 // import TADialogBox from '../TADialogBox';
 const moment = require('moment');
 
@@ -110,13 +111,14 @@ const PendingTAApplications = ({ permission }) => {
   const [openTA, setOpenTA] = useState(false);
   const [openReview, setOpenReview] = useState(false);
   const [id, setId] = useState(-1);
+  const [ltcId, setLtcId] = useState(-1);
   const [status, setStatus] = useState('');
 
-  const handleClickOpen = (event, cellValues) => {
+  const handleClickLtcOpen = (event, cellValues) => {
     setOpen(true);
     // console.log('status', cellValues.row.stage);
     setStatus(cellValues.row.stage);
-    setId(cellValues.row.request_id);
+    setLtcId(cellValues.row.ltc_id);
   };
 
   const handleCloseTA = () => {
@@ -134,14 +136,9 @@ const PendingTAApplications = ({ permission }) => {
     setOpen(false);
   };
 
-  const handleCloseReview = () => {
-    setOpenReview(false);
-  }
-
   const editForm = (event, cellValues) => {
     setOpenReview(true);
     setId(cellValues.row.request_id);
-    // console.log("Open a new dialog box");
   }
 
   const stageElement = (cellValues) => {
@@ -249,7 +246,7 @@ const PendingTAApplications = ({ permission }) => {
               variant="contained"
               color="primary"
               onClick={(event) => {
-                handleClickOpen(event, cellValues);
+                handleClickLtcOpen(event, cellValues);
               }}
             >
               View
@@ -316,13 +313,13 @@ const PendingTAApplications = ({ permission }) => {
             components={{ Toolbar: DataGridToolbar }}
           />
         </Grid>
-        {/* <Dialog
+        <Dialog
           open={open}
           onClose={handleClose}
           classes={{ paper: classes.dialogPaper }}
         >
           <DialogBox
-            request_id={id}
+            request_id={ltcId}
             permission={permission}
             status={status}
             showCommentSection={false}
@@ -332,7 +329,7 @@ const PendingTAApplications = ({ permission }) => {
               Close
             </Button>
           </DialogActions>
-        </Dialog> */}
+        </Dialog>
 
         {/* <Dialog
           open={openReview}
@@ -346,7 +343,7 @@ const PendingTAApplications = ({ permission }) => {
             </Button>
           </DialogActions>
         </Dialog> */}
-        {/* <Dialog
+        <Dialog
           open={openTA}
           onClose={handleCloseTA}
           classes={{ paper: classes.dialogPaper }}
@@ -363,9 +360,7 @@ const PendingTAApplications = ({ permission }) => {
               Close
             </Button>
           </DialogActions>
-        </Dialog> */}
-
-        
+        </Dialog>
       </Paper>
       <Box minHeight="2vh"></Box>
     </>
