@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState, forwardRef } from "react";
+import { useEffect, useState} from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TextField, Box, Button, Typography, Grid } from "@mui/material";
 import axios from "axios";
@@ -12,7 +12,7 @@ const AccountsSectionTAForm = ({acc_data, request_id, setEditState}) => {
     reset(acc_data);
   }, [acc_data]);
 
-  function onSubmitData(data) {
+  function onSubmitAccTAData(data) {
     console.log(data);
     setEdit(false);
     setEditState(false);
@@ -40,7 +40,7 @@ const AccountsSectionTAForm = ({acc_data, request_id, setEditState}) => {
   return (
     <div>
       <form
-        onSubmit={handleSubmit(onSubmitData)}
+        onSubmit={handleSubmit(onSubmitAccTAData)}
         style={{
           width: "100%",
           "& .MultiFormControlRoot": {
@@ -66,16 +66,340 @@ const AccountsSectionTAForm = ({acc_data, request_id, setEditState}) => {
           </Button>
         </Box>
         <Typography>A-1: Actual fares(A/T/R(etc.))</Typography>
-        <Grid item xs={4}>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <Controller
+              name="actual_fares_rate"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextField
+                    disabled={!edit}
+                    label="Rate"
+                    onChange={onChange}
+                    value={value}
+                    error={!!error}
+                    type="text"
+                    //required={required}
+                    color="primary"
+                    fullWidth
+                    margin="normal"
+                    //multiline={multiline}
+                    //rows={rows}
+                  />
+                </>
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="actual_fares_amount"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextField
+                    disabled={!edit}
+                    label="Amount(₹)"
+                    onChange={onChange}
+                    value={value}
+                    error={!!error}
+                    type="text"
+                    //required={required}
+                    color="primary"
+                    fullWidth
+                    margin="normal"
+                    //multiline={multiline}
+                    //rows={rows}
+                  />
+                </>
+              )}
+            />
+          </Grid>
+        </Grid>
+        <Typography>A-2: Road Mileage</Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <Controller
+              name="mileage_rate"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextField
+                    disabled={!edit}
+                    label="Rate"
+                    onChange={onChange}
+                    value={value}
+                    error={!!error}
+                    type="text"
+                    //required={required}
+                    color="primary"
+                    fullWidth
+                    margin="normal"
+                    //multiline={multiline}
+                    //rows={rows}
+                  />
+                </>
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="mileage_amount"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextField
+                    disabled={!edit}
+                    label="Amount(₹)"
+                    onChange={onChange}
+                    value={value}
+                    error={!!error}
+                    type="text"
+                    //required={required}
+                    color="primary"
+                    fullWidth
+                    margin="normal"
+                    //multiline={multiline}
+                    //rows={rows}
+                  />
+                </>
+              )}
+            />
+          </Grid>
+        </Grid>
+        <Typography>A-3: D.A</Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <Controller
+              name="da_rate"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextField
+                    disabled={!edit}
+                    label="Rate"
+                    onChange={onChange}
+                    value={value}
+                    error={!!error}
+                    type="text"
+                    //required={required}
+                    color="primary"
+                    fullWidth
+                    margin="normal"
+                    //multiline={multiline}
+                    //rows={rows}
+                  />
+                </>
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="da_amount"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextField
+                    disabled={!edit}
+                    label="Amount(₹)"
+                    onChange={onChange}
+                    value={value}
+                    error={!!error}
+                    type="text"
+                    //required={required}
+                    color="primary"
+                    fullWidth
+                    margin="normal"
+                    //multiline={multiline}
+                    //rows={rows}
+                  />
+                </>
+              )}
+            />
+          </Grid>
+        </Grid>
+        <Typography>A-4: Food expenses and hotel charges</Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <Controller
+              name="food_rate"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextField
+                    disabled={!edit}
+                    label="Rate"
+                    onChange={onChange}
+                    value={value}
+                    error={!!error}
+                    type="text"
+                    //required={required}
+                    color="primary"
+                    fullWidth
+                    margin="normal"
+                    //multiline={multiline}
+                    //rows={rows}
+                  />
+                </>
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="food_amount"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextField
+                    disabled={!edit}
+                    label="Amount(₹)"
+                    onChange={onChange}
+                    value={value}
+                    error={!!error}
+                    type="text"
+                    //required={required}
+                    color="primary"
+                    fullWidth
+                    margin="normal"
+                    //multiline={multiline}
+                    //rows={rows}
+                  />
+                </>
+              )}
+            />
+          </Grid>
+        </Grid>
+        <Typography>B: Other Expenses</Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <Controller
+              name="other_rate"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextField
+                    disabled={!edit}
+                    label="Rate"
+                    onChange={onChange}
+                    value={value}
+                    error={!!error}
+                    type="text"
+                    //required={required}
+                    color="primary"
+                    fullWidth
+                    margin="normal"
+                    //multiline={multiline}
+                    //rows={rows}
+                  />
+                </>
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="other_amount"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextField
+                    disabled={!edit}
+                    label="Amount(₹)"
+                    onChange={onChange}
+                    value={value}
+                    error={!!error}
+                    type="text"
+                    //required={required}
+                    color="primary"
+                    fullWidth
+                    margin="normal"
+                    //multiline={multiline}
+                    //rows={rows}
+                  />
+                </>
+              )}
+            />
+          </Grid>
+        </Grid>
+        <Typography>C: Total Amount</Typography>
+
+        {/* <Grid item xs={4}>
+            <Controller
+              name="total_rate"
+              control={control}
+              defaultValue=""
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextField
+                    disabled={!edit}
+                    label="Rate"
+                    onChange={onChange}
+                    value={value}
+                    error={!!error}
+                    type="text"
+                    //required={required}
+                    color="primary"
+                    fullWidth
+                    margin="normal"
+                    //multiline={multiline}
+                    //rows={rows}
+                  />
+                </>
+              )}
+            />
+          </Grid> */}
+        <Grid item xs={8}>
           <Controller
-            name="actual_fares_rate"
+            name="total_amount"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <>
                 <TextField
                   disabled={!edit}
-                  label="Rate"
+                  label="Amount(₹)"
                   onChange={onChange}
                   value={value}
                   error={!!error}
@@ -91,6 +415,206 @@ const AccountsSectionTAForm = ({acc_data, request_id, setEditState}) => {
             )}
           />
         </Grid>
+        <Typography>D: Advance if any to be deducted</Typography>
+        <Grid item xs={8}>
+          <Controller
+            name="advance_deducted"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <>
+                <TextField
+                  disabled={!edit}
+                  label="Amount(₹)"
+                  onChange={onChange}
+                  value={value}
+                  error={!!error}
+                  type="text"
+                  //required={required}
+                  color="primary"
+                  fullWidth
+                  margin="normal"
+                  //multiline={multiline}
+                  //rows={rows}
+                />
+              </>
+            )}
+          />
+        </Grid>
+        <Typography>E: Net amount to be reimbursed (C-D)</Typography>
+        <Grid item xs={8}>
+          <Controller
+            name="net_amount"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <>
+                <TextField
+                  disabled={!edit}
+                  label="Amount(₹)"
+                  onChange={onChange}
+                  value={value}
+                  error={!!error}
+                  type="text"
+                  //required={required}
+                  color="primary"
+                  fullWidth
+                  margin="normal"
+                  //multiline={multiline}
+                  //rows={rows}
+                />
+              </>
+            )}
+          />
+        </Grid>
+        <Typography>
+          E-1: To be reimbursed to the travel agent (if any)
+        </Typography>
+        <Grid item xs={8}>
+          <Controller
+            name="agent_amount"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <>
+                <TextField
+                  disabled={!edit}
+                  label="Amount(₹)"
+                  onChange={onChange}
+                  value={value}
+                  error={!!error}
+                  type="text"
+                  //required={required}
+                  color="primary"
+                  fullWidth
+                  margin="normal"
+                  //multiline={multiline}
+                  //rows={rows}
+                />
+              </>
+            )}
+          />
+        </Grid>
+        <Typography>E-2: To the claimant</Typography>
+        <Grid item xs={8}>
+          <Controller
+            name="claimant_amount"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <>
+                <TextField
+                  disabled={!edit}
+                  label="Amount(₹)"
+                  onChange={onChange}
+                  value={value}
+                  error={!!error}
+                  type="text"
+                  //required={required}
+                  color="primary"
+                  fullWidth
+                  margin="normal"
+                  //multiline={multiline}
+                  //rows={rows}
+                />
+              </>
+            )}
+          />
+        </Grid>
+        <Typography>Passed for payment of:</Typography>
+        <Controller
+          name="passed_amount"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <>
+              <TextField
+                disabled={!edit}
+                label="Amount(₹)"
+                onChange={onChange}
+                value={value}
+                error={!!error}
+                type="text"
+                //required={required}
+                color="primary"
+                fullWidth
+                margin="normal"
+                //multiline={multiline}
+                //rows={rows}
+              />
+            </>
+          )}
+        />
+        <Typography>Debitable to:</Typography>
+        <Controller
+          name="debit_to"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <>
+              <TextField
+                disabled={!edit}
+                label="Name"
+                onChange={onChange}
+                value={value}
+                error={!!error}
+                type="text"
+                //required={required}
+                color="primary"
+                fullWidth
+                margin="normal"
+                //multiline={multiline}
+                //rows={rows}
+              />
+            </>
+          )}
+        />
+        <Controller
+          name="budget_head"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <>
+              <TextField
+                disabled={!edit}
+                label="Budget Head"
+                onChange={onChange}
+                value={value}
+                error={!!error}
+                type="text"
+                //required={required}
+                color="primary"
+                fullWidth
+                margin="normal"
+                //multiline={multiline}
+                //rows={rows}
+              />
+            </>
+          )}
+        />
+        <Controller
+          name="project"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <>
+              <TextField
+                disabled={!edit}
+                label="Project/ Institute/ Any other"
+                onChange={onChange}
+                value={value}
+                error={!!error}
+                type="text"
+                //required={required}
+                color="primary"
+                fullWidth
+                margin="normal"
+                //multiline={multiline}
+                //rows={rows}
+              />
+            </>
+          )}
+        />
       </form>
     </div>
   );
