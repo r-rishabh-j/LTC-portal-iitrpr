@@ -5,10 +5,11 @@ import requests
 from . import db, filemanager
 from flask import jsonify, request, make_response, redirect
 from flask_restful import Resource, abort
-from .models import Departments, UserOTP, Users
+from .models import Departments, LTCRequests, UserOTP, Users
 from flask_jwt_extended import create_access_token, jwt_required, \
     set_access_cookies, unset_jwt_cookies, current_user
 from .role_manager import check_role, role_required, Permissions
+from sqlalchemy import desc
 from uuid import uuid4
 import urllib.parse
 from . import emailmanager

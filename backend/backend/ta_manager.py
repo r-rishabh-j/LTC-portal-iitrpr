@@ -58,7 +58,6 @@ class TaManager():
             # remove key attachments (which is redudant) from form json
             form_data.pop('attachments')
             # section form fields
-            form_data['establishment'] = {}
             form_data['accounts'] = {}
             # add TA request to table
             new_request: TARequests = TARequests(
@@ -316,6 +315,36 @@ class TaManager():
             else:
                 db.session.commit()
                 return {"status": 'Comment added'}, 200
+    class FillTaStageForm(Resource):
+        """
+        Fill forms for individual stages(establishment section, accounts section)
+        """
+        allowed_roles = [
+            Permissions.accounts,
+        ]
+
+        @roles_required(roles=allowed_roles)
+        def post(self, permission):
+            analyse()
+
+            request_id = request.json['request_id']
+            if not request_id:
+                abort(404, msg='Request ID not sent')
+
+            content = request.json.get('stage_form', None)
+            if not content:
+                abort(404, msg='No form content sent!')
+
+            form: TARequests = TARequests.query.get(int(request_id))
+
+            if not form:
+                abort(404, msg="Invalid Request ID")
+
+            form.form[permission] = content
+            flag_modified(form, "form")
+            db.session.merge(form)
+            db.session.commit()
+            return jsonify({"msg": "updated!"})
 
     class GetPendingTaApprovalRequests(Resource):
         """

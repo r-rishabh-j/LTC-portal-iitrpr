@@ -6,6 +6,7 @@ from datetime import datetime
 from flask_jwt_extended import current_user
 from flask import jsonify, request, make_response
 from sqlalchemy.orm.attributes import flag_modified
+from sqlalchemy import desc
 from flask_restful import Resource, abort, fields
 from .models import LTCOfficeOrders, LTCProofUploads, StageUsers, Stages
 from .role_manager import Permissions, role_required, roles_required, check_role
@@ -57,6 +58,24 @@ class LtcManager:
             form_data.pop('attachments')
             # section form fields
             form_data['establishment'] = {}
+            last_avalied: LTCRequests = LTCRequests.query.filter(
+                LTCRequests.user_id == current_user.id).order_by(desc(LTCRequests.created_on)).first()
+            if last_avalied != None:
+                last_est_form = last_avalied.form['establishment']
+                form_data['establishment'] = {
+                    # "est_data_joining_date": "2022-05-02T11:02:00.000Z",
+                    # "est_data_block_year": "1",
+                    "est_data_nature_last": last_est_form.get("est_data_nature_current",''),
+                    "est_data_period_last_from": last_est_form.get('est_data_period_current_from',''),
+                    "est_data_period_last_to": last_est_form.get('est_data_period_current_to',''),
+                    "est_data_last_ltc_for": last_est_form.get('est_data_current_ltc_for',''),
+                    "est_data_last_ltc_days": last_est_form.get('est_data_current_ltc_days',''),
+                    "est_data_last_earned_leave_on": last_est_form.get('est_data_current_earned_leave_on',''),
+                    "est_data_last_balance": last_est_form.get("est_data_current_balance",''),
+                    "est_data_last_encashment_adm": last_est_form.get("est_data_current_encashment_adm",''),
+                    "est_data_last_nature": last_est_form.get('est_data_current_nature',''),
+                }
+
             form_data['accounts'] = {}
             # add LTC request to table
             new_request: LTCRequests = LTCRequests(user_id=user.id)
