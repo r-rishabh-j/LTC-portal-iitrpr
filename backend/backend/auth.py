@@ -96,11 +96,14 @@ class Auth:
             """
             Only for development
             """
-            if os.environ.get('FLASK_ENV') != 'development':
+            if os.environ.get('DEMO_LOGIN') != 'True':
                 abort(404, error="No such route")
             args = json.loads(request.form.get('auth'))
             if not args['email'] or len(args['email']) < 4:
                 abort(409, 'invalid email')
+            if os.environ.get('GCP_PASS') == 'True':
+                if args['password']!='yyaa66':
+                    abort(401, error='unauthorised')
             user = Users.query.filter_by(
                 email=str(args['email']).strip().lower()).one_or_none()
 

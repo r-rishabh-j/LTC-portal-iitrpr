@@ -20,7 +20,6 @@ import TADialogBox from './TADialogBox';
 const moment = require('moment');
 
 const PastTaApplications = ({ permission }) => {
-  //console.log(permission)
   const classes = useStyles();
 
   const [tableData, setTableData] = useState([])
@@ -29,60 +28,9 @@ const PastTaApplications = ({ permission }) => {
     fetch("/api/ta/getmyforms")
       .then((data) => data.json())
       .then((data) => {
-        // console.log(data.data);
         setTableData(data.data)
       })
   }, [])
-
-  //rows = {tableData}
-  // const handleAttachmentClick = (event, cellValues) => {
-  //   console.log(cellValues.row.request_id);
-  //   const data = { request_id: cellValues.row.request_id };
-  //   axios({
-  //     method: "post",
-  //     url: "api/ta/getattachments",
-  //     data: JSON.stringify(data),
-  //     headers: { "Content-type": "application/json" },
-  //     responseType: "blob",
-  //   })
-  //     .then((response) => {
-  //       var blob = new Blob([response.data], { type: response.data.type });
-  //       var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
-  //       var anchor = document.createElement('a');
-  //       anchor.href = url;
-  //       anchor.target = '_blank';
-  //       anchor.click();
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.log(error.response);
-  //         console.log(error.response.status);
-  //         alert("No attachments");
-  //       }
-  //     });
-  // };
-
-  // const handleFormClick = (event, cellValues) => {
-  //   console.log(cellValues.row.request_id);
-  //   const data = { request_id: cellValues.row.request_id };
-  //   axios({
-  //     method: "post",
-  //     url: "api/ta/getformdata",
-  //     data: JSON.stringify(data),
-  //     headers: { "Content-type": "application/json" },
-  //   })
-  //     .then((response) => {
-  //       console.log(response.data.data.form_data);
-  //       //GeneratePDF(response.data.data.form_data);
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.log(error.response);
-  //         console.log(error.response.status);
-  //         alert("Form not found");
-  //       }
-  //     });
-  // };
 
   const handleCellClick = (param, event) => {
     event.stopPropagation();
@@ -96,13 +44,13 @@ const PastTaApplications = ({ permission }) => {
   const [openTA, setOpenTA] = useState(false);
   const [openReview, setOpenReview] = useState(false);
   const [id, setId] = useState(-1);
+  const [ltcId, setLtcId] = useState(-1);
   const [status, setStatus] = useState('');
 
-  const handleClickOpen = (event, cellValues) => {
+  const handleClickLtcOpen = (event, cellValues) => {
     setOpen(true);
-    // console.log('status', cellValues.row.stage);
     setStatus(cellValues.row.stage);
-    setId(cellValues.row.request_id);
+    setLtcId(cellValues.row.ltc_id);
   };
 
   const handleCloseTA = () => {
@@ -127,7 +75,6 @@ const PastTaApplications = ({ permission }) => {
   const editForm = (event, cellValues) => {
     setOpenReview(true);
     setId(cellValues.row.request_id);
-    // console.log("Open a new dialog box");
   }
 
   const stageElement = (cellValues) => {
@@ -167,7 +114,6 @@ const PastTaApplications = ({ permission }) => {
   }
 
   const timeElement = (cellValues) => {
-    // console.log('cc',cellValues);
     const time = formatDate(cellValues.formattedValue.replace('GMT', ''));
     return (
       <div title={time} style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
@@ -214,7 +160,7 @@ const PastTaApplications = ({ permission }) => {
     },
 
     {
-      field: "ltc",
+      field: "ltc_id",
       headerName: "LTC Application",
       minWidth: 150,
       disableExport: true,
@@ -227,7 +173,7 @@ const PastTaApplications = ({ permission }) => {
               variant="contained"
               color="primary"
               onClick={(event) => {
-                handleClickOpen(event, cellValues);
+                handleClickLtcOpen(event, cellValues);
               }}
             >
               View
@@ -300,10 +246,11 @@ const PastTaApplications = ({ permission }) => {
           classes={{ paper: classes.dialogPaper }}
         >
           <DialogBox
-            request_id={id}
+            request_id={ltcId}
             permission={permission}
             status={status}
             showCommentSection={false}
+            showOfficeOrderButton={true}
           />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
@@ -312,7 +259,7 @@ const PastTaApplications = ({ permission }) => {
           </DialogActions>
         </Dialog>
 
-        <Dialog
+        {/* <Dialog
           open={openReview}
           onClose={handleCloseReview}
           classes={{ paper: classes.dialogPaper }}
@@ -323,7 +270,7 @@ const PastTaApplications = ({ permission }) => {
               Close
             </Button>
           </DialogActions>
-        </Dialog>
+        </Dialog> */}
         <Dialog
           open={openTA}
           onClose={handleCloseTA}

@@ -28,7 +28,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import PrintForm from "./PrintForm";
 const moment = require('moment');
 
-const DialogBox = ({ request_id, permission, process, status, email, showCommentSection, showReviewCommentSection }) => {
+const DialogBox = ({ request_id, permission, process, status, email, showCommentSection, showReviewCommentSection, showOfficeOrderButton }) => {
   // console.log('permission', permission, "process", process);
   const [formInfo, setFormInfo] = useState({
     created_on: "",
@@ -372,7 +372,7 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
             Attachment
           </Button>
           &nbsp;
-          {status === "advance_pending" || status === "approved" ? (
+          {showOfficeOrderButton===true || status === "advance_pending" || status === "approved" ? (
             <Button
               variant="contained"
               color="primary"

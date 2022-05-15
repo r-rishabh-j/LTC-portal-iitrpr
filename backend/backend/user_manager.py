@@ -121,6 +121,12 @@ class UserManager(Resource):
             if None in [name, email, department, designation]:
                 abort(400, error='invalid request')
 
+            name = str(name).strip()
+            emp_code = int(str(emp_code).strip())
+            department = str(department).strip().lower()
+            designation = str(designation).strip().lower()
+            email = str(email).strip().lower()
+
             roles = UserManager.generateRoles()
             dept_entry: Departments = Departments.query.get(department)
             if department == None:
@@ -202,7 +208,7 @@ class UserManager(Resource):
             return {'users': result}
 
     class GetDepartments(Resource):
-
+        @role_required(Permissions.admin)
         def get(self):
             analyse()
             query1 = db.session.query(Departments, Users).filter(
@@ -225,3 +231,24 @@ class UserManager(Resource):
                     'is_stage': department.is_stage
                 })
             return {'departments': result}
+
+    class AddDepartment(Resource):
+        @role_required(Permissions.admin)
+        def post(self):
+            new_dept_info = json.loads(request.form.get('dept_info'))
+            key = new_dept_info.get('key')
+            full_name = new_dept_info.get('full_name')
+
+            if None in [key, full_name]:
+                abort(400, error='invalid request')
+            
+            key = str(key).strip().lower()
+
+            dept_exits = Departments.query.get(key)
+            if dept_exits != None:
+                abort(400, error='Department Key Already Exists')
+            new_department = Departments(name=key, full_name=full_name)
+            db.session.add(new_department)
+            db.session.commit()
+
+            return {'success': 'Department Added'}

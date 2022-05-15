@@ -203,6 +203,7 @@ class TaManager():
             for ta_form in forms:
                 results.append({
                     'request_id': ta_form.request_id,
+                    'ltc_id': ta_form.ltc_id,
                     'created_on': (ta_form.created_on),
                     'stage': ta_form.stage,
                     'is_active': "Active" if ta_form.is_active else "Not Active",
@@ -241,7 +242,7 @@ class TaManager():
                     'name': user.name,
                     'created_on': form.created_on,
                     'stage': form.stage,
-                    'is_active': "Active" if form.is_active else "Not Active",
+                    'is_active': "In Progress" if form.is_active else "Completed",
                 })
             response = {'data': results}
 
@@ -358,7 +359,7 @@ class TaManager():
                             'name': applicant.name,
                             'created_on': form.created_on,
                             'stage': form.stage,
-                            'is_active': "Active" if form.is_active else "Not Active",
+                            'is_active': "In Progress" if form.is_active else "Completed",
                         })
 
             return jsonify({'pending': pending})
@@ -484,7 +485,7 @@ class TaManager():
                     'name': applicant.name,
                     'created_on': form.created_on,
                     'stage': form.stage,
-                    'is_active': "Active" if form.is_active else "Not Active",
+                    'is_active': "In Progress" if form.is_active else "Completed",
                 })
 
             for dept_log, form, applicant in new:
@@ -499,7 +500,7 @@ class TaManager():
                             'name': applicant.name,
                             'created_on': form.created_on,
                             'stage': form.stage,
-                            'is_active': "Active" if form.is_active else "Not Active",
+                            'is_active': "In Progress" if form.is_active else "Completed",
                         })
             print(previous)
             return jsonify({'previous': previous})
