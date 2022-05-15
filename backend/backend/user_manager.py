@@ -1,4 +1,5 @@
 from datetime import date, datetime
+import enum
 import os
 import json
 from . import db, filemanager
@@ -7,6 +8,7 @@ from flask_restful import Resource, abort
 from .models import Departments, StageUsers, Users, Stages
 from .role_manager import check_role, role_required, Permissions
 from . import emailmanager
+import csv
 from .analyse import analyse
 
 
@@ -115,14 +117,15 @@ class UserManager(Resource):
             designation = user_creds.get('designation')
             emp_code = user_creds.get('emp_code')
 
-            if emp_code.isspace() or emp_code == '':
+            if emp_code!=None and (emp_code.isspace() or emp_code == ''):
                 emp_code = None
 
             if None in [name, email, department, designation]:
                 abort(400, error='invalid request')
 
             name = str(name).strip()
-            emp_code = int(str(emp_code).strip())
+            if emp_code!=None:
+                emp_code = (str(emp_code).strip())
             department = str(department).strip().lower()
             designation = str(designation).strip().lower()
             email = str(email).strip().lower()
@@ -163,6 +166,80 @@ class UserManager(Resource):
                 dept_entry.dept_head = new_user.id
 
             db.session.commit()
+
+            return {'success': 'User added'}, 200
+
+    class RegisterUserFromCSV(Resource):
+        @role_required(role=Permissions.admin)
+        def post(self):
+            analyse()
+            """
+            Send post request to register user
+            """
+            user_creds = json.loads(request.form.get('user'))
+            file = request.files.get('file')
+            print('a', user_creds)
+            department = user_creds.get('department')
+            designation = user_creds.get('designation')
+
+            # with open(file) as user_file:
+            import io
+            stream = io.StringIO(file.read().decode("UTF8"), newline=None)
+            reader = csv.DictReader(stream)
+            for i, row in enumerate(reader):
+                print('hi', row)
+                name = row.get('name')
+                email = row.get('email')
+                emp_code = row.get('emp_code')
+                if emp_code!=None and (emp_code.isspace() or emp_code == ''):
+                    emp_code = None
+
+                if None in [name, email]:
+                    abort(400, error=f'invalid request. Stopped at row {i+1}')
+
+                name = str(name).strip()
+                if emp_code!=None:
+                    emp_code = (str(emp_code).strip())
+                department = str(department).strip().lower()
+                designation = str(designation).strip().lower()
+                email = str(email).strip().lower()
+
+                roles = UserManager.generateRoles()
+                dept_entry: Departments = Departments.query.get(department)
+                if department == None:
+                    abort(400, error='Invalid Department')
+                department_entry = roles[department]
+                if not (designation in department_entry['roles']):
+                    abort(400, error='Role mapping not valid')
+                if Users.query.filter_by(email=email).one_or_none() != None:
+                    abort(400, error='Email Already Exists!')
+
+                if (emp_code != None and not emp_code.isspace() and not emp_code == '') and Users.query.filter_by(employee_code=emp_code).one_or_none() != None:
+                    abort(400, error='Employee code exists!')
+
+                new_user: Users = Users(email=email, name=name, dept=department, permission=department_entry['roles'][designation]['permission'],
+                                        designation=department_entry['roles'][designation]['name'], email_pref=False, employee_code=emp_code)
+
+                db.session.add(new_user)
+                db.session.commit()
+                db.session.refresh(new_user)
+
+                if department_entry['roles'][designation].get('isStageRole') == True:
+                    print(department_entry['roles'][designation]['name'])
+                    stage_user: StageUsers = StageUsers.query.filter(
+                        StageUsers.designation == department_entry['roles'][designation]['name']).one_or_none()
+                    if stage_user == None:
+                        stage_user = StageUsers(
+                            new_user.id, department_entry['roles'][designation]['name'])
+                        db.session.add(stage_user)
+                    else:
+                        stage_user.designation = department_entry['roles'][designation]['name']
+                        stage_user.user_id = new_user.id
+
+                if department_entry['roles'][designation].get('isHead') == True:
+                    dept_entry.dept_head = new_user.id
+
+                db.session.commit()
 
             return {'success': 'User added'}, 200
 

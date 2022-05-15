@@ -184,7 +184,7 @@ const TADialogBox = ({request_id, showCommentSection, permission}) => {
       <Box display="flex" justifyContent="space-between">
         <Box text-overflow="wrap">
           <DialogTitle>
-            TA for LTC ID {formInfo.request_id}:{" "}
+            TA ID {formInfo.request_id}:{" "}
             {formInfo.form_data["name"] === undefined
               ? " "
               : formInfo.form_data["name"]}

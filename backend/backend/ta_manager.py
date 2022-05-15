@@ -397,6 +397,27 @@ class TaManager():
 
             return jsonify({'pending': pending})
 
+    class GetOfficeOrder(Resource):
+        @check_role()
+        def post(self, permission):
+            analyse()
+            request_id = request.json['request_id']
+            print(request_id)
+            if not request_id:
+                abort(404, msg='Request ID not sent')
+            approved_form: TAApproved = TAApproved.query.get(request_id)
+            if not approved_form:
+                abort(404, msg='Form not yet approved!')
+            form: TARequests = TARequests.query.get(request_id)
+            if permission == Permissions.client:
+                if form.user_id != current_user.id:
+                    return abort(403, status={'error': 'Forbidden resource'})
+            office_order: TAOfficeOrders = TAOfficeOrders.query.get(
+                request_id)
+            if office_order == None:
+                return abort(404, status={'error': 'Office order not yet generated'})
+            return filemanager.sendFile(office_order.file, office_order.filename)
+
     class UploadTaOfficeOrder(Resource):
         """
         API for uploading TA office order

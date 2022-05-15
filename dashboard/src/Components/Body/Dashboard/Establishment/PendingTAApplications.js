@@ -26,78 +26,22 @@ const PendingTAApplications = ({ permission }) => {
 
   useEffect(() => {
     axios({
-        method: "GET",
-        url: "/api/ta/pending-requests",
-        data: {},
+      method: "GET",
+      url: "/api/ta/pending-requests",
+      data: {},
+    })
+      .then((response) => {
+        console.log('aaa', response.data.pending);
+        setTableData(response.data.pending);
       })
-        .then((response) => {
-            console.log('aaa', response.data.pending);
-            setTableData(response.data.pending);
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log(error.response);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          }
-        });
-    // return fetch("/api/ta/getpastta")
-    //   .then((data) =>{ data.json()})
-    //   .then((data) => {
-    //     console.log('aaaa', data);
-    //     setTableData(data.previous)
-    //   })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
   }, [])
-
-  //rows = {tableData}
-  // const handleAttachmentClick = (event, cellValues) => {
-  //   console.log(cellValues.row.request_id);
-  //   const data = { request_id: cellValues.row.request_id };
-  //   axios({
-  //     method: "post",
-  //     url: "api/ta/getattachments",
-  //     data: JSON.stringify(data),
-  //     headers: { "Content-type": "application/json" },
-  //     responseType: "blob",
-  //   })
-  //     .then((response) => {
-  //       var blob = new Blob([response.data], { type: response.data.type });
-  //       var url = window.URL.createObjectURL(blob, { oneTimeOnly: true });
-  //       var anchor = document.createElement('a');
-  //       anchor.href = url;
-  //       anchor.target = '_blank';
-  //       anchor.click();
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.log(error.response);
-  //         console.log(error.response.status);
-  //         alert("No attachments");
-  //       }
-  //     });
-  // };
-
-  // const handleFormClick = (event, cellValues) => {
-  //   console.log(cellValues.row.request_id);
-  //   const data = { request_id: cellValues.row.request_id };
-  //   axios({
-  //     method: "post",
-  //     url: "api/ta/getformdata",
-  //     data: JSON.stringify(data),
-  //     headers: { "Content-type": "application/json" },
-  //   })
-  //     .then((response) => {
-  //       console.log(response.data.data.form_data);
-  //       //GeneratePDF(response.data.data.form_data);
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.log(error.response);
-  //         console.log(error.response.status);
-  //         alert("Form not found");
-  //       }
-  //     });
-  // };
 
   const handleCellClick = (param, event) => {
     event.stopPropagation();
@@ -109,14 +53,12 @@ const PendingTAApplications = ({ permission }) => {
 
   const [open, setOpen] = useState(false);
   const [openTA, setOpenTA] = useState(false);
-  const [openReview, setOpenReview] = useState(false);
   const [id, setId] = useState(-1);
   const [ltcId, setLtcId] = useState(-1);
   const [status, setStatus] = useState('');
 
   const handleClickLtcOpen = (event, cellValues) => {
     setOpen(true);
-    // console.log('status', cellValues.row.stage);
     setStatus(cellValues.row.stage);
     setLtcId(cellValues.row.ltc_id);
   };
@@ -136,27 +78,27 @@ const PendingTAApplications = ({ permission }) => {
     setOpen(false);
   };
 
-  const editForm = (event, cellValues) => {
-    setOpenReview(true);
-    setId(cellValues.row.request_id);
-  }
+  // const editForm = (event, cellValues) => {
+  //   setOpenReview(true);
+  //   setId(cellValues.row.request_id);
+  // }
 
-  const stageElement = (cellValues) => {
-    return (
-      (cellValues.row.stage !== 'review') ?
-        <div
-          title={cellValues.formattedValue}
-          style={{
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {cellValues.formattedValue}
-        </div> : <Button style={{ backgroundColor: "orange" }} variant="contained" onClick={(event) => { editForm(event, cellValues) }}>
-          Review</Button>
-    );
-  };
+  // const stageElement = (cellValues) => {
+  //   return (
+  //     (cellValues.row.stage !== 'review') ?
+  //       <div
+  //         title={cellValues.formattedValue}
+  //         style={{
+  //           overflow: "hidden",
+  //           whiteSpace: "nowrap",
+  //           textOverflow: "ellipsis",
+  //         }}
+  //       >
+  //         {cellValues.formattedValue}
+  //       </div> : <Button style={{ backgroundColor: "orange" }} variant="contained" onClick={(event) => { editForm(event, cellValues) }}>
+  //         Review</Button>
+  //   );
+  // };
   const cellElement = (cellValues) => {
     return (
       <div
@@ -226,9 +168,7 @@ const PendingTAApplications = ({ permission }) => {
       type: "date",
       renderCell: timeElement,
       valueGetter: (cellValues) => {
-        return cellValues.value+"+530";
-        // const time = formatDate(cellValues.value.replace("GMT", ""));
-        // return Date(moment(time).local().format("DD/MM/YYYY"));
+        return cellValues.value + "+530";
       },
     },
 
@@ -330,37 +270,18 @@ const PendingTAApplications = ({ permission }) => {
             </Button>
           </DialogActions>
         </Dialog>
-
-        {/* <Dialog
-          open={openReview}
-          onClose={handleCloseReview}
-          classes={{ paper: classes.dialogPaper }}
-        >
-          <ReviewBox request_id={id} />
-          <DialogActions>
-            <Button onClick={handleCloseReview} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog> */}
         <Dialog
           open={openTA}
           onClose={handleCloseTA}
           classes={{ paper: classes.dialogPaper }}
         >
-          {/* <DialogBox
-            request_id={id}
-            permission={permission}
-            status={status}
-            showCommentSection={false}
-          /> */}
-          <TADialogBox request_id = {id} showCommentSection={true} permission={permission}/>
+          <TADialogBox request_id={id} showCommentSection={true} permission={permission} />
           <DialogActions>
             <Button onClick={handleCloseTA} color="primary">
               Close
             </Button>
           </DialogActions>
-        </Dialog>        
+        </Dialog>
       </Paper>
       <Box minHeight="2vh"></Box>
     </>

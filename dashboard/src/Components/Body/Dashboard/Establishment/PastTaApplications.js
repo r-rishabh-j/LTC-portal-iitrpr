@@ -69,7 +69,7 @@ const PastTaApplications = ({ permission }) => {
     setStatus(cellValues.row.stage);
     setLtcId(cellValues.row.ltc_id);
   };
-  
+
   const handleCloseTA = () => {
     setOpenTA(false);
   };
@@ -290,30 +290,11 @@ const PastTaApplications = ({ permission }) => {
             </Button>
           </DialogActions>
         </Dialog>
-
-        {/* <Dialog
-          open={openReview}
-          onClose={handleCloseReview}
-          classes={{ paper: classes.dialogPaper }}
-        >
-          <ReviewBox request_id={id} />
-          <DialogActions>
-            <Button onClick={handleCloseReview} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog> */}
         <Dialog
           open={openTA}
           onClose={handleCloseTA}
           classes={{ paper: classes.dialogPaper }}
         >
-          {/* <DialogBox
-            request_id={id}
-            permission={permission}
-            status={status}
-            showCommentSection={false}
-          /> */}
           <TADialogBox request_id={id} permission={permission} />
           <DialogActions>
             <Button onClick={handleCloseTA} color="primary">

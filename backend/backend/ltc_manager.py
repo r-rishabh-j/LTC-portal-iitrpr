@@ -53,7 +53,6 @@ class LtcManager:
             # get form data
             form_data = json.loads(request.form.get('form'))
 
-            print(form_data)
             # remove key attachments (which is redudant) from form json
             form_data.pop('attachments')
             # section form fields
@@ -65,16 +64,17 @@ class LtcManager:
                 form_data['establishment'] = {
                     # "est_data_joining_date": "2022-05-02T11:02:00.000Z",
                     # "est_data_block_year": "1",
-                    "est_data_nature_last": last_est_form.get("est_data_nature_current",''),
-                    "est_data_period_last_from": last_est_form.get('est_data_period_current_from',''),
-                    "est_data_period_last_to": last_est_form.get('est_data_period_current_to',''),
-                    "est_data_last_ltc_for": last_est_form.get('est_data_current_ltc_for',''),
-                    "est_data_last_ltc_days": last_est_form.get('est_data_current_ltc_days',''),
-                    "est_data_last_earned_leave_on": last_est_form.get('est_data_current_earned_leave_on',''),
-                    "est_data_last_balance": last_est_form.get("est_data_current_balance",''),
-                    "est_data_last_encashment_adm": last_est_form.get("est_data_current_encashment_adm",''),
-                    "est_data_last_nature": last_est_form.get('est_data_current_nature',''),
+                    "est_data_nature_last": last_est_form.get("est_data_nature_current", ''),
+                    "est_data_period_last_from": (None if last_est_form.get('est_data_period_current_from', None)==None else str(last_est_form.get('est_data_period_current_from'))[:10]),
+                    "est_data_period_last_to": (None if last_est_form.get('est_data_period_current_to', None)==None else str(last_est_form.get('est_data_period_current_to'))[:10]),
+                    "est_data_last_ltc_for": last_est_form.get('est_data_current_ltc_for', ''),
+                    "est_data_last_ltc_days": last_est_form.get('est_data_current_ltc_days', ''),
+                    "est_data_last_earned_leave_on": (None if last_est_form.get('est_data_current_earned_leave_on', None)==None else str(last_est_form.get('est_data_current_earned_leave_on'))[:10]),
+                    "est_data_last_balance": last_est_form.get("est_data_current_balance", ''),
+                    "est_data_last_encashment_adm": last_est_form.get("est_data_current_encashment_adm", ''),
+                    "est_data_last_nature": last_est_form.get('est_data_current_nature', ''),
                 }
+                print(form_data['establishment'])
 
             form_data['accounts'] = {}
             # add LTC request to table
@@ -646,9 +646,13 @@ class LtcManager:
                 advance_req: AdvanceRequests = AdvanceRequests(
                     request_id=request_id)
                 db.session.add(advance_req)
+                user.addNotification(
+                    f'Officer order for LTC ID {form.request_id} has been generated. Advance Payment request sent to accounts section')
             else:
                 form.stage = Stages.approved
                 form.is_active = False
+                user.addNotification(
+                    f'Officer order for LTC ID {form.request_id} has been generated.')
                 approved_entry.approved_on = datetime.now()
 
             office_order_upload_entry: LTCOfficeOrders = LTCOfficeOrders(
@@ -708,12 +712,6 @@ class LtcManager:
             if office_order == None:
                 return abort(404, status={'error': 'Office order not yet generated'})
             return filemanager.sendFile(office_order.file, office_order.filename)
-            # attachment_path = approved_form.office_order
-            # if attachment_path == None or attachment_path == "":
-            #     return abort(404, status={'error': 'Office order not yet generated'})
-            # _, ext = os.path.splitext(attachment_path)
-            # filename = f'ltc_{request_id}_office_order'+ext
-            # return filemanager.sendFile(attachment_path, filename)
 
     class GetPendingAdvancePaymentRequests(Resource):
         @role_required(role=Permissions.accounts)
@@ -777,9 +775,7 @@ class LtcManager:
             response = {}
             response['form'] = form_data.form
             response['comments'] = form_data.comments
-
             response['signatures'] = {}
-
             response['signatures']['user'] = applicant.signature
 
             # signatures

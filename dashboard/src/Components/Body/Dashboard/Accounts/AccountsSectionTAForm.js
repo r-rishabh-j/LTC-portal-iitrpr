@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { TextField, Box, Button, Typography, Grid } from "@mui/material";
 import axios from "axios";
 
-const AccountsSectionTAForm = (acc_data, request_id, setEditState) => {
+const AccountsSectionTAForm = ({acc_data, request_id, setEditState}) => {
   const { control, handleSubmit, reset } = useForm();
   const [edit, setEdit] = useState(false);
 

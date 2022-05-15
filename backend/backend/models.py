@@ -1070,7 +1070,7 @@ class TARequests(db.Model):
             self.comments[new_stage].append(
                 self.generate_comments_template(new_stage, stage_roles)
             )
-            log: RegistrarLogs = RegistrarLogs(request_id=self.request_id)
+            log: RegistrarTALogs = RegistrarTALogs(request_id=self.request_id)
             db.session.add(log)
             applicant.addNotification(
                 f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been forwarded to Audit Section')
@@ -1079,7 +1079,7 @@ class TARequests(db.Model):
                     f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for your approval.')
             message = True, {'msg': 'Forwarded to Registrar Section'}
         elif current_stage == TARequests.Stages.registrar:
-            registrar_log: RegistrarLogs = RegistrarLogs.query.get(
+            registrar_log: RegistrarTALogs = RegistrarTALogs.query.get(
                 self.request_id)
             registrar_log.status = 'forwarded'
             registrar_log.updated_on = datetime.now()
@@ -1208,6 +1208,27 @@ class AccountsTALogs(db.Model):
     Accounts section logs for TA
     """
     __tablename__ = 'accounts_ta_logs'
+    request_id = db.Column(db.Integer, db.ForeignKey(
+        'ta_requests.request_id', ondelete='CASCADE'), primary_key=True,)
+    status = db.Column(db.String(50))
+    """
+    status: String
+    -> 'new': a new LTC request
+    -> 'forwarded': application forwarded
+    -> 'complete': application processed(approved or denied anywhere in the heirarchy)
+    """
+    updated_on = db.Column(db.DateTime)
+
+    def __init__(self, request_id):
+        self.request_id = request_id
+        self.status = ApplicationStatus.new
+        self.updated_on = datetime.now()
+
+class RegistrarTALogs(db.Model):
+    """
+    Accounts section logs for TA
+    """
+    __tablename__ = 'registrar_ta_logs'
     request_id = db.Column(db.Integer, db.ForeignKey(
         'ta_requests.request_id', ondelete='CASCADE'), primary_key=True,)
     status = db.Column(db.String(50))

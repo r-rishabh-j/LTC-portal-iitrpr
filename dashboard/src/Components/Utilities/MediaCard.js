@@ -1,44 +1,34 @@
 import React from "react";
-import {Box, Card, CardActions, CardContent, CardMedia, Button, Typography} from "@material-ui/core"
+import { Box, Card, CardActions, CardContent, CardMedia, Button, Typography } from "@material-ui/core"
 
 
 export default function MediaCard(props) {
-    console.log(props)
-  function onClk(){
+  console.log(props)
+  function onClk() {
     window.open(props.url, "_blank")
   }
   return (
-    <Card sx={{ maxWidth: 400 }}>
-      <center>
-        <CardMedia
-          component="img"
-          height="260"
-          style={{ height: "100%", width: "66%", justifyContent: "center" }}
-          image={props.image}
-          alt={props.alt}
-        />
+    <Card sx={{ maxWidth: "2px", maxWidth: "20px", display: "inline-block" }}>
 
-        <CardContent>
-          {/* <Typography gutterBottom variant="h5" component="div">
-          Lizard
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
-        </Typography> */}
-        </CardContent>
-        <CardActions>
-          <Button
-            size="medium"
-            onClick={
-              props.action === "View API analytics" ? onClk : ()=>{props.setOpen(true)}
-            }
-          >
-            {props.action}
-          </Button>
-          {/* <Button size="small">Learn More</Button> */}
-        </CardActions>
-      </center>
+      <CardMedia
+        component="img"
+        height="1"
+        style={{ height: "100%", width: "40%", justifyContent: "center" }}
+        image={props.image}
+        alt={props.alt}
+      />
+      <CardActions>
+        <Button
+          size="medium"
+          onClick={
+            props.action === "View API analytics" ? onClk : () => { props.setOpen(true) }
+          }
+        >
+          {props.action}
+        </Button>
+        {/* <Button size="small">Learn More</Button> */}
+      </CardActions>
+
     </Card>
   );
 }
