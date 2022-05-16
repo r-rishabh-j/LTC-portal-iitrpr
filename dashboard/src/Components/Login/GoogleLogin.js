@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import axios from "axios";
 import GoogleButton from 'react-google-button';
+import image from './spiraliitropar.jpg'
 
 
 const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL, REACT_APP_DEVELOPMENT } = process.env;
@@ -81,7 +82,14 @@ function GoogleLogin() {
 
   return (
     <Grid
-      style={{ backgroundColor: "#cfd8dc", minHeight: "100vh", display: "flex" }}
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        backgroundImage: `url(${image})`,
+        height: "100%",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+      }}
     >
       <Box elevation={10} className={classes.loginPage} display="flex">
         <Grid container>
@@ -170,7 +178,7 @@ function GoogleLogin() {
             </Box>
           </Grid>
 
-          <Grid item xs={6} style={{ backgroundColor: "#263238" }}>
+          <Grid item xs={6} style={{ backgroundColor: "rgba(38,50,56,0.8)" }}>
             <Box
               // display="flex"
               // justifyContent="center"

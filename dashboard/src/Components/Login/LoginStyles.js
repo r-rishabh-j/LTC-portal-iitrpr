@@ -7,7 +7,8 @@ export const useStyles = makeStyles((theme) => ({
         height: "60%",
         width: 800,
         margin: "20vh auto",
-        backgroundColor: "white"
+
+        backgroundColor: "rgba(255,255,255,0.8)"
     },
     avatar: {
         backgroundColor: teal["500"]
