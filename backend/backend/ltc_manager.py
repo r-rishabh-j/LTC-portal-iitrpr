@@ -825,3 +825,46 @@ PFA document for payment information.
                     response['signatures'][stage] = signatures
 
             return {'data': response}
+
+    class PrintOfficeOrder(Resource):
+        @role_required(role=Permissions.establishment)
+        def post(self):
+            analyse()
+            request_id = (request.json.get('request_id', None))
+            if request_id == None:
+                abort(400, error='Invalid request ID')
+            request_id = int(request_id)
+            form_data: LTCRequests = LTCRequests.query.get(request_id)
+            applicant: Users = Users.query.get(form_data.user_id)
+
+            response = {}
+            response['form_data'] = form_data.form
+            response['comments'] = form_data.comments
+            response['signatures'] = {}
+            response['signatures']['user'] = applicant.signature
+
+            department = db.session.query(Departments, Users).filter(
+                Departments.name == applicant.department, Departments.dept_head == Users.id).one_or_none()
+            if department != None:
+                dept, dept_head = department
+                response['signatures']['section_head'] = dept_head.signature
+            stages = [
+                (Stages.establishment, Permissions.establishment),
+                (Stages.audit, Permissions.audit),
+                (Stages.accounts, Permissions.accounts),
+                (Stages.registrar, Permissions.registrar),
+                (Stages.deanfa, Permissions.deanfa),
+            ]
+
+            for stage, permission in stages:
+                query = db.session.query(Users, StageUsers).join(
+                    StageUsers).filter(Users.permission == permission)
+                signatures = {}
+                approvals = form_data.getLatestCommentForStage(stage)
+                for user, stage_user in query:
+                    file = user.signature
+                    signatures[stage_user.designation] = file
+
+                response['signatures'][stage] = signatures
+
+            return {'data': response}

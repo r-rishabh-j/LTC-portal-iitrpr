@@ -136,6 +136,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/edit-stage-form')  # edit stage form(establishment, accounts)
     api.add_resource(LtcManager.PrintForm,
                      '/api/print-form')  # return form data for printing to pdf.
+    api.add_resource(LtcManager.PrintOfficeOrder,
+                     '/api/print-office-order')  # return form data for printing to pdf.
     """
     TA form
     """
