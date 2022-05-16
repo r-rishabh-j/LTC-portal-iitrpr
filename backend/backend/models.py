@@ -58,6 +58,7 @@ class Users(db.Model):
     # stores user notifications
     notifications = db.Column(MutableDict.as_mutable(JSON))
     email_pref = db.Column(db.Boolean)
+    deleted = db.Column(db.Boolean)
     """
     'notifications': {
         [
@@ -80,6 +81,7 @@ class Users(db.Model):
         self.employee_code = employee_code
         self.notifications = {'notifications': []}
         self.email_pref = email_pref
+        self.deleted = False
 
     def __repr__(self) -> str:
         return f'ID:{self.id}, {self.email}, {self.name}'
@@ -911,6 +913,7 @@ class TARequests(db.Model):
         approved = 'approved'
         declined = 'declined'
         office_order_pending = 'office_order_pending'
+        payment_pending = "payment_pending"
         availed = 'availed'
 
     def __init__(self, user_id: int, ltc_id):
@@ -1089,14 +1092,16 @@ class TARequests(db.Model):
             applicant.addNotification(
                 f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} is now approved, pending office order generation.')
             emailmanager.sendEmail(
-                applicant, f'LTC request, ID {self.request_id} is now approved',
-                emailmanager.approval_msg % (applicant.name, self.request_id)
+                applicant, f'Your TA request, ID {self.request_id} is now approved',
+                emailmanager.ta_approval_msg % (applicant.name, self.request_id, self.ltc_id)
             )
             # TODO: send notification to establishment section for office order generation!
             est_stage_roles = get_stage_roles(TARequests.Stages.establishment)
             applicant.addNotification(
                 f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for office order generation.')
-
+            for role in est_stage_roles:
+                role.addNotification(
+                    f'TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been sent for your office order generation.')
             message = True, {'msg': 'TA Approved'}
         elif current_stage == 'approved':
             message = False, {'msg': 'Already Approved'}
@@ -1125,7 +1130,7 @@ class TARequests(db.Model):
         applicant.addNotification(
             f'Your TA request, ID {self.request_id} for LTC ID {self.ltc_id} has been declined.', level='error')
 
-        emailmanager.sendEmail(applicant, f'TA Request ID {self.request_id} Declined', emailmanager.decline_msg % (
+        emailmanager.sendEmail(applicant, f'TA Request ID {self.request_id} Declined', emailmanager.ta_decline_msg % (
             applicant.name, self.request_id, self.ltc_id))
 
 

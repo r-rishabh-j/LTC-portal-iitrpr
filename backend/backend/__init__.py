@@ -84,10 +84,16 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/admin/getroles')  # upload signature
     api.add_resource(UserManager.GetUsers,
                      '/api/admin/getusers')  # upload signature
+    api.add_resource(UserManager.AddDepartment,
+                     '/api/admin/add-department')  # upload signature
     api.add_resource(UserManager.GetDepartments,
                      '/api/admin/getdepartments')  # upload signature
     api.add_resource(UserManager.RegisterUserFromCSV,
                      '/api/admin/register-from-csv')
+    api.add_resource(UserManager.EditUser,
+                     '/api/admin/edit-user')
+    api.add_resource(UserManager.FetchUserByEmail,
+                     '/api/admin/fetch-user')
     api.add_resource(LtcManager.GetLtcFormData,
                      '/api/getformdata')  # get form data
     # get basic form data for display on tables
@@ -128,7 +134,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/resolve-review')  # resolve review requests
     api.add_resource(LtcManager.EditStageForm,
                      '/api/edit-stage-form')  # edit stage form(establishment, accounts)
-    api.add_resource(LtcManager.PrintForm, 
+    api.add_resource(LtcManager.PrintForm,
                      '/api/print-form')  # return form data for printing to pdf.
     """
     TA form
@@ -159,6 +165,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     # fetch pending office orders
     api.add_resource(TaManager.GetPendingTaOfficeOrderRequests,
                      '/api/ta/pending-office-orders')
+    api.add_resource(TaManager.GetPendingTaPaymentRequests,
+                     '/api/ta/pending-payment-requests')
     # upload office order
     api.add_resource(TaManager.UploadTaOfficeOrder,
                      '/api/ta/upload-office-order')

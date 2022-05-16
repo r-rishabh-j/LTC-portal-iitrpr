@@ -94,14 +94,10 @@ const LTCforTA = ({ profileInfo }) => {
   };
 
   const [open, setOpen] = useState(false);
-  const [openReview, setOpenReview] = useState(false);
   const [id, setId] = useState(-1);
-  const [status, setStatus] = useState("");
 
   const handleClickOpen = (event, cellValues) => {
     setOpen(true);
-    // console.log("status", cellValues.row.stage);
-    setStatus(cellValues.row.stage);
     setId(cellValues.row.request_id);
   };
 
@@ -115,40 +111,37 @@ const LTCforTA = ({ profileInfo }) => {
     setOpen(false);
   };
 
-  const handleCloseReview = () => {
-    setOpenReview(false);
-  };
 
-  const editForm = (event, cellValues) => {
-    setOpenReview(true);
-    setId(cellValues.row.request_id);
-    // console.log("Open a new dialog box");
-  };
+  // const editForm = (event, cellValues) => {
+  //   setOpenReview(true);
+  //   setId(cellValues.row.request_id);
+  //   // console.log("Open a new dialog box");
+  // };
 
-  const stageElement = (cellValues) => {
-    return cellValues.row.stage !== "review" ? (
-      <div
-        title={cellValues.formattedValue}
-        style={{
-          overflow: "hidden",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-        }}
-      >
-        {cellValues.formattedValue}
-      </div>
-    ) : (
-      <Button
-        style={{ backgroundColor: "orange" }}
-        variant="contained"
-        onClick={(event) => {
-          editForm(event, cellValues);
-        }}
-      >
-        Review
-      </Button>
-    );
-  };
+  // const stageElement = (cellValues) => {
+  //   return cellValues.row.stage !== "review" ? (
+  //     <div
+  //       title={cellValues.formattedValue}
+  //       style={{
+  //         overflow: "hidden",
+  //         whiteSpace: "nowrap",
+  //         textOverflow: "ellipsis",
+  //       }}
+  //     >
+  //       {cellValues.formattedValue}
+  //     </div>
+  //   ) : (
+  //     <Button
+  //       style={{ backgroundColor: "orange" }}
+  //       variant="contained"
+  //       onClick={(event) => {
+  //         editForm(event, cellValues);
+  //       }}
+  //     >
+  //       Review
+  //     </Button>
+  //   );
+  // };
   const cellElement = (cellValues) => {
     return (
       <div
@@ -310,24 +303,11 @@ const LTCforTA = ({ profileInfo }) => {
               <DialogBox
                 request_id={id}
                 permission={profileInfo.permission}
-                status={status}
+                status={"approved"}
                 showCommentSection={false}
               />
               <DialogActions>
                 <Button onClick={handleClose} color="primary">
-                  Close
-                </Button>
-              </DialogActions>
-            </Dialog>
-
-            <Dialog
-              open={openReview}
-              onClose={handleCloseReview}
-              classes={{ paper: classes.dialogPaper }}
-            >
-              <ReviewBox request_id={id} />
-              <DialogActions>
-                <Button onClick={handleCloseReview} color="primary">
                   Close
                 </Button>
               </DialogActions>

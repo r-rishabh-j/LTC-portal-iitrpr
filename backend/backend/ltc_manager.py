@@ -11,7 +11,7 @@ from flask_restful import Resource, abort, fields
 from .models import LTCOfficeOrders, LTCProofUploads, StageUsers, Stages
 from .role_manager import Permissions, role_required, roles_required, check_role
 from .models import ApplicationStatus, EstablishmentLogs, EstablishmentReview, LTCApproved,\
-    Users, LTCRequests, Departments, AdvanceRequests
+    Users, LTCRequests, Departments, AdvanceRequests, get_stage_roles
 from . import emailmanager
 from . import MAX_UPLOAD_SIZE
 
@@ -65,11 +65,11 @@ class LtcManager:
                     # "est_data_joining_date": "2022-05-02T11:02:00.000Z",
                     # "est_data_block_year": "1",
                     "est_data_nature_last": last_est_form.get("est_data_nature_current", ''),
-                    "est_data_period_last_from": (None if last_est_form.get('est_data_period_current_from', None)==None else str(last_est_form.get('est_data_period_current_from'))[:10]),
-                    "est_data_period_last_to": (None if last_est_form.get('est_data_period_current_to', None)==None else str(last_est_form.get('est_data_period_current_to'))[:10]),
+                    "est_data_period_last_from": (None if last_est_form.get('est_data_period_current_from', None) == None else str(last_est_form.get('est_data_period_current_from'))[:10]),
+                    "est_data_period_last_to": (None if last_est_form.get('est_data_period_current_to', None) == None else str(last_est_form.get('est_data_period_current_to'))[:10]),
                     "est_data_last_ltc_for": last_est_form.get('est_data_current_ltc_for', ''),
                     "est_data_last_ltc_days": last_est_form.get('est_data_current_ltc_days', ''),
-                    "est_data_last_earned_leave_on": (None if last_est_form.get('est_data_current_earned_leave_on', None)==None else str(last_est_form.get('est_data_current_earned_leave_on'))[:10]),
+                    "est_data_last_earned_leave_on": (None if last_est_form.get('est_data_current_earned_leave_on', None) == None else str(last_est_form.get('est_data_current_earned_leave_on'))[:10]),
                     "est_data_last_balance": last_est_form.get("est_data_current_balance", ''),
                     "est_data_last_encashment_adm": last_est_form.get("est_data_current_encashment_adm", ''),
                     "est_data_last_nature": last_est_form.get('est_data_current_nature', ''),
@@ -438,6 +438,7 @@ class LtcManager:
                         'name': applicant.name,
                         'created_on': form.created_on,
                         'received_from': review.received_from,
+                        'status': review.status
                     }
                 )
 
@@ -648,6 +649,10 @@ class LtcManager:
                 db.session.add(advance_req)
                 user.addNotification(
                     f'Officer order for LTC ID {form.request_id} has been generated. Advance Payment request sent to accounts section')
+                acc_roles = get_stage_roles(Stages.accounts)
+                for acc_user in acc_roles:
+                    acc_user.addNotification(
+                        f'LTC ID {request_id} sent for advance payment')
             else:
                 form.stage = Stages.approved
                 form.is_active = False
@@ -754,6 +759,16 @@ class LtcManager:
             form: LTCRequests = LTCRequests.query.get(request_id)
             form.stage = Stages.approved
             form.is_active = False
+            applicant: Users = Users.query.get(form.user_id)
+            applicant.addNotification(
+                f'Advance Payment of ₹{amount} for LTC ID {request_id} issued. Check email for more info')
+            emailmanager.sendMailWithCC([applicant], [],
+                                        f'Advance Payment for LTC ID {request_id} issued',
+                                        f"""Hello {applicant.name}
+Advance payment of amount ₹{amount} has been issued for your LTC Application ID {request_id}. 
+PFA document for payment information.
+            """, (adv_req.payment_proof_filename, adv_req.payment_proof)
+            )
             db.session.commit()
             return jsonify({"success": "uploaded proofs"})
 
@@ -799,10 +814,12 @@ class LtcManager:
                     signatures = {}
                     approvals = form_data.getLatestCommentForStage(stage)
                     for user, stage_user in query:
+                        print(user.email)
                         if approvals[user.email] == True:
                             file = user.signature
                         else:
                             file = None
+                        # file = user.signature
                         signatures[stage_user.designation] = file
 
                     response['signatures'][stage] = signatures

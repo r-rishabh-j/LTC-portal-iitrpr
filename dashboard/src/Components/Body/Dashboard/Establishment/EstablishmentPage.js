@@ -14,6 +14,7 @@ import UploadOfficeOrder from './UploadOfficeOrder';
 import { ProfilePage } from '../Profile/ProfilePage';
 import PastTaApplications from './PastTaApplications';
 import PendingTAApplications from './PendingTAApplications';
+import UploadTAOfficeOrder from './UploadTAOfficeOrder';
 
 export default function EstablishmentPage(props){
     const classes = useStyles();
@@ -59,6 +60,7 @@ export default function EstablishmentPage(props){
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="/past-ta" element={<PastTaApplications permission={props.profileInfo.permission} />}></Route>
           <Route path="/new-ta" element={<PendingTAApplications permission={props.profileInfo.permission} />}></Route>
+          <Route path="/office_orders-ta" element={<UploadTAOfficeOrder permission={props.profileInfo.permission} />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>
       </Box>

@@ -14,6 +14,7 @@ import axios from "axios";
 import { ProfilePage } from '../Body/Dashboard/Profile/ProfilePage';
 import PastTaApplications from '../Body/Dashboard/PastTaApplications';
 import LTCforTA from '../Body/Dashboard/LTCforTA';
+import HowTo from '../Utilities/HowTo';
 
 export default function HeaderComponent(props) {
   const classes = useStyles();
@@ -73,7 +74,7 @@ export default function HeaderComponent(props) {
             path= "/past-ta"
             element={<PastTaApplications permission={props.profileInfo.permission} />}
           ></Route>
-
+          <Route path='/how-to' element={<HowTo/>}></Route>
           <Route path="/logout" element={<Navigate to="/" />}></Route>
           <Route path="*" element={<Home />}></Route>
         </Routes>

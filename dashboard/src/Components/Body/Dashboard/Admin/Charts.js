@@ -14,6 +14,7 @@ import MediaCard from '../../../Utilities/MediaCard';
 import { useStyles } from "../DataGridStyles";
 import AddUser from './AddUser';
 import AddUserCsv from './AddUserCsv';
+import AddDepartment from './AddDepartment';
 
 const { REACT_APP_BASE_BACKEND_URL } = process.env;
 
@@ -21,11 +22,15 @@ function Charts() {
   const classes = useStyles();
   const [openAddUser, setOpenAddUser] = useState(false);
   const [openAddUserCsv, setOpenAddUserCsv] = useState(false);
+  const [openAddDept, setOpenAddDept] = useState(false);
   const handleCloseAddUser = () => {
     setOpenAddUser(false);
   };
   const handleCloseAddUserCsv = () => {
     setOpenAddUserCsv(false);
+  };
+  const handleCloseAddDept = () => {
+    setOpenAddDept(false);
   };
 
 
@@ -133,9 +138,9 @@ function Charts() {
           <Grid item xs>
             <MediaCard
               image={require("./add_user.png")}
-              alt="Add Users in bulk"
-              action="Add Users in Bulk"
-              setOpen={setOpenAddUserCsv}
+              alt="Add Department"
+              action="Add Department"
+              setOpen={setOpenAddDept}
             />
           </Grid>
           <Grid item xs>
@@ -169,6 +174,19 @@ function Charts() {
           <AddUserCsv />
           <DialogActions>
             <Button onClick={handleCloseAddUserCsv} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openAddDept}
+          onClose={handleCloseAddDept}
+          classes={{ paper: classes.addUserDialogPaper }}
+          style={{ minWidth: "80vw" }}
+        >
+          <AddDepartment />
+          <DialogActions>
+            <Button onClick={handleCloseAddDept} color="primary">
               Close
             </Button>
           </DialogActions>

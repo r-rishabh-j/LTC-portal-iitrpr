@@ -84,7 +84,7 @@ class Auth:
             print(googleResponse)
             email = str(googleResponse['email'])
             user: Users = Users.lookUpByEmail(email)
-            if not user:
+            if not user or user.deleted:
                 return make_response(redirect(os.environ.get('FRONTEND_URL')))
             user.picture = googleResponse['picture']
             access_tk = create_access_token(identity=user)
@@ -108,7 +108,7 @@ class Auth:
             user = Users.query.filter_by(
                 email=str(args['email']).strip().lower()).one_or_none()
 
-            if not user:
+            if not user or user.deleted:
                 abort(409, message="user does not exist")
 
             access_tk = create_access_token(identity=user)
@@ -124,7 +124,7 @@ class Auth:
                 abort(409, error='invalid email')
             user: Users = Users.query.filter_by(
                 email=str(email).strip().lower()).one_or_none()
-            if not user:
+            if not user or user.deleted:
                 abort(409, error="User not registered")
 
             previous_otp_entry: UserOTP = UserOTP.query.get(user.email)
@@ -157,7 +157,7 @@ class Auth:
                 abort(400, error='unauthorized')
             user: Users = Users.query.filter(
                 Users.email == email).one_or_none()
-            if not user:
+            if not user or user.deleted:
                 abort(404, error='Invalid Email')
             otp_entry: UserOTP = UserOTP.query.get(email)
             if otp_entry == None:

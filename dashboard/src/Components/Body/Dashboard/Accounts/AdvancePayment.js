@@ -206,7 +206,7 @@ function AdvancePayments() {
           onClose={handleformClose}
           classes={{ paper: classes.dialogPaper }}
         >
-          <DialogBox request_id={id} />
+          <DialogBox request_id={id} showOfficeOrderButton={true}/>
           <DialogActions>
             <Button onClick={handleformClose} color="primary">
               Close
@@ -219,7 +219,7 @@ function AdvancePayments() {
           onClose={handleClose}
           classes={{ paper: classes.advPaymentDialogPaper }}
         >
-          <AdvancePaymentDialogBox request_id={id} />
+          <AdvancePaymentDialogBox request_id={id} api='/api/update-advance-payment'/>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close

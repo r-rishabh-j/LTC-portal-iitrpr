@@ -3,7 +3,6 @@ import { Button, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem } fr
 import HistoryIcon from "@material-ui/icons/History";
 import HomeIcon from "@material-ui/icons/Home";
 import AddIcon from "@material-ui/icons/Add";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import NewReleasesIcon from "@material-ui/icons/NewReleases";
 import RateReviewIcon from "@material-ui/icons/RateReview";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -14,9 +13,10 @@ import { useStyles } from './HeaderStyles';
 import Logout from '../Body/Dashboard/Logout';
 import { Box, Typography } from '@material-ui/core';
 import DomainIcon from '@material-ui/icons/Domain';
-import { blueGrey, blue } from "@material-ui/core/colors";
+import { blueGrey } from "@material-ui/core/colors";
 import EmailIcon from '@material-ui/icons/Email';
 import Divider from '@mui/material/Divider';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 
 export default function SideNavData({ handleDrawerClose, userType, profileInfo }) {
@@ -42,6 +42,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
     { label: "Home", link: ["/home"], icon: <HomeIcon />, popup: false },
     { label: "New Application", link: ["/create", "/ta"], icon: <AddIcon /> , popup: true},
     { label: "Past Applications", link: ["/past", "/past-ta"], icon: <HistoryIcon />, popup: true },
+    { label: "Help", link: ["/how-to"], icon: <HelpOutlineIcon />, popup: false },
 
     //{ label: "Logout", link: "/logout", icon: <ExitToAppIcon /> },
   ];
@@ -97,16 +98,21 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
       link:[ "/advance-payment"],
       icon: <AccountBalanceIcon />,
     },
+    {
+      label: "TA Payments",
+      link:[ "/ta-payments"],
+      icon: <AccountBalanceIcon />,
+    },
   ];
 
   const deanfaList = [
     { label: "Home", link: ["/home"], icon: <HomeIcon /> },
 
-    { label: "New Applications", link: ["/new", "/new-ta"], icon: <NewReleasesIcon />, popup: true },
+    { label: "New Applications", link: ["/new"], icon: <NewReleasesIcon />, popup: false },
     {
       label: "Past Applications",
-      link: ["/past", "/past-ta"],
-      icon: <HistoryIcon />, popup: true
+      link: ["/past"],
+      icon: <HistoryIcon />, popup: false
     },
 
   ];

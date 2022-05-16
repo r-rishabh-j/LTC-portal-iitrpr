@@ -54,7 +54,8 @@ const AddUser = () => {
       data: formData,
     })
       .then((response) => {
-        alert('User added!')
+        alert('User added!');
+        window.location.reload();
       })
       .catch((error) => {
         if (error.response) {

@@ -217,7 +217,7 @@ const UploadOfficeOrder = ({ permission }) => {
         style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor: '#263238' }}
       >
         <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
-          Upload Office order
+          Upload LTC Office order
         </Typography>
       </Paper>
       <Paper
@@ -254,7 +254,7 @@ const UploadOfficeOrder = ({ permission }) => {
           onClose={handleClose}
           classes={{ paper: classes.uploadDialogPaper }}
         >
-          <UploadDialogBox request_id={id} />
+          <UploadDialogBox request_id={id} api={"/api/upload-office-order"} />
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Close
