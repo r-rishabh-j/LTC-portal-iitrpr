@@ -285,7 +285,7 @@ class UserManager(Resource):
     class FetchUserByEmail(Resource):
         @role_required(role=Permissions.admin)
         def post(self):
-            user_creds = json.loads(request.form.get('user_creds'))
+            user_creds = (request.json.get('user_creds'))
             email = user_creds.get('email')
             if not email:
                 abort(400, error='email not sent')
@@ -298,6 +298,7 @@ class UserManager(Resource):
                     'email': user.email,
                     'id': user.id,
                     'name': user.name,
+                    'department' : user.department,
                     'designation': user.designation,
                     'emp_code':user.employee_code
                 }
@@ -307,8 +308,8 @@ class UserManager(Resource):
         @role_required(role=Permissions.admin)
         def post(self):
             analyse()
-            new_user_creds = json.loads(request.form.get('new_user_creds'))
-            old_user_creds = json.loads(request.form.get('old_user_creds'))
+            new_user_creds = request.json.get('new_user_creds')
+            old_user_creds = request.json.get('old_user_creds')
 
             old_email = old_user_creds.get('email')
             if not old_email:
@@ -319,7 +320,8 @@ class UserManager(Resource):
             new_email = new_user_creds.get('email')
             name = new_user_creds.get('name')
             designation = new_user_creds.get('designation')
-            emp_code = new_user_creds.get('emp_code')
+            emp_code = str(new_user_creds.get('emp_code'))
+            print('emp', type(emp_code))
 
             if None in [new_email, name, designation]:
                 abort(400, error='Invalid request')
@@ -341,7 +343,7 @@ class UserManager(Resource):
         @role_required(role=Permissions.admin)
         def post(self):
             analyse()
-            user_creds = json.loads(request.form.get('user'))
+            user_creds = request.json.get('user_creds')
             email = user_creds.get('email')
             if not email:
                 abort(400, error='Invalid request')
