@@ -17,10 +17,12 @@ import {
 } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
 import InfoIcon from "@material-ui/icons/Info";
+import ReactToPrint from "react-to-print";
 import { useForm } from "react-hook-form";
 import { FormInputText } from "../../Utilities/FormInputText";
 import { FormInputRadio } from "../../Utilities/FormInputRadio";
 import AccountsSectionTAForm from './Accounts/AccountsSectionTAForm';
+import PrintTAForm from './PrintTAForm';
 const moment = require("moment");
 
 const TADialogBox = ({request_id, showCommentSection, permission, status}) => {
@@ -251,15 +253,15 @@ const printComponentRef = useRef();
           </DialogTitle>
         </Box>
         <Box margin="2vh 2vh 0 0" display="flex" justifyContent="right">
-          {/* <ReactToPrint
-            trigger={() => ( */}
+          <ReactToPrint
+            trigger={() => (
           <Button variant="contained" color="primary">
             PDF
           </Button>
-          {/* )}
+          )}
             content={() => printComponentRef.current}
             pageStyle={"@page {size: A4; margin: 200mm !important}"}
-          /> */}
+          />
           {/* <Button variant="contained" color="primary">
             
             PDF
@@ -290,9 +292,9 @@ const printComponentRef = useRef();
         </Box>
       </Box>
       <DialogContent>
-        {/* <div style={{ display: "none" }}>
-          <PrintForm ref={printComponentRef} request_id={request_id} />
-        </div> */}
+        <div style={{ display: "none" }}>
+          <PrintTAForm ref={printComponentRef} request_id={request_id} />
+        </div>
         {/* <DialogContentText>hello</DialogContentText> */}
         {/* <TextField label="Field" name = "Field" value = {formInfo.created_on}/> */}
         <Box
