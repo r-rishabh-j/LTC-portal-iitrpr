@@ -179,12 +179,6 @@ const UploadTAOfficeOrder = ({ permission }) => {
               handleClickOpen(cellValues);
             })
           },
-          {
-            text: "Generate",
-            action: (() => {
-              handleTextClickOpen(cellValues)
-            })
-          },
         ]
         return (
           <ButtonDropDown

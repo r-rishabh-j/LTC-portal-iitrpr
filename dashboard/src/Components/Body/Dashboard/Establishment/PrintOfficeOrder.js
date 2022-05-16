@@ -6,7 +6,7 @@ import {
 } from "@material-ui/core";
 
 const PrintOfficeOrder = forwardRef((props, ref) => {
-
+  console.log('sign',props.signature)
   let today = new Date().toISOString().slice(0, 10)
 
   return (
@@ -53,17 +53,71 @@ const PrintOfficeOrder = forwardRef((props, ref) => {
       </Box>
       <Box
         display="flex"
+        justifyContent="right">
+      
+      {props.signature !== undefined &&
+        props.signature.establishment !== undefined &&
+        props.signature.establishment !== null &&
+        props.signature.establishment[
+        "Establishment Deputy Registrar"
+        ] !== null &&
+        props.signature.establishment[
+        "Establishment Deputy Registrar"
+        ] !== undefined ? (
+        <img
+          src={`data:image/jpeg;base64,${props.signature.establishment[
+            "Establishment Deputy Registrar"
+          ].slice(2, -1)}`}
+          width="120px"
+        />
+      ) : (
+        <Box minWidth={"120px"}></Box>
+      )}
+      </Box>
+      <Box
+        display="flex"
         justifyContent="right"
-        style={{ margin: "4vh 0 0 0" }}
+        style={{ margin: "1vh 0 0 0" }}
       >
-        Signature
+        Deputy Registrar
       </Box>
       <Box
         display="flex"
         justifyContent="left"
         style={{ margin: "5vh 0 0 0" }}
       >
-        <Typography>Copy to:-<br/>1. Dean (Faculty Affairs & Administration)<br/>2. Head, {props.dept}<br/>3. {props.self}<br/>4. Assistant Registrar (Accounts)<br/> 5. Personal File - {props.name}</Typography>
+        <Typography>Copy to:-<br />1. Dean (Faculty Affairs & Administration)<br />2. Head, {props.dept}<br />3. {props.self}<br />4. Assistant Registrar (Accounts)<br /> 5. Personal File - {props.name}</Typography>
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="right">
+      
+      {props.signature !== undefined &&
+        props.signature.establishment !== undefined &&
+        props.signature.establishment !== null &&
+        props.signature.establishment[
+        "Establishment Deputy Registrar"
+        ] !== null &&
+        props.signature.establishment[
+        "Establishment Deputy Registrar"
+        ] !== undefined ? (
+        <img
+          src={`data:image/jpeg;base64,${props.signature.establishment[
+            "Establishment Deputy Registrar"
+          ].slice(2, -1)}`}
+          width="120px"
+        />
+      ) : (
+        <Box minWidth={"120px"}></Box>
+
+      )}
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="right"
+        style={{ margin: "1vh 0 0 0" }}
+      >
+        Deputy Registrar
       </Box>
     </div>
   );

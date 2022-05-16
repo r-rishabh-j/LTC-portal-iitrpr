@@ -644,7 +644,7 @@ PFA document for payment information.
             response['signatures']['user'] = applicant.signature
 
             # signatures
-            if form_data.stage in [Stages.approved, Stages.advance_pending]:
+            if form_data.stage in [TARequests.Stages.availed, TARequests.Stages.payment_pending]:
                 department = db.session.query(Departments, Users).filter(
                     Departments.name == applicant.department, Departments.dept_head == Users.id).one_or_none()
                 if department != None:
@@ -667,6 +667,7 @@ PFA document for payment information.
                             file = user.signature
                         else:
                             file = None
+                        # file = user.signature
                         signatures[stage_user.designation] = file
 
                     response['signatures'][stage] = signatures

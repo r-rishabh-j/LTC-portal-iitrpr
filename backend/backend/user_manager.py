@@ -1,13 +1,9 @@
-from datetime import date, datetime
-import enum
-import os
 import json
-from . import db, filemanager
-from flask import jsonify, request, make_response, redirect
+from . import db
+from flask import  request
 from flask_restful import Resource, abort
 from .models import Departments, StageUsers, Users, Stages
-from .role_manager import check_role, role_required, Permissions
-from . import emailmanager
+from .role_manager import  role_required, Permissions
 import csv
 from .analyse import analyse
 import io
@@ -109,6 +105,16 @@ class UserManager(Resource):
             analyse()
             """
             Send post request to register user
+            format: 
+            {
+                user:{
+                    name:,
+                    email:,
+                    department:,
+                    designation:, 
+                    emp_code:,
+                }
+            }
             """
             user_creds = json.loads(request.form.get('user'))
             print('a', user_creds)
@@ -175,11 +181,21 @@ class UserManager(Resource):
         def post(self):
             analyse()
             """
-            Send post request to register user
+            Send post request to register user.
+            csv format:
+
+            name, email, emp_code
+
+            json format:
+            {
+                user:{
+                    designation:,
+                    department:,
+                }
+            }
             """
             user_creds = json.loads(request.form.get('user'))
             file = request.files.get('file')
-            print('a', user_creds)
             department = user_creds.get('department')
             designation = user_creds.get('designation')
 
@@ -189,6 +205,9 @@ class UserManager(Resource):
             for row in (reader):
                 rows.append(row)
             print(rows)
+            """
+            Iterate over rows and verify format and entries
+            """
             for i, row in enumerate(rows):
                 name = row.get('name')
                 email = row.get('email')
@@ -219,6 +238,9 @@ class UserManager(Resource):
                 if (emp_code != None and not emp_code.isspace() and not emp_code == '') and Users.query.filter_by(employee_code=emp_code).one_or_none() != None:
                     abort(400, error=f'Employee code exists! Stopped at row {i+1}')
 
+            """
+            Add users
+            """
             for i, row in enumerate(rows):
                 name = row.get('name')
                 email = row.get('email')
@@ -276,6 +298,9 @@ class UserManager(Resource):
             return {'success': 'Users added'}, 200
 
     class GetRoleMapping(Resource):
+        """
+        Fetch valid role mappings
+        """
         @role_required(role=Permissions.admin)
         def get(self):
             analyse()
@@ -283,6 +308,9 @@ class UserManager(Resource):
             return {'role_mapping': roles}
 
     class FetchUserByEmail(Resource):
+        """
+        Fetch user metadata from email
+        """
         @role_required(role=Permissions.admin)
         def post(self):
             user_creds = (request.json.get('user_creds'))
@@ -305,6 +333,21 @@ class UserManager(Resource):
             }
 
     class EditUser(Resource):
+        """
+        Edit user:
+        format:
+        {
+            old_user_creds:{
+                'email':
+            }
+            new_user_creds:{
+                'email':,
+                'name':,
+                'designation':,
+                'emp_code':,
+            }
+        }
+        """
         @role_required(role=Permissions.admin)
         def post(self):
             analyse()
@@ -340,6 +383,15 @@ class UserManager(Resource):
             return {'success': 'Edited User'}
 
     class DropUser(Resource):
+        """
+        Delete user.
+        format:
+        {
+            user_creds:{
+                email:,
+            }
+        }
+        """
         @role_required(role=Permissions.admin)
         def post(self):
             analyse()
@@ -356,13 +408,14 @@ class UserManager(Resource):
             return {'success': 'User deleted'}
 
     class GetUsers(Resource):
+        """
+        Fetch all users
+        """
         @role_required(role=Permissions.admin)
         def get(self):
             analyse()
-            # query = db.session.query(Users, Departments).join(Departments).all()
             query = db.session.query(Users, Departments).filter(
-                Users.department == Departments.name)
-            # users = Users.query.all()
+                Users.department == Departments.name, Users.deleted==False)
             result = []
             for user, department in query:
                 user: Users
@@ -378,6 +431,9 @@ class UserManager(Resource):
             return {'users': result}
 
     class GetDepartments(Resource):
+        """
+        Fetch all departments along with HOD id
+        """
         @role_required(Permissions.admin)
         def get(self):
             analyse()
@@ -403,6 +459,15 @@ class UserManager(Resource):
             return {'departments': result}
 
     class AddDepartment(Resource):
+        """
+        Add department to database.
+        format:{
+            'dept_info':{
+                key:,
+                full_name:,
+            }
+        }
+        """
         @role_required(Permissions.admin)
         def post(self):
             new_dept_info = json.loads(request.form.get('dept_info'))

@@ -28,6 +28,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import PrintForm from "./PrintForm";
 const moment = require('moment');
 
+/**
+ * 
+ * @description: Contains code for viewing form in dialog box along with stage propagation fields. 
+ * @returns 
+ */
+
 const DialogBox = ({ request_id, permission, process, status, email, showCommentSection, showReviewCommentSection, showOfficeOrderButton }) => {
   // console.log('permission', permission, "process", process);
   const [formInfo, setFormInfo] = useState({
@@ -136,6 +142,9 @@ const DialogBox = ({ request_id, permission, process, status, email, showComment
 
 
   function formatDate(date) {
+    if (date===null){
+      return null;
+    }
     const d = moment(date).format("DD-MM-YYYY");
     return d;
   }

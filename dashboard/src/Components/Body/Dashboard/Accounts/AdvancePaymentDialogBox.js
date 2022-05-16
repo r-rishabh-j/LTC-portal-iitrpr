@@ -55,7 +55,7 @@ const AdvancePaymentDialogBox = ({ request_id, api }) => {
     }
     return (
         <>
-            <DialogTitle>Advance Payment Details</DialogTitle>
+            <DialogTitle>Upload Payment Details</DialogTitle>
             <form onSubmit={handleSubmit(onClick)}>
                 <DialogContent>
                     <FormInputNumber

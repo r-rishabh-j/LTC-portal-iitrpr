@@ -14,6 +14,14 @@ import axios from "axios";
 
 const moment = require("moment");
 
+
+/**
+ * 
+ * @description: Print TA form to pdf 
+ * @returns 
+ */
+
+
 function formatDate(date) {
   const d = moment(date).format("DD-MM-YYYY");
   return d;
@@ -639,8 +647,42 @@ const PrintTAForm = forwardRef((props, ref) => {
             </Typography>
           </ul>
         </Box>
+        <Box
+         display="flex"
+         justifyContent="right"
+        >
+        {formInfo.signatures !== undefined &&
+          formInfo.signatures.user !== undefined &&
+          formInfo.signatures.user !== null ? (
+            <img
+              src={`data:image/jpeg;base64,${formInfo.signatures.user.slice(2, -1)}`}
+              width="120px"
+            />
+          ) : (
+            // <div width="175px"/>
+            <Box minWidth={"120px"}></Box>
+
+          )}
+        </Box>
         <Box display="flex" justifyContent="right">
           <Typography ariant="body2">Signature of the Applicant</Typography>
+        </Box>
+        <Box
+         display="flex"
+         justifyContent="left"
+        >
+        {formInfo.signatures !== undefined &&
+          formInfo.signatures.section_head !== undefined &&
+          formInfo.signatures.section_head !== null ? (
+            <img
+              src={`data:image/jpeg;base64,${formInfo.signatures.section_head.slice(2, -1)}`}
+              width="120px"
+            />
+          ) : (
+            // <div width="175px"/>
+            <Box minWidth={"120px"}></Box>
+
+          )}
         </Box>
         <Typography>Journey verified and forwarded.</Typography>
         <Typography style={{ margin: "2vh 0 0 0" }}>
@@ -1027,43 +1069,45 @@ const PrintTAForm = forwardRef((props, ref) => {
         <Box
           display="flex"
           justifyContent="space-between"
-          style={{ margin: "0 0 0 0" }}
+          style={{ margin: "2vh 0 0 0" }}
         >
-          {/* {formInfo.signatures !== undefined &&
-          formInfo.signatures.establishment !== undefined &&
-          formInfo.signatures.establishment !== null &&
-          formInfo.signatures.establishment[
-            "Establishment Junior Assistant"
+          {formInfo.signatures !== undefined &&
+          formInfo.signatures.audit !== undefined &&
+          formInfo.signatures.audit !== null &&
+          formInfo.signatures.audit[
+            "Assistant Audit Officer"
           ] !== null &&
-          formInfo.signatures.establishment[
-            "Establishment Junior Assistant"
+          formInfo.signatures.audit[
+            "Assistant Audit Officer"
           ] !== undefined ? (
             <img
-              src={`data:image/jpeg;base64,${formInfo.signatures.establishment[
-                "Establishment Junior Assistant"
+              src={`data:image/jpeg;base64,${formInfo.signatures.audit[
+                "Assistant Audit Officer"
               ].slice(2, -1)}`}
-              width="175px"
+              width="120px"
             />
           ) : (
-            <div />
+            <Box minWidth={"120px"}></Box>
+            // <div width="175px"/>
           )}
           {formInfo.signatures !== undefined &&
-          formInfo.signatures.establishment !== undefined &&
-          formInfo.signatures.establishment !== null &&
-          formInfo.signatures.establishment[
-            "Establishment Junior Superintendent"
+          formInfo.signatures.audit !== undefined &&
+          formInfo.signatures.audit !== null &&
+          formInfo.signatures.audit[
+            "Senior Audit Officer"
           ] !== null &&
-          formInfo.signatures.establishment[
-            "Establishment Junior Superintendent"
+          formInfo.signatures.audit[
+            "Senior Audit Officer"
           ] !== undefined ? (
             <img
-              src={`data:image/jpeg;base64,${formInfo.signatures.establishment[
-                "Establishment Junior Superintendent"
+              src={`data:image/jpeg;base64,${formInfo.signatures.audit[
+                "Senior Audit Officer"
               ].slice(2, -1)}`}
-              width="175px"
+              width="120px"
             />
           ) : (
-            <div />
+            // <div width="175px"/>
+            <Box minWidth={"120px"}></Box>
           )}
           {formInfo.signatures !== undefined &&
           formInfo.signatures.establishment !== undefined &&
@@ -1078,10 +1122,11 @@ const PrintTAForm = forwardRef((props, ref) => {
               src={`data:image/jpeg;base64,${formInfo.signatures.establishment[
                 "Establishment Assistant Registrar"
               ].slice(2, -1)}`}
-              width="175px"
+              width="120px"
             />
           ) : (
-            <div />
+            // <div width="175px"/>
+            <Box minWidth={"120px"}></Box>
           )}
           {formInfo.signatures !== undefined &&
           formInfo.signatures.establishment !== undefined &&
@@ -1096,11 +1141,13 @@ const PrintTAForm = forwardRef((props, ref) => {
               src={`data:image/jpeg;base64,${formInfo.signatures.establishment[
                 "Establishment Deputy Registrar"
               ].slice(2, -1)}`}
-              width="175px"
+              width="120px"
             />
           ) : (
-            <div />
-          )} */}
+            // <div width="175px"/>
+            <Box minWidth={"120px"}></Box>
+
+          )}
         </Box>
         <Box
           display="flex"
@@ -1120,6 +1167,32 @@ const PrintTAForm = forwardRef((props, ref) => {
           <Typography variant="body2">
             Dy Registrar
           </Typography>
+        </Box>
+        <Box
+         display="flex"
+         justifyContent="left"
+         margin="5vh 0 0 0"
+        >
+        {formInfo.signatures !== undefined &&
+          formInfo.signatures.registrar !== undefined &&
+          formInfo.signatures.registrar !== null &&
+          formInfo.signatures.registrar[
+            "Registrar"
+          ] !== null &&
+          formInfo.signatures.registrar[
+            "Registrar"
+          ] !== undefined ? (
+            <img
+              src={`data:image/jpeg;base64,${formInfo.signatures.registrar[
+                "Registrar"
+              ].slice(2, -1)}`}
+              width="120px"
+            />
+          ) : (
+            // <div width="175px"/>
+            <Box minWidth={"120px"}></Box>
+
+          )}
         </Box>
         <Typography style={{margin: "2vh 0 0 0", textDecoration: "underline"}}>Registrar</Typography>
       </Box>

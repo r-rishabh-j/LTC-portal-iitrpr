@@ -15,7 +15,15 @@ import { useForm, Controller } from "react-hook-form";
 import ReactToPrint from "react-to-print";
 import axios from "axios";
 import PrintOfficeOrder from "./PrintOfficeOrder";
+const moment = require('moment');
 
+function formatDate(date) {
+  if (date==='' || date===null || date===undefined){
+    return ' '
+  }
+  const d = moment(date).format("DD-MM-YYYY");
+  return d;
+}
 
 export const OfficeOrderText = ({request_id}) => {
 
@@ -34,12 +42,12 @@ export const OfficeOrderText = ({request_id}) => {
       const data = { request_id: request_id };
       axios({
         method: "post",
-        url: "api/getformdata",
+        url: "api/print-office-order",
         data: JSON.stringify(data),
         headers: { "Content-type": "application/json" },
       })
         .then((response) => {
-          // console.log(response.data.data);
+          console.log(response.data.data);
           setFormInfo(response.data.data);
           var info = response.data.data
           console.log(info.form_data["name"])
@@ -65,17 +73,17 @@ export const OfficeOrderText = ({request_id}) => {
             " . He/she will visit " +
             info.form_data["home_town"] +
             ". Dates of onward and return journey shall be " +
-            info.form_data["self_date_outward"] +
+            formatDate(info.form_data["self_date_outward"]) +
             " and " +
-            info.form_data["self_date_inward"] +
+            formatDate(info.form_data["self_date_inward"]) +
             " respectively. For the purpose, he/she has been sanctioned:\n\t1. " +
             info.form_data["nature"] +
             " leave for " +
             info.form_data["num_days"] +
             " from " +
-            info.form_data["nature_from"] +
+            formatDate(info.form_data["nature_from"]) +
             " to " +
-            info.form_data["nature_to"] +
+            formatDate(info.form_data["nature_to"]) +
             "\n" +
             (info.form_data["encashment_is_required"] === "Yes" ? "\t2. Encashment of " + info.form_data["encashment_days"] + " days Earned leave." : "");
           reset({'order_text': text})
@@ -96,10 +104,10 @@ export const OfficeOrderText = ({request_id}) => {
 
   return (
     <>
-      <Box display="flex" justifyContent="space-between">
-        <Box text-overflow="wrap">
+      {/* <Box display="flex" > */}
+        {/* <Box > */}
           <DialogTitle>
-            Office Order Text for LTC ID {formInfo.request_id}:{" "}
+            Office Order Text for LTC ID {request_id}:{" "}
             {formInfo.form_data["name"] === undefined
               ? " "
               : formInfo.form_data["name"]}
@@ -181,6 +189,7 @@ export const OfficeOrderText = ({request_id}) => {
                 <PrintOfficeOrder
                   ref={printComponentRef}
                   data={orderInfo}
+                  signature={formInfo.signatures}
                   dept={
                     formInfo.form_data["department"] !== undefined
                       ? formInfo.form_data["department"]
@@ -202,8 +211,8 @@ export const OfficeOrderText = ({request_id}) => {
               )}
             </div>
           </DialogContent>
-        </Box>
-      </Box>
+        {/* </Box> */}
+      {/* </Box> */}
     </>
   );
 };

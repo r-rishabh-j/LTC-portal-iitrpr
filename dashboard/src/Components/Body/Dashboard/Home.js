@@ -7,6 +7,11 @@ import NotificationsPausedIcon from "@material-ui/icons/NotificationsPaused";
 import ClearIcon from '@material-ui/icons/Clear';
 import { Alert, AlertTitle } from '@mui/material';
 const moment = require('moment');
+/**
+ * 
+ * @description: Home page. 
+ * @returns 
+ */
 
 export default function Home() {
   const classes = useStyles();
