@@ -18,8 +18,14 @@ import {Box} from '@material-ui/core';
 import DataGridToolbar from './DataGridToolbar';
 const moment = require('moment');
 
+/**
+ * 
+ * @description: View user past LTC Applications 
+ * @returns 
+ */
+
+
 const PastApplications = ({ permission }) => {
-  //console.log(permission)
   const classes = useStyles();
 
   const [tableData, setTableData] = useState([])
@@ -28,7 +34,6 @@ const PastApplications = ({ permission }) => {
     fetch("/api/getmyforms")
       .then((data) => data.json())
       .then((data) => {
-        // console.log(data.data);
         setTableData(data.data)
       })
   }, [])

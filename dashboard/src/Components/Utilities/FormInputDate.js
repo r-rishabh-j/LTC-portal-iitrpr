@@ -7,7 +7,7 @@ import { Controller } from "react-hook-form";
 
 
 export const FormInputDate = ({name, control, label, required, disabled}) => {
-  let today = new Date().toISOString().slice(0, 10)
+  let today = new Date();
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Controller

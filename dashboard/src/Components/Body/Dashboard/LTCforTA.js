@@ -19,6 +19,12 @@ import TAForm from "./TAForm";
 import DataGridToolbar from "./DataGridToolbar";
 const moment = require("moment");
 
+/**
+ * 
+ * @description: View for LTC applications eligible for TA form. 
+ * @returns 
+ */
+
 const LTCforTA = ({ profileInfo }) => {
   //console.log(permission)
   const classes = useStyles();

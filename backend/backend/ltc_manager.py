@@ -22,9 +22,6 @@ class LtcManager:
         API for applying for LTC Application
         """
 
-        def validateForm(self, form: dict):
-            pass
-
         @role_required(Permissions.client)
         def post(self):
             """
@@ -62,8 +59,6 @@ class LtcManager:
             if last_avalied != None:
                 last_est_form = last_avalied.form['establishment']
                 form_data['establishment'] = {
-                    # "est_data_joining_date": "2022-05-02T11:02:00.000Z",
-                    # "est_data_block_year": "1",
                     "est_data_nature_last": last_est_form.get("est_data_nature_current", ''),
                     "est_data_period_last_from": (None if last_est_form.get('est_data_period_current_from', None) == None else str(last_est_form.get('est_data_period_current_from'))[:10]),
                     "est_data_period_last_to": (None if last_est_form.get('est_data_period_current_to', None) == None else str(last_est_form.get('est_data_period_current_to'))[:10]),
@@ -94,6 +89,7 @@ class LtcManager:
                 db.session.add(ltc_upload)
             db.session.commit()
 
+            # send email to user
             emailmanager.sendEmail(
                 current_user,
                 f'LTC Request, ID {new_request.request_id} created',
@@ -175,8 +171,7 @@ class LtcManager:
 
             user_dept: Departments = Departments.query.get(
                 current_user.department)
-            # if not user_dept.is_stage:
-            #     abort(401, msg='Only stage users allowed')
+
 
             applicant: Users = Users.query.get(form.user_id)
             if kwargs['permission'] == Permissions.dept_head:
@@ -288,11 +283,6 @@ class LtcManager:
                 return abort(404, status={'error': 'No attachment'})
 
             return filemanager.sendFile(ltc_upload.file, ltc_upload.filename)
-            # attachment_path = form.attachments
-            # if not attachment_path or attachment_path == "":
-            # _, ext = os.path.splitext(attachment_path)
-            # filename = f'ltc_{request_id}_proofs'+ext
-            # return filemanager.sendFile(attachment_path, filename)
 
     class GetLtcFormMetaDataForUser(Resource):
         """
@@ -698,6 +688,9 @@ class LtcManager:
             return jsonify({'pending': result})
 
     class GetOfficeOrder(Resource):
+        """
+        Fetch LTC office order by request ID
+        """
         @check_role()
         def post(self, permission):
             analyse()
@@ -719,6 +712,9 @@ class LtcManager:
             return filemanager.sendFile(office_order.file, office_order.filename)
 
     class GetPendingAdvancePaymentRequests(Resource):
+        """
+        Fetch pending advance payment request by ID
+        """
         @role_required(role=Permissions.accounts)
         def get(self):
             analyse()
@@ -735,6 +731,9 @@ class LtcManager:
             return jsonify({'pending': result})
 
     class UpdateAdvancePaymentDetails(Resource):
+        """
+        Update advance payemnt details
+        """
         @role_required(role=Permissions.accounts)
         def post(self):
             analyse()
@@ -827,6 +826,9 @@ PFA document for payment information.
             return {'data': response}
 
     class PrintOfficeOrder(Resource):
+        """
+        Print office order
+        """
         @role_required(role=Permissions.establishment)
         def post(self):
             analyse()
@@ -843,6 +845,8 @@ PFA document for payment information.
             response['signatures'] = {}
             response['signatures']['user'] = applicant.signature
 
+            # add department section signature
+
             department = db.session.query(Departments, Users).filter(
                 Departments.name == applicant.department, Departments.dept_head == Users.id).one_or_none()
             if department != None:
@@ -855,6 +859,8 @@ PFA document for payment information.
                 (Stages.registrar, Permissions.registrar),
                 (Stages.deanfa, Permissions.deanfa),
             ]
+
+            # add signatures
 
             for stage, permission in stages:
                 query = db.session.query(Users, StageUsers).join(

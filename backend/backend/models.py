@@ -106,6 +106,9 @@ class Users(db.Model):
 
 
 class StageUsers(db.Model):
+    """
+    Users
+    """
     user_id = db.Column(db.Integer, db.ForeignKey(
         'users.id', ondelete='CASCADE'), primary_key=True,)
     designation = db.Column(db.String, unique=True)

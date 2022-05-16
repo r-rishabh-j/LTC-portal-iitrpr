@@ -5,18 +5,12 @@ from flask import Flask, make_response, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, get_jwt, create_access_token, set_access_cookies, current_user
-import redis
-from rq import Queue
-
 from .file_manager.encoded_file_manager import EncodedFileManager
 from .email_manager.background_email_manager import EmailManager
 from dotenv import load_dotenv
 
 load_dotenv()
 db = SQLAlchemy()
-
-redis_conn = redis.Redis()
-task_queue = Queue(connection=redis_conn)
 
 filemanager = EncodedFileManager()
 
@@ -26,7 +20,9 @@ if os.environ.get("ENABLE_EMAIL") == 'true':
 emailmanager = EmailManager(enabled=enable_email, queue={})
 MAX_UPLOAD_SIZE = 50*1024*1024
 
-
+"""
+Entrypoint of the app
+"""
 def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app = Flask(__name__, static_url_path='', template_folder=os.path.abspath(
         './build'), static_folder=os.path.abspath('./build'))
@@ -39,9 +35,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=5)
-    # app.config['MAX_CONTENT_LENGTH'] = 50 * \
-    #     1024 * 1024  # 50 MB max request size
 
+    # analytics config
     app.config["flask_profiler"] = {
         "enabled": True,
         "storage": {
@@ -91,11 +86,11 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(UserManager.RegisterUserFromCSV,
                      '/api/admin/register-from-csv')
     api.add_resource(UserManager.EditUser,
-                     '/api/admin/edit-user')
+                     '/api/admin/edit-user') # edit user 
     api.add_resource(UserManager.DropUser,
-                     '/api/admin/drop-user')
+                     '/api/admin/drop-user') # delete user
     api.add_resource(UserManager.FetchUserByEmail,
-                     '/api/admin/fetch-user')
+                     '/api/admin/fetch-user') # fetch user details by email
     api.add_resource(LtcManager.GetLtcFormData,
                      '/api/getformdata')  # get form data
     # get basic form data for display on tables

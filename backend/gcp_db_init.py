@@ -4,7 +4,8 @@ from backend.models import DepartmentTALogs
 from backend.models import TAOfficeOrders
 from backend.models import Departments, Users, LTCRequests, EstablishmentLogs, DeanLogs, DepartmentLogs, \
     AuditLogs, AccountsLogs, LTCApproved, RegistrarLogs, EstablishmentReview, AdvanceRequests, StageUsers,\
-    LTCOfficeOrders, LTCProofUploads, AccountsTALogs, AuditTALogs, EstablishmentTALogs, TAApproved, TARequests, UserOTP, TAProofUploads
+    LTCOfficeOrders, LTCProofUploads, AccountsTALogs, AuditTALogs, EstablishmentTALogs, TAApproved, TARequests, \
+    UserOTP, TAProofUploads, RegistrarTALogs
 from backend.models import db
 from dotenv import load_dotenv
 import os
@@ -93,6 +94,7 @@ with app.app_context() as ctx:
     LTCProofUploads.__table__.drop(db.engine)
     LTCOfficeOrders.__table__.drop(db.engine)
     RegistrarLogs.__table__.drop(db.engine)
+    RegistrarTALogs.__table__.drop(db.engine)
     EstablishmentReview.__table__.drop(db.engine)
     AdvanceRequests.__table__.drop(db.engine)
     EstablishmentTALogs.__table__.drop(db.engine)

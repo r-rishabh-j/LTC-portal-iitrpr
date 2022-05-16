@@ -21,26 +21,14 @@ import useAuthCookie from "../../Login/useAuthCookie";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FieldArrayInput } from "../../Utilities/FieldArrayInput";
 
-// function getCookie(name) {
-//   if (!document.cookie) {
-//     return null;
-//   }
 
-//   const xsrfCookies = document.cookie.split(';')
-//     .map(c => c.trim())
-//     .filter(c => c.startsWith(name + '='));
-
-//   if (xsrfCookies.length === 0) {
-//     return null;
-//   }
-//   return decodeURIComponent(xsrfCookies[0].split('=')[1]);
-// }
-
-// const csrf = getCookie('csrf_access_token');
-// console.log('csrf', csrf);
+/**
+ * 
+ * @description: Contains code for LTC form 
+ * 
+ */
 
 export default function CreateApplication({ profileInfo }) {
-  // console.log(profileInfo);
   const classes = useStyles();
   const { handleSubmit, control, register, reset, formState: { isSubmitting } } = useForm({
     defaultValues: {
@@ -67,21 +55,33 @@ export default function CreateApplication({ profileInfo }) {
   ];
 
   const onSubmit = (data) => {
-    // console.log("Submitting", isSubmitting);
     const formData = new FormData();
 
+    if (data.prefix_from > data.prefix_to) {
+      alert('Invalid prefix dates');
+      return;
+    }
+    if (data.suffix_from > data.suffix_to) {
+      alert('Invalid suffix dates!');
+      return;
+    }
+    if (data.nature_from > data.nature_to) {
+      alert('Invalid nature to/from dates!');
+      return;
+    }
+    if (data.joining_date > Date()) {
+      alert('Invalid joining date!');
+      return;
+    }
+
     data.name = profileInfo.name;
-    //data.designation = profile.permission;
     data.department = profileInfo.department;
     data.emp_code = profileInfo.employee_code;
 
 
-    // console.log('data: ', JSON.stringify(data));
     formData.append('attachments', data.attachments[0]);
     formData.append('form', JSON.stringify(data));
 
-    // console.log("onSubmit")
-    // console.log(data);
     return axios({
       method: "POST",
       url: "/api/apply",
@@ -100,48 +100,7 @@ export default function CreateApplication({ profileInfo }) {
         }
       });
   };
-  // const onSubmit = (data) => {
-  //   console.log("Submitting", isSubmitting);
-  //   // console.log("Submitting", formState);
-  //   const formData = new FormData();
 
-  //   const profile = JSON.parse(sessionStorage.getItem('profile'));
-  //   data.name = profile.name;
-  //   //data.designation = profile.permission;
-  //   data.department = profile.department;
-  //   data.emp_code = profile.employee_code;
-
-
-  //   console.log('data: ', JSON.stringify(data));
-  //   formData.append('attachments', data.attachments[0]);
-  //   formData.append('form', JSON.stringify(data));
-
-  //   console.log("onSubmit")
-  //   console.log(data);
-  //   axios({
-  //     method: "POST",
-  //     url: "/api/apply",
-  //     data: formData
-  //   })
-  //     .then((response) => {
-  //       console.log('s', response.status)
-  //       if (response.status === 200) {
-  //         alert("Application submitted!")
-  //         window.location.reload()
-  //       }
-  //       else {
-  //         alert("Error submitting, try again")
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.log(error.response);
-  //         console.log(error.response.status);
-  //         console.log(error.response.headers);
-  //         alert('Error. Please try logging in again');
-  //       }
-  //     });
-  // };
   return profileInfo === {} ? null : (
     <>
       <Grid container>
