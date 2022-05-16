@@ -92,6 +92,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/admin/register-from-csv')
     api.add_resource(UserManager.EditUser,
                      '/api/admin/edit-user')
+    api.add_resource(UserManager.DropUser,
+                     '/api/admin/drop-user')
     api.add_resource(UserManager.FetchUserByEmail,
                      '/api/admin/fetch-user')
     api.add_resource(LtcManager.GetLtcFormData,
