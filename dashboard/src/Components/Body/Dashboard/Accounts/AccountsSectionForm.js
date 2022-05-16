@@ -6,7 +6,7 @@ import { TextField, Box, Button, Typography, Grid } from "@mui/material";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 
-
+//display and edit prefilled data for accounts section
 
 const AccountsSectionForm = ({ acc_data, request_id, setEditState }) => {
   const { control, handleSubmit, reset } = useForm({defaultValues:{

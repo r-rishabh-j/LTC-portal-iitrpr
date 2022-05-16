@@ -69,6 +69,7 @@ export default function CreateApplication({ profileInfo }) {
   const onSubmit = (data) => {
     // console.log("Submitting", isSubmitting);
     const formData = new FormData();
+    console.log(typeof(data["prefix_from"]))
 
     data.name = profileInfo.name;
     //data.designation = profile.permission;

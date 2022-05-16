@@ -55,7 +55,7 @@ function Charts() {
         <Grid container spacing={4} style={{ margin: "2vh 3vh 0 3vh" }}>
           <Grid item xs={4}>
             <MediaCard
-              image={require("./view_users.png")}
+              image={require("./analytics.png")}
               alt="View API analytics"
               action="View API analytics"
               url={REACT_APP_BASE_BACKEND_URL + "/analytics"}
@@ -80,7 +80,7 @@ function Charts() {
           </Grid>
           <Grid item xs={4}>
             <MediaCard
-              image={require("./add_user.png")}
+              image={require("./add_users.png")}
               alt="Add Users in bulk"
               action="Add Users in Bulk"
               setOpen={setOpenAddUserCsv}
@@ -88,7 +88,7 @@ function Charts() {
           </Grid>
           <Grid item xs={4}>
             <MediaCard
-              image={require("./add_user.png")}
+              image={require("./view_users.png")}
               alt="Add Department"
               action="Add Department"
               setOpen={setOpenAddDept}
@@ -96,7 +96,7 @@ function Charts() {
           </Grid>
           <Grid item xs={4}>
             <MediaCard
-              image={require("./add_user.png")}
+              image={require("./drop_user.png")}
               alt="Drop User"
               action="Drop User"
               setOpen={setOpenDropUser}

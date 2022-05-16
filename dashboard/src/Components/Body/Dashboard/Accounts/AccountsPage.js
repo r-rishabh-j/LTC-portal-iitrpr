@@ -14,6 +14,7 @@ import PastTaApplications from '../Establishment/PastTaApplications';
 import PendingTAApplications from '../Establishment/PendingTAApplications';
 import TAPayments from './TAPayments';
 
+//landing page for accounts section
 export default function AccountsPage(props){
     const classes = useStyles();
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -39,6 +40,7 @@ export default function AccountsPage(props){
         userType="accounts"
         profileInfo={props.profileInfo}
       />
+      
       <Box className={classes.wrapper}>
         <Routes>
           <Route
