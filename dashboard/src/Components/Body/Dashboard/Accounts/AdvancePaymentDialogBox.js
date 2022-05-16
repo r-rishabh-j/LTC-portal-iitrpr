@@ -4,16 +4,11 @@ import axios from "axios";
 import {
     DialogTitle,
     DialogContent,
-    DialogContentText,
-    TextField,
-    Grid,
-    Typography,
     Button,
     Box,
-    Tooltip,
 } from "@material-ui/core";
 import { DropzoneArea } from 'material-ui-dropzone';
-import { useForm, Controller, useFieldArray, register } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FormInputText } from "../../../Utilities/FormInputText";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FormInputNumber } from "../../../Utilities/FormInputNumber";
@@ -22,7 +17,7 @@ import { FormInputNumber } from "../../../Utilities/FormInputNumber";
 const AdvancePaymentDialogBox = ({ request_id, api }) => {
     const [file, setFile] = useState(null);
 
-    const { handleSubmit, control, register, formState: { isSubmitting } } = useForm();
+    const { handleSubmit, control, formState: { isSubmitting } } = useForm();
 
     function onUpload(file) {
         console.log('o', file);

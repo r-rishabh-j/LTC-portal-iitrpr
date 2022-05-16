@@ -3,7 +3,6 @@ import { Button, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem } fr
 import HistoryIcon from "@material-ui/icons/History";
 import HomeIcon from "@material-ui/icons/Home";
 import AddIcon from "@material-ui/icons/Add";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import NewReleasesIcon from "@material-ui/icons/NewReleases";
 import RateReviewIcon from "@material-ui/icons/RateReview";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -14,7 +13,7 @@ import { useStyles } from './HeaderStyles';
 import Logout from '../Body/Dashboard/Logout';
 import { Box, Typography } from '@material-ui/core';
 import DomainIcon from '@material-ui/icons/Domain';
-import { blueGrey, blue } from "@material-ui/core/colors";
+import { blueGrey } from "@material-ui/core/colors";
 import EmailIcon from '@material-ui/icons/Email';
 import Divider from '@mui/material/Divider';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';

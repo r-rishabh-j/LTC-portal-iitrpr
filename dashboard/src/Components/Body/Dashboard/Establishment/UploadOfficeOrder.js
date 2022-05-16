@@ -217,7 +217,7 @@ const UploadOfficeOrder = ({ permission }) => {
         style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor: '#263238' }}
       >
         <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
-          Upload Office order
+          Upload LTC Office order
         </Typography>
       </Paper>
       <Paper

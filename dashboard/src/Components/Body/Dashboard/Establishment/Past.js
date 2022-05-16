@@ -256,7 +256,7 @@ function Past({ permission }) {
         style={{ display: "flex", margin: "0 0.5vw 0 3vw", backgroundColor: '#263238' }}
       >
         <Typography variant="body1" style={{ margin: "auto", fontSize: "25px", color: "white" }}>
-          Past Applications
+          Past LTC Applications
         </Typography>
       </Paper>
       <Paper

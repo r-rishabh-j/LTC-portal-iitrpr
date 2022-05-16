@@ -10,6 +10,10 @@ class EmailManager():
 Your LTC Request, ID %s has been created.
 Keep visiting LTC Portal for updates.
 """
+    ta_req_created_msg = """Hello %s,
+Your TA request, ID %s for LTC Request, ID %s has been created.
+Keep visiting LTC Portal for updates.
+"""
     decline_msg = """Hello %s,
 Your LTC Request, ID %s has been declined.
 Visit LTC Portal for more information.
@@ -20,6 +24,10 @@ Visit LTC Portal for more information.
 """
     approval_msg = """Hello %s,
 Your LTC Request, ID %s has been approved and is pending office order generation.
+Visit LTC Portal for more information.
+"""
+    ta_approval_msg = """Hello %s,
+Your TA request, ID %s for LTC ID %s has been approved and is pending office order generation.
 Visit LTC Portal for more information.
 """
     ltc_office_order_msg = """Hello %s,

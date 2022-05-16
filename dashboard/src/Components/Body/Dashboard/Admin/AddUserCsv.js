@@ -63,7 +63,8 @@ const AddUserCsv = () => {
             data: formData,
         })
             .then((response) => {
-                alert('User added!')
+                alert('Users added!');
+                window.location.reload();
             })
             .catch((error) => {
                 if (error.response) {

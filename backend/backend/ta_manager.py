@@ -12,7 +12,7 @@ from .models import AccountsTAPayments, StageUsers, Stages, TAProofUploads
 from .role_manager import Permissions, role_required, roles_required, check_role
 from .models import ApplicationStatus,  LTCApproved,\
     Users, LTCRequests, Departments, TAApproved, TARequests, TAOfficeOrders, \
-    EstablishmentTALogs, AccountsTALogs, AuditTALogs
+    EstablishmentTALogs, AccountsTALogs, AuditTALogs, get_stage_roles
 
 
 class TaManager():
@@ -82,8 +82,8 @@ class TaManager():
             emailmanager.sendEmail(
                 current_user,
                 f'TA Request, ID {new_request.request_id} created for LTC ID ',
-                emailmanager.ltc_req_created_msg % (
-                    current_user.name, new_request.request_id)
+                emailmanager.ta_req_created_msg % (
+                    current_user.name, new_request.request_id, new_request.ltc_id)
             )
             return make_response(jsonify({'status': 'ok', 'msg': 'Applied for LTC'}), 200)
 
@@ -157,7 +157,7 @@ class TaManager():
             response = {'data': results}
 
             return jsonify(response)
-    
+
     class GetPendingTaPaymentRequests(Resource):
         @role_required(role=Permissions.accounts)
         def get(self):
@@ -314,7 +314,7 @@ class TaManager():
                                     True if action == 'approve' else False)
             else:
                 form.addComment(current_user, comment,
-                            True if action == 'approve' else False)
+                                True if action == 'approve' else False)
 
             """
                 Application is forwarded, or decline only when the stage head forwards or declines it.
@@ -332,6 +332,7 @@ class TaManager():
             else:
                 db.session.commit()
                 return {"status": 'Comment added'}, 200
+
     class FillTaStageForm(Resource):
         """
         Fill forms for individual stages(establishment section, accounts section)
@@ -469,6 +470,10 @@ class TaManager():
                 form.request_id)
             db.session.add(payment_request)
             db.session.commit()
+            acc_roles = get_stage_roles(TARequests.Stages.accounts)
+            for acc_user in acc_roles:
+                acc_user.addNotification(
+                    f'TA ID {request_id} sent for reimbursement')
 
             # deanfa, hod, dr accounts,
             dean_stage_user: StageUsers = StageUsers.query.filter(
@@ -601,6 +606,16 @@ class TaManager():
 
             form: TARequests = TARequests.query.get(request_id)
             form.stage = TARequests.Stages.availed
+            applicant: Users = Users.query.get(ta_request.user_id)
+            applicant.addNotification(
+                f'Reimbursement of ₹{amount} for TA ID {request_id} made. Check email for more info')
+            emailmanager.sendMailWithCC([applicant], [],
+                                        f'Reimbursement for TA ID {request_id} issued',
+                                        f"""Hello {applicant.name}
+Reimbursement for your TA Application ID {request_id} corresponding to LTC ID {ta_request.ltc_id} has been issued. 
+PFA document for payment information.
+            """, (payment_req.payment_proof_filename, payment_req.payment_proof)
+            )
             db.session.commit()
             return jsonify({"success": "uploaded proofs"})
 
@@ -612,11 +627,10 @@ class TaManager():
         def post(self, permission):
             analyse()
             request_id = (request.json.get('request_id', None))
-            print(request_id)
             if request_id == None:
                 abort(400, error='Invalid request ID')
             request_id = int(request_id)
-            form_data: LTCRequests = LTCRequests.query.get(request_id)
+            form_data: TARequests = TARequests.query.get(request_id)
             applicant: Users = Users.query.get(form_data.user_id)
 
             if permission == Permissions.client:
@@ -626,33 +640,34 @@ class TaManager():
             response = {}
             response['form'] = form_data.form
             response['comments'] = form_data.comments
-
             response['signatures'] = {}
-
             response['signatures']['user'] = applicant.signature
+
             # signatures
             if form_data.stage in [Stages.approved, Stages.advance_pending]:
+                department = db.session.query(Departments, Users).filter(
+                    Departments.name == applicant.department, Departments.dept_head == Users.id).one_or_none()
+                if department != None:
+                    dept, dept_head = department
+                    response['signatures']['section_head'] = dept_head.signature
                 stages = [
                     (Stages.establishment, Permissions.establishment),
                     (Stages.audit, Permissions.audit),
                     (Stages.accounts, Permissions.accounts),
                     (Stages.registrar, Permissions.registrar),
-                    (Stages.deanfa, Permissions.deanfa),
                 ]
 
                 for stage, permission in stages:
                     query = db.session.query(Users, StageUsers).join(
                         StageUsers).filter(Users.permission == permission)
-                    signatures = []
+                    signatures = {}
                     approvals = form_data.getLatestCommentForStage(stage)
                     for user, stage_user in query:
-                        if approvals[user] == True:
+                        if approvals[user.email] == True:
                             file = user.signature
                         else:
                             file = None
-                        signatures.append({
-                            stage_user.designation: file
-                        })
+                        signatures[stage_user.designation] = file
 
                     response['signatures'][stage] = signatures
 

@@ -8,10 +8,8 @@ import {
     Typography,
     Box
 } from "@material-ui/core";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { useStyles } from "../DataGridStyles";
-import axios from "axios";
-import DialogBox from '../DialogBox'
 import AdvancePaymentDialogBox from "./AdvancePaymentDialogBox";
 import DataGridToolbar from "../DataGridToolbar";
 import TADialogBox from "../TADialogBox";

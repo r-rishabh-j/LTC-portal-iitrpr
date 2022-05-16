@@ -185,8 +185,41 @@ class UserManager(Resource):
 
             stream = io.StringIO(file.read().decode("UTF8"), newline=None)
             reader = csv.DictReader(stream)
-            for i, row in enumerate(reader):
-                print('hi', row)
+            rows = []
+            for row in (reader):
+                rows.append(row)
+            print(rows)
+            for i, row in enumerate(rows):
+                name = row.get('name')
+                email = row.get('email')
+                emp_code = row.get('emp_code')
+                if emp_code!=None and (emp_code.isspace() or emp_code == ''):
+                    emp_code = None
+
+                if None in [name, email]:
+                    abort(400, error=f'invalid request. Stopped at row {i+1}')
+
+                name = str(name).strip()
+                if emp_code!=None:
+                    emp_code = (str(emp_code).strip())
+                department = str(department).strip().lower()
+                designation = str(designation).strip().lower()
+                email = str(email).strip().lower()
+
+                roles = UserManager.generateRoles()
+                dept_entry: Departments = Departments.query.get(department)
+                if department == None:
+                    abort(400, error=f'Invalid Department. Stopped at row {i+1}')
+                department_entry = roles[department]
+                if not (designation in department_entry['roles']):
+                    abort(400, error=f'Role mapping not valid. Stopped at row {i+1}')
+                if Users.query.filter_by(email=email).one_or_none() != None:
+                    abort(400, error=f'Email Already Exists! Stopped at row {i+1}')
+
+                if (emp_code != None and not emp_code.isspace() and not emp_code == '') and Users.query.filter_by(employee_code=emp_code).one_or_none() != None:
+                    abort(400, error=f'Employee code exists! Stopped at row {i+1}')
+
+            for i, row in enumerate(rows):
                 name = row.get('name')
                 email = row.get('email')
                 emp_code = row.get('emp_code')
@@ -240,7 +273,7 @@ class UserManager(Resource):
 
                 db.session.commit()
 
-            return {'success': 'User added'}, 200
+            return {'success': 'Users added'}, 200
 
     class GetRoleMapping(Resource):
         @role_required(role=Permissions.admin)
@@ -374,15 +407,18 @@ class UserManager(Resource):
             key = new_dept_info.get('key')
             full_name = new_dept_info.get('full_name')
 
-            if None in [key, full_name]:
+            if (None in [key, full_name]) or "" in [key, full_name]:
                 abort(400, error='invalid request')
             
+            if (key.isspace() or full_name.isspace()):
+                abort(400, error='invalid request. Blank fields')
+
             key = str(key).strip().lower()
 
             dept_exits = Departments.query.get(key)
             if dept_exits != None:
                 abort(400, error='Department Key Already Exists')
-            new_department = Departments(name=key, full_name=full_name)
+            new_department = Departments(name=key, full_name=full_name, is_stage=False)
             db.session.add(new_department)
             db.session.commit()
 

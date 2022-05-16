@@ -84,6 +84,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/admin/getroles')  # upload signature
     api.add_resource(UserManager.GetUsers,
                      '/api/admin/getusers')  # upload signature
+    api.add_resource(UserManager.AddDepartment,
+                     '/api/admin/add-department')  # upload signature
     api.add_resource(UserManager.GetDepartments,
                      '/api/admin/getdepartments')  # upload signature
     api.add_resource(UserManager.RegisterUserFromCSV,
@@ -132,7 +134,7 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/resolve-review')  # resolve review requests
     api.add_resource(LtcManager.EditStageForm,
                      '/api/edit-stage-form')  # edit stage form(establishment, accounts)
-    api.add_resource(LtcManager.PrintForm, 
+    api.add_resource(LtcManager.PrintForm,
                      '/api/print-form')  # return form data for printing to pdf.
     """
     TA form

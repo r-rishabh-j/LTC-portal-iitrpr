@@ -1097,9 +1097,9 @@ shortest route "
                             "est_data_period_last_from"
                           ] === undefined
                         ? " "
-                        : formInfo.form_data["establishment"][
+                        : formatDate(formInfo.form_data["establishment"][
                             "est_data_period_last_from"
-                          ]
+                          ])
                     }
                     fullWidth
                     InputProps={{
@@ -1119,9 +1119,9 @@ shortest route "
                             "est_data_period_last_to"
                           ] === undefined
                         ? " "
-                        : formInfo.form_data["establishment"][
+                        : formatDate(formInfo.form_data["establishment"][
                             "est_data_period_last_to"
-                          ]
+                          ])
                     }
                     fullWidth
                     InputProps={{
@@ -1141,9 +1141,9 @@ shortest route "
                             "est_data_period_current_from"
                           ] === undefined
                         ? " "
-                        : formInfo.form_data["establishment"][
+                        : formatDate(formInfo.form_data["establishment"][
                             "est_data_period_current_from"
-                          ]
+                          ])
                     }
                     fullWidth
                     InputProps={{
@@ -1164,9 +1164,9 @@ shortest route "
                             "est_data_period_current_to"
                           ] === undefined
                         ? " "
-                        : formInfo.form_data["establishment"][
+                        : formatDate(formInfo.form_data["establishment"][
                             "est_data_period_current_to"
-                          ]
+                          ])
                     }
                     fullWidth
                     InputProps={{
@@ -1283,9 +1283,9 @@ shortest route "
                             "est_data_last_earned_leave_on"
                           ] === undefined
                         ? " "
-                        : formInfo.form_data["establishment"][
+                        : formatDate(formInfo.form_data["establishment"][
                             "est_data_last_earned_leave_on"
-                          ]
+                          ])
                     }
                     fullWidth
                     InputProps={{
@@ -1305,9 +1305,9 @@ shortest route "
                             "est_data_current_earned_leave_on"
                           ] === undefined
                         ? " "
-                        : formInfo.form_data["establishment"][
+                        : formatDate(formInfo.form_data["establishment"][
                             "est_data_current_earned_leave_on"
-                          ]
+                          ])
                     }
                     fullWidth
                     InputProps={{
