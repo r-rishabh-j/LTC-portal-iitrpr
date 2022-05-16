@@ -264,7 +264,7 @@ const UploadOfficeOrder = ({ permission }) => {
         <Dialog
           open={textOpen}
           onClose={handleTextClose}
-          classes={{ paper: classes.uploadDialogPaper }}
+          classes={{ paper: classes.officeOrderDialogPaper }}
         >
           <OfficeOrderText request_id={id} />
           <DialogActions>

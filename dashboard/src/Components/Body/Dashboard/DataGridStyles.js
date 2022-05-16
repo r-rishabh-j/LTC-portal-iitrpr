@@ -20,6 +20,12 @@ export const useStyles = makeStyles((theme) => ({
     minWidth: "50vw",
     maxWidth: "55vw",
   },
+  officeOrderDialogPaper: {
+    minHeight: "50vh",
+    maxHeight: "60vh",
+    minWidth: "50vw",
+    maxWidth: "55vw",
+  },
   addUserDialogPaper: {
     minHeight: "50vh",
     maxHeight: "81vh",

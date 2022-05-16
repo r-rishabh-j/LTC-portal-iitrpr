@@ -79,7 +79,7 @@ export default function SideNavData({ handleDrawerClose, userType, profileInfo }
       label: "Office Orders",
       link:[ "/office_orders", "/office_orders-ta"],
       icon: <AttachFileIcon />,
-      popup: true
+      popup: false
     },
   ];
 
