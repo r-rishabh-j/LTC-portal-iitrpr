@@ -14,6 +14,14 @@ import axios from "axios";
 
 const moment = require("moment");
 
+
+/**
+ * 
+ * @description: Print TA form to pdf 
+ * @returns 
+ */
+
+
 function formatDate(date) {
   const d = moment(date).format("DD-MM-YYYY");
   return d;

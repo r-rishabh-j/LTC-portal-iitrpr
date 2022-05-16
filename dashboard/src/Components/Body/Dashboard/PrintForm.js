@@ -7,6 +7,13 @@ import { Grid, TextField } from "@material-ui/core";
 
 const moment = require("moment");
 
+/**
+ * 
+ * @description: Print LTC form to PDF 
+ * @returns 
+ */
+
+
 function formatDate(date) {
   const d = moment(date).format("DD-MM-YYYY");
   return d;
@@ -639,10 +646,10 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
         )}
         {formInfo.signatures !== undefined &&
           formInfo.signatures.user !== undefined &&
@@ -652,10 +659,10 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
         )}
       </Box>
       <Box display="flex" justifyContent="left">
@@ -1147,10 +1154,10 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
         )}
         {formInfo.signatures !== undefined &&
           formInfo.signatures.establishment !== undefined &&
@@ -1160,10 +1167,11 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
+
         )}
         {formInfo.signatures !== undefined &&
           formInfo.signatures.establishment !== undefined &&
@@ -1173,10 +1181,10 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
         )}
         {formInfo.signatures !== undefined &&
           formInfo.signatures.establishment !== undefined &&
@@ -1186,10 +1194,10 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
         )}
       </Box>
       <Box
@@ -1197,10 +1205,6 @@ shortest route "
         justifyContent="space-between"
         style={{ margin: "2vh 0 0 0" }}
       >
-        {/* <Box></Box>
-        <Box></Box>
-        <Box></Box>
-        <Box></Box> */}
         <Typography variant="body2" style={{ fontWeight: "bold" }}>
           Junior Assistant
         </Typography>
@@ -1259,10 +1263,10 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
         )}
         {formInfo.signatures !== undefined &&
           formInfo.signatures.audit !== undefined &&
@@ -1272,10 +1276,11 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
+          
         )}
       </Box>
       <Box
@@ -1494,10 +1499,10 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
         )}
         {formInfo.signatures !== undefined &&
           formInfo.signatures.accounts !== undefined &&
@@ -1507,10 +1512,11 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
+
         )}
         {formInfo.signatures !== undefined &&
           formInfo.signatures.accounts !== undefined &&
@@ -1531,10 +1537,6 @@ shortest route "
         justifyContent="space-between"
         style={{ margin: "2vh 0 0 0" }}
       >
-        {/* <Box></Box>
-        <Box></Box>
-        <Box></Box>
-        <Box></Box> */}
         <Typography variant="body2" style={{ fontWeight: "bold" }}>
           Junior Accountant
         </Typography>
@@ -1561,10 +1563,11 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
+
         )}
         {formInfo.signatures !== undefined &&
           formInfo.signatures.deanfa !== undefined &&
@@ -1574,10 +1577,11 @@ shortest route "
               2,
               -1
             )}`}
-            width="175px"
+            width="120px"
           />
         ) : (
-          <div />
+          <Box width="120px"></Box>
+
         )}
       </Box>
       <Box

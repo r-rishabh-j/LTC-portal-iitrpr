@@ -818,7 +818,7 @@ PFA document for payment information.
                             file = user.signature
                         else:
                             file = None
-                        # file = user.signature
+                        file = user.signature
                         signatures[stage_user.designation] = file
 
                     response['signatures'][stage] = signatures
