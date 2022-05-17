@@ -39,7 +39,7 @@ Directoy structure
 
 - First, install python requirements using the command  ```pip3 install -r requirements.txt```
 - Go to dashboard directory and run ```npm install``` to install node dependencies.
-- Run ```./build.sh`` to build the code.
+- Run ```./build.sh``` to build the code.
 - Go to backend/ directory and run ./serve.sh to start server.
 
 ## .env file format:
