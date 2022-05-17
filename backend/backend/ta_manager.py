@@ -81,7 +81,7 @@ class TaManager():
 
             emailmanager.sendEmail(
                 current_user,
-                f'TA Request, ID {new_request.request_id} created for LTC ID ',
+                f'TA Request, ID {new_request.request_id} created for LTC ID {ltc_application.request_id}',
                 emailmanager.ta_req_created_msg % (
                     current_user.name, new_request.request_id, new_request.ltc_id)
             )
@@ -667,7 +667,7 @@ PFA document for payment information.
                             file = user.signature
                         else:
                             file = None
-                        # file = user.signature
+                        file = user.signature
                         signatures[stage_user.designation] = file
 
                     response['signatures'][stage] = signatures
