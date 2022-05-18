@@ -25,10 +25,10 @@ const TAForm = ({ profileInfo, ltcId }) => {
     defaultValues: {
       items: [
         {
-          dep_date: "",
+          dep_date: null,
           dep_time: "",
           dep_place: "",
-          arr_date: "",
+          arr_date: null,
           arr_time: "",
           arr_place: "",
           mode: "",

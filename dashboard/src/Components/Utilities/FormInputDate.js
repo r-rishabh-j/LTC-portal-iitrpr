@@ -13,7 +13,7 @@ export const FormInputDate = ({name, control, label, required, disabled}) => {
       <Controller
         name={name}
         control={control}
-        defaultValue={today}
+        defaultValue={null}
         render={({ field: { onChange, value } }) => (
           <KeyboardDatePicker
             format="dd-MM-yyyy"

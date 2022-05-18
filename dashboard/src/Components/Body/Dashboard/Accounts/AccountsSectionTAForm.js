@@ -7,6 +7,7 @@ import axios from "axios";
 const AccountsSectionTAForm = ({acc_data, request_id, setEditState}) => {
   const { control, handleSubmit, reset } = useForm();
   const [edit, setEdit] = useState(false);
+  // const [total, setTotal] = useState(parseFloat(0));
 
   useEffect(() => {
     reset(acc_data);
@@ -122,7 +123,8 @@ const AccountsSectionTAForm = ({acc_data, request_id, setEditState}) => {
                 </>
               )}
             />
-          </Grid>
+          </Grid>{" "}
+          const [total, setTotal] = useState(parseFloat(0));
         </Grid>
         <Typography>A-2: Road Mileage</Typography>
         <Grid container spacing={2}>
