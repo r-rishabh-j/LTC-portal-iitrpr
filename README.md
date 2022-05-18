@@ -10,6 +10,10 @@ Directoy structure
 │   ├── __init__.py
 │   ├── analyse.py
 │   ├── auth.py
+│   ├── notifications.py
+│   ├── role_manager.py
+│   ├── ta_manager.py
+│   └── user_manager.py
 │   ├── email_manager
 │   │   ├── __init__.py
 │   │   ├── background_email_manager.py
@@ -22,10 +26,6 @@ Directoy structure
 │   ├── flask_profiler
 │   │   ├── __init__.py
 │   │   ├── flask_profiler.py
-│   ├── notifications.py
-│   ├── role_manager.py
-│   ├── ta_manager.py
-│   └── user_manager.py
 ├── db_init.py
 ├── gcp_db_init.py
 ├── main.py
@@ -47,24 +47,23 @@ Directoy structure
 ### Backend .env variables:
 
 ```
-DEMO_LOGIN
-GCP_PASS
-JWT_SECRET 
-POSTGRES_PATH
-client_id 
-client_secret
-FRONTEND_URL
-BACKEND_URL 
-EMAIL_APP_PASSWORD
-EMAIL_ID 
-ENABLE_EMAIL 
+DEMO_LOGIN = <"true" or "false", whether to show demo login component for dev>
+JWT_SECRET = <"JWT Token secret key">
+POSTGRES_PATH = <"URI to postgres server along with driver config">
+client_id = <"Google OAuth2.0 client ID">
+client_secret = <"Google OAuth2.0 client secret">
+FRONTEND_URL = <"frontend URL">
+BACKEND_URL = <"backend URL">
+EMAIL_APP_PASSWORD = <"Email App Password">
+EMAIL_ID = "email ID for sending email"
+ENABLE_EMAIL = "whether to enable email notifications"
 ```
 
 ### frontend .env
 
 ```
-REACT_APP_GOOGLE_CLIENT_ID 
-REACT_APP_BASE_BACKEND_URL
+REACT_APP_GOOGLE_CLIENT_ID = <"Google OAuth2.0 client ID">
+REACT_APP_BASE_BACKEND_URL = <"backend URL">
 ```
 
 Frontend structure
@@ -75,6 +74,8 @@ Frontend structure
 ├── Components
 │   ├── Body
 │   │   └── Dashboard
+│   │       ├── SectionHead
+│   │       │   └── SectionHeadPage.js
 │   │       ├── Accounts
 │   │       │   ├── AccountsPage.js
 │   │       │   ├── AccountsSectionForm.js
@@ -84,36 +85,6 @@ Frontend structure
 │   │       │   ├── Past.js
 │   │       │   ├── Pending.js
 │   │       │   └── TAPayments.js
-│   │       ├── Admin
-│   │       │   ├── AddDepartment.js
-│   │       │   ├── AddUserCsv.js
-│   │       │   ├── AddUser.js
-│   │       │   ├── add_user.png
-│   │       │   ├── add_users.png
-│   │       │   ├── AdminPage.js
-│   │       │   ├── analytics.png
-│   │       │   ├── Charts.js
-│   │       │   ├── Database.js
-│   │       │   ├── Deparments.js
-│   │       │   ├── DropUserForm.js
-│   │       │   ├── DropUser.js
-│   │       │   ├── drop_user.png
-│   │       │   ├── EditUserForm.js
-│   │       │   ├── EditUser.js
-│   │       │   ├── edit_user.png
-│   │       │   ├── LTCApplications.js
-│   │       │   ├── TAApplications.js
-│   │       │   ├── Users.js
-│   │       │   └── view_users.png
-│   │       ├── Audit
-│   │       │   └── AuditPage.js
-│   │       ├── ButtonDropDown.js
-│   │       ├── CreateApplication.js
-│   │       ├── DataGridStyles.js
-│   │       ├── DataGridToolbar.js
-│   │       ├── DeanFA
-│   │       │   └── DeanPage.js
-│   │       ├── DialogBox.js
 │   │       ├── Establishment
 │   │       │   ├── EstablishmentPage.js
 │   │       │   ├── EstablishmentSectionForm.js
@@ -128,6 +99,41 @@ Frontend structure
 │   │       │   ├── UploadDialogBoxStyles.js
 │   │       │   ├── UploadOfficeOrder.js
 │   │       │   └── UploadTAOfficeOrder.js
+│   │       ├── Audit
+│   │       │   └── AuditPage.js
+│   │       ├── DeanFA
+│   │       │   └── DeanPage.js
+│   │       ├── Registrar
+│   │       │   └── RegistrarPage.js
+│   │       ├── Admin
+│   │       │   ├── AdminPage.js
+│   │       │   ├── AddDepartment.js
+│   │       │   ├── AddUserCsv.js
+│   │       │   ├── AddUser.js
+│   │       │   ├── DropUser.js
+│   │       │   ├── DropUserForm.js
+│   │       │   ├── EditUserForm.js
+│   │       │   ├── EditUser.js
+│   │       │   ├── Charts.js
+│   │       │   ├── Database.js
+│   │       │   ├── Users.js
+│   │       │   ├── LTCApplications.js
+│   │       │   ├── TAApplications.js
+│   │       │   ├── Deparments.js
+│   │       │   ├── add_user.png
+│   │       │   ├── add_users.png
+│   │       │   ├── drop_user.png
+│   │       │   ├── edit_user.png
+│   │       │   ├── analytics.png
+│   │       │   └── view_users.png
+│   │       ├── Profile
+│   │       │   ├── ProfilePage.js
+│   │       │   └── SignatureUploadDialog.js
+│   │       ├── ButtonDropDown.js
+│   │       ├── CreateApplication.js
+│   │       ├── DataGridStyles.js
+│   │       ├── DataGridToolbar.js
+│   │       ├── DialogBox.js
 │   │       ├── FormStyles.js
 │   │       ├── Home.js
 │   │       ├── iitrpr_logo.png
@@ -139,15 +145,8 @@ Frontend structure
 │   │       ├── PastTaApplications.js
 │   │       ├── PrintForm.js
 │   │       ├── PrintTAForm.js
-│   │       ├── Profile
-│   │       │   ├── ProfilePage.js
-│   │       │   └── SignatureUploadDialog.js
-│   │       ├── Registrar
-│   │       │   └── RegistrarPage.js
 │   │       ├── ReviewBox.js
 │   │       ├── ReviewUserForm.js
-│   │       ├── SectionHead
-│   │       │   └── SectionHeadPage.js
 │   │       ├── TADialogBox.js
 │   │       └── TAForm.js
 │   ├── Header

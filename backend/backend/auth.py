@@ -95,7 +95,7 @@ class Auth:
 
         def post(self):
             """
-            Only for development
+            Only for development. Remove in production!
             """
             if os.environ.get('DEMO_LOGIN') != 'True':
                 abort(404, error="No such route")
@@ -117,6 +117,9 @@ class Auth:
             return response
 
     class OTPLogin(Resource):
+        """
+        Login user by OTP
+        """
         def post(self):
             email = str(request.json.get('email')).strip().lower()
             print(email)
@@ -127,6 +130,7 @@ class Auth:
             if not user or user.deleted:
                 abort(409, error="User not registered")
 
+            # check prev OTP
             previous_otp_entry: UserOTP = UserOTP.query.get(user.email)
             current_time = datetime.now()
             if previous_otp_entry != None:
@@ -136,6 +140,7 @@ class Auth:
                 else:
                     db.session.delete(previous_otp_entry)
 
+            # Create new OTP and send
             otp = uuid4()
             login_otp: UserOTP = UserOTP(user.email, otp)
             db.session.add(login_otp)
@@ -151,6 +156,9 @@ class Auth:
             return {'success': 'login link sent on email!'}
 
         def get(self):
+            """
+            Verify incoming OTP from arguments
+            """
             email = str(request.args.get('user')).strip().lower()  # email
             otp = request.args.get('otp')
             if email == None or otp == None:

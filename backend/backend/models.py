@@ -521,8 +521,6 @@ class LTCRequests(db.Model):
         ]
     }
     """
-    # stores path to attachments
-    # attachments: str = db.Column(db.String, nullable=True)
 
     def __init__(self, user_id: int):
         self.user_id = user_id

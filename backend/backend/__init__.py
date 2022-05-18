@@ -69,10 +69,10 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
     api.add_resource(Auth.OTPLogin, '/api/otp-login')  # logout route
     # check if logged in
     api.add_resource(Auth.IsLoggedIn, '/api/is-logged-in')
-    api.add_resource(LtcManager.ApplyForLTC, '/api/apply')  # apply for ltc
     api.add_resource(Auth.GetSignature, '/api/get-signature')  # get signature
     api.add_resource(Auth.UploadSignature,
                      '/api/upload-signature')  # upload signature
+
     api.add_resource(UserManager.RegisterUser,
                      '/api/admin/register')  # register user
     api.add_resource(UserManager.GetRoleMapping,
@@ -91,6 +91,8 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/admin/drop-user') # delete user
     api.add_resource(UserManager.FetchUserByEmail,
                      '/api/admin/fetch-user') # fetch user details by email
+
+    api.add_resource(LtcManager.ApplyForLTC, '/api/apply')  # apply for ltc
     api.add_resource(LtcManager.GetLtcFormData,
                      '/api/getformdata')  # get form data
     # get basic form data for display on tables
@@ -107,14 +109,6 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/comment')  # comment and forward
     api.add_resource(LtcManager.FillStageForm,
                      '/api/fill-stage-form')  # fill stage form
-    # get user dashboard notifications
-    api.add_resource(GetUserNotifications, '/api/getnotifications')
-    # fetch user email notification preferences
-    api.add_resource(GetEmailPref, '/api/get-email-pref')
-    # set user email notification preferences
-    api.add_resource(SetEmailPref, '/api/set-email-pref')
-    # clear user dashboard notifications
-    api.add_resource(ClearUserNotifications, '/api/clearnotifications')
     api.add_resource(LtcManager.GetEstablishmentReview,
                      '/api/establishment-review')  # get establishment review requests
     api.add_resource(LtcManager.UploadOfficeOrder,
@@ -135,6 +129,16 @@ def create_app(db_path=os.environ.get('POSTGRES_PATH')):
                      '/api/print-form')  # return form data for printing to pdf.
     api.add_resource(LtcManager.PrintOfficeOrder,
                      '/api/print-office-order')  # return form data for printing to pdf.
+
+    # get user dashboard notifications
+    api.add_resource(GetUserNotifications, '/api/getnotifications')
+    # fetch user email notification preferences
+    api.add_resource(GetEmailPref, '/api/get-email-pref')
+    # set user email notification preferences
+    api.add_resource(SetEmailPref, '/api/set-email-pref')
+    # clear user dashboard notifications
+    api.add_resource(ClearUserNotifications, '/api/clearnotifications')
+    
     """
     TA form
     """

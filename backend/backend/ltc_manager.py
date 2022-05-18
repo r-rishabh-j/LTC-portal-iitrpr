@@ -57,6 +57,7 @@ class LtcManager:
             last_avalied: LTCRequests = LTCRequests.query.filter(
                 LTCRequests.user_id == current_user.id).order_by(desc(LTCRequests.created_on)).first()
             if last_avalied != None:
+                # auto fill data from last LTC application
                 last_est_form = last_avalied.form['establishment']
                 form_data['establishment'] = {
                     "est_data_nature_last": last_est_form.get("est_data_nature_current", ''),
@@ -84,6 +85,7 @@ class LtcManager:
             new_request.forward(current_user)
 
             if file != None:
+                # save file
                 ltc_upload = LTCProofUploads(
                     new_request.request_id, file_encoding, filename)
                 db.session.add(ltc_upload)
@@ -346,6 +348,9 @@ class LtcManager:
             return jsonify(response)
 
     class GetPastApprovalRequests(Resource):
+        """
+        Fetch approved request by stage
+        """
         allowed_roles = [
             Permissions.deanfa,
             Permissions.registrar,
@@ -413,6 +418,9 @@ class LtcManager:
             return jsonify({'previous': previous})
 
     class GetEstablishmentReview(Resource):
+        """
+        Fetch pending review requests from establishment review table
+        """
         @role_required(Permissions.establishment)
         def get(self):
             analyse()
@@ -435,6 +443,9 @@ class LtcManager:
             return jsonify({'review': to_review})
 
     class EditStageForm(Resource):
+        """
+        Edit stage from in review
+        """
         @role_required(role=Permissions.establishment)
         def post(self, **kwargs):
             analyse()
@@ -450,6 +461,10 @@ class LtcManager:
             return jsonify({'msg': 'Updated'})
 
     class ResolveReviewRequest(Resource):
+        """
+        Resolve review request.
+        Combined for establishment and applicant
+        """
         allowed_roles = [
             Permissions.establishment,
             Permissions.client
@@ -772,6 +787,21 @@ PFA document for payment information.
             return jsonify({"success": "uploaded proofs"})
 
     class PrintForm(Resource):
+        """
+        Return
+        {
+            form:,
+            comments:,
+            signatures:{
+                'user',
+                'section_head',
+                'establishment':{
+                    '<user designation>
+                },
+                ...and all the other stages...
+            }
+        }
+        """
         @check_role()
         def post(self, permission):
             analyse()

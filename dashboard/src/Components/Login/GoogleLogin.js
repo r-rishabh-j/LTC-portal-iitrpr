@@ -102,7 +102,7 @@ function GoogleLogin() {
                 </Avatar>
                 <h3>Sign In</h3>
 
-                {REACT_APP_DEVELOPMENT === "true" ? (
+                {REACT_APP_DEVELOPMENT === "tru" ? (
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <Controller
                       name="email"
